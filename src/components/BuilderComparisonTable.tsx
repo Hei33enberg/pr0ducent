@@ -154,7 +154,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                         onMouseLeave={() => setHoveredCol(null)}
                       >
                         {feature.tools.includes(tool.id) ? (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-500 mx-auto" />
+                          <CheckCircle2 className="w-4 h-4 text-success mx-auto" />
                         ) : (
                           <XCircle className="w-4 h-4 text-muted-foreground/20 mx-auto" />
                         )}
