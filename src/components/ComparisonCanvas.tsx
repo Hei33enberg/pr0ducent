@@ -3,9 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getToolById } from "@/config/tools";
 import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
 import { saveExperiment } from "@/lib/mock-experiment";
+import { updateRunStatusInDb, logReferralClick } from "@/lib/experiment-service";
+import { useAuth } from "@/hooks/useAuth";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CanvasFilters, type SortOption } from "@/components/CanvasFilters";
+import { WinnerBanner } from "@/components/WinnerBanner";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
@@ -57,10 +61,12 @@ function ToolTile({
   run,
   elapsed,
   onClick,
+  onReferralClick,
 }: {
   run: ExperimentRun;
   elapsed: number;
   onClick: () => void;
+  onReferralClick: (toolId: string) => void;
 }) {
   const tool = getToolById(run.toolId);
   if (!tool) return null;
@@ -76,6 +82,7 @@ function ToolTile({
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       className={cn(
         "bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden",
         isFeatured
@@ -85,7 +92,6 @@ function ToolTile({
       onClick={onClick}
     >
       <div className="p-4 space-y-3">
-        {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center text-xs font-bold text-foreground">
@@ -101,13 +107,11 @@ function ToolTile({
           <StatusBadge status={run.status} />
         </div>
 
-        {/* Timer */}
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Clock className="w-3 h-3" />
           <span className="font-mono tabular-nums">{displayTime.toFixed(1)}s</span>
         </div>
 
-        {/* Preview placeholder */}
         <div
           className={cn(
             "rounded-lg overflow-hidden",
@@ -124,7 +128,6 @@ function ToolTile({
           )}
         </div>
 
-        {/* Scores (only when completed) */}
         {run.status === "completed" && (
           <div className="grid grid-cols-2 gap-x-4 gap-y-2">
             <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
@@ -134,7 +137,6 @@ function ToolTile({
           </div>
         )}
 
-        {/* CTA */}
         {run.status === "completed" && (
           <Button
             size="sm"
@@ -142,7 +144,10 @@ function ToolTile({
             className={cn("w-full text-xs", isFeatured && "bg-featured hover:bg-featured/90 text-featured-foreground")}
             onClick={(e) => {
               e.stopPropagation();
-              // In real product, this would be a referral link
+              onReferralClick(run.toolId);
+              if (tool.referralUrl) {
+                window.open(tool.referralUrl, "_blank");
+              }
             }}
           >
             Continue in {tool.name}
@@ -154,13 +159,20 @@ function ToolTile({
   );
 }
 
+function getOverallScore(run: ExperimentRun) {
+  const s = run.scores;
+  return (s.uiQuality + s.backendLogic + s.speed + s.easeOfEditing) / 4;
+}
+
 export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }: ComparisonCanvasProps) {
+  const { user } = useAuth();
   const [elapsed, setElapsed] = useState<Record<string, number>>({});
+  const [hiddenTools, setHiddenTools] = useState<Set<string>>(new Set());
+  const [sortBy, setSortBy] = useState<SortOption>("default");
 
   const completedCount = experiment.runs.filter((r) => r.status === "completed").length;
   const totalCount = experiment.runs.length;
 
-  // Simulate experiment progression
   useEffect(() => {
     const interval = setInterval(() => {
       const now = Date.now();
@@ -174,16 +186,11 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }
         }
         if (run.status === "running" && run.timeToFirstPrototype && elapsedSec > run.timeToFirstPrototype) {
           updated = true;
-          return {
-            ...run,
-            status: "completed" as RunStatus,
-            completedAt: now,
-          };
+          return { ...run, status: "completed" as RunStatus, completedAt: now };
         }
         return run;
       });
 
-      // Update elapsed times
       const newElapsed: Record<string, number> = {};
       newRuns.forEach((run) => {
         newElapsed[run.toolId] = (now - run.startedAt) / 1000;
@@ -200,39 +207,66 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }
     return () => clearInterval(interval);
   }, [experiment, onExperimentUpdate]);
 
-  // Sort: featured first, then completed first
-  const sortedRuns = [...experiment.runs].sort((a, b) => {
-    const toolA = getToolById(a.toolId);
-    const toolB = getToolById(b.toolId);
-    if (toolA?.featured && !toolB?.featured) return -1;
-    if (!toolA?.featured && toolB?.featured) return 1;
-    if (a.status === "completed" && b.status !== "completed") return -1;
-    if (a.status !== "completed" && b.status === "completed") return 1;
-    return 0;
-  });
+  const toggleTool = (toolId: string) => {
+    setHiddenTools((prev) => {
+      const next = new Set(prev);
+      if (next.has(toolId)) next.delete(toolId);
+      else next.add(toolId);
+      return next;
+    });
+  };
+
+  const handleReferralClick = (toolId: string) => {
+    if (user) {
+      logReferralClick(user.id, experiment.id, toolId);
+    }
+  };
+
+  const sortedRuns = [...experiment.runs]
+    .filter((r) => !hiddenTools.has(r.toolId))
+    .sort((a, b) => {
+      if (sortBy === "score") return getOverallScore(b) - getOverallScore(a);
+      if (sortBy === "speed") return (a.timeToFirstPrototype ?? 999) - (b.timeToFirstPrototype ?? 999);
+      if (sortBy === "name") {
+        const na = getToolById(a.toolId)?.name ?? "";
+        const nb = getToolById(b.toolId)?.name ?? "";
+        return na.localeCompare(nb);
+      }
+      // default: featured first, completed first
+      const toolA = getToolById(a.toolId);
+      const toolB = getToolById(b.toolId);
+      if (toolA?.featured && !toolB?.featured) return -1;
+      if (!toolA?.featured && toolB?.featured) return 1;
+      if (a.status === "completed" && b.status !== "completed") return -1;
+      if (a.status !== "completed" && b.status === "completed") return 1;
+      return 0;
+    });
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-8">
-      {/* Global progress */}
-      <div className="mb-6 space-y-2">
+    <section className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
-          <span className="font-medium text-foreground">
-            Experiment Progress
-          </span>
-          <span className="font-mono text-muted-foreground">
-            {completedCount}/{totalCount} completed
-          </span>
+          <span className="font-medium text-foreground">Experiment Progress</span>
+          <span className="font-mono text-muted-foreground">{completedCount}/{totalCount} completed</span>
         </div>
         <Progress value={(completedCount / totalCount) * 100} className="h-2" />
       </div>
 
-      {/* Prompt recap */}
-      <div className="mb-6 bg-card rounded-xl border border-border p-4">
+      <div className="bg-card rounded-xl border border-border p-4">
         <div className="text-xs text-muted-foreground mb-1">Your prompt</div>
         <div className="text-sm text-foreground font-medium">{experiment.prompt}</div>
       </div>
 
-      {/* Tool tiles grid */}
+      <WinnerBanner runs={experiment.runs} />
+
+      <CanvasFilters
+        hiddenTools={hiddenTools}
+        onToggleTool={toggleTool}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+        availableToolIds={experiment.selectedTools}
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <AnimatePresence>
           {sortedRuns.map((run) => (
@@ -241,6 +275,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }
               run={run}
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
+              onReferralClick={handleReferralClick}
             />
           ))}
         </AnimatePresence>
