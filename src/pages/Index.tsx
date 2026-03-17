@@ -3,8 +3,8 @@ import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
-import { createMockExperiment, saveExperiment, loadExperiments } from "@/lib/mock-experiment";
-import { createExperimentInDb, loadExperimentsFromDb } from "@/lib/experiment-service";
+import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
+import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Experiment, AccountModel } from "@/types/experiment";
@@ -59,6 +59,16 @@ const Index = () => {
       setPastExperiments(loadExperiments());
     }
   };
+
+  const handleDelete = useCallback(async (expId: string) => {
+    if (user) {
+      await deleteExperimentFromDb(expId);
+      loadExperimentsFromDb(user.id).then(setPastExperiments);
+    } else {
+      deleteLocalExperiment(expId);
+      setPastExperiments(loadExperiments());
+    }
+  }, [user]);
 
   const selectedRun = experiment?.runs.find((r) => r.toolId === selectedToolId) ?? null;
 
@@ -121,6 +131,7 @@ const Index = () => {
             <ExperimentHistory
               experiments={pastExperiments}
               onSelect={(exp) => setExperiment(exp)}
+              onDelete={handleDelete}
             />
           </motion.div>
         )}

@@ -113,3 +113,7 @@ export async function logReferralClick(userId: string, experimentId: string, too
     tool_id: toolId,
   });
 }
+
+export async function deleteExperimentFromDb(experimentId: string) {
+  await supabase.from("experiments").delete().eq("id", experimentId);
+}
