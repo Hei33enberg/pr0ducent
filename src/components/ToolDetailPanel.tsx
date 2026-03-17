@@ -4,13 +4,88 @@ import type { ExperimentRun } from "@/types/experiment";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ExternalLink, Check, X as XIcon, Cpu, Globe } from "lucide-react";
+import { ExternalLink, Check, X as XIcon, Cpu, Globe, CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ToolDetailPanelProps {
   run: ExperimentRun | null;
   open: boolean;
   onClose: () => void;
+}
+
+const BUILD_PHASES = [
+  { label: "Prompt analysis", pct: 0 },
+  { label: "Scaffolding project", pct: 15 },
+  { label: "Generating UI components", pct: 35 },
+  { label: "Building backend logic", pct: 60 },
+  { label: "Running tests & checks", pct: 80 },
+  { label: "Deploying prototype", pct: 95 },
+];
+
+function BuildTimeline({ run }: { run: ExperimentRun }) {
+  const totalTime = run.timeToFirstPrototype ?? 15;
+  const isCompleted = run.status === "completed";
+  const elapsed = isCompleted
+    ? totalTime
+    : run.completedAt
+      ? (run.completedAt - run.startedAt) / 1000
+      : 0;
+  const progress = Math.min(100, (elapsed / totalTime) * 100);
+
+  return (
+    <div className="space-y-1">
+      <h4 className="text-sm font-semibold text-foreground mb-3">Build Timeline</h4>
+      <div className="relative pl-5">
+        {/* Vertical line */}
+        <div className="absolute left-[7px] top-1 bottom-1 w-px bg-border" />
+        <div
+          className="absolute left-[7px] top-1 w-px bg-primary transition-all duration-500"
+          style={{ height: `${Math.min(progress, 100)}%` }}
+        />
+
+        <div className="space-y-3">
+          {BUILD_PHASES.map((phase, i) => {
+            const done = progress >= phase.pct + 10;
+            const active = !done && progress >= phase.pct;
+            const timeAtPhase = (phase.pct / 100) * totalTime;
+
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.05 }}
+                className="flex items-center gap-3 relative"
+              >
+                <div className="absolute -left-5">
+                  {done ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                  ) : active ? (
+                    <div className="w-3.5 h-3.5 rounded-full border-2 border-primary bg-primary/20 animate-pulse" />
+                  ) : (
+                    <Circle className="w-3.5 h-3.5 text-muted-foreground/40" />
+                  )}
+                </div>
+                <span
+                  className={cn(
+                    "text-xs",
+                    done ? "text-foreground" : active ? "text-foreground font-medium" : "text-muted-foreground/60"
+                  )}
+                >
+                  {phase.label}
+                </span>
+                {done && (
+                  <span className="text-[10px] font-mono text-muted-foreground ml-auto">
+                    {timeAtPhase.toFixed(1)}s
+                  </span>
+                )}
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function ScoreRow({ label, value }: { label: string; value: number }) {
@@ -62,6 +137,9 @@ export function ToolDetailPanel({ run, open, onClose }: ToolDetailPanelProps) {
           <div className="rounded-xl bg-gradient-to-br from-muted to-muted/50 h-48 flex items-center justify-center">
             <p className="text-sm text-muted-foreground text-center px-6">{run.description}</p>
           </div>
+
+          {/* Build Timeline */}
+          <BuildTimeline run={run} />
 
           {/* Time */}
           {run.timeToFirstPrototype && (
