@@ -3,17 +3,19 @@ import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
-import { createMockExperiment } from "@/lib/mock-experiment";
+import { createMockExperiment, saveExperiment, loadExperiments } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion, AnimatePresence } from "framer-motion";
-import { Beaker, ArrowLeft, LogOut } from "lucide-react";
+import { Beaker, ArrowLeft, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [pastExperiments, setPastExperiments] = useState<Experiment[]>([]);
@@ -21,28 +23,40 @@ const Index = () => {
   useEffect(() => {
     if (user) {
       loadExperimentsFromDb(user.id).then(setPastExperiments);
+    } else {
+      setPastExperiments(loadExperiments());
     }
   }, [user]);
 
   const handleSubmit = useCallback(
     async (prompt: string, selectedTools: string[], accountModel: AccountModel) => {
-      if (!user) return;
       const exp = createMockExperiment(prompt, selectedTools, accountModel);
-      await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs);
+      // Always save locally so experiment works immediately
+      saveExperiment(exp);
       setExperiment(exp);
-      loadExperimentsFromDb(user.id).then(setPastExperiments);
+
+      // If logged in, also persist to DB
+      if (user) {
+        await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs);
+        loadExperimentsFromDb(user.id).then(setPastExperiments);
+      } else {
+        setPastExperiments(loadExperiments());
+      }
     },
     [user]
   );
 
   const handleExperimentUpdate = useCallback((updated: Experiment) => {
     setExperiment(updated);
+    saveExperiment(updated);
   }, []);
 
   const handleBack = () => {
     setExperiment(null);
     if (user) {
       loadExperimentsFromDb(user.id).then(setPastExperiments);
+    } else {
+      setPastExperiments(loadExperiments());
     }
   };
 
@@ -62,13 +76,20 @@ const Index = () => {
             <span className="font-bold text-foreground tracking-tight">PromptLab</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground hidden sm:inline">
-              {user?.email}
-            </span>
             <ThemeToggle />
-            <Button variant="ghost" size="icon" onClick={signOut} title="Wyloguj" className="h-8 w-8">
-              <LogOut className="w-4 h-4" />
-            </Button>
+            {user ? (
+              <>
+                <span className="text-xs text-muted-foreground hidden sm:inline">{user.email}</span>
+                <Button variant="ghost" size="icon" onClick={signOut} title="Wyloguj" className="h-8 w-8">
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </>
+            ) : (
+              <Button variant="outline" size="sm" onClick={() => navigate("/auth")} className="text-xs h-8">
+                <LogIn className="w-3.5 h-3.5 mr-1.5" />
+                Zaloguj się
+              </Button>
+            )}
           </div>
         </div>
       </header>
