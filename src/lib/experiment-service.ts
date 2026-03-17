@@ -6,7 +6,8 @@ export async function createExperimentInDb(
   prompt: string,
   selectedTools: string[],
   accountModel: AccountModel,
-  runs: ExperimentRun[]
+  runs: ExperimentRun[],
+  useCaseTags?: string[]
 ): Promise<string | null> {
   const { data: exp, error: expErr } = await supabase
     .from("experiments")
@@ -15,7 +16,8 @@ export async function createExperimentInDb(
       prompt,
       account_model: accountModel,
       selected_tools: selectedTools,
-    })
+      use_case_tags: useCaseTags || [],
+    } as any)
     .select("id")
     .single();
 
@@ -80,13 +82,15 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
     runsMap.set(r.experiment_id, list);
   });
 
-  return exps.map((e) => ({
+  return exps.map((e: any) => ({
     id: e.id,
     prompt: e.prompt,
     selectedTools: e.selected_tools,
     accountModel: e.account_model as AccountModel,
     createdAt: new Date(e.created_at).getTime(),
     runs: runsMap.get(e.id) || [],
+    useCaseTags: e.use_case_tags || [],
+    isPublic: e.is_public ?? false,
   }));
 }
 

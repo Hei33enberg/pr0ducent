@@ -69,27 +69,33 @@ export type Database = {
           account_model: string
           created_at: string
           id: string
+          is_public: boolean
           prompt: string
           selected_tools: string[]
           updated_at: string
+          use_case_tags: string[]
           user_id: string
         }
         Insert: {
           account_model?: string
           created_at?: string
           id?: string
+          is_public?: boolean
           prompt: string
           selected_tools?: string[]
           updated_at?: string
+          use_case_tags?: string[]
           user_id: string
         }
         Update: {
           account_model?: string
           created_at?: string
           id?: string
+          is_public?: boolean
           prompt?: string
           selected_tools?: string[]
           updated_at?: string
+          use_case_tags?: string[]
           user_id?: string
         }
         Relationships: []

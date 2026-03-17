@@ -3,6 +3,8 @@ import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
+import { ShareButton } from "@/components/ShareButton";
+import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
@@ -19,6 +21,7 @@ const Index = () => {
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [pastExperiments, setPastExperiments] = useState<Experiment[]>([]);
+  const [showGuestLimit, setShowGuestLimit] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -29,15 +32,24 @@ const Index = () => {
   }, [user]);
 
   const handleSubmit = useCallback(
-    async (prompt: string, selectedTools: string[], accountModel: AccountModel) => {
+    async (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => {
+      // Guest limit check
+      if (!user && isGuestLimitReached()) {
+        setShowGuestLimit(true);
+        return;
+      }
+
       const exp = createMockExperiment(prompt, selectedTools, accountModel);
-      // Always save locally so experiment works immediately
+      exp.useCaseTags = useCaseTags;
       saveExperiment(exp);
       setExperiment(exp);
 
-      // If logged in, also persist to DB
+      if (!user) {
+        incrementGuestCount();
+      }
+
       if (user) {
-        await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs);
+        await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
         loadExperimentsFromDb(user.id).then(setPastExperiments);
       } else {
         setPastExperiments(loadExperiments());
@@ -70,6 +82,12 @@ const Index = () => {
     }
   }, [user]);
 
+  const handleVisibilityChange = (isPublic: boolean) => {
+    if (experiment) {
+      setExperiment({ ...experiment, isPublic });
+    }
+  };
+
   const selectedRun = experiment?.runs.find((r) => r.toolId === selectedToolId) ?? null;
 
   return (
@@ -86,6 +104,14 @@ const Index = () => {
             <span className="font-bold text-foreground tracking-tight">PromptLab</span>
           </div>
           <div className="flex items-center gap-2">
+            {experiment && user && (
+              <ShareButton
+                experimentId={experiment.id}
+                isPublic={experiment.isPublic ?? false}
+                isOwner={true}
+                onVisibilityChange={handleVisibilityChange}
+              />
+            )}
             <ThemeToggle />
             {user ? (
               <>
@@ -142,6 +168,8 @@ const Index = () => {
         open={!!selectedToolId}
         onClose={() => setSelectedToolId(null)}
       />
+
+      <GuestLimitModal open={showGuestLimit} onClose={() => setShowGuestLimit(false)} />
     </div>
   );
 };
