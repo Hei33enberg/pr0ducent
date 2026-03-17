@@ -6,6 +6,7 @@ import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { createMockExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion, AnimatePresence } from "framer-motion";
 import { Beaker, ArrowLeft, LogOut } from "lucide-react";
@@ -60,11 +61,12 @@ const Index = () => {
             <Beaker className="w-5 h-5 text-primary" />
             <span className="font-bold text-foreground tracking-tight">PromptLab</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground hidden sm:inline">
               {user?.email}
             </span>
-            <Button variant="ghost" size="icon" onClick={signOut} title="Wyloguj">
+            <ThemeToggle />
+            <Button variant="ghost" size="icon" onClick={signOut} title="Wyloguj" className="h-8 w-8">
               <LogOut className="w-4 h-4" />
             </Button>
           </div>

@@ -8,6 +8,7 @@ export interface BuilderTool {
   mockDelayRange: [number, number]; // seconds
   stack: string;
   hosting: string;
+  referralUrl?: string;
 }
 
 export const BUILDER_TOOLS: BuilderTool[] = [
