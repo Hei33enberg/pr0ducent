@@ -6,6 +6,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
+import Compare from "./pages/Compare.tsx";
+import PublicExperiment from "./pages/PublicExperiment.tsx";
 import NotFound from "./pages/NotFound.tsx";
 
 const queryClient = new QueryClient();
@@ -19,6 +21,8 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/auth" element={<Auth />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/experiment/:id" element={<PublicExperiment />} />
             <Route path="/" element={<Index />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
