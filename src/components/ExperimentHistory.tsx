@@ -50,7 +50,7 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
                       <div className="text-sm font-medium text-foreground truncate">
                         {exp.prompt}
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {new Date(exp.createdAt).toLocaleDateString()}
@@ -61,6 +61,9 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
                         <span>
                           {completed}/{exp.runs.length} completed
                         </span>
+                        {exp.useCaseTags && exp.useCaseTags.length > 0 && exp.useCaseTags.map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-[10px]">{tag}</Badge>
+                        ))}
                       </div>
                     </div>
                     <div className="flex items-center gap-1">
