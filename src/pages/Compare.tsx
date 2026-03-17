@@ -1,4 +1,5 @@
 import { BUILDER_TOOLS } from "@/config/tools";
+import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
