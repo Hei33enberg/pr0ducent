@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
+import { BuilderComparisonTable } from "@/components/BuilderComparisonTable";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { ShareButton } from "@/components/ShareButton";
@@ -9,6 +10,7 @@ import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExper
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BUILDER_TOOLS } from "@/config/tools";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion, AnimatePresence } from "framer-motion";
 import { Beaker, ArrowLeft, LogOut, LogIn } from "lucide-react";
