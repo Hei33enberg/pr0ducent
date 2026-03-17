@@ -24,6 +24,10 @@ const Index = () => {
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [pastExperiments, setPastExperiments] = useState<Experiment[]>([]);
   const [showGuestLimit, setShowGuestLimit] = useState(false);
+  const [selectedTools, setSelectedTools] = useState<string[]>(
+    BUILDER_TOOLS.filter((t) => t.featured).map((t) => t.id)
+  );
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (user) {
