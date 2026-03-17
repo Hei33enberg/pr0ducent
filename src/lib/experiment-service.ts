@@ -6,7 +6,8 @@ export async function createExperimentInDb(
   prompt: string,
   selectedTools: string[],
   accountModel: AccountModel,
-  runs: ExperimentRun[]
+  runs: ExperimentRun[],
+  useCaseTags?: string[]
 ): Promise<string | null> {
   const { data: exp, error: expErr } = await supabase
     .from("experiments")
@@ -15,7 +16,8 @@ export async function createExperimentInDb(
       prompt,
       account_model: accountModel,
       selected_tools: selectedTools,
-    })
+      use_case_tags: useCaseTags || [],
+    } as any)
     .select("id")
     .single();
 
