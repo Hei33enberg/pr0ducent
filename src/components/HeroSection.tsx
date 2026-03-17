@@ -48,7 +48,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   };
 
   return (
-    <section className="relative overflow-hidden">
+    <section ref={heroRef} className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
 
       <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-12">
