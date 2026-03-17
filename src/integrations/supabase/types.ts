@@ -14,7 +14,142 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      experiment_runs: {
+        Row: {
+          completed_at: string | null
+          cons: Json
+          description: string
+          experiment_id: string
+          id: string
+          pros: Json
+          scores: Json
+          started_at: string
+          status: string
+          time_to_prototype: number | null
+          tool_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          cons?: Json
+          description?: string
+          experiment_id: string
+          id?: string
+          pros?: Json
+          scores?: Json
+          started_at?: string
+          status?: string
+          time_to_prototype?: number | null
+          tool_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          cons?: Json
+          description?: string
+          experiment_id?: string
+          id?: string
+          pros?: Json
+          scores?: Json
+          started_at?: string
+          status?: string
+          time_to_prototype?: number | null
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiment_runs_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      experiments: {
+        Row: {
+          account_model: string
+          created_at: string
+          id: string
+          prompt: string
+          selected_tools: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_model?: string
+          created_at?: string
+          id?: string
+          prompt: string
+          selected_tools?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_model?: string
+          created_at?: string
+          id?: string
+          prompt?: string
+          selected_tools?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referral_clicks: {
+        Row: {
+          clicked_at: string
+          experiment_id: string
+          id: string
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          clicked_at?: string
+          experiment_id: string
+          id?: string
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          clicked_at?: string
+          experiment_id?: string
+          id?: string
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_clicks_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
