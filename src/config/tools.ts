@@ -8,6 +8,8 @@ export interface BuilderTool {
   mockDelayRange: [number, number]; // seconds
   stack: string;
   hosting: string;
+  pricing: string;
+  category: string;
   referralUrl?: string;
 }
 
