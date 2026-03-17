@@ -82,13 +82,15 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
     runsMap.set(r.experiment_id, list);
   });
 
-  return exps.map((e) => ({
+  return exps.map((e: any) => ({
     id: e.id,
     prompt: e.prompt,
     selectedTools: e.selected_tools,
     accountModel: e.account_model as AccountModel,
     createdAt: new Date(e.created_at).getTime(),
     runs: runsMap.get(e.id) || [],
+    useCaseTags: e.use_case_tags || [],
+    isPublic: e.is_public ?? false,
   }));
 }
 
