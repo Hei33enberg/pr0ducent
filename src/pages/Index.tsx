@@ -131,6 +131,7 @@ const Index = () => {
             <ExperimentHistory
               experiments={pastExperiments}
               onSelect={(exp) => setExperiment(exp)}
+              onDelete={handleDelete}
             />
           </motion.div>
         )}
