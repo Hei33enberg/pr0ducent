@@ -60,6 +60,16 @@ const Index = () => {
     }
   };
 
+  const handleDelete = useCallback(async (expId: string) => {
+    if (user) {
+      await deleteExperimentFromDb(expId);
+      loadExperimentsFromDb(user.id).then(setPastExperiments);
+    } else {
+      deleteLocalExperiment(expId);
+      setPastExperiments(loadExperiments());
+    }
+  }, [user]);
+
   const selectedRun = experiment?.runs.find((r) => r.toolId === selectedToolId) ?? null;
 
   return (
