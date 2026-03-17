@@ -12,13 +12,13 @@ import { Zap, Shield, BarChart3, Sparkles } from "lucide-react";
 
 interface HeroSectionProps {
   onSubmit: (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => void;
+  selectedTools: string[];
+  onSelectedToolsChange: (tools: string[]) => void;
+  heroRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function HeroSection({ onSubmit }: HeroSectionProps) {
+export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, heroRef }: HeroSectionProps) {
   const [prompt, setPrompt] = useState("");
-  const [selectedTools, setSelectedTools] = useState<string[]>(
-    BUILDER_TOOLS.filter((t) => t.featured).map((t) => t.id)
-  );
   const [accountModel, setAccountModel] = useState<AccountModel>("broker");
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
