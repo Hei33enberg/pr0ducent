@@ -28,4 +28,6 @@ export interface Experiment {
   accountModel: AccountModel;
   createdAt: number;
   runs: ExperimentRun[];
+  useCaseTags?: string[];
+  isPublic?: boolean;
 }
