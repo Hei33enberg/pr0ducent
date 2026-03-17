@@ -118,3 +118,8 @@ export function saveExperiment(experiment: Experiment) {
   }
   localStorage.setItem("promptlab_experiments", JSON.stringify(experiments));
 }
+
+export function deleteLocalExperiment(id: string) {
+  const experiments = loadExperiments().filter((e) => e.id !== id);
+  localStorage.setItem("promptlab_experiments", JSON.stringify(experiments));
+}
