@@ -6,6 +6,7 @@ import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { createMockExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion, AnimatePresence } from "framer-motion";
 import { Beaker, ArrowLeft, LogOut } from "lucide-react";
