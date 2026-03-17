@@ -159,7 +159,18 @@ const Index = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <HeroSection onSubmit={handleSubmit} />
+            <HeroSection
+              onSubmit={handleSubmit}
+              selectedTools={selectedTools}
+              onSelectedToolsChange={setSelectedTools}
+              heroRef={heroRef}
+            />
+            <BuilderComparisonTable
+              onSelectTool={(toolId) => {
+                setSelectedTools([toolId]);
+                heroRef.current?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
             <ExperimentHistory
               experiments={pastExperiments}
               onSelect={(exp) => setExperiment(exp)}
