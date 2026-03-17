@@ -24,6 +24,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [8, 18],
     stack: "React + TypeScript + Tailwind + Supabase",
     hosting: "Lovable Cloud (auto-scaling)",
+    pricing: "Free tier + $20/mo Pro",
+    category: "Full-stack builder",
   },
   {
     id: "replit",
@@ -35,6 +37,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [12, 25],
     stack: "Node.js + Express + SQLite",
     hosting: "Replit Deployments",
+    pricing: "Free tier + $25/mo Hacker",
+    category: "Cloud IDE",
   },
   {
     id: "v0",
@@ -46,6 +50,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [5, 12],
     stack: "Next.js + TypeScript + Tailwind",
     hosting: "Vercel Edge Network",
+    pricing: "Free tier + $20/mo Premium",
+    category: "UI generator",
   },
   {
     id: "cursor",
@@ -57,6 +63,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [15, 30],
     stack: "Any (user-defined)",
     hosting: "Self-hosted",
+    pricing: "Free tier + $20/mo Pro",
+    category: "Code editor",
   },
   {
     id: "base44",
@@ -68,6 +76,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [10, 22],
     stack: "React + Python + PostgreSQL",
     hosting: "Base44 Cloud",
+    pricing: "Free tier + $29/mo",
+    category: "Business app builder",
   },
   {
     id: "antigravity",
@@ -79,6 +89,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [8, 20],
     stack: "React Native + TypeScript",
     hosting: "Antigravity Cloud",
+    pricing: "Free beta",
+    category: "Mobile builder",
   },
   {
     id: "build0",
@@ -90,6 +102,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [6, 15],
     stack: "Next.js + Prisma + PostgreSQL",
     hosting: "Build0 Infrastructure",
+    pricing: "Free tier + $15/mo",
+    category: "Full-stack builder",
   },
   {
     id: "orchids",
@@ -101,6 +115,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [10, 24],
     stack: "React + Framer Motion + Tailwind",
     hosting: "Orchids CDN",
+    pricing: "Free tier + $19/mo",
+    category: "Design-focused builder",
   },
   {
     id: "floot",
@@ -112,6 +128,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [14, 28],
     stack: "Next.js + tRPC + PostgreSQL",
     hosting: "AWS (managed)",
+    pricing: "From $49/mo",
+    category: "Enterprise builder",
   },
   {
     id: "bolt",
@@ -123,6 +141,8 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     mockDelayRange: [7, 16],
     stack: "Any (WebContainer)",
     hosting: "Bolt Cloud",
+    pricing: "Free tier + $20/mo Pro",
+    category: "In-browser IDE",
   },
 ];
 
