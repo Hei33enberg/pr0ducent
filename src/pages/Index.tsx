@@ -1,6 +1,7 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
+import { BuilderComparisonTable } from "@/components/BuilderComparisonTable";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { ShareButton } from "@/components/ShareButton";
@@ -9,6 +10,7 @@ import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExper
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { BUILDER_TOOLS } from "@/config/tools";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion, AnimatePresence } from "framer-motion";
 import { Beaker, ArrowLeft, LogOut, LogIn } from "lucide-react";
@@ -22,6 +24,10 @@ const Index = () => {
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [pastExperiments, setPastExperiments] = useState<Experiment[]>([]);
   const [showGuestLimit, setShowGuestLimit] = useState(false);
+  const [selectedTools, setSelectedTools] = useState<string[]>(
+    BUILDER_TOOLS.filter((t) => t.featured).map((t) => t.id)
+  );
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -153,7 +159,18 @@ const Index = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <HeroSection onSubmit={handleSubmit} />
+            <HeroSection
+              onSubmit={handleSubmit}
+              selectedTools={selectedTools}
+              onSelectedToolsChange={setSelectedTools}
+              heroRef={heroRef}
+            />
+            <BuilderComparisonTable
+              onSelectTool={(toolId) => {
+                setSelectedTools([toolId]);
+                heroRef.current?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
             <ExperimentHistory
               experiments={pastExperiments}
               onSelect={(exp) => setExperiment(exp)}

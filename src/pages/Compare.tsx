@@ -1,23 +1,11 @@
 import { BUILDER_TOOLS } from "@/config/tools";
+import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Beaker, Zap, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-const COMPARISON_FEATURES = [
-  { label: "Full-stack generation", tools: ["lovable", "replit", "bolt"] },
-  { label: "One-click deploy", tools: ["lovable", "replit", "v0", "bolt", "build0"] },
-  { label: "Backend included", tools: ["lovable", "replit", "base44", "floot", "bolt"] },
-  { label: "UI component library", tools: ["lovable", "v0", "orchids"] },
-  { label: "Collaborative editing", tools: ["replit", "cursor"] },
-  { label: "Git integration", tools: ["cursor", "replit"] },
-  { label: "Mobile-first", tools: ["antigravity"] },
-  { label: "Enterprise workflows", tools: ["floot"] },
-  { label: "In-browser dev", tools: ["bolt", "replit"] },
-  { label: "Design system support", tools: ["lovable", "v0", "orchids"] },
-];
 
 const TOP_TOOLS = BUILDER_TOOLS.filter((t) =>
   ["lovable", "replit", "v0", "cursor", "bolt"].includes(t.id)
