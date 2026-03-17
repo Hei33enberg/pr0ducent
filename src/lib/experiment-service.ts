@@ -71,9 +71,9 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
       completedAt: r.completed_at ? new Date(r.completed_at).getTime() : undefined,
       timeToFirstPrototype: r.time_to_prototype ?? undefined,
       description: r.description,
-      scores: r.scores as EditorialScores,
-      pros: r.pros as string[],
-      cons: r.cons as string[],
+      scores: r.scores as unknown as EditorialScores,
+      pros: r.pros as unknown as string[],
+      cons: r.cons as unknown as string[],
     };
     const list = runsMap.get(r.experiment_id) || [];
     list.push(run);
