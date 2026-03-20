@@ -1320,10 +1320,7 @@ export type Database = {
     Views: {
       builder_leaderboard: {
         Row: {
-          avg_code_quality: number | null
           avg_pvi: number | null
-          avg_speed: number | null
-          avg_ui_quality: number | null
           best_pvi: number | null
           last_scored_at: string | null
           runs_with_preview: number | null
