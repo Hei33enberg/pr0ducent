@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, type ReactNode } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
+import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -62,6 +63,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
   const navLinks = [
     { label: t("nav.compare"), href: "/compare" },
+    { label: t("nav.blog"), href: "/blog" },
+    { label: t("nav.dashboard"), href: "/dashboard/updates" },
     { label: t("nav.howItWorks"), href: "#how-it-works" },
     { label: t("nav.faq"), href: "#faq" },
   ];
@@ -108,6 +111,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 />
               )}
               <LanguageToggle />
+              <NotificationBell />
               {user ? (
                 <>
                   <span className="text-xs text-muted-foreground hidden sm:inline font-sans">{user.email}</span>

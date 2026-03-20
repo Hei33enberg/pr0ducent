@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      blog_posts: {
+        Row: {
+          ai_model_used: string | null
+          category: string | null
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          language: string | null
+          og_image_url: string | null
+          published_at: string | null
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          status: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_model_used?: string | null
+          category?: string | null
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language?: string | null
+          og_image_url?: string | null
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          status?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_model_used?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          language?: string | null
+          og_image_url?: string | null
+          published_at?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          status?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       builder_results: {
         Row: {
           chat_url: string | null
@@ -66,6 +123,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      builder_sync_data: {
+        Row: {
+          changelog: Json | null
+          created_at: string | null
+          docs_url: string | null
+          features: Json | null
+          id: string
+          last_synced_at: string | null
+          official_url: string | null
+          pricing_tiers: Json | null
+          raw_perplexity_response: Json | null
+          status: string | null
+          tool_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          changelog?: Json | null
+          created_at?: string | null
+          docs_url?: string | null
+          features?: Json | null
+          id?: string
+          last_synced_at?: string | null
+          official_url?: string | null
+          pricing_tiers?: Json | null
+          raw_perplexity_response?: Json | null
+          status?: string | null
+          tool_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          changelog?: Json | null
+          created_at?: string | null
+          docs_url?: string | null
+          features?: Json | null
+          id?: string
+          last_synced_at?: string | null
+          official_url?: string | null
+          pricing_tiers?: Json | null
+          raw_perplexity_response?: Json | null
+          status?: string | null
+          tool_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       experiment_runs: {
         Row: {
@@ -153,6 +255,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_subscriptions: {
+        Row: {
+          created_at: string | null
+          id: string
+          notify_blog: boolean | null
+          notify_changelog: boolean | null
+          notify_pricing: boolean | null
+          tool_ids: string[] | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          notify_blog?: boolean | null
+          notify_changelog?: boolean | null
+          notify_pricing?: boolean | null
+          tool_ids?: string[] | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          notify_blog?: boolean | null
+          notify_changelog?: boolean | null
+          notify_pricing?: boolean | null
+          tool_ids?: string[] | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -208,6 +340,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_notifications: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          id: string
+          link: string | null
+          read: boolean | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          read?: boolean | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          id?: string
+          link?: string | null
+          read?: boolean | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

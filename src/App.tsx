@@ -10,6 +10,10 @@ import Auth from "./pages/Auth.tsx";
 import Compare from "./pages/Compare.tsx";
 import PublicExperiment from "./pages/PublicExperiment.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
+import BuilderDashboard from "./pages/BuilderDashboard.tsx";
+import Notifications from "./pages/Notifications.tsx";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +29,10 @@ const App = () => (
               <Route path="/auth" element={<Auth />} />
               <Route path="/compare" element={<Compare />} />
               <Route path="/experiment/:id" element={<PublicExperiment />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/dashboard/updates" element={<BuilderDashboard />} />
+              <Route path="/dashboard/notifications" element={<Notifications />} />
               <Route path="/" element={<Index />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

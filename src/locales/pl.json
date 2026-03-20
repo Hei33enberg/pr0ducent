@@ -113,5 +113,31 @@
   "footer.docs": "Dokumentacja",
   "footer.privacy": "Polityka prywatności",
   "footer.terms": "Regulamin",
-  "footer.rights": "Wszelkie prawa zastrzeżone."
+  "footer.rights": "Wszelkie prawa zastrzeżone.",
+
+  "nav.blog": "Blog",
+  "nav.dashboard": "Aktualizacje",
+  "nav.notifications": "Powiadomienia",
+
+  "blog.title": "Blog",
+  "blog.subtitle": "Wglądy, porównania i aktualności ze świata AI builderów.",
+  "blog.all": "Wszystkie",
+  "blog.empty": "Brak opublikowanych postów. Wróć wkrótce!",
+
+  "dashboard.title": "Aktualizacje builderów",
+  "dashboard.subtitle": "Synchronizowane na żywo ceny, funkcje i changelogi każdego AI buildera.",
+  "dashboard.autoSync": "Automatyczna synchronizacja co dzień",
+  "dashboard.empty": "Brak zsynchronizowanych danych.",
+  "dashboard.emptyHint": "Dane pojawią się po pierwszej codziennej synchronizacji.",
+
+  "notifications.title": "Ustawienia powiadomień",
+  "notifications.subtitle": "Wybierz, o jakich aktualizacjach chcesz być powiadamiany.",
+  "notifications.alertTypes": "Typy alertów",
+  "notifications.changelog": "Aktualizacje changelogów builderów",
+  "notifications.pricing": "Zmiany cenowe",
+  "notifications.blogPosts": "Nowe posty na blogu",
+  "notifications.watchBuilders": "Obserwuj buildery",
+  "notifications.watchHint": "Wybierz konkretne buildery do obserwowania, lub zostaw puste aby obserwować wszystkie.",
+  "notifications.signInRequired": "Wymagane logowanie",
+  "notifications.signInDesc": "Zaloguj się, aby zarządzać preferencjami powiadomień."
 }
