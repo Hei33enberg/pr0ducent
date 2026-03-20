@@ -6,6 +6,8 @@ import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
 import { HowItWorks } from "@/components/HowItWorks";
+import { FeatureMatrix } from "@/components/FeatureMatrix";
+import { PlanComparisonTable } from "@/components/PlanComparisonTable";
 
 import { HomepageBlogSection } from "@/components/HomepageBlogSection";
 import { InlineCalculator } from "@/components/InlineCalculator";
@@ -143,6 +145,8 @@ const Index = () => {
                   heroRef.current?.scrollIntoView({ behavior: "smooth" });
                 }}
               />
+              <FeatureMatrix />
+              <PlanComparisonTable />
               <InlineCalculator />
               <FAQ />
               <HomepageBlogSection />
