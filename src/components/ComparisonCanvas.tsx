@@ -16,7 +16,7 @@ import { WinnerBanner } from "@/components/WinnerBanner";
 import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2, BarChart3, MessageSquare, Info } from "lucide-react";
-import { useRunTaskStream, type RunTaskRow, type RunEventRow } from "@/hooks/useRunTaskStream";
+import { useRunTaskStream, type RunTaskRow, type RunEventRow, type BuilderResultRow } from "@/hooks/useRunTaskStream";
 import { DemoPreviewFrame } from "@/components/DemoPreviewFrame";
 import { BuilderProgressStream } from "@/components/BuilderProgressStream";
 import { GuestOrchestrationBanner } from "@/components/GuestOrchestrationBanner";
