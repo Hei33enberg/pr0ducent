@@ -14,6 +14,7 @@ import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
 import BuilderDashboard from "./pages/BuilderDashboard.tsx";
 import Notifications from "./pages/Notifications.tsx";
+import RunsNow from "./pages/RunsNow.tsx";
 
 const queryClient = new QueryClient();
 
