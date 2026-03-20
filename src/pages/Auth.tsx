@@ -2,11 +2,15 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Beaker, Mail, Loader2 } from "lucide-react";
+import { Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n";
+import { useNavigate } from "react-router-dom";
 
 export default function Auth() {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
@@ -21,7 +25,7 @@ export default function Auth() {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("Zalogowano!");
+        toast.success(t("auth.loginSuccess"));
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -29,10 +33,10 @@ export default function Auth() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success("Sprawdź email — kliknij link, aby potwierdzić konto.");
+        toast.success(t("auth.registerSuccess"));
       }
     } catch (err: any) {
-      toast.error(err.message || "Wystąpił błąd");
+      toast.error(err.message || t("auth.error"));
     } finally {
       setLoading(false);
     }
@@ -46,26 +50,30 @@ export default function Auth() {
         className="w-full max-w-sm space-y-6"
       >
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2">
-            <Beaker className="w-6 h-6 text-primary" />
-            <span className="text-xl font-bold text-foreground tracking-tight">PromptLab</span>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            {isLogin ? "Zaloguj się, aby kontynuować" : "Utwórz konto"}
+          <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="inline-block no-underline">
+            <span
+              className="font-serif font-bold tracking-tight leading-none"
+              style={{ color: "#000", fontSize: "1.8rem" }}
+            >
+              pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
+            </span>
+          </a>
+          <p className="text-sm text-muted-foreground font-sans">
+            {isLogin ? t("auth.signIn") : t("auth.createAccount")}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             type="email"
-            placeholder="Email"
+            placeholder={t("auth.email")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Input
             type="password"
-            placeholder="Hasło"
+            placeholder={t("auth.password")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -77,19 +85,19 @@ export default function Auth() {
             ) : (
               <>
                 <Mail className="w-4 h-4 mr-2" />
-                {isLogin ? "Zaloguj się" : "Zarejestruj się"}
+                {isLogin ? t("auth.loginBtn") : t("auth.registerBtn")}
               </>
             )}
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground">
-          {isLogin ? "Nie masz konta?" : "Masz już konto?"}{" "}
+        <p className="text-center text-sm text-muted-foreground font-sans">
+          {isLogin ? t("auth.noAccount") : t("auth.hasAccount")}{" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
             className="text-primary hover:underline font-medium"
           >
-            {isLogin ? "Zarejestruj się" : "Zaloguj się"}
+            {isLogin ? t("auth.registerBtn") : t("auth.loginBtn")}
           </button>
         </p>
       </motion.div>

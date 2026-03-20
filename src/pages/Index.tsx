@@ -5,6 +5,10 @@ import { BuilderComparisonTable } from "@/components/BuilderComparisonTable";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
+import { HowItWorks } from "@/components/HowItWorks";
+import { BuilderLogosBar } from "@/components/BuilderLogosBar";
+import { FAQ } from "@/components/FAQ";
+import { Footer } from "@/components/Footer";
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
@@ -128,17 +132,21 @@ const Index = () => {
                 onSelectedToolsChange={setSelectedTools}
                 heroRef={heroRef}
               />
+              <BuilderLogosBar />
+              <HowItWorks />
               <BuilderComparisonTable
                 onSelectTool={(toolId) => {
                   setSelectedTools([toolId]);
                   heroRef.current?.scrollIntoView({ behavior: "smooth" });
                 }}
               />
+              <FAQ />
               <ExperimentHistory
                 experiments={pastExperiments}
                 onSelect={(exp) => setExperiment(exp)}
                 onDelete={handleDelete}
               />
+              <Footer />
             </motion.div>
           )}
         </AnimatePresence>

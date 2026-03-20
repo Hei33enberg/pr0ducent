@@ -3,13 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
+import { useTranslation } from "@/lib/i18n";
 import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@/types/experiment";
-import { Beaker, ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function PublicExperiment() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +29,7 @@ export default function PublicExperiment() {
         .maybeSingle();
 
       if (expErr || !exp) {
-        setError("Eksperyment nie znaleziony lub jest prywatny.");
+        setError(t("public.notFound"));
         setLoading(false);
         return;
       }
@@ -75,10 +77,16 @@ export default function PublicExperiment() {
             <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="mr-1">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <Beaker className="w-5 h-5 text-primary" />
-            <span className="font-bold text-foreground tracking-tight">PromptLab</span>
+            <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="no-underline">
+              <span
+                className="font-serif font-bold tracking-tight leading-none"
+                style={{ color: "#000", fontSize: "1.3rem" }}
+              >
+                pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
+              </span>
+            </a>
           </div>
-          <span className="text-xs text-muted-foreground">Shared experiment</span>
+          <span className="text-xs text-muted-foreground font-sans">{t("public.sharedExperiment")}</span>
         </div>
       </header>
 
@@ -88,8 +96,8 @@ export default function PublicExperiment() {
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <p className="text-muted-foreground">{error}</p>
-          <Button variant="outline" onClick={() => navigate("/")}>Wróć na stronę główną</Button>
+          <p className="text-muted-foreground font-sans">{error}</p>
+          <Button variant="outline" onClick={() => navigate("/")}>{t("public.backHome")}</Button>
         </div>
       ) : experiment ? (
         <>
