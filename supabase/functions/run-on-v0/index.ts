@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: isTimeout ? "v0 handshake timeout (110s). Spróbuj ponownie za chwilę." : message,
+        error: isTimeout ? `v0 handshake timeout (${Math.round(V0_HANDSHAKE_TIMEOUT_MS / 1000)}s). Spróbuj ponownie za chwilę.` : message,
         retryable: isTimeout,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
