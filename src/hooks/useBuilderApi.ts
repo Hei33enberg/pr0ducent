@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/i18n";
 
 export interface BuilderResult {
   toolId: string;
@@ -18,6 +19,7 @@ const RUN_ON_V0_RETRY_DELAY_MS = 1500;
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function useBuilderApi() {
+  const { t } = useTranslation();
   const [results, setResults] = useState<Record<string, BuilderResult>>({});
   const [loading, setLoading] = useState(false);
   const pollTimers = useRef<Record<string, number>>({});
@@ -102,7 +104,7 @@ export function useBuilderApi() {
                 v0: {
                   toolId: "v0",
                   status: "error",
-                  error: pollData.error || "v0 generation failed",
+                  error: pollData.error || t("api.v0Failed"),
                   chatUrl: pollData.chatUrl || chatUrl,
                 },
               }));
@@ -126,7 +128,7 @@ export function useBuilderApi() {
                   v0: {
                     toolId: "v0",
                     status: "error",
-                    error: "Timeout — generowanie trwa zbyt długo. Sprawdź link do chatu.",
+                    error: t("api.timeoutGenerating"),
                     chatUrl,
                   },
                 };
@@ -142,12 +144,12 @@ export function useBuilderApi() {
           v0: {
             toolId: "v0",
             status: "error",
-            error: err.message || "Failed to generate with v0",
+            error: err.message || t("api.failedWithV0"),
           },
         }));
       }
     },
-    [stopPolling]
+    [stopPolling, t]
   );
 
   const runBuilders = useCallback(

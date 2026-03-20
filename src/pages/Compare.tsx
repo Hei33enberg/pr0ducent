@@ -140,7 +140,7 @@ export default function Compare() {
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: "AI App Builder Comparison — Lovable vs Replit vs v0 vs Cursor vs Bolt",
-            description: "Compare the best AI app builders side by side. Test Lovable, Replit, Vercel v0, Cursor, and Bolt with one prompt.",
+            description: "Compare AI app builders side by side with live v0 runs and benchmark profiles for Lovable, Replit, Cursor, and Bolt.",
             url: `${window.location.origin}/compare`,
           }),
         }}

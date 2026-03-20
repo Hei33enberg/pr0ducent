@@ -59,16 +59,16 @@ export const MOCK_BUILD_STEPS: Record<string, string[]> = {
 
 // Mock gradient colors per builder for preview placeholders
 export const MOCK_PREVIEW_GRADIENTS: Record<string, string> = {
-  lovable: "from-rose-500/20 via-purple-500/20 to-indigo-500/20",
-  replit: "from-orange-500/20 via-amber-500/20 to-yellow-500/20",
-  v0: "from-zinc-900/30 via-zinc-700/20 to-zinc-500/10",
-  cursor: "from-emerald-500/20 via-teal-500/20 to-cyan-500/20",
-  base44: "from-blue-500/20 via-indigo-500/20 to-violet-500/20",
-  antigravity: "from-pink-500/20 via-fuchsia-500/20 to-purple-500/20",
-  build0: "from-green-500/20 via-emerald-500/20 to-teal-500/20",
-  orchids: "from-pink-400/20 via-rose-400/20 to-red-400/20",
-  floot: "from-slate-500/20 via-gray-500/20 to-zinc-500/20",
-  bolt: "from-yellow-500/20 via-orange-500/20 to-red-500/20",
+  lovable: "from-featured/30 via-accent/20 to-secondary/40",
+  replit: "from-warning/25 via-secondary/35 to-muted/55",
+  v0: "from-foreground/20 via-primary/10 to-muted/50",
+  cursor: "from-success/25 via-accent/15 to-secondary/45",
+  base44: "from-primary/20 via-accent/15 to-muted/50",
+  antigravity: "from-featured/25 via-secondary/30 to-muted/55",
+  build0: "from-success/20 via-secondary/35 to-muted/55",
+  orchids: "from-accent/25 via-featured/20 to-secondary/45",
+  floot: "from-muted/60 via-secondary/40 to-card/70",
+  bolt: "from-warning/25 via-featured/20 to-secondary/45",
 };
 
 function generateScores(toolId: string): EditorialScores {

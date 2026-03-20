@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface BuilderRatingStarsProps {
   toolId: string;
@@ -74,7 +74,7 @@ export function BuilderRatingStars({ toolId, experimentId }: BuilderRatingStarsP
       await supabase.from("builder_ratings").insert(payload);
     }
 
-    toast({ title: "Rating saved!" });
+    toast.success("Rating saved.");
     setExisting({ id: existing?.id || "", rating, review });
   };
 

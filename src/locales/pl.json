@@ -8,12 +8,12 @@
   "hero.title1": "Jeden prompt.",
   "hero.title2": "Wiele",
   "hero.title3": "builderów.",
-  "hero.subtitle": "Wyślij swój pomysł do wielu AI builderów jednocześnie i porównaj prawdziwe prototypy obok siebie.",
+  "hero.subtitle": "Uruchom prompt na żywo w v0 i porównaj go z benchmarkowymi preview innych builderów obok siebie.",
   "hero.runTest": "Uruchom Multi-Builder Test",
   "hero.demoPrompt": "Wypróbuj demo prompt",
   "hero.promptPlaceholder": "Opisz swoją aplikację… np. 'Zbuduj narzędzie do zarządzania projektami z tablicami Kanban, czatem i płatnościami Stripe'",
   "hero.useCase": "Kategoria (opcjonalnie)",
-  "hero.trustReal": "Prawdziwe prototypy, nie mockupy",
+  "hero.trustReal": "Live run na v0 + spójne benchmark preview",
   "hero.trustObjective": "Obiektywne porównanie obok siebie",
   "hero.trustReferrals": "Zarabiamy z poleceń — Ty masz kontrolę",
 
@@ -21,19 +21,19 @@
   "howItWorks.step1.title": "Opisz swoją aplikację",
   "howItWorks.step1.desc": "Wpisz prompt opisujący aplikację webową, którą chcesz zbudować.",
   "howItWorks.step2.title": "Uruchom buildery równolegle",
-  "howItWorks.step2.desc": "Wysyłamy Twój prompt do wielu AI builderów jednocześnie i śledzimy postęp w czasie rzeczywistym.",
+  "howItWorks.step2.desc": "Uruchamiamy Twój prompt na żywo w v0 i benchmarkujemy ten sam prompt na profilach innych builderów.",
   "howItWorks.step3.title": "Porównaj i wybierz",
-  "howItWorks.step3.desc": "Zobacz prawdziwe prototypy obok siebie z oceną AI: jakość UI, kod, szybkość i więcej.",
+  "howItWorks.step3.desc": "Zobacz wynik live oraz benchmarkowe porównania obok siebie z oceną AI: jakość UI, kod, szybkość i więcej.",
 
   "faq.title": "Najczęściej zadawane pytania",
   "faq.q1": "Czy pr0ducent jest darmowy?",
   "faq.a1": "Tak! Możesz uruchomić do 3 porównań za darmo bez konta. Zarejestruj się, aby odblokować nielimitowane eksperymenty.",
   "faq.q2": "Jakich AI builderów wspieracie?",
-  "faq.a2": "Obecnie wspieramy Lovable, Vercel v0, Bolt.new, Cursor, Replit, Base44 i więcej. Ciągle dodajemy nowe buildery.",
+  "faq.a2": "Integracja live działa obecnie dla v0. Pozostali builderzy są pokazywani jako benchmarkowe profile oparte na tym samym prompcie i modelu oceniania, a kolejne integracje wdrażamy stopniowo.",
   "faq.q3": "Jak obliczane są oceny?",
   "faq.a3": "Każdy build jest oceniany przez naszą orkiestrę AI — wyspecjalizowani agenci analizują jakość UI, strukturę kodu, szybkość i edytowalność. Oceny zawierają uzasadnienie AI dla pełnej transparentności.",
   "faq.q4": "Czy potrzebuję kont na każdym builderze?",
-  "faq.a4": "Nie. W trybie brokera uruchamiamy buildy na naszych kontach. Możesz też podłączyć własne klucze API.",
+  "faq.a4": "Nie. Dla live runów v0 wykonanie odbywa się przez naszą integrację. Benchmarkowe profile pozostałych builderów nie wymagają Twoich kont.",
   "faq.q5": "Jak zarabiacie?",
   "faq.a5": "Zarabiamy przez partnerstwa referralowe z builderami. Gdy wybierasz kontynuację z builderem, możemy otrzymać prowizję. Twoje wyniki nigdy nie są stronnicze — ocenianie jest ślepe i audytowalne.",
 
@@ -63,7 +63,7 @@
   "canvas.sortSpeed": "Wg szybkości",
   "canvas.sortName": "Wg nazwy",
 
-  "winner.bestResult": "🏆 Najlepszy wynik:",
+  "winner.bestResult": "Najlepszy wynik:",
   "winner.avgScore": "Średnia ocena:",
   "winner.time": "Czas:",
 
@@ -89,9 +89,9 @@
   "tile.waiting": "Oczekiwanie…",
 
   "compare.title": "Porównanie AI App Builderów 2025",
-  "compare.subtitle": "Lovable vs Replit vs Vercel v0 vs Cursor vs Bolt — porównanie najlepszych AI app builderów. Sprawdź, który najlepiej pasuje do Twojego projektu.",
+  "compare.subtitle": "Porównaj live runy v0 z benchmarkowymi profilami Lovable, Replit, Cursor, Bolt i innych, aby wybrać najlepszy fit.",
   "compare.ctaTitle": "Nie ufaj tabelkom — przetestuj sam!",
-  "compare.ctaSubtitle": "Wpisz swój prompt i porównaj wyniki w realnych prototypach, nie na papierze.",
+  "compare.ctaSubtitle": "Wpisz prompt, uruchom v0 na żywo i porównaj benchmarkowane wyniki pozostałych builderów.",
   "compare.runComparison": "Uruchom porównanie",
 
   "public.sharedExperiment": "Udostępniony eksperyment",
@@ -107,15 +107,23 @@
   "footer.resources": "Zasoby",
   "footer.legal": "Prawne",
   "footer.compare": "Porównaj buildery",
+  "footer.calculator": "Kalkulator",
+  "footer.pricing": "Cennik",
   "footer.howItWorks": "Jak to działa",
   "footer.faq": "FAQ",
   "footer.blog": "Blog",
+  "footer.runsNow": "Runs Now",
+  "footer.allBuilders": "Wszyscy builderzy",
   "footer.docs": "Dokumentacja",
   "footer.privacy": "Polityka prywatności",
   "footer.terms": "Regulamin",
   "footer.rights": "Wszelkie prawa zastrzeżone.",
 
   "nav.blog": "Blog",
+  "nav.calculator": "Kalkulator",
+  "nav.pricing": "Cennik",
+  "nav.runsNow": "Runs Now",
+  "nav.myAccount": "Moje konto",
   "nav.dashboard": "Aktualizacje",
   "nav.notifications": "Powiadomienia",
 
@@ -139,5 +147,8 @@
   "notifications.watchBuilders": "Obserwuj buildery",
   "notifications.watchHint": "Wybierz konkretne buildery do obserwowania, lub zostaw puste aby obserwować wszystkie.",
   "notifications.signInRequired": "Wymagane logowanie",
-  "notifications.signInDesc": "Zaloguj się, aby zarządzać preferencjami powiadomień."
+  "notifications.signInDesc": "Zaloguj się, aby zarządzać preferencjami powiadomień.",
+  "api.timeoutGenerating": "Limit czasu: generowanie trwa zbyt długo. Sprawdź link do czatu.",
+  "api.v0Failed": "Generowanie v0 nie powiodło się",
+  "api.failedWithV0": "Nie udało się wygenerować przez v0"
 }

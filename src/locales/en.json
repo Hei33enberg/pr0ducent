@@ -8,12 +8,12 @@
   "hero.title1": "One prompt.",
   "hero.title2": "Many",
   "hero.title3": "builders.",
-  "hero.subtitle": "Run your idea through multiple AI app builders in parallel and see real prototypes side by side.",
+  "hero.subtitle": "Run your prompt with live v0 generation and benchmark previews for other builders, then compare results side by side.",
   "hero.runTest": "Run Multi-Builder Test",
   "hero.demoPrompt": "Try Demo Prompt",
   "hero.promptPlaceholder": "Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'",
   "hero.useCase": "Use Case (optional)",
-  "hero.trustReal": "Real prototypes, not mockups",
+  "hero.trustReal": "Live v0 runs plus consistent benchmark previews",
   "hero.trustObjective": "Objective side-by-side comparison",
   "hero.trustReferrals": "We earn via referrals — you keep control",
 
@@ -21,19 +21,19 @@
   "howItWorks.step1.title": "Describe Your App",
   "howItWorks.step1.desc": "Enter a natural-language prompt describing the web app you want to build.",
   "howItWorks.step2.title": "Run Builders in Parallel",
-  "howItWorks.step2.desc": "We send your prompt to multiple AI builders simultaneously and track progress in real time.",
+  "howItWorks.step2.desc": "We run your prompt live on v0 and benchmark the same prompt against curated builder profiles.",
   "howItWorks.step3.title": "Compare & Choose",
-  "howItWorks.step3.desc": "See real prototypes side by side with AI-powered scoring on UI quality, code, speed, and more.",
+  "howItWorks.step3.desc": "See one live output and benchmarked comparisons side by side with scoring on UI quality, code, speed, and more.",
 
   "faq.title": "Frequently Asked Questions",
   "faq.q1": "Is pr0ducent free to use?",
   "faq.a1": "Yes! You can run up to 3 comparison experiments for free without an account. Sign up to unlock unlimited experiments.",
   "faq.q2": "Which AI app builders do you support?",
-  "faq.a2": "We currently support Lovable, Vercel v0, Bolt.new, Cursor, Replit, Base44, and more. We're constantly adding new builders.",
+  "faq.a2": "v0 runs are live today. Other builders are shown as benchmark profiles using the same prompt and scoring model while direct integrations are being rolled out.",
   "faq.q3": "How are the scores calculated?",
   "faq.a3": "Each build is evaluated by our AI scoring orchestra — multiple specialized agents analyze UI quality, code structure, speed, and editability. Scores include AI reasoning for full transparency.",
   "faq.q4": "Do I need accounts on each builder?",
-  "faq.a4": "No. In broker mode, we run builds through our own accounts. You can also connect your own API keys for direct access.",
+  "faq.a4": "No. For live v0 runs we handle execution through our integration. Benchmark profiles for other builders do not require your accounts.",
   "faq.q5": "How do you make money?",
   "faq.a5": "We earn through referral partnerships with builders. When you choose to continue with a builder, we may receive a commission. Your results are never biased — scoring is blind and auditable.",
 
@@ -63,7 +63,7 @@
   "canvas.sortSpeed": "By speed",
   "canvas.sortName": "By name",
 
-  "winner.bestResult": "🏆 Best result:",
+  "winner.bestResult": "Best result:",
   "winner.avgScore": "Average score:",
   "winner.time": "Time:",
 
@@ -89,9 +89,9 @@
   "tile.waiting": "Waiting…",
 
   "compare.title": "AI App Builder Comparison 2025",
-  "compare.subtitle": "Lovable vs Replit vs Vercel v0 vs Cursor vs Bolt — compare the best AI app builders. Find the best fit for your project.",
+  "compare.subtitle": "Compare v0 live runs with benchmark profiles for Lovable, Replit, Cursor, Bolt, and more to find the right fit.",
   "compare.ctaTitle": "Don't trust tables — test it yourself!",
-  "compare.ctaSubtitle": "Enter your prompt and compare results with real prototypes, not on paper.",
+  "compare.ctaSubtitle": "Enter your prompt to run v0 live and compare benchmarked results for other builders.",
   "compare.runComparison": "Run Comparison",
 
   "public.sharedExperiment": "Shared experiment",
@@ -107,15 +107,23 @@
   "footer.resources": "Resources",
   "footer.legal": "Legal",
   "footer.compare": "Compare Builders",
+  "footer.calculator": "Calculator",
+  "footer.pricing": "Pricing",
   "footer.howItWorks": "How It Works",
   "footer.faq": "FAQ",
   "footer.blog": "Blog",
+  "footer.runsNow": "Runs Now",
+  "footer.allBuilders": "All Builders",
   "footer.docs": "Documentation",
   "footer.privacy": "Privacy Policy",
   "footer.terms": "Terms of Service",
   "footer.rights": "All rights reserved.",
 
   "nav.blog": "Blog",
+  "nav.calculator": "Calculator",
+  "nav.pricing": "Pricing",
+  "nav.runsNow": "Runs Now",
+  "nav.myAccount": "My Account",
   "nav.dashboard": "Updates",
   "nav.notifications": "Notifications",
 
@@ -139,5 +147,8 @@
   "notifications.watchBuilders": "Watch Builders",
   "notifications.watchHint": "Select specific builders to watch, or leave empty to watch all.",
   "notifications.signInRequired": "Sign in required",
-  "notifications.signInDesc": "Sign in to manage your notification preferences."
+  "notifications.signInDesc": "Sign in to manage your notification preferences.",
+  "api.timeoutGenerating": "Timeout: generation is taking too long. Check the chat link.",
+  "api.v0Failed": "v0 generation failed",
+  "api.failedWithV0": "Failed to generate with v0"
 }

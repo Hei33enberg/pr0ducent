@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
@@ -9,6 +8,7 @@ import { lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
+const Compare = lazy(() => import("./pages/Compare.tsx"));
 const Auth = lazy(() => import("./pages/Auth.tsx"));
 const Pricing = lazy(() => import("./pages/Pricing.tsx"));
 const PublicExperiment = lazy(() => import("./pages/PublicExperiment.tsx"));
@@ -38,7 +38,6 @@ const App = () => (
     <I18nProvider>
       <AuthProvider>
         <TooltipProvider>
-          <Toaster />
           <Sonner />
           <BrowserRouter>
             <ScrollToTop />
@@ -46,6 +45,7 @@ const App = () => (
               <Routes>
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/pricing" element={<Pricing />} />
+                <Route path="/compare" element={<Compare />} />
                 <Route path="/experiment/:id" element={<PublicExperiment />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />

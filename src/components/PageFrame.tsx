@@ -80,11 +80,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
-    { label: t("nav.compare"), href: "#comparison", icon: Swords },
-    { label: "Calculator", href: "/calculator", icon: Calculator },
-    { label: "Pricing", href: "/pricing", icon: Calculator },
+    { label: t("nav.compare"), href: "/compare", icon: Swords },
+    { label: t("nav.calculator"), href: "/calculator", icon: Calculator },
+    { label: t("nav.pricing"), href: "/pricing", icon: Calculator },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },
-    { label: "Runs Now", href: "/runs-now", icon: Radio },
+    { label: t("nav.runsNow"), href: "/runs-now", icon: Radio },
     { label: t("nav.faq"), href: "#faq", icon: HelpCircle },
   ];
 
@@ -138,7 +138,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 <>
                   <button
                     onClick={() => navigate("/dashboard")}
-                    title="My Account"
+                    title={t("nav.myAccount")}
                     className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
                   >
                     <User className="w-4 h-4" />
@@ -203,7 +203,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
                 >
                   <User className="w-4 h-4" />
-                  My Account
+                  {t("nav.myAccount")}
                 </a>
               )}
               {!user && (
