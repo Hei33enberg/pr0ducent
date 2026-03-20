@@ -8,6 +8,7 @@ import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/com
 import { HowItWorks } from "@/components/HowItWorks";
 
 import { HomepageBlogSection } from "@/components/HomepageBlogSection";
+import { InlineCalculator } from "@/components/InlineCalculator";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { FloatingToolbar } from "@/components/FloatingToolbar";
