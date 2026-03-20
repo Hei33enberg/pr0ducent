@@ -31,4 +31,4 @@ Funkcja **`process-task-queue`** zakłada schemat z migracji **`20260322120000_v
 
 ## Co dalej operacyjnie
 
-Jedna strona z linkami: [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md). Smoke test: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Deploy backendu z CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md).
+Jedna strona z linkami: [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md). Smoke test: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Deploy backendu z CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md). Plan AG (PVI vs orkiestracja): [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md).

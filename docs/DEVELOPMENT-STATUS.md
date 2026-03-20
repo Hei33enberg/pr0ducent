@@ -12,7 +12,7 @@
 - **Realtime:** `builder_results`, `run_events`, `run_tasks` (after migrations) for Compare + Run Center.
 - **Other builders** in the UI remain **benchmark** paths (tier 4 / disabled in config) until new adapters are registered.
 - **VBP (draft):** [`VBP-SPEC.md`](./VBP-SPEC.md) + `vbp-adapter`; builders can implement VBP to plug in without custom code per vendor.
-- **Task queue:** `dispatch-builders` enqueues `run_tasks` (`queued`), calls `process-task-queue` (service role), then **inline fallback** if tasks remain queued (e.g. worker not deployed).
+- **Task queue:** `dispatch-builders` enqueues `run_tasks` (`queued`), calls `process-task-queue` (service role), then **inline fallback** if tasks remain queued (e.g. worker not deployed). Per-tool caps: `builder_rate_limits` — seed repo dla `v0` ma **`max_per_minute = 30`** (patrz migracje `20260322120000`, `20260326120000`).
 - **UI (AG cockpit):** `useRunTaskStream`, `BuilderProgressStream`, `DemoPreviewFrame`, `/marketplace`, `UserDashboard` plans/BYOA stub — see [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for deploy order vs Lovable.
 - **UI primitives (legacy hook):** `useOrchestrationRealtime`, `VbpClaimButton` — still available where used.
 
@@ -62,3 +62,5 @@ See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and 
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md) — next integrations.
 - Staging E2E: `npm run test:e2e-staging` (requires env vars in script header).
 - VBP OSS bundle: [protocol/vibecoding-broker-protocol/README.md](../protocol/vibecoding-broker-protocol/README.md).
+- PVI vs orkiestracja (AG): [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), Realtime: [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md).
+- Kolejka / trigger: [scripts/README-queue-worker.md](../scripts/README-queue-worker.md).

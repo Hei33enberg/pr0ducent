@@ -4,9 +4,17 @@
 
 Funkcja `builder_try_dispatch_slot` z **`20260325100000_builder_dispatch_slot_rpc.sql`** wymaga tabeli **`builder_rate_limits`** (standardowo z **`20260322120000_vbp_orchestration.sql`**). Jeśli ktoś wdrożył tylko `25100000`, migracja **`20260326120000_ensure_builder_rate_limits.sql`** tworzy tabelę idempotentnie.
 
+## Źródło prawdy: `max_per_minute` dla `v0`
+
+W repozytorium seed **`builder_rate_limits`** dla `tool_id = 'v0'` ustawia **`max_per_minute = 30`** (m.in. `20260322120000_vbp_orchestration.sql`, `20260326120000_ensure_builder_rate_limits.sql`). Jeśli w panelu widzisz inną wartość, ktoś nadpisał ręcznie — dostosuj zgodnie z produktem i zapisz w migracji lub dokumentacji operacyjnej.
+
 ## Symptom: zadania wiszą w `queued`
 
-Worker [`process-task-queue`](../supabase/functions/process-task-queue/index.ts) powinien zdejmować `run_tasks` ze statusem `queued` lub `retrying` (gdy `next_retry_at` minął). [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts) dodatkowo robi **inline drain** — jeśli po wywołaniach workera nadal są `queued`, problemem jest brak deployu workera, zły **Database Webhook**, lub błąd w adapterze.
+Worker [`process-task-queue`](../supabase/functions/process-task-queue/index.ts) powinien zdejmować `run_tasks` ze statusem `queued` lub `retrying` (gdy `next_retry_at` minął). [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts) dodatkowo robi **inline drain** — jeśli po wywołaniach workera nadal są `queued`, problemem jest brak deployu workera, brak triggera **`pg_net`**, brak sekretu Vault, zły **Database Webhook**, lub błąd w adapterze.
+
+### Checklist automatyczny (trigger `pg_net` w repo)
+
+Migracja [`20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql`](../supabase/migrations/20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql) + sekret Vault — szczegóły: [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md), skrypt SQL: [`scripts/verify-queue-trigger.sql`](../scripts/verify-queue-trigger.sql).
 
 ### Checklist webhook (Supabase Dashboard)
 
@@ -46,3 +54,4 @@ LIMIT 50;
 
 - [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) — deploy funkcji
 - [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — weryfikacja produktowa
+- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — kanały i throttle (plan AG)

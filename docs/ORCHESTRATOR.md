@@ -61,3 +61,5 @@ Same `idempotencyKey` + same user returns stored `dispatched` snapshot without r
 
 - [WORKFLOW-ENGINE.md](./WORKFLOW-ENGINE.md) — Temporal bridge, retries.
 - [BYOA-MIGRATION.md](./BYOA-MIGRATION.md), [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
+- [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md) — mapowanie wymiarów PVI na pipeline (AG / benchmark produktu).
+- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — kanały Realtime, throttle, score off-path.

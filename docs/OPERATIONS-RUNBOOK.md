@@ -32,6 +32,10 @@ Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DE
 
 → [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md), [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)
 
+## 8. PVI / benchmark (AG) + Realtime
+
+→ [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md)
+
 ## Architektura (skrót)
 
 - **Gość:** `run-on-v0` — bez pełnej kolejki.

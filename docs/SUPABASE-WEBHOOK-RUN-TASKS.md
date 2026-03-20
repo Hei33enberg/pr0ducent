@@ -55,3 +55,4 @@ WHERE status = 'queued' AND created_at < now() - interval '5 minutes';
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
 - [ORCHESTRATOR.md](./ORCHESTRATOR.md)
+- [scripts/README-queue-worker.md](../scripts/README-queue-worker.md) — skrypt weryfikacji SQL + podsumowanie ścieżek

@@ -6,7 +6,7 @@
 |------|--------|--------|
 | **Backend / orchestration** | Cursor | Shipped on `main` (commit `6a667e0`+): queue worker, VBP/generic adapters, crawl + webhook stubs, docs/schemas. |
 | **Cockpit UI** | Antigravity | Shipped in this commit: `useRunTaskStream`, `BuilderProgressStream`, Compare wiring, `/marketplace`, dashboard polish, nav + i18n. |
-| **Infra** | You / Lovable Cloud | **Not automatic:** apply migration `20260322120000`, deploy new Edge Functions, wire DB Webhook → `process-task-queue`, set secrets. |
+| **Infra** | You / Lovable Cloud | **Not automatic:** apply migrations (including `20260322120000`, trigger `20260320222441`), deploy Edge Functions, set Vault `service_role_key` for `pg_net` trigger **or** wire DB Webhook → `process-task-queue`, set secrets. |
 
 **Core business order:** stabilize **v0 end-to-end** on prod → enable **second builder** (config + adapter) → load tests → only then lean on Lovable for cosmetic polish. UI can ship first; **live multi-builder stream** needs backend deploy + `builder_integration_config` rows.
 
@@ -78,9 +78,10 @@ C) SECRETS (Dashboard → Edge Functions secrets)
 - V0_API_KEY, SUPABASE_SERVICE_ROLE_KEY, PERPLEXITY_API_KEY, Stripe_* (existing)
 - Optional VBP: VBP_WEBHOOK_SECRET, VBP_BROKER_OUTBOUND_SECRET / partner keys if used
 
-D) DATABASE WEBHOOK (primary worker trigger)
-- On INSERT into public.run_tasks WHERE status = 'queued' (or all inserts filtered in worker), HTTP POST to process-task-queue URL with Authorization: Bearer SERVICE_ROLE_KEY
-- Optional fallback: pg_cron every 10s calling same function URL (NOT every 2s)
+D) QUEUE WORKER TRIGGER (prefer repo migrations)
+- **Option A (in repo):** `pg_net` trigger + Vault secret `service_role_key` — see [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md), [scripts/README-queue-worker.md](../scripts/README-queue-worker.md)
+- **Option B (Dashboard):** Database Webhook on INSERT `public.run_tasks` → HTTP POST `process-task-queue` with `Authorization: Bearer SERVICE_ROLE_KEY`
+- Optional: pg_cron calling same URL (not every 2s; avoid hammering)
 
 E) REALTIME
 - Publication must include: builder_results, run_events, run_tasks (if not already)
@@ -132,6 +133,7 @@ Publikacja Lovable: dopiero po deploy funkcji + migracji jeśli UI korzysta z no
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md)
 - [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md)
+- [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md)
 
 ---
 
