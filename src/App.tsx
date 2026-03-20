@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
-import Compare from "./pages/Compare.tsx";
+
 import PublicExperiment from "./pages/PublicExperiment.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Blog from "./pages/Blog.tsx";
