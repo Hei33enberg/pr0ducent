@@ -142,6 +142,7 @@ const Index = () => {
                 }}
               />
               <FAQ />
+              <HomepageBlogSection />
               <ExperimentHistory
                 experiments={pastExperiments}
                 onSelect={(exp) => setExperiment(exp)}

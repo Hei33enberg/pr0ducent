@@ -34,6 +34,7 @@ const App = () => (
               <Route path="/blog/:slug" element={<BlogPost />} />
               <Route path="/dashboard/updates" element={<BuilderDashboard />} />
               <Route path="/dashboard/notifications" element={<Notifications />} />
+              <Route path="/runs-now" element={<RunsNow />} />
               <Route path="/" element={<Index />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
