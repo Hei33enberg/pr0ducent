@@ -6,7 +6,7 @@ import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
 import { HowItWorks } from "@/components/HowItWorks";
-import { BuilderLogosBar } from "@/components/BuilderLogosBar";
+
 import { HomepageBlogSection } from "@/components/HomepageBlogSection";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
@@ -134,7 +134,7 @@ const Index = () => {
                 onSelectedToolsChange={setSelectedTools}
                 heroRef={heroRef}
               />
-              <BuilderLogosBar />
+              
               <HowItWorks />
               <BuilderComparisonTable
                 onSelectTool={(toolId) => {
