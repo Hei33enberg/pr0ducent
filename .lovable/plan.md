@@ -1,249 +1,209 @@
 
 
-# pr0ducent -- Full Audit & Development Plan
+# pr0ducent — Phase 5: Content Engine, Builder Sync Dashboard & Notifications
 
-## Current State Summary
+## Overview
 
-The app is an "AI builder comparator" -- user enters a prompt, it runs through multiple AI app builders (v0, Lovable, Bolt, etc.) and shows side-by-side results. Currently: editorial design with Cormorant Garamond + Space Grotesk, warm coral palette, page frame with border, sticky glass header, caricature illustration. Backend on Lovable Cloud with experiments/runs/profiles tables. Only v0 integration is live; other builders use mock data with hardcoded scores.
-
----
-
-## A. DESIGN / UI / UX AUDIT
-
-### Issues Found
-
-1. **Inconsistent branding**: Auth page (`/auth`) and Compare page (`/compare`) still show old "PromptLab" branding with `Beaker` icon instead of pr0ducent logo
-2. **Public experiment page** (`/experiment/:id`) also uses old branding
-3. **No footer** anywhere -- missing legal, links, social, newsletter
-4. **No mobile hamburger menu** -- header only has logo + CTA, no navigation links
-5. **Missing "About" / "How it works" section** on homepage
-6. **Missing pricing/value prop section** for the platform itself
-7. **No 404 page** styled to match brand (exists but likely default)
-8. **Copy is mixed PL/EN** -- some UI in Polish (CanvasFilters, GuestLimitModal, WinnerBanner, ShareButton, Auth), rest in English. No i18n system.
-9. **No loading states** for initial page load (auth check)
-10. **Comparison table** has no responsive solution -- just horizontal scroll with no indicator on mobile
-11. **ExperimentHistory** section always shows even when empty for logged-in users (shows Polish empty state)
-12. **No dark mode** despite `darkMode: ["class"]` in Tailwind config
-13. **Trust bar** ("Real prototypes, not mockups") could be stronger with actual numbers/logos
-
-### Missing Sections (Homepage)
-
-- "How it works" (3-step explainer)
-- Social proof / logos of supported builders
-- Testimonials / press mentions placeholder
-- FAQ section
-- Footer with links, legal, social
-
-### Navigation
-
-- No main nav beyond logo + auth CTA
-- Missing links: Compare, About, Pricing, Blog (future)
-- Mobile: needs collapsible menu
+This phase adds four major systems:
+1. **AI Content Engine** (blog posts, social media, translations) powered by Claude Sonnet via Vercel AI SDK + Perplexity for research
+2. **Builder Updates Dashboard** with daily cron sync of builder changelogs/pricing/features
+3. **Enriched comparison table** with live-synced data and "last synced" timestamps
+4. **User notification system** (opt-in alerts for builder updates)
 
 ---
 
-## B. COPY & i18n
+## A. Prerequisites — API Keys & Connectors
 
-### Current Problem
-Mixed Polish/English throughout. No translation system.
-
-### Plan
-1. Create `src/lib/i18n.ts` with a simple key-value translation system (React context + hook)
-2. Support `en` and `pl` initially, with language auto-detect from browser + manual toggle
-3. Extract all hardcoded strings into translation keys
-4. Files affected: every component with user-facing text (~15 files)
+1. **Claude Sonnet (Anthropic)**: Need `ANTHROPIC_API_KEY` — will ask user to provide it via `add_secret`
+2. **Perplexity**: Already available in workspace (`perp_murd0ch`). Link to project via `connect` tool. Will be used in edge functions via `PERPLEXITY_API_KEY`
+3. **LOVABLE_API_KEY**: Already available (for Lovable AI gateway as fallback)
 
 ---
 
-## C. SEO / GEO / AEO
+## B. Database Schema (New Tables)
 
-### SEO
-1. **Meta tags**: Update `index.html` with proper OG tags, canonical URL
-2. **Per-route meta**: Add `react-helmet-async` for dynamic `<title>` and `<meta>` per route
-3. **Structured data**: Extend JSON-LD on `/compare` with `SoftwareApplication` schema for each builder
-4. **Sitemap**: Generate `public/sitemap.xml` with all static routes
-5. **robots.txt**: Already exists and is good
-6. **SEO landing pages**: Create `/compare/lovable-vs-v0`, `/compare/lovable-vs-cursor` etc. as static routes with rich content and JSON-LD
+### `builder_sync_data`
+Stores the latest synced info for each builder (pricing tiers, features, changelog entries, status).
 
-### GEO (Generative Engine Optimization)
-1. Add FAQ schema markup (FAQPage JSON-LD) for common questions
-2. Structure content with clear H1-H3 hierarchy answering "what is the best AI app builder"
-3. Add "People also ask" style expandable FAQ section
-
-### AEO (Answer Engine Optimization)
-1. Featured snippet-optimized content blocks on `/compare`
-2. Concise definition paragraphs at top of comparison pages
-3. Table markup with clear headers for comparison matrices
-
----
-
-## D. SCORING SYSTEM -- The Core Feature Redesign
-
-### Current Problem
-Scores are **completely fake** -- hardcoded per builder in `mock-experiment.ts` with +/-5 random noise. This is the biggest integrity issue in the entire product.
-
-### Proposed Architecture: AI-Powered Scoring Orchestra
-
-```text
-User Prompt
-    |
-    v
-[Edge Function: orchestrate-scoring]
-    |
-    +---> [1] Send prompt to each builder API
-    |         (v0 already done, extend to others)
-    |
-    +---> [2] Collect outputs (code, preview URL, files)
-    |
-    +---> [3] AI Scoring Pipeline (edge function: score-build)
-    |         |
-    |         +---> Agent 1: UI/UX Analyzer
-    |         |     - Screenshot the preview URL
-    |         |     - Send screenshot to Gemini vision model
-    |         |     - Evaluate: layout, spacing, typography, 
-    |         |       color harmony, responsiveness, accessibility
-    |         |     - Output: uiQuality score + reasoning
-    |         |
-    |         +---> Agent 2: Code Quality Analyzer  
-    |         |     - Parse generated files/code
-    |         |     - Send to AI with rubric:
-    |         |       TypeScript usage, error handling,
-    |         |       component structure, backend completeness
-    |         |     - Output: backendLogic score + reasoning
-    |         |
-    |         +---> Agent 3: Speed Benchmarker
-    |         |     - Measure actual time-to-first-prototype
-    |         |     - Normalize against baseline
-    |         |     - Output: speed score (objective, no AI needed)
-    |         |
-    |         +---> Agent 4: Editability Assessor
-    |               - Evaluate code readability, modularity
-    |               - Check for hardcoded values, config patterns
-    |               - Output: easeOfEditing score + reasoning
-    |
-    +---> [4] Aggregate scores, store in DB
-    |         - Each score includes AI reasoning (transparency)
-    |         - Store raw AI responses for audit trail
-    |
-    +---> [5] Return to frontend via realtime subscription
+```sql
+CREATE TABLE builder_sync_data (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  tool_id TEXT NOT NULL UNIQUE,
+  pricing_tiers JSONB DEFAULT '[]',
+  features JSONB DEFAULT '[]',
+  changelog JSONB DEFAULT '[]',
+  official_url TEXT,
+  docs_url TEXT,
+  status TEXT DEFAULT 'active',
+  last_synced_at TIMESTAMPTZ DEFAULT now(),
+  raw_perplexity_response JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+-- No RLS needed — public read, service-role write via edge functions
+ALTER TABLE builder_sync_data ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can read builder data" ON builder_sync_data FOR SELECT TO anon, authenticated USING (true);
 ```
 
-### Implementation Steps
+### `blog_posts`
+AI-generated blog content (articles, social posts).
 
-1. **New DB table**: `scoring_results` with columns: `run_id`, `dimension` (ui/backend/speed/editing), `score` (0-100), `reasoning` (text), `model_used`, `raw_response` (jsonb), `created_at`
-2. **Edge function `score-build`**: Takes builder output (code + screenshot URL) and runs it through Lovable AI (Gemini 2.5 Pro for vision analysis of screenshots, Gemini Flash for code analysis)
-3. **Scoring rubric config**: `src/config/scoring-rubric.ts` with detailed criteria per dimension, versioned
-4. **Transparency UI**: Each score in the UI becomes clickable, showing the AI's reasoning
-5. **Fallback**: If real API integration not available for a builder, show "Estimated score" badge with lower confidence indicator
-
-### Scoring Dimensions (Expanded)
-
-| Dimension | Method | Source |
-|-----------|--------|--------|
-| UI Quality | Vision AI on screenshot | Gemini Pro |
-| Code Quality | Code analysis | Gemini Flash |
-| Backend Completeness | Code + feature detection | Gemini Flash |
-| Speed | Wall-clock measurement | Objective |
-| Editability | Code structure analysis | Gemini Flash |
-| Deployment Ready | Check for deploy config | Heuristic |
-| Accessibility | Lighthouse-style checks | Heuristic + AI |
-
-### Anti-Bias Measures
-- Rotate prompt order sent to AI scorer
-- Include builder name only after scoring (blind evaluation)
-- Log all raw AI responses for auditability
-- Version the scoring rubric; show which version was used
-
----
-
-## E. BUILDER INTEGRATIONS
-
-### Currently Live
-- **v0**: Full async API integration with polling
-
-### Priority Queue (per memory: v0, Lovable, Floot, Orchids)
-1. **Lovable**: Use Lovable API (needs research on programmatic access)
-2. **Floot**: Needs API investigation
-3. **Orchids**: Needs API investigation
-4. **Bolt.new**: WebContainer API investigation
-
-For builders without APIs: clearly label as "Community Score" based on historical data, not live generation.
-
----
-
-## F. IMPLEMENTATION PLAN (Ordered)
-
-### Phase 1: Foundation (Steps 1-4)
-1. **Unify branding** -- Update Auth, Compare, PublicExperiment, NotFound pages to use pr0ducent brand + PageFrame
-2. **Add i18n system** -- Create translation context, extract strings, add PL/EN toggle to header
-3. **Add missing homepage sections** -- "How it works", builder logos bar, FAQ, footer
-4. **Fix navigation** -- Add nav links to header, mobile hamburger menu
-
-### Phase 2: SEO & Discoverability (Steps 5-6)
-5. **SEO infrastructure** -- react-helmet-async, sitemap.xml, JSON-LD schemas, canonical URLs
-6. **SEO landing pages** -- `/compare/lovable-vs-v0` etc. with rich comparison content
-
-### Phase 3: Scoring System (Steps 7-10)
-7. **DB migration** -- Create `scoring_results` table with RLS
-8. **Edge function `score-build`** -- AI scoring pipeline using Lovable AI (Gemini models)
-9. **Scoring rubric config** -- Detailed criteria per dimension
-10. **Scoring transparency UI** -- Clickable scores showing AI reasoning, confidence badges
-
-### Phase 4: Polish (Steps 11-12)
-11. **Responsive audit** -- Fix mobile layouts, comparison table UX
-12. **Loading states & error handling** -- Skeleton screens, proper error boundaries
-
----
-
-## Technical Details
-
-### i18n approach
-Simple React context with `useTranslation()` hook returning `t(key)` function. JSON dictionaries in `src/locales/en.json` and `src/locales/pl.json`. No heavy library needed for 2 languages.
-
-### Scoring edge function
-Uses Lovable AI gateway (`LOVABLE_API_KEY` already available). Two calls per build:
-- Vision call (Gemini 2.5 Pro) with screenshot for UI scoring
-- Text call (Gemini Flash) with code for backend/editability scoring
-
-### New DB table
 ```sql
-CREATE TABLE scoring_results (
+CREATE TABLE blog_posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  experiment_run_id UUID NOT NULL,
-  dimension TEXT NOT NULL,
-  score INTEGER NOT NULL CHECK (score >= 0 AND score <= 100),
-  reasoning TEXT,
-  confidence REAL DEFAULT 0.8,
-  model_used TEXT,
-  rubric_version TEXT DEFAULT 'v1',
-  raw_response JSONB DEFAULT '{}'::jsonb,
+  slug TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  excerpt TEXT,
+  category TEXT DEFAULT 'blog',
+  tags TEXT[] DEFAULT '{}',
+  language TEXT DEFAULT 'en',
+  status TEXT DEFAULT 'draft',
+  seo_title TEXT,
+  seo_description TEXT,
+  og_image_url TEXT,
+  ai_model_used TEXT,
+  published_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Anyone can read published posts" ON blog_posts FOR SELECT TO anon, authenticated USING (status = 'published');
+CREATE POLICY "Admins can manage posts" ON blog_posts FOR ALL TO authenticated USING (has_role(auth.uid(), 'admin'));
+```
+
+### `notification_subscriptions`
+User opt-in for builder update alerts.
+
+```sql
+CREATE TABLE notification_subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  tool_ids TEXT[] DEFAULT '{}',
+  notify_changelog BOOLEAN DEFAULT true,
+  notify_pricing BOOLEAN DEFAULT true,
+  notify_blog BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(user_id)
+);
+ALTER TABLE notification_subscriptions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users manage own subs" ON notification_subscriptions FOR ALL TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+```
+
+### `user_notifications`
+Actual notifications delivered to users.
+
+```sql
+CREATE TABLE user_notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  body TEXT,
+  link TEXT,
+  read BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE user_notifications ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users see own notifications" ON user_notifications FOR SELECT TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Users update own notifications" ON user_notifications FOR UPDATE TO authenticated USING (auth.uid() = user_id);
+
+ALTER PUBLICATION supabase_realtime ADD TABLE user_notifications;
+```
+
+---
+
+## C. Edge Functions
+
+### 1. `sync-builder-data` (Cron — daily)
+- Uses **Perplexity** (`sonar-pro`) to research each builder's latest pricing, features, changelog
+- Stores results in `builder_sync_data`
+- Creates `user_notifications` for subscribed users when changes detected
+- Triggered via `pg_cron` daily at 06:00 UTC
+
+### 2. `generate-blog-post` (Admin-triggered or Cron)
+- Uses **Claude Sonnet** (via Anthropic API with `ANTHROPIC_API_KEY`) for writing
+- Uses **Perplexity** for research/fact-checking
+- Flow: Perplexity researches topic → Claude writes SEO-optimized article → stores in `blog_posts`
+- Supports categories: `blog`, `social_twitter`, `social_linkedin`, `comparison`
+- Auto-generates PL translation using Claude
+
+### 3. `translate-content` (On-demand)
+- Takes any content + target language
+- Uses Claude Sonnet for high-quality translation
+- Updates `blog_posts` with translated versions (creates new row with same slug + language suffix)
+
+---
+
+## D. Frontend — New Pages & Components
+
+### New Routes
+- `/blog` — Blog listing page with published posts
+- `/blog/:slug` — Individual blog post with SEO meta
+- `/dashboard/updates` — Builder updates dashboard (all synced data)
+- `/dashboard/notifications` — User notification center
+
+### New Components
+- `src/pages/Blog.tsx` — Blog listing with category filters
+- `src/pages/BlogPost.tsx` — Single post with JSON-LD Article schema
+- `src/pages/BuilderDashboard.tsx` — Rich dashboard showing:
+  - Per-builder cards with pricing tiers, feature matrix, changelog timeline
+  - "Last synced: X hours ago" badge per builder
+  - Diff view highlighting what changed since last sync
+- `src/components/NotificationBell.tsx` — Header bell icon with unread count, dropdown
+- `src/components/NotificationSettings.tsx` — Opt-in toggles per builder + category
+- `src/components/BuilderPricingGrid.tsx` — Detailed pricing comparison (free/pro/team/enterprise per builder)
+- `src/components/BuilderChangelog.tsx` — Timeline of changes per builder
+
+### Enhanced Comparison Table
+- Replace hardcoded data in `BuilderComparisonTable` with live data from `builder_sync_data`
+- Add pricing tier rows (Free, Pro, Team, Enterprise) with actual prices
+- Add "Last synced" footer row
+- Add expandable detail rows per builder
+
+### Navigation Updates
+- Add Blog + Dashboard links to header nav
+- Add notification bell to header (authenticated users)
+
+---
+
+## E. Cron Setup
+
+Use `pg_cron` + `pg_net` to call `sync-builder-data` daily:
+```sql
+SELECT cron.schedule(
+  'daily-builder-sync',
+  '0 6 * * *',
+  $$ SELECT net.http_post(
+    url := 'https://fhfkkxdjogkkobnsedyo.supabase.co/functions/v1/sync-builder-data',
+    headers := '{"Content-Type":"application/json","Authorization":"Bearer <anon_key>"}'::jsonb,
+    body := '{"trigger":"cron"}'::jsonb
+  ) $$
 );
 ```
 
-### Files to create
-- `src/lib/i18n.tsx` -- i18n context + hook
-- `src/locales/en.json`, `src/locales/pl.json` -- translations
-- `src/components/Footer.tsx` -- site footer
-- `src/components/HowItWorks.tsx` -- 3-step explainer
-- `src/components/FAQ.tsx` -- expandable FAQ with JSON-LD
-- `src/components/BuilderLogosBar.tsx` -- trust/social proof
-- `src/components/LanguageToggle.tsx` -- PL/EN switch
-- `src/components/MobileMenu.tsx` -- hamburger nav
-- `src/config/scoring-rubric.ts` -- scoring criteria
-- `src/components/ScoreDetail.tsx` -- transparency UI for scores
-- `supabase/functions/score-build/index.ts` -- AI scoring
-- SEO comparison pages as route components
+---
 
-### Files to modify
-- `src/components/PageFrame.tsx` -- add nav, language toggle, mobile menu
-- `src/pages/Auth.tsx` -- rebrand to pr0ducent
-- `src/pages/Compare.tsx` -- rebrand, enhance SEO
-- `src/pages/PublicExperiment.tsx` -- rebrand
-- `src/pages/NotFound.tsx` -- brand-consistent 404
-- `src/components/ComparisonCanvas.tsx` -- integrate real scoring UI
-- `src/components/ToolDetailPanel.tsx` -- show AI reasoning
-- `src/App.tsx` -- wrap with i18n provider, add new routes
-- `index.html` -- enhanced meta tags
-- `src/lib/mock-experiment.ts` -- replace hardcoded scores with scoring service calls
+## F. Implementation Order
+
+1. **Connect Perplexity** to project + ask user for `ANTHROPIC_API_KEY`
+2. **DB migrations** — all 4 new tables
+3. **Edge function: `sync-builder-data`** — Perplexity research + store
+4. **Edge function: `generate-blog-post`** — Claude writing + Perplexity research
+5. **Edge function: `translate-content`** — Claude translation
+6. **Cron job** — daily sync via pg_cron
+7. **Frontend: Builder Dashboard** — `/dashboard/updates` with synced data
+8. **Frontend: Enhanced Comparison Table** — live data from `builder_sync_data`
+9. **Frontend: Blog pages** — `/blog` listing + `/blog/:slug` posts
+10. **Frontend: Notifications** — bell, settings, realtime subscription
+11. **Navigation & i18n** — add new routes to nav, translate new strings
+
+---
+
+## Technical Notes
+
+- **Claude Sonnet** is called via `https://api.anthropic.com/v1/messages` with `ANTHROPIC_API_KEY` from edge functions — NOT through Lovable AI gateway (which doesn't support Anthropic models)
+- **Perplexity** is called via `https://api.perplexity.ai/chat/completions` with `PERPLEXITY_API_KEY` from connector
+- Blog posts stored in DB, not as static files — enables dynamic i18n and admin management
+- `builder_sync_data` is the single source of truth for the comparison table — replaces hardcoded `tools.ts` data over time
+- Realtime subscription on `user_notifications` for live bell updates
 
