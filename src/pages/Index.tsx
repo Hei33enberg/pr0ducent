@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const { results: builderResults, runBuilders } = useBuilderApi();
   const navigate = useNavigate();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
