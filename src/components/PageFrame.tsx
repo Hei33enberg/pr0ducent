@@ -95,8 +95,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       navigate(link.href);
                     }
                   }}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
                 >
+                  <span className="text-xs">{link.icon}</span>
                   {link.label}
                 </a>
               ))}
