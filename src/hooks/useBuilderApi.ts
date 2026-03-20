@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface BuilderResult {
@@ -10,54 +10,112 @@ export interface BuilderResult {
   error?: string;
 }
 
-/**
- * Hook to call real builder APIs via edge functions.
- * Currently supports: v0
- * Returns results per tool and a trigger function.
- */
+const POLL_INTERVAL = 3000;
+const MAX_POLL_TIME = 120000;
+
 export function useBuilderApi() {
   const [results, setResults] = useState<Record<string, BuilderResult>>({});
   const [loading, setLoading] = useState(false);
+  const pollTimers = useRef<Record<string, number>>({});
+
+  const stopPolling = useCallback((toolId: string) => {
+    if (pollTimers.current[toolId]) {
+      clearInterval(pollTimers.current[toolId]);
+      delete pollTimers.current[toolId];
+    }
+  }, []);
 
   const runOnV0 = useCallback(
-    async (prompt: string, experimentId: string) => {
+    async (prompt: string, experimentId?: string) => {
       setResults((prev) => ({
         ...prev,
         v0: { toolId: "v0", status: "generating" },
       }));
 
+      const startTime = Date.now();
+
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-
-        if (!session?.access_token) {
-          throw new Error("Sesja wygasła. Zaloguj się ponownie.");
-        }
-
+        // Step 1: Initiate async generation
         const { data, error } = await supabase.functions.invoke("run-on-v0", {
           body: { prompt, experimentId },
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-          },
         });
 
-        if (error) throw error;
+        if (error) throw new Error(error.message || "Failed to call run-on-v0");
+        if (!data?.success) throw new Error(data?.error || "v0 API error");
 
-        if (data?.success) {
-          setResults((prev) => ({
-            ...prev,
-            v0: {
-              toolId: "v0",
-              status: "completed",
-              chatUrl: data.chatUrl,
-              previewUrl: data.previewUrl,
-              generationTimeMs: data.generationTimeMs,
-            },
-          }));
-        } else {
-          throw new Error(data?.error || "Unknown error from v0 API");
-        }
+        const chatId = data.chatId;
+        const chatUrl = data.chatUrl;
+
+        setResults((prev) => ({
+          ...prev,
+          v0: { toolId: "v0", status: "generating", chatUrl },
+        }));
+
+        // Step 2: Poll for completion
+        const poll = async () => {
+          try {
+            const { data: pollData, error: pollError } =
+              await supabase.functions.invoke("poll-v0-status", {
+                body: { chatId, experimentId },
+              });
+
+            if (pollError) {
+              console.warn("Poll error:", pollError);
+              return;
+            }
+
+            if (pollData?.status === "completed") {
+              stopPolling("v0");
+              setResults((prev) => ({
+                ...prev,
+                v0: {
+                  toolId: "v0",
+                  status: "completed",
+                  chatUrl: pollData.chatUrl || chatUrl,
+                  previewUrl: pollData.previewUrl,
+                  generationTimeMs: Date.now() - startTime,
+                },
+              }));
+            } else if (pollData?.status === "error") {
+              stopPolling("v0");
+              setResults((prev) => ({
+                ...prev,
+                v0: {
+                  toolId: "v0",
+                  status: "error",
+                  error: pollData.error || "v0 generation failed",
+                  chatUrl: pollData.chatUrl || chatUrl,
+                },
+              }));
+            }
+          } catch (e) {
+            console.warn("Poll exception:", e);
+          }
+        };
+
+        // Start polling
+        pollTimers.current.v0 = window.setInterval(poll, POLL_INTERVAL);
+
+        // Auto-stop after max time
+        setTimeout(() => {
+          if (pollTimers.current.v0) {
+            stopPolling("v0");
+            setResults((prev) => {
+              if (prev.v0?.status === "generating") {
+                return {
+                  ...prev,
+                  v0: {
+                    toolId: "v0",
+                    status: "error",
+                    error: "Timeout — generowanie trwa zbyt długo. Sprawdź link do chatu.",
+                    chatUrl,
+                  },
+                };
+              }
+              return prev;
+            });
+          }
+        }, MAX_POLL_TIME);
       } catch (err: any) {
         console.error("v0 API error:", err);
         setResults((prev) => ({
@@ -70,7 +128,7 @@ export function useBuilderApi() {
         }));
       }
     },
-    []
+    [stopPolling]
   );
 
   const runBuilders = useCallback(
@@ -82,8 +140,6 @@ export function useBuilderApi() {
       if (selectedTools.includes("v0")) {
         promises.push(runOnV0(prompt, experimentId));
       }
-
-      // Future: add runOnReplit, runOnBolt, etc.
 
       await Promise.allSettled(promises);
       setLoading(false);
