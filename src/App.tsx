@@ -29,9 +29,10 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/experiment/:id" element={<PublicExperiment />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
