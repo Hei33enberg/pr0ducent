@@ -86,16 +86,19 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
         <div className="max-w-4xl mx-auto">
           {/* Prompt templates */}
           <div className="flex flex-wrap justify-center gap-2 mb-5 fade-up stagger-1 visible-immediate">
-            {PROMPT_TEMPLATES.map((tpl) => (
-              <button
-                key={tpl.id}
-                onClick={() => handleTemplateClick(tpl)}
-                className="glass-card inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
-              >
-                <span>{tpl.emoji}</span>
-                <span>{tpl.label}</span>
-              </button>
-            ))}
+            {PROMPT_TEMPLATES.map((tpl) => {
+              const Icon = tpl.icon;
+              return (
+                <button
+                  key={tpl.id}
+                  onClick={() => handleTemplateClick(tpl)}
+                  className="glass-card inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{tpl.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Prompt input */}
