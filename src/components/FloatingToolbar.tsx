@@ -36,7 +36,7 @@ export function FloatingToolbar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-1.5 rounded-full bg-card/90 backdrop-blur-xl border border-border/60 shadow-2xl"
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1.5 rounded-full bg-card/90 backdrop-blur-xl border border-border/60 shadow-2xl max-w-[calc(100vw-2rem)]"
         >
           {items.map((item) => {
             const Icon = item.icon;
