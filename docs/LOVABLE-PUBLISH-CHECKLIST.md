@@ -25,6 +25,10 @@ Sterują [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts). Wartość **`f
 
 Opcjonalnie ustaw **`VITE_VBP_PROTOCOL_URL`** (np. publiczne repo `vibecoding-broker-protocol` po utworzeniu). Jeśli puste, stopka używa domyślnego URL z kodu (zobacz Footer).
 
+## Sprint 3 AG (benchmark + social)
+
+Po merge migracji i Edge na `main`: **[LOVABLE-SPRINT3-PROMPT.md](./LOVABLE-SPRINT3-PROMPT.md)** (krótki copy-paste dla operatora) oraz **[AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)** (pełny handoff).
+
 ## Powiązane
 
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
