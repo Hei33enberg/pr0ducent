@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Call v0 API in async mode — allow longer handshake time
+    // Call v0 API in async mode — allow longer handshake time under load
     console.log("Calling v0 API async with prompt length:", prompt.length);
 
     const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
@@ -54,9 +54,13 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         message: prompt,
-        modelConfiguration: { responseMode: "async" },
+        modelConfiguration: {
+          responseMode: "async",
+          thinking: false,
+          imageGenerations: false,
+        },
       }),
-      signal: AbortSignal.timeout(55000),
+      signal: AbortSignal.timeout(V0_HANDSHAKE_TIMEOUT_MS),
     });
 
     if (!chatResponse.ok) {
