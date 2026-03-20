@@ -115,6 +115,10 @@ export default function Compare() {
           </table>
         </motion.div>
 
+        <p className="text-center text-xs text-muted-foreground max-w-xl mx-auto mb-8 font-sans">
+          {t("help.comparePageNote")}
+        </p>
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

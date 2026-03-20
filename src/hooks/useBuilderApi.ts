@@ -18,6 +18,8 @@ export interface BuilderResult {
 
 const POLL_INTERVAL = 3000;
 const MAX_POLL_TIME = 120000;
+/** Polls builder_results for non-v0 tools (generic_rest / VBP until SSE exists). */
+const DB_RESULTS_POLL_KEY = "__db_results__";
 const RUN_ON_V0_MAX_RETRIES = 3;
 const RUN_ON_V0_RETRY_DELAY_MS = 1500;
 
@@ -63,6 +65,13 @@ export function useBuilderApi() {
     if (pollTimers.current[toolId]) {
       clearInterval(pollTimers.current[toolId]);
       delete pollTimers.current[toolId];
+    }
+  }, []);
+
+  const stopDbResultsPolling = useCallback(() => {
+    if (pollTimers.current[DB_RESULTS_POLL_KEY]) {
+      clearInterval(pollTimers.current[DB_RESULTS_POLL_KEY]);
+      delete pollTimers.current[DB_RESULTS_POLL_KEY];
     }
   }, []);
 
@@ -199,6 +208,51 @@ export function useBuilderApi() {
     [stopPolling, t]
   );
 
+  const startDbResultsPolling = useCallback(
+    (experimentId: string, toolIds: string[]) => {
+      const others = [...new Set(toolIds.filter((id) => id !== "v0"))];
+      if (others.length === 0) return;
+
+      stopDbResultsPolling();
+
+      const tick = async () => {
+        const { data: rows } = await supabase
+          .from("builder_results")
+          .select("*")
+          .eq("experiment_id", experimentId)
+          .in("tool_id", others);
+        if (!rows?.length) return;
+        setResults((prev) => {
+          const merged = { ...prev };
+          let changed = false;
+          for (const row of rows) {
+            const br = mapBuilderRow(row as Record<string, unknown>);
+            const old = merged[br.toolId];
+            if (
+              !old ||
+              old.status !== br.status ||
+              old.previewUrl !== br.previewUrl ||
+              old.error !== br.error ||
+              old.providerRunId !== br.providerRunId
+            ) {
+              merged[br.toolId] = br;
+              changed = true;
+            }
+          }
+          return changed ? merged : prev;
+        });
+      };
+
+      pollTimers.current[DB_RESULTS_POLL_KEY] = window.setInterval(tick, POLL_INTERVAL);
+      void tick();
+
+      setTimeout(() => {
+        stopDbResultsPolling();
+      }, MAX_POLL_TIME);
+    },
+    [stopDbResultsPolling]
+  );
+
   const startV0PollingForExperiment = useCallback(
     (experimentId: string, chatId: string, chatUrl: string | undefined) => {
       stopPolling("v0");
@@ -277,6 +331,7 @@ export function useBuilderApi() {
   const runBuilders = useCallback(
     async (prompt: string, experimentId: string | undefined, selectedTools: string[]) => {
       unsubscribeRealtime();
+      stopDbResultsPolling();
       Object.keys(pollTimers.current).forEach(stopPolling);
       setResults({});
 
@@ -335,6 +390,8 @@ export function useBuilderApi() {
         startV0PollingForExperiment(experimentId, v0Row.providerRunId, v0Row.chatUrl);
       }
 
+      startDbResultsPolling(experimentId, selectedTools);
+
       const resultsChannel = supabase
         .channel(`builder_results:${experimentId}`)
         .on(
@@ -369,17 +426,26 @@ export function useBuilderApi() {
 
       setLoading(false);
     },
-    [runOnV0Guest, startV0PollingForExperiment, stopPolling, t, unsubscribeRealtime]
+    [
+      runOnV0Guest,
+      startDbResultsPolling,
+      startV0PollingForExperiment,
+      stopDbResultsPolling,
+      stopPolling,
+      t,
+      unsubscribeRealtime,
+    ]
   );
 
   useEffect(() => {
     return () => {
       unsubscribeRealtime();
+      stopDbResultsPolling();
       Object.keys(pollTimers.current).forEach((k) => {
         clearInterval(pollTimers.current[k]);
       });
     };
-  }, [unsubscribeRealtime]);
+  }, [stopDbResultsPolling, unsubscribeRealtime]);
 
   return { results, loading, runBuilders };
 }

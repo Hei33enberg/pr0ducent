@@ -1,5 +1,7 @@
 # Wiring Lovable, Bolt, Replit (outbound adapters)
 
+Step-by-step: [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md).
+
 Until partners ship **VBP**, pr0ducent uses dedicated or **generic-rest** adapters.
 
 ## Lovable

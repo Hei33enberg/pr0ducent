@@ -2,7 +2,7 @@
 
 ## Date
 
-2026-03-22
+2026-03-25
 
 ## Execution model (current)
 
@@ -21,6 +21,7 @@
 - [`20260321120000_orchestrator_core.sql`](../supabase/migrations/20260321120000_orchestrator_core.sql)
 - [`20260321140000_run_jobs_tasks_workflow_pool.sql`](../supabase/migrations/20260321140000_run_jobs_tasks_workflow_pool.sql)
 - [`20260322120000_vbp_orchestration.sql`](../supabase/migrations/20260322120000_vbp_orchestration.sql) — VBP config columns, `builder_rate_limits`, `builder_crawl_sources`, `run_tasks.next_retry_at`.
+- [`20260325100000_builder_dispatch_slot_rpc.sql`](../supabase/migrations/20260325100000_builder_dispatch_slot_rpc.sql) — `builder_try_dispatch_slot()` RPC for atomic rate window + inflight cap (`process-task-queue`).
 
 ## Edge functions (orchestrator-related)
 
@@ -49,3 +50,11 @@ See [ORCHESTRATOR.md](./ORCHESTRATOR.md) for sequence diagram and adapter layout
 ## Sprint close notes
 
 See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and follow-ups.
+
+## QA / protocol pointers
+
+- [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — how to verify a real orchestrated run (not `/compare`).
+- [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md) — stuck `queued`, webhooks.
+- [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md) — next integrations.
+- Staging E2E: `npm run test:e2e-staging` (requires env vars in script header).
+- VBP OSS bundle: [protocol/vibecoding-broker-protocol/README.md](../protocol/vibecoding-broker-protocol/README.md).

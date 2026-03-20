@@ -14,6 +14,7 @@ const corsHeaders = {
 
 const MAX_TASKS_PER_INVOCATION = 40;
 const DEADLINE_MS = 120_000;
+const RATE_LIMIT_BACKOFF_MS = 15_000;
 
 function isServiceRoleRequest(req: Request): boolean {
   const expected = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -69,6 +70,36 @@ async function dispatchOne(
   }
 }
 
+type PickableTask = {
+  id: string;
+  tool_id: string;
+  experiment_id: string;
+  run_job_id: string;
+  attempt_count: number;
+};
+
+async function pickNextQueuedOrRetrying(
+  admin: ReturnType<typeof createClient>
+): Promise<PickableTask | null> {
+  const { data: queued } = await admin
+    .from("run_tasks")
+    .select("id, tool_id, experiment_id, run_job_id, attempt_count")
+    .eq("status", "queued")
+    .order("created_at", { ascending: true })
+    .limit(1);
+  if (queued?.length) return queued[0] as PickableTask;
+
+  const iso = new Date().toISOString();
+  const { data: retrying } = await admin
+    .from("run_tasks")
+    .select("id, tool_id, experiment_id, run_job_id, attempt_count")
+    .eq("status", "retrying")
+    .or(`next_retry_at.is.null,next_retry_at.lte.${iso}`)
+    .order("next_retry_at", { ascending: true, nullsFirst: true })
+    .limit(1);
+  return (retrying?.[0] as PickableTask) ?? null;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -104,26 +135,59 @@ Deno.serve(async (req) => {
   );
 
   while (processed < MAX_TASKS_PER_INVOCATION && Date.now() - started < DEADLINE_MS) {
-    let q = admin
-      .from("run_tasks")
-      .select("id, tool_id, experiment_id, run_job_id")
-      .eq("status", "queued")
-      .order("created_at", { ascending: true })
-      .limit(1);
-
+    let task: PickableTask | null = null;
     if (body.run_job_id) {
-      q = q.eq("run_job_id", body.run_job_id);
+      const { data: scoped } = await admin
+        .from("run_tasks")
+        .select("id, tool_id, experiment_id, run_job_id, attempt_count")
+        .eq("run_job_id", body.run_job_id)
+        .eq("status", "queued")
+        .order("created_at", { ascending: true })
+        .limit(1);
+      task = (scoped?.[0] as PickableTask) ?? null;
+      if (!task) {
+        const iso = new Date().toISOString();
+        const { data: scopedR } = await admin
+          .from("run_tasks")
+          .select("id, tool_id, experiment_id, run_job_id, attempt_count")
+          .eq("run_job_id", body.run_job_id)
+          .eq("status", "retrying")
+          .or(`next_retry_at.is.null,next_retry_at.lte.${iso}`)
+          .order("next_retry_at", { ascending: true, nullsFirst: true })
+          .limit(1);
+        task = (scopedR?.[0] as PickableTask) ?? null;
+      }
+    } else {
+      task = await pickNextQueuedOrRetrying(admin);
     }
+    if (!task) break;
 
-    const { data: tasks, error } = await q;
-    if (error || !tasks?.length) break;
-
-    const task = tasks[0] as {
-      id: string;
-      tool_id: string;
-      experiment_id: string;
-      run_job_id: string;
-    };
+    let rateAllowed = true;
+    let rateReason = "";
+    const { data: slot, error: slotErr } = await admin.rpc("builder_try_dispatch_slot", {
+      p_tool_id: task.tool_id,
+    });
+    if (slotErr) {
+      console.warn("builder_try_dispatch_slot skipped:", slotErr.message);
+      rateAllowed = true;
+    } else {
+      const slotObj = slot as { allowed?: boolean; reason?: string } | null;
+      rateAllowed = slotObj?.allowed === true;
+      rateReason = slotObj?.reason ?? "";
+    }
+    if (!rateAllowed) {
+      await admin
+        .from("run_tasks")
+        .update({
+          status: "retrying",
+          next_retry_at: new Date(Date.now() + RATE_LIMIT_BACKOFF_MS).toISOString(),
+          error_message: `rate_limit:${rateReason || "unknown"}`,
+          attempt_count: (task.attempt_count ?? 0) + 1,
+        })
+        .eq("id", task.id);
+      processed++;
+      continue;
+    }
 
     const { data: job, error: jobErr } = await admin
       .from("run_jobs")

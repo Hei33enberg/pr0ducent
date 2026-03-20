@@ -121,7 +121,14 @@ Publikacja Lovable: dopiero po deploy funkcji + migracji jeśli UI korzysta z no
 - **Per-builder E2E** with `BUILDER_E2E_ENABLED` and secrets in CI/staging only.
 - **k6** load script: `scripts/k6-dispatch-smoke.js` — wire to staging URL + service token policy.
 - **Marketplace backend** — table or snapshot for public demos + remix lineage ([MARKETPLACE-REMIX.md](./MARKETPLACE-REMIX.md)).
-- **OSS repo** — promote `protocol/vibecoding-broker-protocol` to `github.com/pr0ducent/vibecoding-broker-protocol` with OpenAPI + validator CI.
+- **OSS repo** — promote `protocol/vibecoding-broker-protocol` to `github.com/pr0ducent/vibecoding-broker-protocol` (OpenAPI + schemas + validator already in monorepo).
+
+## Related docs (orchestration hardening)
+
+- [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md)
+- [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
+- [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md)
+- [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md)
 
 ---
 

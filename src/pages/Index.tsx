@@ -19,6 +19,8 @@ import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } f
 import { useAuth } from "@/hooks/useAuth";
 import { useBuilderApi } from "@/hooks/useBuilderApi";
 import { PageFrame } from "@/components/PageFrame";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useTranslation } from "@/lib/i18n";
 import AmbientBackground from "@/components/AmbientBackground";
 import { BUILDER_TOOLS } from "@/config/tools";
 import type { Experiment, AccountModel } from "@/types/experiment";
@@ -26,6 +28,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 const Index = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const { results: builderResults, runBuilders } = useBuilderApi();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
@@ -142,6 +145,16 @@ const Index = () => {
                 onSelectedToolsChange={setSelectedTools}
                 heroRef={heroRef}
               />
+
+              {user ? (
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-2">
+                  <Alert className="border-border/60 bg-muted/30">
+                    <AlertDescription className="text-sm text-muted-foreground">
+                      {t("help.orchestrationSignedIn")}
+                    </AlertDescription>
+                  </Alert>
+                </div>
+              ) : null}
               
               <HowItWorks />
               <BuilderComparisonTable

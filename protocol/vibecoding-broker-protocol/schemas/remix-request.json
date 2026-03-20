@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pr0ducent.dev/schemas/vbp/remix-request.json",
+  "title": "VBP Remix Request",
+  "type": "object",
+  "properties": {
+    "new_prompt": { "type": "string" },
+    "user_context": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

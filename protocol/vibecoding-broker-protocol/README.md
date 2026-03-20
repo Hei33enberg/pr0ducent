@@ -1,29 +1,25 @@
 # Vibecoding Broker Protocol (VBP)
 
-This folder mirrors what will live in a dedicated public GitHub repo **`pr0ducent/vibecoding-broker-protocol`**.
+Mirror of what can be published as **`pr0ducent/vibecoding-broker-protocol`** on GitHub.
 
-## Contents (source of truth in app repo)
+## Layout
 
-| App repo path | Purpose |
-|---------------|---------|
-| [docs/VBP-SPEC.md](../../docs/VBP-SPEC.md) | Normative spec (v0.1) |
-| [docs/vbp-schemas/](../../docs/vbp-schemas/) | JSON Schema fragments |
-| [supabase/functions/_shared/adapters/vbp-adapter.ts](../../supabase/functions/_shared/adapters/vbp-adapter.ts) | Reference broker-side client behavior |
+| Path | Purpose |
+|------|---------|
+| [openapi/vbp-v1.openapi.yaml](./openapi/vbp-v1.openapi.yaml) | OpenAPI 3.1 sketch (paths + schema refs) |
+| [schemas/](./schemas/) | JSON Schema (synced with `docs/vbp-schemas/` in app repo) |
+| [validator/cli.mjs](./validator/cli.mjs) | `npm run vbp-validate -- <baseUrl>` — HTTP probe dispatch + status |
+| [examples/minimal-node/](./examples/minimal-node/) | Local demo server for validator |
 
-## Planned OSS repo layout
+## Normative spec (app monorepo)
 
-```
-vibecoding-broker-protocol/
-  spec/v1.md              # copy of VBP-SPEC
-  schemas/                # copy of vbp-schemas
-  sdk/typescript/
-  sdk/python/
-  examples/express-builder/
-  examples/hono-builder/
-  validator/              # npx vbp-validate <baseUrl>
-  badge/vbp-certified.svg
-```
+- [docs/VBP-SPEC.md](../../docs/VBP-SPEC.md)
+- [docs/VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) — VBP vs „pr0ducent Open Protocol”
 
-## Validator (stub)
+## Broker implementation
 
-See [validator/package.json](./validator/package.json). Full HTTP probing will iterate dispatch → status → artifacts compliance checks.
+- [supabase/functions/_shared/adapters/vbp-adapter.ts](../../supabase/functions/_shared/adapters/vbp-adapter.ts)
+
+## CI
+
+Monorepo workflow **vbp-protocol** validates JSON schemas under `protocol/.../schemas` and `docs/vbp-schemas`.

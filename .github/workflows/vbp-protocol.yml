@@ -1,0 +1,33 @@
+name: vbp-protocol
+
+on:
+  push:
+    paths:
+      - "protocol/vibecoding-broker-protocol/**"
+      - "docs/vbp-schemas/**"
+  pull_request:
+    paths:
+      - "protocol/vibecoding-broker-protocol/**"
+      - "docs/vbp-schemas/**"
+
+jobs:
+  validate-json-schemas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse OSS protocol schemas
+        run: |
+          node -e "
+            const fs = require('fs');
+            const dirs = [
+              'protocol/vibecoding-broker-protocol/schemas',
+              'docs/vbp-schemas'
+            ];
+            for (const d of dirs) {
+              for (const f of fs.readdirSync(d)) {
+                if (!f.endsWith('.json')) continue;
+                JSON.parse(fs.readFileSync(d + '/' + f, 'utf8'));
+              }
+              console.log('ok:', d);
+            }
+          "

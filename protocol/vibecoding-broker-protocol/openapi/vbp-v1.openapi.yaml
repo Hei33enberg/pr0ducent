@@ -1,0 +1,113 @@
+openapi: 3.1.0
+info:
+  title: Vibecoding Broker Protocol (VBP) v1
+  version: "0.1.0"
+  description: |
+    Builder-implemented HTTP API consumed by brokers (e.g. pr0ducent).
+    Normative prose: docs/VBP-SPEC.md in the pr0ducent app repo.
+servers:
+  - url: https://builder.example.com/vbp/v1
+    description: Example base (builder hosts under /vbp/v1 or equivalent)
+paths:
+  /dispatch:
+    post:
+      summary: Start a build (broker → builder)
+      operationId: vbpDispatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/dispatch-request.json
+      responses:
+        "202":
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/dispatch-response.json
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+  /status/{run_id}:
+    get:
+      summary: Poll status fallback
+      operationId: vbpStatus
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Current status
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/status-response.json
+  /stream/{run_id}:
+    get:
+      summary: Server-Sent Events stream
+      operationId: vbpStream
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: text/event-stream
+          content:
+            text/event-stream:
+              schema:
+                type: string
+  /artifacts/{run_id}:
+    get:
+      summary: Artifact bundle metadata
+      operationId: vbpArtifacts
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/artifacts-response.json
+  /export/{run_id}:
+    get:
+      summary: ZIP or export redirect
+      operationId: vbpExport
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: application/zip or JSON with github_repo_url
+  /remix/{run_id}:
+    post:
+      summary: Remix from existing run
+      operationId: vbpRemix
+      parameters:
+        - name: run_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/remix-request.json
+      responses:
+        "202":
+          description: New run accepted

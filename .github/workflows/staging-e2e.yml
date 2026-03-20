@@ -1,0 +1,27 @@
+# Manual staging smoke: real JWT + experiment (costs v0 API if live).
+# Repo → Settings → Secrets → Actions:
+#   E2E_SUPABASE_URL, E2E_ANON_KEY, E2E_USER_JWT, E2E_EXPERIMENT_ID
+
+name: staging-e2e-v0
+
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run staging E2E
+        env:
+          E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          E2E_ANON_KEY: ${{ secrets.E2E_ANON_KEY }}
+          E2E_USER_JWT: ${{ secrets.E2E_USER_JWT }}
+          E2E_EXPERIMENT_ID: ${{ secrets.E2E_EXPERIMENT_ID }}
+        run: node scripts/staging-e2e-v0.mjs

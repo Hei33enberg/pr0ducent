@@ -1,5 +1,7 @@
 # Orchestrator (broker MVP)
 
+Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md).
+
 ## Flow
 
 ```mermaid
