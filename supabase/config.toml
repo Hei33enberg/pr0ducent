@@ -2,3 +2,12 @@ project_id = "fhfkkxdjogkkobnsedyo"
 
 [functions.run-on-v0]
 verify_jwt = false
+
+[functions.sync-builder-data]
+verify_jwt = false
+
+[functions.generate-blog-post]
+verify_jwt = false
+
+[functions.translate-content]
+verify_jwt = false
