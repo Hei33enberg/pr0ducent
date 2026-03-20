@@ -1,17 +1,15 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Database } from "@/integrations/supabase/types";
 import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Activity, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface RunEventRow {
-  id: string;
-  event_type: string;
-  tool_id: string | null;
-  payload: Record<string, unknown>;
-  created_at: string;
-}
+type RunEventRow = Pick<
+  Database["public"]["Tables"]["run_events"]["Row"],
+  "id" | "event_type" | "tool_id" | "payload" | "created_at"
+>;
 
 function formatEventLabel(eventType: string): string {
   return eventType.replace(/^orchestrator\./, "").replace(/^builder\./, "").replace(/^score\./, "score: ");
@@ -24,14 +22,15 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    const { data, error } = await (supabase as unknown as { from: (t: string) => any }).from("run_events")
+    const { data, error } = await supabase
+      .from("run_events")
       .select("id, event_type, tool_id, payload, created_at")
       .eq("experiment_id", experimentId)
       .order("created_at", { ascending: false })
       .limit(40);
 
     if (!error && data) {
-      setEvents(data as unknown as RunEventRow[]);
+      setEvents(data);
     }
     setLoading(false);
   }, [experimentId]);

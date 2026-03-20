@@ -128,7 +128,7 @@ export async function logReferralHandoff(
   metadata?: Record<string, unknown>
 ) {
   await logReferralClick(userId, experimentId, toolId);
-  await (supabase as unknown as { from: (t: string) => any }).from("referral_conversions").insert({
+  await supabase.from("referral_conversions").insert({
     user_id: userId,
     experiment_id: experimentId,
     tool_id: toolId,
