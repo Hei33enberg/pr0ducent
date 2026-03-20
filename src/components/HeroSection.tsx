@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { ToolSelectionGrid } from "@/components/ToolSelectionGrid";
 import { BUILDER_TOOLS } from "@/config/tools";
 import { PROMPT_TEMPLATES, DEMO_TEMPLATE } from "@/config/prompt-templates";
 import { USE_CASE_TAGS } from "@/config/use-case-tags";
 import type { AccountModel } from "@/types/experiment";
-import { Zap, Shield, BarChart3, Sparkles } from "lucide-react";
+import { Zap, Sparkles, BarChart3, Shield } from "lucide-react";
 
 interface HeroSectionProps {
   onSubmit: (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => void;
@@ -48,149 +45,131 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   };
 
   return (
-    <section ref={heroRef} className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
+    <section ref={heroRef} className="section-divider relative flex items-center" style={{ minHeight: "calc(80svh - 4rem)" }}>
+      {/* Animated gradient washes */}
+      <div className="absolute pointer-events-none hero-wash hero-wash--peach" aria-hidden="true" />
+      <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
+      <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
-      <div className="relative max-w-4xl mx-auto px-4 pt-20 pb-12">
-        {/* Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-10"
-        >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-foreground leading-[1.1] mb-4">
-            One prompt.{" "}
-            <span className="bg-gradient-to-r from-primary to-featured bg-clip-text text-transparent">
-              Many builders.
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Run your idea through multiple AI app builders in parallel and see real prototypes side by side.
-          </p>
-        </motion.div>
-
-        {/* Prompt templates */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="flex flex-wrap justify-center gap-2 mb-5"
-        >
-          {PROMPT_TEMPLATES.map((tpl) => (
-            <button
-              key={tpl.id}
-              onClick={() => handleTemplateClick(tpl)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border bg-card hover:bg-accent hover:border-primary/30 transition-all text-xs font-medium text-foreground shadow-sm"
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
+        <div className="max-w-4xl mx-auto">
+          {/* Headline */}
+          <div className="text-center mb-10 fade-up visible-immediate">
+            <h1
+              className="font-serif leading-[0.92] tracking-[-0.02em] mb-6"
+              style={{ fontSize: "clamp(2.8rem, 6vw + 1rem, 7rem)", color: "#000" }}
             >
-              <span>{tpl.emoji}</span>
-              <span>{tpl.label}</span>
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Prompt input */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-          className="space-y-4"
-        >
-          <div className="relative">
-            <Textarea
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
-              className="min-h-[120px] text-base bg-card shadow-lg border-border/50 resize-none rounded-xl p-5 focus-visible:ring-primary/30"
-              onFocus={() => setIsExpanded(true)}
-            />
+              One prompt. Many
+              <br />
+              <span className="text-accent-gradient">builders.</span>
+            </h1>
+            <p className="font-sans text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Run your idea through multiple AI app builders in parallel and see real prototypes side by side.
+            </p>
           </div>
 
-          {/* Config panel */}
-          <motion.div
-            initial={false}
-            animate={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
-            transition={{ duration: 0.3 }}
-            className="overflow-hidden"
-          >
-            <div className="bg-card rounded-xl border border-border/50 shadow-lg p-5 space-y-5">
-              {/* Use-case tags */}
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-2">Use Case (optional)</h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {USE_CASE_TAGS.map((tag) => (
-                    <button
-                      key={tag.id}
-                      onClick={() => toggleTag(tag.id)}
-                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border ${
-                        selectedTags.includes(tag.id)
-                          ? "border-primary bg-primary/10 text-primary"
-                          : "border-border bg-background text-muted-foreground hover:border-primary/30"
-                      }`}
-                    >
-                      <span>{tag.emoji}</span>
-                      <span>{tag.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* Prompt templates */}
+          <div className="flex flex-wrap justify-center gap-2 mb-5 fade-up stagger-1 visible-immediate">
+            {PROMPT_TEMPLATES.map((tpl) => (
+              <button
+                key={tpl.id}
+                onClick={() => handleTemplateClick(tpl)}
+                className="glass-card inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
+              >
+                <span>{tpl.emoji}</span>
+                <span>{tpl.label}</span>
+              </button>
+            ))}
+          </div>
 
-              <ToolSelectionGrid
-                selectedTools={selectedTools}
-                onSelectionChange={onSelectedToolsChange}
-                accountModel={accountModel}
-                onAccountModelChange={setAccountModel}
+          {/* Prompt input */}
+          <div className="space-y-4 fade-up stagger-2 visible-immediate">
+            <div className="relative">
+              <Textarea
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
+                className="min-h-[120px] text-base bg-card/80 backdrop-blur-sm shadow-lg border-border/50 resize-none rounded-xl p-5 focus-visible:ring-accent/30 font-sans"
+                onFocus={() => setIsExpanded(true)}
               />
             </div>
-          </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button
-              size="lg"
-              onClick={handleSubmit}
-              disabled={!prompt.trim() || selectedTools.length === 0}
-              className="h-12 px-8 text-base font-semibold bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20 rounded-xl"
+            {/* Config panel */}
+            <div
+              className="overflow-hidden transition-all duration-300"
+              style={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
             >
-              <Zap className="w-5 h-5 mr-2" />
-              Run Multi-Builder Test
-              {selectedTools.length > 0 && (
-                <span className="ml-2 bg-primary-foreground/20 px-2 py-0.5 rounded-md text-sm">
-                  {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
-                </span>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={handleDemo}
-              className="h-12 px-6 text-sm rounded-xl"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Try Demo Prompt
-            </Button>
-          </div>
-        </motion.div>
+              <div className="glass-card rounded-xl p-5 space-y-5">
+                {/* Use-case tags */}
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground mb-2 font-sans">Use Case (optional)</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {USE_CASE_TAGS.map((tag) => (
+                      <button
+                        key={tag.id}
+                        onClick={() => toggleTag(tag.id)}
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border font-sans ${
+                          selectedTags.includes(tag.id)
+                            ? "border-accent bg-accent/10 text-accent"
+                            : "border-border bg-background text-muted-foreground hover:border-accent/30"
+                        }`}
+                      >
+                        <span>{tag.emoji}</span>
+                        <span>{tag.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Trust bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground"
-        >
-          <div className="flex items-center gap-1.5">
-            <Zap className="w-3.5 h-3.5" />
-            <span>Real prototypes, not mockups</span>
+                <ToolSelectionGrid
+                  selectedTools={selectedTools}
+                  onSelectionChange={onSelectedToolsChange}
+                  accountModel={accountModel}
+                  onAccountModelChange={setAccountModel}
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={handleSubmit}
+                disabled={!prompt.trim() || selectedTools.length === 0}
+                className="bg-foreground text-background px-8 py-3.5 text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
+              >
+                <Zap className="w-4 h-4" />
+                Run Multi-Builder Test
+                {selectedTools.length > 0 && (
+                  <span className="bg-background/20 px-2 py-0.5 rounded-md text-xs">
+                    {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={handleDemo}
+                className="glass-card px-6 py-3 text-sm rounded-full inline-flex items-center gap-2 font-sans font-medium hover:scale-[1.02] transition-all duration-300"
+              >
+                <Sparkles className="w-4 h-4" />
+                Try Demo Prompt
+              </button>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Objective side-by-side comparison</span>
+
+          {/* Trust bar */}
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-sans fade-up stagger-3 visible-immediate">
+            <div className="flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5" />
+              <span>Real prototypes, not mockups</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <BarChart3 className="w-3.5 h-3.5" />
+              <span>Objective side-by-side comparison</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5" />
+              <span>We earn via referrals — you keep control</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Shield className="w-3.5 h-3.5" />
-            <span>We earn via referrals — you keep control</span>
-          </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
