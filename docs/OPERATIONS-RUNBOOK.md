@@ -10,7 +10,7 @@ Pull z GitHub `main` → build → Publish; ustaw `VITE_FF_*` i opcjonalnie `VIT
 ## 2. Backend Supabase (migracje + funkcje)
 
 → [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) (sekcja deploy) oraz [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md) (lista migracji).  
-Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) (workflow `supabase-deploy`).
+Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) (workflow `supabase-deploy`). Lovable bez własnego konta Supabase: [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
 
 ## 3. Webhook kolejki (krytyczne dla niezawodności)
 

@@ -9,6 +9,10 @@ Cel: po **INSERT** do `public.run_tasks` worker Edge Function od razu zdejmuje k
 
 **Schemat bazy:** aktualny kod `process-task-queue` zakłada kolumny z migracji `20260322120000_vbp_orchestration.sql` (m.in. `builder_integration_config.circuit_state`, `run_tasks.next_retry_at`). Jeśli Supabase zwraca błąd „column does not exist”, **zastosuj brakujące migracje** — nie upraszczaj funkcji Edge zamiast aktualizacji bazy.
 
+**Bez webhooka:** `dispatch-builders` nadal odpala `process-task-queue` i ma **inline fallback** — aplikacja może działać; webhook lub równoważny trigger tylko poprawia niezawodność przy dużym ruchu.
+
+**Lovable / trigger `pg_net`:** jeśli operator doda w bazie trigger wołający Edge przez `pg_net`, **powinien dodać ten sam SQL do `supabase/migrations/`** w repozytorium; inaczej środowisko nie odtworzysz z GitHuba. Ograniczenia dostępu do Supabase przy Lovable Cloud: [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
+
 ## Kroki (Supabase Dashboard)
 
 1. Zaloguj się do projektu → **Database**.
