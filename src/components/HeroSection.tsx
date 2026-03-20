@@ -53,12 +53,12 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
 
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
         {/* Hero grid — copy + caricature */}
-        <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 md:gap-8 items-center mb-10">
+        <div className="mx-auto max-w-5xl grid grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr] gap-4 md:gap-8 items-center mb-10">
           {/* Left — copy */}
-          <div className="space-y-6 text-center md:text-left">
+          <div className="space-y-4 md:space-y-6 text-left">
             <h1
               className="font-serif leading-[0.92] tracking-[-0.02em] fade-up visible-immediate"
-              style={{ fontSize: "clamp(2.8rem, 6vw + 1rem, 7rem)", color: "#000" }}
+              style={{ fontSize: "clamp(2.2rem, 5vw + 0.8rem, 7rem)", color: "#000" }}
             >
               One prompt.
               <br />
@@ -66,18 +66,17 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               <br />
               <span className="text-accent-gradient">builders.</span>
             </h1>
-            <p className="font-sans text-base sm:text-lg md:text-xl text-muted-foreground max-w-lg mx-auto md:mx-0 leading-relaxed fade-up stagger-1 visible-immediate">
+            <p className="font-sans text-sm sm:text-base md:text-xl text-muted-foreground max-w-lg leading-relaxed fade-up stagger-1 visible-immediate">
               Run your idea through multiple AI app builders in parallel and see real prototypes side by side.
             </p>
           </div>
 
-          {/* Right — Claude caricature */}
-          <div className="flex items-center justify-center md:justify-end fade-up stagger-1 visible-immediate">
+          {/* Right — caricature */}
+          <div className="flex items-center justify-end fade-up stagger-1 visible-immediate">
             <img
               src={caricatureFounder}
               alt="pr0ducent founder caricature"
-              className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-[260px] lg:max-w-[320px] object-contain select-none"
-              style={{ opacity: 0.92 }}
+              className="w-[100px] sm:w-[140px] md:w-[220px] lg:w-[280px] object-contain select-none"
               loading="eager"
               decoding="async"
             />
