@@ -154,6 +154,15 @@ Deno.serve(async (req) => {
       );
       if (benchErr) {
         console.error("builder_benchmark_scores upsert:", benchErr.message);
+      } else if (br?.id && br.preview_url && String(br.preview_url).trim()) {
+        fetch(`${supabaseUrl}/functions/v1/benchmark-probe-group-b`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${serviceKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ builderResultId: br.id }),
+        }).catch(() => {});
       }
     }
 

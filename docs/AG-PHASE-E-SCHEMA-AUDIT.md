@@ -9,7 +9,7 @@
 | `UNIQUE(builder_result_id)` | Tak |
 | RLS odczyt dla eksperymentów **public** (`anon` + `authenticated`) | Tak — polityka „Anyone can view benchmark scores for public experiments” |
 | RLS odczyt właściciela | Tak — „Users can view benchmark scores for own experiments” |
-| MV `builder_leaderboard` + **UNIQUE (`tool_id`)** | Tak — `builder_leaderboard_tool_id_uidx` (wymagane do `REFRESH … CONCURRENTLY`) |
+| MV `builder_leaderboard` + **UNIQUE (`tool_id`)** | Tak — `builder_leaderboard_tool_id_uidx` (wymagane do `REFRESH … CONCURRENTLY`). Migracja `20260330120000_extend_builder_leaderboard_mv.sql` dodaje `avg_speed`, `avg_ui_quality`, `avg_code_quality` (agregaty z `builder_benchmark_scores`). |
 | `GRANT SELECT` na MV dla `anon`, `authenticated` | Tak |
 
 Zapis z Edge (`score-builder-output`) używa `SCORING_MODEL_VERSION` + JSON `ai_reasoning` zgodnie z kolumnami powyżej.

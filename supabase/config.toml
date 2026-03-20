@@ -21,6 +21,12 @@ verify_jwt = false
 [functions.score-builder-output]
 verify_jwt = true
 
+[functions.benchmark-probe-group-b]
+verify_jwt = false
+
+[functions.benchmark-ai-batch-skeleton]
+verify_jwt = false
+
 [functions.sync-builder-data]
 verify_jwt = false
 

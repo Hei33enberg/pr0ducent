@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { BUILDER_TOOLS } from "@/config/tools";
+import type { Tables } from "@/integrations/supabase/types";
 
 export interface LeaderboardEntry {
   tool_id: string;
@@ -9,12 +10,37 @@ export interface LeaderboardEntry {
   avg_speed: number;
   avg_ui_quality: number;
   avg_code_quality: number;
-  user_rating: number; // 1-5
+  user_rating: number;
   trend: "up" | "down" | "flat";
 }
 
 export type Timeframe = "7d" | "30d" | "all";
 export type SortDim = "pvi_score" | "avg_speed" | "avg_ui_quality" | "avg_code_quality" | "total_runs";
+
+type LeaderboardRow = Tables<"builder_leaderboard">;
+
+function mapMvRow(row: LeaderboardRow): LeaderboardEntry | null {
+  const tid = row.tool_id;
+  if (!tid) return null;
+  return {
+    tool_id: tid,
+    pvi_score: Number(row.avg_pvi ?? row.best_pvi ?? 0),
+    total_runs: Number(row.total_runs ?? 0),
+    avg_speed: Number(row.avg_speed ?? 0),
+    avg_ui_quality: Number(row.avg_ui_quality ?? 0),
+    avg_code_quality: Number(row.avg_code_quality ?? 0),
+    user_rating: 0,
+    trend: "flat",
+  };
+}
+
+const SORT_COLUMN: Record<SortDim, keyof LeaderboardRow> = {
+  pvi_score: "avg_pvi",
+  avg_speed: "avg_speed",
+  avg_ui_quality: "avg_ui_quality",
+  avg_code_quality: "avg_code_quality",
+  total_runs: "total_runs",
+};
 
 export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -25,44 +51,42 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
     setLoading(true);
     setError(null);
     try {
-      // W wersji produkcyjnej query powinno filtrować wg. timeframe (np. funkcja RPC z argumentem dni)
-      // Jednak jako materialized view `builder_leaderboard` jest całościowe.
-      
+      const col = SORT_COLUMN[sortDim];
       const { data, error: sbError } = await supabase
-        .from("builder_leaderboard" as any)
+        .from("builder_leaderboard")
         .select("*")
-        .order(sortDim, { ascending: sortDim === "avg_speed" ? true : false }); 
-        // UWAGA: Mniejszy czas generowania (speed) traktujemy jako lepszy, jeśli to sekundy.
-        // Jeśli to wynik (1-100), odwracamy. Dla spójności PVI Score zakładamy 0-100.
+        .order(col, { ascending: false, nullsFirst: false });
 
       if (sbError) throw sbError;
-      
+
       if (data && data.length > 0) {
-        setEntries(data as unknown as LeaderboardEntry[]);
+        const mapped = data
+          .map(mapMvRow)
+          .filter((e): e is LeaderboardEntry => e !== null);
+        setEntries(mapped);
+        setLoading(false);
         return;
       }
-    } catch (err: any) {
-      console.warn("Failed to fetch builder_leaderboard. View might not exist yet. Using fallback mocks.", err);
+    } catch (err: unknown) {
+      console.warn("Failed to fetch builder_leaderboard. Using fallback mocks.", err);
+      setError(err instanceof Error ? err.message : "fetch_failed");
     }
-    
-    // Fallback Mock Data if view is missing or empty
+
     const mockDb: LeaderboardEntry[] = BUILDER_TOOLS.map((t, idx) => ({
       tool_id: t.id,
-      pvi_score: 85 - idx * 2 + (Math.random() * 5),
+      pvi_score: 85 - idx * 2 + Math.random() * 5,
       total_runs: 1200 - idx * 100 + Math.floor(Math.random() * 50),
-      avg_speed: Math.floor(Math.random() * 20) + 70, 
+      avg_speed: Math.floor(Math.random() * 20) + 70,
       avg_ui_quality: 90 - idx,
       avg_code_quality: 88 - idx,
       user_rating: parseFloat((4.0 + Math.random()).toFixed(1)),
       trend: idx === 0 ? "up" : idx === 1 ? "down" : "flat",
     }));
 
-    // Local sort mock
     const sorted = [...mockDb].sort((a, b) => {
-      const valA = a[sortDim] as number;
-      const valB = b[sortDim] as number;
-      // Jeśli to avg_speed i to by było w sekundach, powinno być rosnąco, 
-      // ale w BenchmarkScores to jest od 0 do 100, więc malejąco:
+      const key = sortDim === "pvi_score" ? "pvi_score" : sortDim;
+      const valA = a[key] as number;
+      const valB = b[key] as number;
       return valB - valA;
     });
 

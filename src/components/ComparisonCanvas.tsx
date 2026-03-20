@@ -25,6 +25,7 @@ import { VoteWidget } from "@/components/VoteWidget";
 import { CommentsSection } from "@/components/CommentsSection";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { calculatePVI, getPVILabel } from "@/lib/pvi-calculator";
+import type { Tables } from "@/integrations/supabase/types";
 
 function isDbExperimentId(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
@@ -79,7 +80,7 @@ function StatusBadge({ status }: { status: RunStatus }) {
 }
 
 function PVIScoreDisplay({ tool, run, builderResultId }: { tool: any; run: ExperimentRun; builderResultId?: string }) {
-  const [realScore, setRealScore] = useState<any>(null);
+  const [realScore, setRealScore] = useState<Tables<"builder_benchmark_scores"> | null>(null);
 
   useEffect(() => {
     if (!builderResultId) return;
@@ -94,16 +95,19 @@ function PVIScoreDisplay({ tool, run, builderResultId }: { tool: any; run: Exper
       });
   }, [builderResultId]);
 
-  const pvi = realScore?.pvi_score || calculatePVI({
-      tool_id: tool.id,
-      plan_name: "pro",
-      monthly_price: parseInt(tool.pricing.replace(/\D/g,'')) || 20,
-      credits_included: 1000,
-      credit_unit: "messages",
-      ai_models: [],
-      features: tool.strengths,
-      dev_environment: tool.stack,
-  });
+  const pvi =
+    realScore?.pvi_score != null
+      ? Number(realScore.pvi_score)
+      : calculatePVI({
+          tool_id: tool.id,
+          plan_name: "pro",
+          monthly_price: parseInt(tool.pricing.replace(/\D/g, "")) || 20,
+          credits_included: 1000,
+          credit_unit: "messages",
+          ai_models: [],
+          features: tool.strengths,
+          dev_environment: tool.stack,
+        });
   
   const { label, color } = getPVILabel(pvi);
 
@@ -154,7 +158,13 @@ function PVIScoreDisplay({ tool, run, builderResultId }: { tool: any; run: Exper
                    <div className="border-t border-border/50 mt-2 pt-2">
                      <div className="text-[10px] text-muted-foreground font-semibold mb-1">AI Reasoning</div>
                      <p className="text-[10px] text-muted-foreground leading-relaxed">
-                       {realScore?.ai_reasoning?.summary || "System estimated PVI based on structural analysis and developer ecosystem strength. Awaiting real telemetry from broker."}
+                       {(() => {
+                         const ar = realScore?.ai_reasoning;
+                         if (ar && typeof ar === "object" && ar !== null && "summary" in ar) {
+                           return String((ar as Record<string, unknown>).summary);
+                         }
+                         return "System estimated PVI based on structural analysis and developer ecosystem strength. Awaiting real telemetry from broker.";
+                       })()}
                      </p>
                    </div>
                  </div>

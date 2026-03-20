@@ -2,6 +2,11 @@
 
 **Cel:** uzupełnić wymiary z headless probe / AI **poza** krytyczną ścieżką Edge (timeout, koszt).
 
+## Stan w repo (MVP)
+
+- Edge [`benchmark-probe-group-b`](../supabase/functions/benchmark-probe-group-b/index.ts): po udanym zapisie Grupy A wywoływany z [`score-builder-output`](../supabase/functions/score-builder-output/index.ts) (fire-and-forget). Robi **GET** `preview_url`, liczy heurystyki deploy / web vitals / mobile / a11y (proxy), aktualizuje `builder_benchmark_scores` i `run_events` `score.group_b_probe`.
+- Pełny Lighthouse / axe: nadal **osobny runner** (poniżej).
+
 ## Lighthouse (batch lub worker ≤ ~25 s na URL)
 
 - **Wejście:** `builder_results.preview_url` po stabilnym buildzie.

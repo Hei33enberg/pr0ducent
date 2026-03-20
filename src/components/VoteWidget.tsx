@@ -60,19 +60,24 @@ export function VoteWidget({
           .from("user_votes")
           .delete()
           .eq("user_id", user.id)
-          .eq("builder_result_id", builderResultId);
+          .eq("builder_result_id", builderResultId)
+          .eq("vote_kind", "result");
         if (error) throw error;
       } else {
         // Upsert vote
         const { error } = await supabase
           .from("user_votes")
-          .upsert({
-            user_id: user.id,
-            builder_result_id: builderResultId,
-            tool_id: toolId,
-            vote: newVote,
-            rating: myRating, // Preserve rating if it exists
-          }, { onConflict: 'user_id,builder_result_id' });
+          .upsert(
+            {
+              user_id: user.id,
+              builder_result_id: builderResultId,
+              tool_id: toolId,
+              vote: newVote,
+              rating: myRating,
+              vote_kind: "result",
+            },
+            { onConflict: "user_id,builder_result_id,vote_kind" }
+          );
         if (error) throw error;
       }
     } catch (err: any) {
@@ -112,13 +117,17 @@ export function VoteWidget({
     try {
       const { error } = await supabase
         .from("user_votes")
-        .upsert({
-          user_id: user.id,
-          builder_result_id: builderResultId,
-          tool_id: toolId,
-          vote: defaultVote,
-          rating: newRating,
-        }, { onConflict: 'user_id,builder_result_id' });
+        .upsert(
+          {
+            user_id: user.id,
+            builder_result_id: builderResultId,
+            tool_id: toolId,
+            vote: defaultVote,
+            rating: newRating,
+            vote_kind: "result",
+          },
+          { onConflict: "user_id,builder_result_id,vote_kind" }
+        );
       
       if (error) throw error;
       if (newRating) {

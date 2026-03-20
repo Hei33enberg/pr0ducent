@@ -141,7 +141,9 @@ export default function Leaderboard() {
                                 <span className="font-semibold text-sm group-hover:text-primary transition-colors cursor-pointer" onClick={() => navigate(`/?tools=${tool.id}`)}>
                                   {tool.name}
                                 </span>
-                                <span className="text-[10px] text-muted-foreground py-0.5">Rating {entry.user_rating}★</span>
+                                <span className="text-[10px] text-muted-foreground py-0.5">
+                                  {entry.user_rating > 0 ? `Rating ${entry.user_rating}★` : "—"}
+                                </span>
                               </div>
                               {tool.featured && <Badge variant="secondary" className="text-[9px] px-1.5 py-0 h-4 bg-primary/10 text-primary border-primary/20 ml-2 shadow-none">Partner</Badge>}
                             </div>
@@ -170,7 +172,9 @@ export default function Leaderboard() {
                           </td>
                           <td className="py-4 px-6 text-right">
                             <span className="text-xs font-mono text-muted-foreground bg-muted/30 px-2 py-1 rounded-md">
-                              {(entry.total_runs / 1000).toFixed(1)}k
+                              {entry.total_runs >= 1000
+                                ? `${(entry.total_runs / 1000).toFixed(1)}k`
+                                : String(entry.total_runs)}
                             </span>
                           </td>
                         </tr>
