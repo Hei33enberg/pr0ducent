@@ -57,8 +57,12 @@ const Index = () => {
       }
 
       if (user) {
-        await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
+        const dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
         loadExperimentsFromDb(user.id).then(setPastExperiments);
+        // Trigger real builder APIs for tools that support it
+        if (dbId) {
+          runBuilders(prompt, dbId, selectedTools);
+        }
       } else {
         setPastExperiments(loadExperiments());
       }
