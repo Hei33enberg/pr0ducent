@@ -65,7 +65,8 @@ const Index = () => {
       }
 
       // Trigger real builder APIs for all users (guests too)
-      runBuilders(prompt, dbId || exp.id, selectedTools);
+      // For guests we don't pass a DB experimentId
+      runBuilders(prompt, dbId, selectedTools);
     },
     [user]
   );

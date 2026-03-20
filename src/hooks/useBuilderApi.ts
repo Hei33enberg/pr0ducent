@@ -132,7 +132,7 @@ export function useBuilderApi() {
   );
 
   const runBuilders = useCallback(
-    async (prompt: string, experimentId: string, selectedTools: string[]) => {
+    async (prompt: string, experimentId: string | undefined, selectedTools: string[]) => {
       setLoading(true);
 
       const promises: Promise<void>[] = [];
