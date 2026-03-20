@@ -1,159 +1,124 @@
 
+# pr0ducent — Project Plan
 
-# Plan: Kompleksowa naprawa i rozbudowa pr0ducent
+## Overview
 
-## Podsumowanie
-
-Naprawiamy nawigację, logo, kalkulator; podpinamy crony (sync builderów + blog); poprawiamy logotypy builderów; przebudowujemy tabelę porównawczą; dodajemy mock generator dla wszystkich builderów; wstawiamy przykładowe runy; optymalizujemy UI/UX/performance.
-
----
-
-## 1. Naprawa nawigacji i logo
-
-**Problem:** Logo na podstronach (np. /auth, /pricing) nie kieruje do `/` bo `handleLogoClick` wymaga `experiment`. Linki `#comparison`, `#faq` nie działają na podstronach (tych sekcji tam nie ma). Kalkulator brak w menu.
-
-**Rozwiązanie:**
-- `PageFrame.tsx`: Logo `onClick` → zawsze `navigate("/")`. Linki z `#` na podstronach → `navigate("/#comparison")` itd.
-- Dodać link do Kalkulatora w `navLinks` i `FloatingToolbar`
-- Footer: dodać link do Kalkulatora
+**pr0ducent™** is an AI builder comparison platform. Users enter a prompt, select AI builders (Lovable, v0, Bolt, Cursor, Replit, etc.), and get a side-by-side comparison of generated outputs — scores, pros/cons, time-to-prototype, and community ratings.
 
 ---
 
-## 2. Kalkulator na stronie głównej
+## Architecture
 
-**Problem:** Kalkulator jest na osobnej stronie `/calculator`, trudno go znaleźć.
-
-**Rozwiązanie:**
-- Dodać sekcję `<CalculatorSection />` na `Index.tsx` (wersja inline, uproszczona) z linkiem "Full Calculator →" do `/calculator`
-- Umieścić ją między `BuilderComparisonTable` a `FAQ`
-
----
-
-## 3. Poprawne logotypy builderów
-
-**Problem:** Wiele builderów ma puste `logoUrl` (antigravity, build0, orchids, floot), a niektóre URL mogą być nieaktualne.
-
-**Rozwiązanie w `src/config/tools.ts`:**
-- Zaktualizować URL logotypów do działających favicon/logo (lub użyć Google favicon proxy: `https://www.google.com/s2/favicons?domain=example.com&sz=64`)
-- Dla builderów bez oficjalnej strony → użyć placeholdera z pierwszą literą (już działa, ale poprawić fallback w komponentach)
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18 + TypeScript + Vite 8 |
+| Styling | Tailwind CSS 3 + custom CSS utilities |
+| State | React Query (server) + useState (local) |
+| Backend | Lovable Cloud (Supabase) |
+| Auth | Supabase Auth (email/password) |
+| Database | PostgreSQL via Supabase |
+| Edge Functions | Deno (Supabase Edge Functions) |
+| i18n | Custom React context (EN/PL) |
+| Routing | React Router v6 (lazy-loaded) |
 
 ---
 
-## 4. Cron: Synchronizacja danych builderów
+## Routes
 
-**Problem:** `sync-builder-data` istnieje jako edge function, ale nie ma crona.
-
-**Rozwiązanie:**
-- Włączyć extensions `pg_cron` i `pg_net` (migration)
-- Utworzyć cron job (SQL insert, nie migration) wywołujący `sync-builder-data` co 24h
-- Dodać RLS insert policy na `builder_sync_data` i `builder_pricing_plans` dla service_role (już mają upsert w edge function z service key)
-
----
-
-## 5. Cron: Automatyczne artykuły na bloga
-
-**Problem:** `generate-blog-post` istnieje, ale nie jest zautomatyzowany.
-
-**Rozwiązanie:**
-- Stworzyć nową edge function `cron-blog-generator` która:
-  - Generuje rotacyjnie tematy (porównania builderów, analizy ofert, update roundupy, best-for-X)
-  - Wywołuje `generate-blog-post` z `autoTranslate: true`
-  - Publikuje jako draft (admin zatwierdza) lub auto-publish
-- Dodać cron job co 3 dni wywołujący `cron-blog-generator`
+| Path | Page | Description |
+|------|------|-------------|
+| `/` | Index | Hero + comparison + calculator + FAQ + blog |
+| `/auth` | Auth | Login/signup |
+| `/pricing` | Pricing | Plans & pricing |
+| `/calculator` | Calculator | PVI cost calculator |
+| `/blog` | Blog | AI-generated blog posts |
+| `/blog/:slug` | BlogPost | Single post |
+| `/builders` | BuildersIndex | All builders listing |
+| `/builders/:id` | BuilderProfile | Individual builder profile |
+| `/runs-now` | RunsNow | Public experiments feed |
+| `/experiment/:id` | PublicExperiment | Shared experiment view |
+| `/dashboard` | UserDashboard | User account |
+| `/dashboard/updates` | BuilderDashboard | Builder sync updates |
+| `/dashboard/notifications` | Notifications | User notifications |
 
 ---
 
-## 6. Dokumentacja builderów pod SEO
+## Database Tables
 
-**Rozwiązanie:**
-- Nowa strona `/builders/:id` z pełnym profilem buildera (dane z `builder_sync_data` + `builder_pricing_plans`)
-- Route w `App.tsx` → `BuilderProfile.tsx`
-- Zawiera: opis, pricing tiers, AI models, features, changelog, PVI score, community rating, link referralowy
-- Linkowane z tabeli porównawczej i footera
-- Strona `/builders` jako index z listą wszystkich builderów
-
----
-
-## 7. Przebudowa tabeli porównawczej
-
-**Problem:** Tabela jest "brzydka, nieprawdziwa, słaba" — dane statyczne, layout ciasny, brak wizualnego wow.
-
-**Rozwiązanie:**
-- Przeprojektować na card-based layout zamiast tabeli (lepsze na mobile)
-- Każdy builder jako karta z: logo, PVI score bar, kluczowe metryki, pricing, CTA
-- Dodać filtry: kategoria, price range, feature checklist
-- Dane z DB (builder_sync_data + builder_pricing_plans) zamiast statycznych z `tools.ts`
-- Wyróżnić partnera (Lovable) wizualnie ale nie nachalnie
-- Dodać porównanie 2-3 builderów side-by-side (select & compare)
+| Table | Purpose |
+|-------|---------|
+| `experiments` | User comparison experiments |
+| `experiment_runs` | Individual builder runs per experiment |
+| `builder_results` | Raw API results from builders |
+| `builder_ratings` | Community ratings per builder |
+| `builder_pricing_plans` | Pricing data per builder |
+| `builder_price_history` | Historical pricing snapshots |
+| `builder_sync_data` | Synced builder metadata |
+| `blog_posts` | AI-generated blog content |
+| `profiles` | User profiles |
+| `subscriptions` | User subscription plans |
+| `user_roles` | Admin/moderator/user roles |
+| `user_notifications` | In-app notifications |
+| `notification_subscriptions` | Notification preferences |
+| `run_comments` | Comments on experiments |
+| `referral_clicks` | Affiliate referral tracking |
 
 ---
 
-## 8. Mock generator dla wszystkich builderów
+## Edge Functions
 
-**Problem:** Tylko v0 ma real API. Reszta potrzebuje mocków które wyglądają jak prawdziwy build.
-
-**Rozwiązanie:**
-- Rozbudować `mock-experiment.ts`: po "completed" generować mock preview (screenshot placeholder, bardziej realistyczne opisy)
-- W `ComparisonCanvas` dodać animację generowania (typing, progress steps) zamiast prostego spinnera
-- Każdy builder tile: pokazać mock screenshot z gradientem i nazwą buildera
-- Przygotować placeholder preview images per builder (np. generowane CSS gradients + tekst)
-
----
-
-## 9. Przykładowe runy w Runs Now
-
-**Problem:** Brak danych, strona pusta.
-
-**Rozwiązanie:**
-- Seed database z przykładowymi eksperymentami (migration z insert do `experiments` i `experiment_runs`)
-- Oznaczone jako `is_public = true`, `is_free_run = true`
-- Różne prompty i kombinacje builderów
+| Function | Purpose |
+|----------|---------|
+| `run-on-v0` | Send prompt to v0 API |
+| `poll-v0-status` | Poll v0 generation status |
+| `sync-builder-data` | Sync builder metadata via AI |
+| `generate-blog-post` | Generate blog content via AI |
+| `cron-blog-generator` | Scheduled blog generation |
+| `translate-content` | Translate content EN↔PL |
+| `create-checkout` | Stripe checkout session |
+| `stripe-webhook` | Stripe webhook handler |
 
 ---
 
-## 10. Optymalizacja performance, UI, UX, design
+## Key Components
 
-**Rozwiązanie:**
-- Lazy load stron: `React.lazy()` + `Suspense` dla wszystkich route'ów
-- Obrazki: lazy loading, proper `loading="lazy"` na logo builderów
-- Reduce bundle: dynamiczny import framer-motion w komponentach poniżej foldu
-- Dark mode fix: logo `color: "#000"` → użyć `text-foreground`
-- Mobile: poprawić responsywność tabeli porównawczej
-- Smooth page transitions
-- Skeleton loaders dla danych z DB (pricing plans, ratings)
-
----
-
-## Kolejność implementacji
-
-1. Naprawa nawigacji + logo (quick wins)
-2. Logotypy builderów
-3. Mock generator + przykładowe runy
-4. Przebudowa tabeli porównawczej
-5. Kalkulator inline na głównej
-6. Strony dokumentacji builderów
-7. Crony (sync + blog)
-8. Optymalizacja performance
+| Component | Role |
+|-----------|------|
+| `PageFrame` | App shell with nav, logo, mobile menu |
+| `HeroSection` | Prompt input + tool selection + templates |
+| `ComparisonCanvas` | Side-by-side builder results |
+| `BuilderComparisonTable` | Builder comparison cards |
+| `FeatureMatrix` | Feature support matrix |
+| `PlanComparisonTable` | Pricing plans comparison |
+| `InlineCalculator` | Cost calculator widget |
+| `FAQ` | FAQ accordion with JSON-LD |
+| `AmbientBackground` | Animated gradient background |
 
 ---
 
-## Pliki do utworzenia/edycji
+## Supported Builders
 
-| Plik | Akcja |
-|------|-------|
-| `src/components/PageFrame.tsx` | Edit - nawigacja, logo |
-| `src/components/FloatingToolbar.tsx` | Edit - dodać Calculator |
-| `src/components/Footer.tsx` | Edit - dodać Calculator link |
-| `src/config/tools.ts` | Edit - logotypy |
-| `src/pages/Index.tsx` | Edit - inline calculator sekcja |
-| `src/components/BuilderComparisonTable.tsx` | Rewrite - card layout |
-| `src/components/ComparisonCanvas.tsx` | Edit - mock previews |
-| `src/lib/mock-experiment.ts` | Edit - lepsze mocki |
-| `src/pages/BuilderProfile.tsx` | Create |
-| `src/pages/BuildersIndex.tsx` | Create |
-| `src/components/InlineCalculator.tsx` | Create |
-| `supabase/functions/cron-blog-generator/index.ts` | Create |
-| `src/App.tsx` | Edit - nowe route'y, lazy loading |
-| Migration: pg_cron jobs | SQL insert |
-| Migration: seed example experiments | SQL insert |
+Lovable, Replit, Vercel v0, Cursor, Base44, Antigravity, Build0, Orchids, Floot, Bolt.new
 
+---
+
+## Implementation Status
+
+- [x] Navigation & logo fixes
+- [x] Builder logos (Google favicon proxy)
+- [x] Mock experiment generator
+- [x] Seed example experiments
+- [x] Builder comparison table
+- [x] Feature matrix
+- [x] Pricing plans table
+- [x] Inline calculator
+- [x] Builder profiles & index
+- [x] Blog system (AI-generated)
+- [x] Social features (ratings, comments)
+- [x] RunsNow feed with filters
+- [x] Auth system
+- [x] i18n (EN/PL)
+- [x] Lazy loading all routes
+- [ ] Real v0 API integration (partial)
+- [ ] Cron jobs (sync + blog)
+- [ ] Stripe payments (partial)
