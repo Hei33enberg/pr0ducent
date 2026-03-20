@@ -16,6 +16,7 @@ import BuilderDashboard from "./pages/BuilderDashboard.tsx";
 import Notifications from "./pages/Notifications.tsx";
 import RunsNow from "./pages/RunsNow.tsx";
 import CalculatorPage from "./pages/Calculator.tsx";
+import UserDashboard from "./pages/UserDashboard.tsx";
 
 const queryClient = new QueryClient();
 
