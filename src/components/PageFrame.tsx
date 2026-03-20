@@ -161,8 +161,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       navigate(link.href);
                     }
                   }}
-                  className="block text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
                 >
+                  <span>{link.icon}</span>
                   {link.label}
                 </a>
               ))}

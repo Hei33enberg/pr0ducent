@@ -14,12 +14,24 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | null>(null);
 
+function getCookie(name: string): string | null {
+  const match = document.cookie.match(new RegExp(`(?:^|; )${name}=([^;]*)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+function setCookie(name: string, value: string, days = 365) {
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+}
+
 function detectLocale(): Locale {
   try {
-    const stored = localStorage.getItem("pr0ducent_locale");
-    if (stored === "en" || stored === "pl") return stored;
-    const browserLang = navigator.language?.slice(0, 2);
-    return browserLang === "pl" ? "pl" : "en";
+    // Check cookie first, then localStorage — NO browser detection
+    const fromCookie = getCookie("pr0ducent_locale");
+    if (fromCookie === "en" || fromCookie === "pl") return fromCookie;
+    const fromStorage = localStorage.getItem("pr0ducent_locale");
+    if (fromStorage === "en" || fromStorage === "pl") return fromStorage;
+    return "en"; // Always default to English
   } catch {
     return "en";
   }
@@ -30,7 +42,10 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);
-    try { localStorage.setItem("pr0ducent_locale", l); } catch {}
+    try {
+      localStorage.setItem("pr0ducent_locale", l);
+      setCookie("pr0ducent_locale", l);
+    } catch {}
   }, []);
 
   useEffect(() => {
