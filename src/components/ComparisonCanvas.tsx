@@ -172,7 +172,7 @@ function getOverallScore(run: ExperimentRun) {
   return (s.uiQuality + s.backendLogic + s.speed + s.easeOfEditing) / 4;
 }
 
-export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }: ComparisonCanvasProps) {
+export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, builderResults = {} }: ComparisonCanvasProps) {
   const { user } = useAuth();
   const [elapsed, setElapsed] = useState<Record<string, number>>({});
   const [hiddenTools, setHiddenTools] = useState<Set<string>>(new Set());
