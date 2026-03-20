@@ -18,3 +18,17 @@
 - `supabase/config.toml` sets `verify_jwt` per function: for example `dispatch-builders` and `score-builder-output` expect user JWT; `poll-v0-status` is typically invoked with anon from the browser (`verify_jwt = false`).
 - Typical split: Cursor drives the GitHub repo (migrations, Edge Functions, backend-heavy changes); Antigravity ships UI commits to `main`; Lovable hosts the deployed frontend and needs Pull from GitHub plus Publish when deploying UI changes.
 - POP/VBP is the intended standard for third-party builders (telemetry, exports, partner APIs); benchmarking and scoring of built outputs are treated as core to the pr0duction pipeline alongside dispatch, not as an afterthought.
+
+## Sprint 3.5 — typy, PVI, odczyty (ustalone z AG)
+
+- **`as any` w `src/`:** traktuj jako regres architektury. Warstwa eksperymentów (`experiment-service.ts`, `ComparisonCanvas.tsx`, `PublicExperiment.tsx`) ma używać typów z `Database` / `Json` z `src/integrations/supabase/types.ts` oraz `satisfies` tam gdzie AG to wprowadził — nie wracaj do obejść typów bez uzasadnienia (wyjątek: biblioteki zewnętrzne).
+- **Dwa silniki PVI:** `src/lib/pvi-engine.ts` + typ `PVIDimensions` + kolumny `score_*` w `builder_benchmark_scores` = **benchmark / analityka**. `src/lib/pvi-calculator.ts` = **marketing / kalkulator planów** (landing, cennik) — nie mieszaj ich w Edge Functions zapisujących benchmark.
+- **Read-only kontrakty UI:** `WinnerBanner` opiera się na **`avg_pvi`** z widoku `builder_leaderboard`. Wykresy (radar itd.) biorą **`score_*`** z `builder_benchmark_scores` po `tool_id` / `builder_result_id`. Zmiany MV lub kolumn muszą zachować te ścieżki albo zostać zsynchronizowane z frontem w jednym PR.
+- **Realtime / stream:** wiersze ze streamu (`BuilderResultRow`, snake_case) mapuj do **`BuilderResult`** (camelCase) przed przekazaniem do komponentów oczekujących `BuilderResult` — unikaj unionów `BuilderResult | BuilderResultRow` na propsach bez mapowania.
+
+## Backend (Edge / migracje) — kierunek zapisu wymiarów
+
+- Zapis do `builder_benchmark_scores` powinien używać **tych samych nazw kolumn** co `PVIDimensions` / `mapRowToScores` w `pvi-engine.ts` (`score_speed`, …, `score_code_quality`).
+- **`pvi_score`:** licz zgodnie z wagami w `pvi-engine` (lub współdziel `computePartialPVI` w `supabase/functions/_shared/benchmark-group-a.ts` dla spójności Deno).
+- **`ai_reasoning`:** JSONB; struktura zgodna z tym, co czyta UI (np. pola per wymiar / `summary` tam gdzie ComparisonCanvas je wyświetla).
+- **Grupa B/C:** ciężkie joby (Lighthouse, batch AI) poza długim invoke — aktualizacja tego samego wiersza po `builder_result_id`, idempotencja, `run_events` do audytu; MV odświeżane przez `pg_cron` lub ręczny refresh po batchu.
