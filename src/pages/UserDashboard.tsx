@@ -268,8 +268,14 @@ export default function UserDashboard() {
                         ))}
                       </ul>
                       {subscription?.plan !== plan.name.toLowerCase() && plan.name !== "Free" && (
-                        <Button size="sm" variant="outline" className="text-[10px] h-6 w-full mt-1">
-                          Upgrade
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-[10px] h-6 w-full mt-1"
+                          disabled={loadingPlan === plan.name}
+                          onClick={() => handleUpgrade(plan.name)}
+                        >
+                          {loadingPlan === plan.name ? <Loader2 className="w-3 h-3 animate-spin" /> : "Upgrade"}
                         </Button>
                       )}
                     </div>
