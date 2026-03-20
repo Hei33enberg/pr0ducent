@@ -28,8 +28,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Optionally save to DB if experimentId provided
-    if (experimentId) {
+    // Save to DB only for real DB experiment UUIDs (skip guest/local ids)
+    const isUuid = typeof experimentId === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(experimentId);
+    if (isUuid) {
       const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
       const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
       if (SUPABASE_URL && SUPABASE_SERVICE_ROLE_KEY) {
@@ -41,7 +42,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Call v0 API in async mode — should return quickly with chatId
+    // Call v0 API in async mode — allow longer handshake time
     console.log("Calling v0 API async with prompt length:", prompt.length);
 
     const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
@@ -54,7 +55,7 @@ Deno.serve(async (req) => {
         message: prompt,
         modelConfiguration: { responseMode: "async" },
       }),
-      signal: AbortSignal.timeout(15000),
+      signal: AbortSignal.timeout(55000),
     });
 
     if (!chatResponse.ok) {
