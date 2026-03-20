@@ -1,0 +1,1 @@
+UPDATE public.builder_rate_limits SET max_per_minute = 30 WHERE tool_id = 'v0';
