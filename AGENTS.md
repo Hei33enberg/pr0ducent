@@ -2,6 +2,7 @@
 
 ## Learned User Preferences
 
+- Ship changes by committing and pushing to `main` (pull/rebase onto `origin/main` when the branch has diverged) so connected tools such as Lovable see updates; use GitHub identity aligned with `maciej.bialek.33@gmail.com` for this repo’s commits when working on behalf of this project owner.
 - Keep product messaging aligned with what the backend actually does: clearly separate live builder integrations from benchmark or mock paths unless `dispatch-builders` and `builder_integration_config` support more live tools.
 - When designing scale for many concurrent runs, plan explicitly for durable workflow engines and broker account isolation as layers beyond the first Supabase Edge–centric MVP if they are not already in place.
 - In Supabase Edge Functions that use `@supabase/supabase-js` with the caller’s JWT, validate identity with supported APIs such as `auth.getUser()` (using the Bearer token or client global headers); do not rely on non-existent or undocumented client methods.
