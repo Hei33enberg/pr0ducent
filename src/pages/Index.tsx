@@ -11,7 +11,7 @@ import { HomepageBlogSection } from "@/components/HomepageBlogSection";
 import { InlineCalculator } from "@/components/InlineCalculator";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
-import { FloatingToolbar } from "@/components/FloatingToolbar";
+
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
