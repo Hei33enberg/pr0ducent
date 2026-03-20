@@ -105,7 +105,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
-                className="min-h-[120px] text-base bg-card/80 backdrop-blur-sm shadow-lg border-border/50 resize-none rounded-xl p-5 focus-visible:ring-accent/30 font-sans"
+                className="min-h-[120px] text-base bg-card backdrop-blur-sm shadow-xl border-2 border-foreground/25 resize-none rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
                 onFocus={() => setIsExpanded(true)}
               />
             </div>

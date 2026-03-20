@@ -62,11 +62,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
-    { label: t("nav.compare"), href: "/compare" },
-    { label: t("nav.blog"), href: "/blog" },
-    { label: t("nav.dashboard"), href: "/dashboard/updates" },
-    { label: t("nav.howItWorks"), href: "#how-it-works" },
-    { label: t("nav.faq"), href: "#faq" },
+    { label: t("nav.compare"), href: "/compare", icon: "⚔️" },
+    { label: t("nav.blog"), href: "/blog", icon: "📰" },
+    { label: t("nav.dashboard"), href: "/dashboard/updates", icon: "🔄" },
+    { label: "Runs Now", href: "/runs-now", icon: "🔴" },
+    { label: t("nav.howItWorks"), href: "#how-it-works", icon: "🧭" },
+    { label: t("nav.faq"), href: "#faq", icon: "❓" },
   ];
 
   return (
@@ -94,8 +95,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       navigate(link.href);
                     }
                   }}
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
                 >
+                  <span className="text-xs">{link.icon}</span>
                   {link.label}
                 </a>
               ))}
@@ -159,8 +161,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       navigate(link.href);
                     }
                   }}
-                  className="block text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
                 >
+                  <span>{link.icon}</span>
                   {link.label}
                 </a>
               ))}
