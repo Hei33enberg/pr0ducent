@@ -29,7 +29,7 @@ export function Footer() {
               {t("footer.product")}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-sans">
-              <li><a href="/compare" onClick={(e) => { e.preventDefault(); navigate("/compare"); }} className="hover:text-foreground transition-colors">{t("footer.compare")}</a></li>
+              <li><a href="#comparison" className="hover:text-foreground transition-colors">{t("footer.compare")}</a></li>
               <li><a href="/calculator" onClick={(e) => { e.preventDefault(); navigate("/calculator"); }} className="hover:text-foreground transition-colors">Calculator</a></li>
               <li><a href="#how-it-works" className="hover:text-foreground transition-colors">{t("footer.howItWorks")}</a></li>
               <li><a href="#faq" className="hover:text-foreground transition-colors">{t("footer.faq")}</a></li>
