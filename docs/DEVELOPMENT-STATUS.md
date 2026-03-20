@@ -22,6 +22,7 @@
 - [`20260321140000_run_jobs_tasks_workflow_pool.sql`](../supabase/migrations/20260321140000_run_jobs_tasks_workflow_pool.sql)
 - [`20260322120000_vbp_orchestration.sql`](../supabase/migrations/20260322120000_vbp_orchestration.sql) — VBP config columns, `builder_rate_limits`, `builder_crawl_sources`, `run_tasks.next_retry_at`.
 - [`20260325100000_builder_dispatch_slot_rpc.sql`](../supabase/migrations/20260325100000_builder_dispatch_slot_rpc.sql) — `builder_try_dispatch_slot()` RPC for atomic rate window + inflight cap (`process-task-queue`).
+- [`20260326120000_ensure_builder_rate_limits.sql`](../supabase/migrations/20260326120000_ensure_builder_rate_limits.sql) — idempotentne `CREATE TABLE` jeśli `22120000` było pominięte przed RPC.
 
 ## Edge functions (orchestrator-related)
 

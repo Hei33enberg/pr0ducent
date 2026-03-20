@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { resolveAdapterKind } from "../_shared/adapter-registry.ts";
 import { dispatchBenchmarkAdapter } from "../_shared/adapters/benchmark-adapter.ts";
 import { dispatchGenericRestAdapter } from "../_shared/adapters/generic-rest-adapter.ts";
@@ -24,7 +24,7 @@ function isServiceRoleRequest(req: Request): boolean {
 }
 
 async function dispatchOne(
-  admin: ReturnType<typeof createClient>,
+  admin: SupabaseClient,
   task: { id: string; tool_id: string; experiment_id: string; run_job_id: string },
   job: { trace_id: string; metadata: Record<string, unknown> | null },
   configByTool: Map<string, IntegrationConfigRow>
@@ -78,9 +78,7 @@ type PickableTask = {
   attempt_count: number;
 };
 
-async function pickNextQueuedOrRetrying(
-  admin: ReturnType<typeof createClient>
-): Promise<PickableTask | null> {
+async function pickNextQueuedOrRetrying(admin: SupabaseClient): Promise<PickableTask | null> {
   const { data: queued } = await admin
     .from("run_tasks")
     .select("id, tool_id, experiment_id, run_job_id, attempt_count")
@@ -206,12 +204,7 @@ Deno.serve(async (req) => {
 
     const meta = (job.metadata ?? {}) as Record<string, unknown>;
 
-    await dispatchOne(
-      admin as any,
-      task,
-      { trace_id: job.trace_id as string, metadata: meta },
-      configByTool
-    );
+    await dispatchOne(admin, task, { trace_id: job.trace_id as string, metadata: meta }, configByTool);
     processed++;
   }
 

@@ -1,5 +1,9 @@
 # Kolejka — obserwowalność i alerty
 
+## Kolejność migracji (ważne)
+
+Funkcja `builder_try_dispatch_slot` z **`20260325100000_builder_dispatch_slot_rpc.sql`** wymaga tabeli **`builder_rate_limits`** (standardowo z **`20260322120000_vbp_orchestration.sql`**). Jeśli ktoś wdrożył tylko `25100000`, migracja **`20260326120000_ensure_builder_rate_limits.sql`** tworzy tabelę idempotentnie.
+
 ## Symptom: zadania wiszą w `queued`
 
 Worker [`process-task-queue`](../supabase/functions/process-task-queue/index.ts) powinien zdejmować `run_tasks` ze statusem `queued` lub `retrying` (gdy `next_retry_at` minął). [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts) dodatkowo robi **inline drain** — jeśli po wywołaniach workera nadal są `queued`, problemem jest brak deployu workera, zły **Database Webhook**, lub błąd w adapterze.

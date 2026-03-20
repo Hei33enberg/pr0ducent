@@ -61,7 +61,9 @@ A) MIGRATIONS (order matters)
 Apply all pending files under supabase/migrations/, including:
 - 20260321120000_orchestrator_core.sql
 - 20260321140000_run_jobs_tasks_workflow_pool.sql
-- 20260322120000_vbp_orchestration.sql
+- 20260322120000_vbp_orchestration.sql  (builder_rate_limits + VBP columns — wymagane przed RPC)
+- 20260325100000_builder_dispatch_slot_rpc.sql  (builder_try_dispatch_slot)
+- 20260326120000_ensure_builder_rate_limits.sql  (idempotent, gdy 22120000 było pominięte)
 If ALTER PUBLICATION supabase_realtime complains about duplicate, skip duplicate adds (migrations use guards where noted).
 
 B) EDGE FUNCTIONS — deploy these (supabase functions deploy <name>):
