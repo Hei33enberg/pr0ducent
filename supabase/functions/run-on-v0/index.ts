@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
     const isTimeout = error instanceof DOMException && error.name === "TimeoutError";
 
     return new Response(
-      JSON.stringify({ success: false, error: isTimeout ? "v0 API timeout. Spróbuj ponownie." : message }),
+      JSON.stringify({ success: false, error: isTimeout ? "v0 handshake timeout (110s). Spróbuj ponownie za chwilę." : message }),
       { status: isTimeout ? 504 : 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
