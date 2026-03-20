@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, forwardRef, type ReactNode } from "react";
-import { LogOut, Menu, X, Swords, Newspaper, RefreshCw, Radio, Compass, HelpCircle, Calculator, User } from "lucide-react";
+import { LogOut, Menu, X, Swords, Newspaper, RefreshCw, Radio, Compass, HelpCircle, Calculator, User, BarChart3 } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -81,7 +81,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
-    { label: t("nav.compare"), href: "/compare", icon: Swords },
+    { label: "Arena", href: "/arena", icon: Swords },
+    { label: "Leaderboard", href: "/leaderboard", icon: BarChart3 },
+    { label: t("nav.compare"), href: "/compare", icon: Compass },
     { label: t("nav.calculator"), href: "/calculator", icon: Calculator },
     { label: t("nav.pricing"), href: "/pricing", icon: Calculator },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },

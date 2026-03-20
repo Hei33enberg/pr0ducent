@@ -1,35 +1,14 @@
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
-import { useNavigate } from "react-router-dom";
+import { usePublicExperiments, PublicExperimentRecord as PublicDemo } from "@/hooks/usePublicExperiments";
 import { Clock, Scissors } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-interface PublicDemo {
-  id: string;
-  prompt: string;
-  selected_tools: string[];
-  created_at: string;
-  account_model: string;
-}
-
 export default function Marketplace() {
   const navigate = useNavigate();
-  const [demos, setDemos] = useState<PublicDemo[]>([]);
-
-  useEffect(() => {
-    supabase
-      .from("experiments")
-      .select("id, prompt, selected_tools, created_at, account_model")
-      .eq("is_public", true)
-      .order("created_at", { ascending: false })
-      .limit(20)
-      .then(({ data }) => {
-        if (data) setDemos(data);
-      });
-  }, []);
+  const { experiments: demos, loading, hasMore, loadMore } = usePublicExperiments(12);
 
   const handleRemix = (demo: PublicDemo, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -97,6 +76,20 @@ export default function Marketplace() {
               </div>
             ))}
           </div>
+          
+          {loading && (
+            <div className="flex justify-center py-10">
+              <div className="w-8 h-8 rounded-full border-t-2 border-primary animate-spin" />
+            </div>
+          )}
+          
+          {!loading && hasMore && (
+            <div className="flex justify-center py-10">
+              <Button variant="outline" onClick={loadMore} className="rounded-full px-8">
+                Load More
+              </Button>
+            </div>
+          )}
         </div>
       </PageFrame>
     </div>

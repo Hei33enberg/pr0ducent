@@ -3,14 +3,26 @@ import { getToolById } from "@/config/tools";
 import type { ExperimentRun } from "@/types/experiment";
 import { Trophy } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { calculatePVI } from "@/lib/pvi-calculator";
 
 interface WinnerBannerProps {
   runs: ExperimentRun[];
 }
 
 function getOverallScore(run: ExperimentRun) {
-  const s = run.scores;
-  return (s.uiQuality + s.backendLogic + s.speed + s.easeOfEditing) / 4;
+  const tool = getToolById(run.toolId);
+  if (!tool) return 0;
+  
+  return calculatePVI({
+    tool_id: tool.id,
+    plan_name: "pro",
+    monthly_price: parseInt(tool.pricing.replace(/\D/g, '')) || 20,
+    credits_included: 1000,
+    credit_unit: "messages",
+    ai_models: [],
+    features: tool.strengths,
+    dev_environment: tool.stack,
+  });
 }
 
 export function WinnerBanner({ runs }: WinnerBannerProps) {
@@ -23,7 +35,7 @@ export function WinnerBanner({ runs }: WinnerBannerProps) {
   const tool = getToolById(winner.toolId);
   if (!tool) return null;
 
-  const avgScore = getOverallScore(winner).toFixed(0);
+  const avgScore = getOverallScore(winner).toFixed(1);
 
   return (
     <motion.div

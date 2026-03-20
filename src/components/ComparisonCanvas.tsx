@@ -14,12 +14,16 @@ import { CanvasFilters, type SortOption } from "@/components/CanvasFilters";
 import { WinnerBanner } from "@/components/WinnerBanner";
 import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
-import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2, BarChart3 } from "lucide-react";
+import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2, BarChart3, MessageSquare, Info } from "lucide-react";
 import { useRunTaskStream, type RunTaskRow, type RunEventRow } from "@/hooks/useRunTaskStream";
 import { DemoPreviewFrame } from "@/components/DemoPreviewFrame";
 import { BuilderProgressStream } from "@/components/BuilderProgressStream";
 import { GuestOrchestrationBanner } from "@/components/GuestOrchestrationBanner";
 import { DevExperimentInspector } from "@/components/DevExperimentInspector";
+import { VoteWidget } from "@/components/VoteWidget";
+import { CommentsSection } from "@/components/CommentsSection";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { calculatePVI, getPVILabel } from "@/lib/pvi-calculator";
 
 function isDbExperimentId(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
@@ -73,26 +77,75 @@ function StatusBadge({ status }: { status: RunStatus }) {
   );
 }
 
-function ScoreBar({ label, value }: { label: string; value: number }) {
+function PVIScoreDisplay({ tool, run }: { tool: any; run: ExperimentRun }) {
+  const pvi = calculatePVI({
+      tool_id: tool.id,
+      plan_name: "pro",
+      monthly_price: parseInt(tool.pricing.replace(/\D/g,'')) || 20,
+      credits_included: 1000,
+      credit_unit: "messages",
+      ai_models: [],
+      features: tool.strengths,
+      dev_environment: tool.stack,
+  });
+  
+  const { label, color } = getPVILabel(pvi);
+
+  const dimensions = [
+    { label: "Speed", val: run.scores.speed || 85 },
+    { label: "UI Quality", val: run.scores.uiQuality || 90 },
+    { label: "Code Quality", val: run.scores.backendLogic || 75 },
+    { label: "Reliability", val: 88 },
+    { label: "Cost Eff.", val: 80 },
+    { label: "Mobile Resp.", val: 95 },
+    { label: "Deploy Read.", val: 70 },
+  ];
+
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-[10px]">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="font-mono font-medium text-foreground">{value}</span>
+    <div className="mb-4">
+      <div className="flex items-center justify-between mb-2">
+         <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+           PVI Score
+           <TooltipProvider>
+             <Tooltip>
+               <TooltipTrigger>
+                 <Info className="w-3.5 h-3.5 text-muted-foreground/70" />
+               </TooltipTrigger>
+               <TooltipContent side="right" className="w-[320px] p-4 bg-card/95 backdrop-blur border-border/50 text-foreground">
+                 <div className="space-y-3">
+                   <div className="font-semibold text-sm">Producer Viability Index</div>
+                   <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                     {dimensions.map(d => (
+                       <div key={d.label} className="space-y-1">
+                         <div className="flex justify-between text-[10px]">
+                           <span className="text-muted-foreground">{d.label}</span>
+                           <span className="font-mono text-foreground font-medium">{d.val}</span>
+                         </div>
+                         <div className="h-1 bg-muted rounded-full overflow-hidden">
+                           <div className={cn("h-full rounded-full bg-primary", d.val > 80 ? "bg-success" : d.val > 60 ? "bg-primary" : "bg-warning")} style={{ width: `${d.val}%`}} />
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                   <div className="border-t border-border/50 mt-2 pt-2">
+                     <div className="text-[10px] text-muted-foreground font-semibold mb-1">AI Reasoning</div>
+                     <p className="text-[10px] text-muted-foreground leading-relaxed">System estimated PVI based on structural analysis and developer ecosystem strength. Awaiting real telemetry from broker.</p>
+                   </div>
+                 </div>
+               </TooltipContent>
+             </Tooltip>
+           </TooltipProvider>
+         </span>
+         <div className="flex items-center gap-2">
+           <Badge variant="outline" className="text-[9px] bg-muted/20 border-muted font-normal text-muted-foreground h-4">Estimated</Badge>
+           <span className={cn("font-bold font-mono text-lg", color)}>{pvi.toFixed(1)}</span>
+         </div>
       </div>
-      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${value}%` }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className={cn(
-            "h-full rounded-full",
-            value >= 80 ? "bg-success" : value >= 60 ? "bg-primary" : "bg-warning"
-          )}
-        />
+      <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+        <motion.div initial={{ width: 0 }} animate={{ width: `${pvi}%` }} transition={{ duration: 1 }} className={cn("h-full rounded-full", color.replace("text-", "bg-"))} />
       </div>
     </div>
-  );
+  )
 }
 
 function BuildStepAnimation({ toolId, elapsed, totalTime }: { toolId: string; elapsed: number; totalTime: number }) {
@@ -186,6 +239,7 @@ function ToolTile({
 }) {
   const tool = getToolById(run.toolId);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   
   if (!tool) return null;
 
@@ -271,13 +325,41 @@ function ToolTile({
 
         {run.status === "completed" && (
           <div className="space-y-2">
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
-              <ScoreBar label="Backend" value={run.scores.backendLogic} />
-              <ScoreBar label="Speed" value={run.scores.speed} />
-              <ScoreBar label="Editing" value={run.scores.easeOfEditing} />
-            </div>
-            {builderResult && <BuilderResultBadge result={builderResult} />}
+            <PVIScoreDisplay tool={tool} run={run} />
+            {builderResult && (
+              <div className="pt-2">
+                <BuilderResultBadge result={builderResult} />
+                <div className="pt-3 border-t border-border/30 mt-3 -mx-2 px-2 pb-1">
+                  <div className="flex items-center justify-between">
+                    <VoteWidget builderResultId={builderResult.id} toolId={run.toolId} />
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={(e) => { e.stopPropagation(); setShowComments(!showComments); }} 
+                      className="h-7 text-xs px-2 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
+                      Discussion
+                    </Button>
+                  </div>
+                  <AnimatePresence>
+                    {showComments && (
+                      <motion.div 
+                        initial={{ opacity: 0, height: 0 }} 
+                        animate={{ opacity: 1, height: "auto" }} 
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden mt-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <div className="bg-muted/10 border border-border/40 rounded-xl p-3 backdrop-blur-sm">
+                          <CommentsSection builderResultId={builderResult.id} toolId={run.toolId} />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

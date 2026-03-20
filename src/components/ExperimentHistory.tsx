@@ -3,7 +3,8 @@ import type { Experiment } from "@/types/experiment";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, ArrowRight, Trash2, FlaskConical } from "lucide-react";
+import { Clock, ArrowRight, Trash2, FlaskConical, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { getToolById } from "@/config/tools";
 import { useTranslation } from "@/lib/i18n";
 
 interface ExperimentHistoryProps {
@@ -61,9 +62,26 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
                         <Badge variant="secondary" className="text-[10px]">
                           {exp.selectedTools.length} tools
                         </Badge>
-                        <span>
-                          {completed}/{exp.runs.length} {t("canvas.completed")}
-                        </span>
+                      <div className="flex items-center gap-1.5 ml-1">
+                        {exp.runs.map((r, ri) => {
+                          const tool = getToolById(r.toolId);
+                          return (
+                            <div 
+                              key={ri} 
+                              title={`${tool?.name || r.toolId}: ${r.status}`}
+                              className="w-4 h-4 rounded-full flex items-center justify-center bg-muted/50 border border-border/50"
+                            >
+                              {r.status === "completed" ? (
+                                <CheckCircle2 className="w-3 h-3 text-success" />
+                              ) : r.status === "error" ? (
+                                <AlertCircle className="w-3 h-3 text-destructive" />
+                              ) : (
+                                <Loader2 className="w-3 h-3 text-primary animate-spin" />
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                         {exp.useCaseTags && exp.useCaseTags.length > 0 && exp.useCaseTags.map((tag) => (
                           <Badge key={tag} variant="outline" className="text-[10px]">{tag}</Badge>
                         ))}

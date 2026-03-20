@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
 export interface BuilderResult {
+  id: string;
   toolId: string;
   status: "pending" | "generating" | "completed" | "error";
   chatUrl?: string;
@@ -42,6 +43,7 @@ function mapBuilderRow(row: Record<string, unknown>): BuilderResult {
           : "pending";
 
   return {
+    id: (row.id as string) ?? "",
     toolId: String(row.tool_id),
     status: uiStatus,
     chatUrl: (row.chat_url as string) ?? undefined,
@@ -86,7 +88,7 @@ export function useBuilderApi() {
     async (prompt: string) => {
       setResults((prev) => ({
         ...prev,
-        v0: { toolId: "v0", status: "generating", provenance: "live_api", executionMode: "live" },
+        v0: { id: `v0-${Date.now()}`, toolId: "v0", status: "generating", provenance: "live_api", executionMode: "live" },
       }));
 
       const startTime = Date.now();
@@ -122,6 +124,7 @@ export function useBuilderApi() {
         setResults((prev) => ({
           ...prev,
           v0: {
+            id: `v0-${Date.now()}`,
             toolId: "v0",
             status: "generating",
             chatUrl,
@@ -144,6 +147,7 @@ export function useBuilderApi() {
               setResults((prev) => ({
                 ...prev,
                 v0: {
+                  id: `v0-${Date.now()}`,
                   toolId: "v0",
                   status: "completed",
                   chatUrl: pollData.chatUrl || chatUrl,
@@ -159,6 +163,7 @@ export function useBuilderApi() {
               setResults((prev) => ({
                 ...prev,
                 v0: {
+                  id: `v0-${Date.now()}`,
                   toolId: "v0",
                   status: "error",
                   error: pollData.error || t("api.v0Failed"),
@@ -185,6 +190,7 @@ export function useBuilderApi() {
                   ...prev,
                   v0: {
                     ...prev.v0,
+                    id: `v0-${Date.now()}`,
                     toolId: "v0",
                     status: "error",
                     error: t("api.timeoutGenerating"),
@@ -201,7 +207,7 @@ export function useBuilderApi() {
         const message = err instanceof Error ? err.message : t("api.failedWithV0");
         setResults((prev) => ({
           ...prev,
-          v0: { toolId: "v0", status: "error", error: message, provenance: "live_api", executionMode: "live" },
+          v0: { id: `v0-${Date.now()}`, toolId: "v0", status: "error", error: message, provenance: "live_api", executionMode: "live" },
         }));
       }
     },
@@ -271,6 +277,7 @@ export function useBuilderApi() {
             setResults((prev) => ({
               ...prev,
               v0: {
+                id: `v0-${Date.now()}`,
                 toolId: "v0",
                 status: "completed",
                 chatUrl: pollData.chatUrl || chatUrl,
@@ -286,6 +293,7 @@ export function useBuilderApi() {
             setResults((prev) => ({
               ...prev,
               v0: {
+                id: `v0-${Date.now()}`,
                 toolId: "v0",
                 status: "error",
                 error: pollData.error || t("api.v0Failed"),
