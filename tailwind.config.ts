@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["Space Grotesk", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+        serif: ["Cormorant Garamond", "Georgia", "serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
