@@ -140,6 +140,39 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_crawl_sources: {
+        Row: {
+          crawl_frequency_hours: number
+          created_at: string
+          enabled: boolean
+          id: string
+          last_crawled_at: string | null
+          source_type: string
+          source_url: string
+          tool_id: string
+        }
+        Insert: {
+          crawl_frequency_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_crawled_at?: string | null
+          source_type?: string
+          source_url: string
+          tool_id: string
+        }
+        Update: {
+          crawl_frequency_hours?: number
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          last_crawled_at?: string | null
+          source_type?: string
+          source_url?: string
+          tool_id?: string
+        }
+        Relationships: []
+      }
       builder_ingest_alerts: {
         Row: {
           alert_type: string
@@ -169,6 +202,7 @@ export type Database = {
           api_secret_env: string | null
           browserbase_script: string | null
           capabilities: Json
+          circuit_state: string
           enabled: boolean
           execution_modes: string[]
           max_poll_time_ms: number
@@ -183,6 +217,7 @@ export type Database = {
           api_secret_env?: string | null
           browserbase_script?: string | null
           capabilities?: Json
+          circuit_state?: string
           enabled?: boolean
           execution_modes?: string[]
           max_poll_time_ms?: number
@@ -197,6 +232,7 @@ export type Database = {
           api_secret_env?: string | null
           browserbase_script?: string | null
           capabilities?: Json
+          circuit_state?: string
           enabled?: boolean
           execution_modes?: string[]
           max_poll_time_ms?: number
@@ -911,6 +947,7 @@ export type Database = {
           experiment_id: string
           id: string
           metadata: Json
+          next_retry_at: string | null
           run_job_id: string
           status: string
           tool_id: string
@@ -925,6 +962,7 @@ export type Database = {
           experiment_id: string
           id?: string
           metadata?: Json
+          next_retry_at?: string | null
           run_job_id: string
           status?: string
           tool_id: string
@@ -939,6 +977,7 @@ export type Database = {
           experiment_id?: string
           id?: string
           metadata?: Json
+          next_retry_at?: string | null
           run_job_id?: string
           status?: string
           tool_id?: string
