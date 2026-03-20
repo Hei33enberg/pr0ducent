@@ -134,11 +134,14 @@ function ToolTile({
         </div>
 
         {run.status === "completed" && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-            <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
-            <ScoreBar label="Backend" value={run.scores.backendLogic} />
-            <ScoreBar label="Speed" value={run.scores.speed} />
-            <ScoreBar label="Editing" value={run.scores.easeOfEditing} />
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
+              <ScoreBar label="Backend" value={run.scores.backendLogic} />
+              <ScoreBar label="Speed" value={run.scores.speed} />
+              <ScoreBar label="Editing" value={run.scores.easeOfEditing} />
+            </div>
+            {builderResult && <BuilderResultBadge result={builderResult} />}
           </div>
         )}
 
