@@ -164,7 +164,7 @@ const Index = () => {
       />
 
       <GuestLimitModal open={showGuestLimit} onClose={() => setShowGuestLimit(false)} />
-      <FloatingToolbar />
+      
     </div>
   );
 };
