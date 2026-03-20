@@ -39,9 +39,8 @@ export function useBuilderApi() {
       const startTime = Date.now();
 
       try {
-        // Step 1: Initiate async generation (with retries for transient 504 timeout)
+        // Step 1: Initiate async generation (with retries only for retryable failures)
         let data: any = null;
-        let lastErrorMessage = "Failed to call run-on-v0";
 
         for (let attempt = 1; attempt <= RUN_ON_V0_MAX_RETRIES; attempt++) {
           const { data: attemptData, error: attemptError } = await supabase.functions.invoke("run-on-v0", {
@@ -54,8 +53,7 @@ export function useBuilderApi() {
           }
 
           const combinedError = attemptError?.message || attemptData?.error || "v0 API error";
-          lastErrorMessage = combinedError;
-          const retryable = /504|timeout|non-2xx/i.test(combinedError);
+          const retryable = attemptData?.retryable === true || /timeout|504|failed to fetch/i.test(combinedError);
 
           if (!retryable || attempt === RUN_ON_V0_MAX_RETRIES) {
             throw new Error(combinedError);
