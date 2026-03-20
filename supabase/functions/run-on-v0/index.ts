@@ -10,7 +10,7 @@ const V0_API_BASE = "https://api.v0.dev/v1";
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
@@ -24,37 +24,35 @@ Deno.serve(async (req) => {
     const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_ANON_KEY) {
-      console.error("Missing env vars:", {
-        hasUrl: !!SUPABASE_URL,
-        hasServiceKey: !!SUPABASE_SERVICE_ROLE_KEY,
-        hasAnonKey: !!SUPABASE_ANON_KEY,
-      });
-      throw new Error("Missing required Supabase environment variables");
+      throw new Error("Missing required environment variables");
     }
 
-    // Validate auth
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader) {
+    // Validate auth using getClaims
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Missing authorization" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
-    const {
-      data: { user },
-      error: authError,
-    } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } =
+      await anonClient.auth.getClaims(token);
 
-    if (authError || !user) {
+    if (claimsError || !claimsData?.claims) {
+      console.error("Auth error:", claimsError);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const userId = claimsData.claims.sub as string;
 
     const { prompt, experimentId } = await req.json();
 
@@ -68,12 +66,14 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Verify experiment belongs to user
+    // Verify experiment belongs to user using service role
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
     const { data: exp } = await supabase
       .from("experiments")
       .select("id")
       .eq("id", experimentId)
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .single();
 
     if (!exp) {
@@ -98,7 +98,8 @@ Deno.serve(async (req) => {
 
     const startTime = Date.now();
 
-    // Call v0 Platform API
+    // Call v0 Platform API — POST /v1/chats with message field
+    console.log("Calling v0 API with prompt length:", prompt.length);
     const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
       method: "POST",
       headers: {
@@ -112,16 +113,39 @@ Deno.serve(async (req) => {
 
     if (!chatResponse.ok) {
       const errorBody = await chatResponse.text();
-      throw new Error(`v0 API error [${chatResponse.status}]: ${errorBody}`);
+      console.error(`v0 API error [${chatResponse.status}]:`, errorBody);
+      
+      // Update builder_results with error
+      await supabase
+        .from("builder_results")
+        .update({
+          status: "error",
+          error_message: `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 500)}`,
+        })
+        .eq("experiment_id", experimentId)
+        .eq("tool_id", "v0");
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 200)}`,
+        }),
+        {
+          status: 502,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
     }
 
     const chatData = await chatResponse.json();
     const generationTime = Date.now() - startTime;
 
+    console.log("v0 API response keys:", Object.keys(chatData));
+
     const chatId = chatData.id || chatData.chat_id;
-    const chatUrl = chatId ? `https://v0.dev/chat/${chatId}` : null;
-    const files = chatData.files || chatData.messages?.[0]?.files || [];
-    const previewUrl = chatData.preview_url || chatData.deployment_url || null;
+    const chatUrl = chatData.webUrl || (chatId ? `https://v0.dev/chat/${chatId}` : null);
+    const files = chatData.files || chatData.latestVersion?.files || chatData.messages?.[0]?.files || [];
+    const previewUrl = chatData.latestVersion?.demoUrl || chatData.preview_url || chatData.deployment_url || null;
 
     await supabase
       .from("builder_results")
