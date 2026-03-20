@@ -140,6 +140,44 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_arena_votes: {
+        Row: {
+          created_at: string
+          experiment_id: string
+          id: string
+          tool_a_id: string
+          tool_b_id: string
+          user_id: string | null
+          winner_tool_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          experiment_id: string
+          id?: string
+          tool_a_id: string
+          tool_b_id: string
+          user_id?: string | null
+          winner_tool_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          experiment_id?: string
+          id?: string
+          tool_a_id?: string
+          tool_b_id?: string
+          user_id?: string | null
+          winner_tool_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_arena_votes_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       builder_benchmark_scores: {
         Row: {
           ai_reasoning: Json | null
