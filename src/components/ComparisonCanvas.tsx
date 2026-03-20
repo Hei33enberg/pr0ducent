@@ -65,11 +65,13 @@ function ToolTile({
   elapsed,
   onClick,
   onReferralClick,
+  builderResult,
 }: {
   run: ExperimentRun;
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
+  builderResult?: BuilderResult;
 }) {
   const tool = getToolById(run.toolId);
   if (!tool) return null;
