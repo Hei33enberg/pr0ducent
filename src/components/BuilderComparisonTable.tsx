@@ -3,7 +3,7 @@ import { BUILDER_TOOLS } from "@/config/tools";
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, ChevronRight, Zap, Star, TrendingUp, Sparkles, BarChart3, DollarSign, Cpu, CheckSquare, Monitor, Clock, Tag } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Zap, Star, TrendingUp, Sparkles, BarChart3, DollarSign, Cpu, CheckSquare, Monitor, Clock, Tag, Swords } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
