@@ -3,7 +3,8 @@ import type { Experiment } from "@/types/experiment";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, ArrowRight, Beaker, Trash2, FlaskConical } from "lucide-react";
+import { Clock, ArrowRight, Trash2, FlaskConical } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 interface ExperimentHistoryProps {
   experiments: Experiment[];
@@ -12,11 +13,13 @@ interface ExperimentHistoryProps {
 }
 
 export function ExperimentHistory({ experiments, onSelect, onDelete }: ExperimentHistoryProps) {
+  const { t } = useTranslation();
+
   return (
     <section className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex items-center gap-2 mb-4">
-        <Beaker className="w-4 h-4 text-muted-foreground" />
-        <h2 className="text-lg font-semibold text-foreground">Past Experiments</h2>
+        <FlaskConical className="w-4 h-4 text-muted-foreground" />
+        <h2 className="text-lg font-serif font-bold text-foreground">{t("history.title")}</h2>
       </div>
 
       {experiments.length === 0 ? (
@@ -26,8 +29,8 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
           className="rounded-xl border border-dashed border-border bg-muted/30 p-10 flex flex-col items-center gap-3"
         >
           <FlaskConical className="w-10 h-10 text-muted-foreground/40" />
-          <p className="text-sm text-muted-foreground text-center">
-            Brak eksperymentów. Wpisz prompt powyżej i uruchom swój pierwszy test!
+          <p className="text-sm text-muted-foreground text-center font-sans">
+            {t("history.empty")}
           </p>
         </motion.div>
       ) : (
@@ -47,10 +50,10 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
                 >
                   <CardContent className="p-4 flex items-center gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-foreground truncate">
+                      <div className="text-sm font-medium text-foreground truncate font-sans">
                         {exp.prompt}
                       </div>
-                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap">
+                      <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground flex-wrap font-sans">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {new Date(exp.createdAt).toLocaleDateString()}
@@ -59,7 +62,7 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
                           {exp.selectedTools.length} tools
                         </Badge>
                         <span>
-                          {completed}/{exp.runs.length} completed
+                          {completed}/{exp.runs.length} {t("canvas.completed")}
                         </span>
                         {exp.useCaseTags && exp.useCaseTags.length > 0 && exp.useCaseTags.map((tag) => (
                           <Badge key={tag} variant="outline" className="text-[10px]">{tag}</Badge>

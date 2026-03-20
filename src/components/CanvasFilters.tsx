@@ -1,8 +1,8 @@
 import { BUILDER_TOOLS } from "@/config/tools";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Filter, ArrowUpDown, X } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 export type SortOption = "default" | "score" | "speed" | "name";
 
@@ -21,13 +21,14 @@ export function CanvasFilters({
   onSortChange,
   availableToolIds,
 }: CanvasFiltersProps) {
-  const tools = BUILDER_TOOLS.filter((t) => availableToolIds.includes(t.id));
+  const { t } = useTranslation();
+  const tools = BUILDER_TOOLS.filter((tool) => availableToolIds.includes(tool.id));
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-sans">
         <Filter className="w-3.5 h-3.5" />
-        <span>Filter:</span>
+        <span>{t("canvas.filter")}</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {tools.map((tool) => {
@@ -53,10 +54,10 @@ export function CanvasFilters({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">Domyślnie</SelectItem>
-            <SelectItem value="score">Wg wyniku</SelectItem>
-            <SelectItem value="speed">Wg szybkości</SelectItem>
-            <SelectItem value="name">Wg nazwy</SelectItem>
+            <SelectItem value="default">{t("canvas.sortDefault")}</SelectItem>
+            <SelectItem value="score">{t("canvas.sortScore")}</SelectItem>
+            <SelectItem value="speed">{t("canvas.sortSpeed")}</SelectItem>
+            <SelectItem value="name">{t("canvas.sortName")}</SelectItem>
           </SelectContent>
         </Select>
       </div>

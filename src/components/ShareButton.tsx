@@ -5,6 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n";
 
 interface ShareButtonProps {
   experimentId: string;
@@ -16,13 +17,14 @@ interface ShareButtonProps {
 export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChange }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const [toggling, setToggling] = useState(false);
+  const { t } = useTranslation();
 
   const shareUrl = `${window.location.origin}/experiment/${experimentId}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
-    toast.success("Link skopiowany!");
+    toast.success(t("share.linkCopied"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -34,10 +36,10 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
       .eq("id", experimentId);
 
     if (error) {
-      toast.error("Nie udało się zmienić widoczności");
+      toast.error(t("share.visibilityError"));
     } else {
       onVisibilityChange?.(!isPublic);
-      toast.success(!isPublic ? "Eksperyment jest teraz publiczny" : "Eksperyment jest teraz prywatny");
+      toast.success(!isPublic ? t("share.nowPublic") : t("share.nowPrivate"));
     }
     setToggling(false);
   };
@@ -53,13 +55,13 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
       <PopoverContent className="w-80 p-4 space-y-4" align="end">
         {isOwner && (
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm font-sans">
               {isPublic ? (
                 <Globe className="w-4 h-4 text-success" />
               ) : (
                 <Lock className="w-4 h-4 text-muted-foreground" />
               )}
-              <span className="text-foreground">{isPublic ? "Publiczny" : "Prywatny"}</span>
+              <span className="text-foreground">{isPublic ? t("share.public") : t("share.private")}</span>
             </div>
             <Switch checked={isPublic} onCheckedChange={handleTogglePublic} disabled={toggling} />
           </div>
@@ -68,15 +70,15 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
           <input
             readOnly
             value={shareUrl}
-            className="flex-1 text-xs bg-muted rounded-md px-3 py-2 text-muted-foreground border border-border"
+            className="flex-1 text-xs bg-muted rounded-md px-3 py-2 text-muted-foreground border border-border font-sans"
           />
           <Button size="sm" variant="secondary" onClick={handleCopy} className="shrink-0">
             {copied ? <Check className="w-3.5 h-3.5" /> : <Link className="w-3.5 h-3.5" />}
           </Button>
         </div>
         {!isPublic && isOwner && (
-          <p className="text-[11px] text-muted-foreground">
-            Włącz tryb publiczny, aby inni mogli zobaczyć ten eksperyment.
+          <p className="text-[11px] text-muted-foreground font-sans">
+            {t("share.enablePublic")}
           </p>
         )}
       </PopoverContent>
