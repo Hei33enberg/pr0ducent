@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, type ReactNode } from "react";
-import { LogOut, Menu, X } from "lucide-react";
+import { useRef, useState, useEffect, forwardRef, type ReactNode } from "react";
+import { LogOut, Menu, X, Swords, Newspaper, RefreshCw, Radio, Compass, HelpCircle, Calculator, User } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -15,9 +15,10 @@ interface PageFrameProps {
   onVisibilityChange: (isPublic: boolean) => void;
 }
 
-function Logo({ onClick }: { onClick: () => void }) {
+const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }, ref) => {
   return (
     <a
+      ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
       className="shrink-0 no-underline flex items-center h-full"
@@ -30,7 +31,8 @@ function Logo({ onClick }: { onClick: () => void }) {
       </span>
     </a>
   );
-}
+});
+Logo.displayName = "Logo";
 
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
@@ -62,12 +64,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
-    { label: t("nav.compare"), href: "/compare", icon: "⚔️" },
-    { label: t("nav.blog"), href: "/blog", icon: "📰" },
-    { label: t("nav.dashboard"), href: "/dashboard/updates", icon: "🔄" },
-    { label: "Runs Now", href: "/runs-now", icon: "🔴" },
-    { label: t("nav.howItWorks"), href: "#how-it-works", icon: "🧭" },
-    { label: t("nav.faq"), href: "#faq", icon: "❓" },
+    { label: t("nav.compare"), href: "/compare", icon: Swords },
+    { label: t("nav.blog"), href: "/blog", icon: Newspaper },
+    { label: t("nav.dashboard"), href: "/dashboard/updates", icon: RefreshCw },
+    { label: "Runs Now", href: "/runs-now", icon: Radio },
+    { label: "Calculator", href: "/calculator", icon: Calculator },
+    { label: t("nav.howItWorks"), href: "#how-it-works", icon: Compass },
+    { label: t("nav.faq"), href: "#faq", icon: HelpCircle },
   ];
 
   return (
@@ -81,26 +84,29 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
             <Logo onClick={handleLogoClick} />
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-6 font-sans text-sm">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    if (link.href.startsWith("#")) {
-                      e.preventDefault();
-                      document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      e.preventDefault();
-                      navigate(link.href);
-                    }
-                  }}
-                  className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
-                >
-                  <span className="text-xs">{link.icon}</span>
-                  {link.label}
-                </a>
-              ))}
+            <nav className="hidden md:flex items-center gap-5 font-sans text-sm">
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={(e) => {
+                      if (link.href.startsWith("#")) {
+                        e.preventDefault();
+                        document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        e.preventDefault();
+                        navigate(link.href);
+                      }
+                    }}
+                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5"
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    {link.label}
+                  </a>
+                );
+              })}
             </nav>
 
             <div className="flex items-center gap-2">
@@ -116,6 +122,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               <NotificationBell />
               {user ? (
                 <>
+                  <button
+                    onClick={() => navigate("/dashboard")}
+                    title="My Account"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                  </button>
                   <span className="text-xs text-muted-foreground hidden sm:inline font-sans">{user.email}</span>
                   <button
                     onClick={signOut}
@@ -147,26 +160,39 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           {/* Mobile menu */}
           {mobileMenuOpen && (
             <div className="md:hidden bg-card/95 backdrop-blur-xl border-b border-border/50 px-6 py-4 space-y-3 font-sans">
-              {navLinks.map((link) => (
+              {navLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={(e) => {
+                      setMobileMenuOpen(false);
+                      if (link.href.startsWith("#")) {
+                        e.preventDefault();
+                        document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        e.preventDefault();
+                        navigate(link.href);
+                      }
+                    }}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
+                  >
+                    <Icon className="w-4 h-4" />
+                    {link.label}
+                  </a>
+                );
+              })}
+              {user && (
                 <a
-                  key={link.href}
-                  href={link.href}
-                  onClick={(e) => {
-                    setMobileMenuOpen(false);
-                    if (link.href.startsWith("#")) {
-                      e.preventDefault();
-                      document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
-                    } else {
-                      e.preventDefault();
-                      navigate(link.href);
-                    }
-                  }}
+                  href="/dashboard"
+                  onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate("/dashboard"); }}
                   className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
                 >
-                  <span>{link.icon}</span>
-                  {link.label}
+                  <User className="w-4 h-4" />
+                  My Account
                 </a>
-              ))}
+              )}
               {!user && (
                 <a
                   href="/auth"

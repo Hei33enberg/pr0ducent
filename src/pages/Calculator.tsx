@@ -7,7 +7,7 @@ import { calculatePVI, getPVILabel, type PVIPlan, type PVIWeights } from "@/lib/
 import { useNavigate } from "react-router-dom";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calculator } from "lucide-react";
+import { TrendingUp, Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
 
 interface PricingPlan {
   tool_id: string;
@@ -70,14 +70,21 @@ export default function CalculatorPage() {
     return { tool, pvi, monthlyCost, plan: bestPlan };
   }).sort((a, b) => b.pvi - a.pvi);
 
+  const sliders = [
+    { key: "costEfficiency" as const, label: "Cost Efficiency", icon: DollarSign, value: weights.costEfficiency },
+    { key: "features" as const, label: "Features", icon: CheckSquare, value: weights.features },
+    { key: "modelQuality" as const, label: "AI Model Quality", icon: Cpu, value: weights.modelQuality },
+    { key: "ecosystem" as const, label: "Ecosystem", icon: Wrench, value: weights.ecosystem },
+  ];
+
   return (
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2">
-              <Calculator className="w-8 h-8 inline-block mr-2" />
+            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2 inline-flex items-center gap-2">
+              <Calculator className="w-8 h-8" />
               Value Calculator
             </h1>
             <p className="text-sm text-muted-foreground font-sans">
@@ -89,15 +96,13 @@ export default function CalculatorPage() {
           <div className="glass-card rounded-xl p-5 mb-6 space-y-4">
             <h3 className="text-sm font-semibold font-sans text-foreground">Adjust Your Priorities</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { key: "costEfficiency" as const, label: "💰 Cost Efficiency", value: weights.costEfficiency },
-                { key: "features" as const, label: "✅ Features", value: weights.features },
-                { key: "modelQuality" as const, label: "🤖 AI Model Quality", value: weights.modelQuality },
-                { key: "ecosystem" as const, label: "🔧 Ecosystem", value: weights.ecosystem },
-              ].map(({ key, label, value }) => (
+              {sliders.map(({ key, label, icon: Icon, value }) => (
                 <div key={key} className="space-y-1">
-                  <div className="flex justify-between text-xs font-sans">
-                    <span>{label}</span>
+                  <div className="flex justify-between text-xs font-sans items-center">
+                    <span className="inline-flex items-center gap-1.5">
+                      <Icon className="w-3.5 h-3.5 text-muted-foreground" />
+                      {label}
+                    </span>
                     <span className="text-muted-foreground">{value}%</span>
                   </div>
                   <Slider
@@ -112,8 +117,11 @@ export default function CalculatorPage() {
             </div>
 
             <div className="space-y-1">
-              <div className="flex justify-between text-xs font-sans">
-                <span>📊 Expected Prompts/Month</span>
+              <div className="flex justify-between text-xs font-sans items-center">
+                <span className="inline-flex items-center gap-1.5">
+                  <BarChart3 className="w-3.5 h-3.5 text-muted-foreground" />
+                  Expected Prompts/Month
+                </span>
                 <span className="text-muted-foreground">{promptsPerMonth}</span>
               </div>
               <Slider
@@ -147,7 +155,11 @@ export default function CalculatorPage() {
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm font-sans">{tool.name}</span>
                       {tool.featured && <Badge className="text-[7px] px-1 py-0 bg-featured text-featured-foreground border-0">Partner</Badge>}
-                      {i === 0 && <Badge className="text-[7px] px-1 py-0 bg-accent text-accent-foreground border-0">🏆 Best Match</Badge>}
+                      {i === 0 && (
+                        <Badge className="text-[7px] px-1 py-0 bg-accent text-accent-foreground border-0 inline-flex items-center gap-0.5">
+                          <Trophy className="w-2 h-2" /> Best Match
+                        </Badge>
+                      )}
                     </div>
                     <span className="text-[10px] text-muted-foreground font-sans">{tool.category}</span>
                   </div>

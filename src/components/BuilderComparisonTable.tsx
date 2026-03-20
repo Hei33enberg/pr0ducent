@@ -3,7 +3,7 @@ import { BUILDER_TOOLS } from "@/config/tools";
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, ChevronRight, Zap, Star, TrendingUp, Sparkles } from "lucide-react";
+import { CheckCircle2, XCircle, ChevronRight, Zap, Star, TrendingUp, Sparkles, BarChart3, DollarSign, Cpu, CheckSquare, Monitor, Clock, Tag, Swords } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
@@ -99,10 +99,10 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
   };
 
   const sections = [
-    { key: "overview" as const, label: "Overview", icon: "📊" },
-    { key: "pricing" as const, label: "Pricing & Credits", icon: "💰" },
-    { key: "models" as const, label: "AI Models & Stack", icon: "🤖" },
-    { key: "features" as const, label: "Feature Matrix", icon: "✅" },
+    { key: "overview" as const, label: "Overview", icon: BarChart3 },
+    { key: "pricing" as const, label: "Pricing & Credits", icon: DollarSign },
+    { key: "models" as const, label: "AI Models & Stack", icon: Cpu },
+    { key: "features" as const, label: "Feature Matrix", icon: CheckSquare },
   ];
 
   return (
@@ -113,8 +113,9 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
         transition={{ duration: 0.5 }}
       >
         <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2">
-            ⚔️ All Builders at a Glance
+          <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2 inline-flex items-center gap-2">
+            <Swords className="w-6 h-6" />
+            All Builders at a Glance
           </h2>
           <p className="text-sm text-muted-foreground font-sans">
             Complete comparison of {BUILDER_TOOLS.length} AI builders — pricing, AI models, features, and our Value Index.
@@ -123,20 +124,23 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
 
         {/* Section tabs */}
         <div className="flex flex-wrap justify-center gap-1.5 mb-4">
-          {sections.map((s) => (
-            <button
-              key={s.key}
-              onClick={() => setActiveSection(s.key)}
-              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
-                activeSection === s.key
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-card text-muted-foreground hover:border-foreground/30"
-              }`}
-            >
-              <span>{s.icon}</span>
-              {s.label}
-            </button>
-          ))}
+          {sections.map((s) => {
+            const Icon = s.icon;
+            return (
+              <button
+                key={s.key}
+                onClick={() => setActiveSection(s.key)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
+                  activeSection === s.key
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border bg-card text-muted-foreground hover:border-foreground/30"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {s.label}
+              </button>
+            );
+          })}
         </div>
 
         <div className="relative">
@@ -170,11 +174,13 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                         )}
                         <span className="font-semibold text-foreground text-xs font-sans">{tool.name}</span>
                         {tool.featured && (
-                          <Badge className="text-[7px] px-1 py-0 bg-featured text-featured-foreground border-0">★ Partner</Badge>
+                          <Badge className="text-[7px] px-1 py-0 bg-featured text-featured-foreground border-0">
+                            <Star className="w-2 h-2 mr-0.5 inline" /> Partner
+                          </Badge>
                         )}
                         {getPromo(tool.id) && (
                           <Badge className="text-[7px] px-1 py-0 bg-warning text-warning-foreground border-0 animate-pulse">
-                            🎉 Promo
+                            <Tag className="w-2 h-2 mr-0.5 inline" /> Promo
                           </Badge>
                         )}
                       </div>
@@ -187,7 +193,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                 {activeSection === "overview" && (
                   <>
                     {/* PVI Score */}
-                    <Row label="🏆 Value Index (PVI)" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
+                    <Row label="Value Index (PVI)" icon={<TrendingUp className="w-3.5 h-3.5 inline mr-1 text-accent" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
                       {BUILDER_TOOLS.map((tool) => {
                         const pvi = getPVI(tool.id);
                         const { label, color } = getPVILabel(pvi);
@@ -203,7 +209,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                     </Row>
 
                     {/* Community Rating */}
-                    <Row label="⭐ Community Rating" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
+                    <Row label="Community Rating" icon={<Star className="w-3.5 h-3.5 inline mr-1 text-warning" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
                       {BUILDER_TOOLS.map((tool) => {
                         const r = getRating(tool.id);
                         return (
@@ -223,7 +229,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                     </Row>
 
                     {/* Pricing summary */}
-                    <Row label="💰 Starting Price" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
+                    <Row label="Starting Price" icon={<DollarSign className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
                       {BUILDER_TOOLS.map((tool) => (
                         <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
                           <span className="text-xs font-medium text-foreground font-sans">{tool.pricing}</span>
@@ -316,7 +322,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
 
                 {activeSection === "models" && (
                   <>
-                    <Row label="🤖 AI Models" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
+                    <Row label="AI Models" icon={<Cpu className="w-3.5 h-3.5 inline mr-1 text-accent" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
                       {BUILDER_TOOLS.map((tool) => {
                         const plans = getPlansForTool(tool.id);
                         const models = [...new Set(plans.flatMap((p) => p.ai_models || []))];
@@ -336,7 +342,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                       })}
                     </Row>
 
-                    <Row label="🖥️ Dev Environment" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
+                    <Row label="Dev Environment" icon={<Monitor className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
                       {BUILDER_TOOLS.map((tool) => {
                         const plans = getPlansForTool(tool.id);
                         const env = plans[0]?.dev_environment;
@@ -356,7 +362,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                       ))}
                     </Row>
 
-                    <Row label="Avg Build Time" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
+                    <Row label="Avg Build Time" icon={<Clock className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
                       {BUILDER_TOOLS.map((tool) => (
                         <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
                           <span className="text-xs text-foreground font-medium font-sans">
@@ -428,12 +434,14 @@ function cellClass(hoveredCol: string | null, toolId: string, alt = false) {
 
 function Row({
   label,
+  icon,
   children,
   hoveredCol,
   setHoveredCol,
   alt = false,
 }: {
   label: string;
+  icon?: React.ReactNode;
   children: React.ReactNode;
   hoveredCol: string | null;
   setHoveredCol: (id: string | null) => void;
@@ -446,7 +454,7 @@ function Row({
           alt ? "bg-muted/20" : "bg-card"
         }`}
       >
-        {label}
+        {icon}{label}
       </td>
       {children}
     </tr>
