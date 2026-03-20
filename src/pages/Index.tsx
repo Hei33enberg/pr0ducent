@@ -134,7 +134,7 @@ const Index = () => {
                 onSelectedToolsChange={setSelectedTools}
                 heroRef={heroRef}
               />
-              <BuilderLogosBar />
+              
               <HowItWorks />
               <BuilderComparisonTable
                 onSelectTool={(toolId) => {
