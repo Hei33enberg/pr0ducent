@@ -140,6 +140,84 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_benchmark_scores: {
+        Row: {
+          ai_reasoning: Json | null
+          builder_result_id: string
+          experiment_id: string
+          id: string
+          pvi_score: number | null
+          score_accessibility: number | null
+          score_code_quality: number | null
+          score_completeness: number | null
+          score_cost_efficiency: number | null
+          score_deploy_readiness: number | null
+          score_mobile_responsiveness: number | null
+          score_reliability: number | null
+          score_speed: number | null
+          score_ui_quality: number | null
+          score_web_vitals: number | null
+          scored_at: string
+          scoring_model: string | null
+          tool_id: string
+        }
+        Insert: {
+          ai_reasoning?: Json | null
+          builder_result_id: string
+          experiment_id: string
+          id?: string
+          pvi_score?: number | null
+          score_accessibility?: number | null
+          score_code_quality?: number | null
+          score_completeness?: number | null
+          score_cost_efficiency?: number | null
+          score_deploy_readiness?: number | null
+          score_mobile_responsiveness?: number | null
+          score_reliability?: number | null
+          score_speed?: number | null
+          score_ui_quality?: number | null
+          score_web_vitals?: number | null
+          scored_at?: string
+          scoring_model?: string | null
+          tool_id: string
+        }
+        Update: {
+          ai_reasoning?: Json | null
+          builder_result_id?: string
+          experiment_id?: string
+          id?: string
+          pvi_score?: number | null
+          score_accessibility?: number | null
+          score_code_quality?: number | null
+          score_completeness?: number | null
+          score_cost_efficiency?: number | null
+          score_deploy_readiness?: number | null
+          score_mobile_responsiveness?: number | null
+          score_reliability?: number | null
+          score_speed?: number | null
+          score_ui_quality?: number | null
+          score_web_vitals?: number | null
+          scored_at?: string
+          scoring_model?: string | null
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_benchmark_scores_builder_result_id_fkey"
+            columns: ["builder_result_id"]
+            isOneToOne: true
+            referencedRelation: "builder_results"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "builder_benchmark_scores_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       builder_crawl_sources: {
         Row: {
           crawl_frequency_hours: number
@@ -1070,6 +1148,47 @@ export type Database = {
         }
         Relationships: []
       }
+      user_comments: {
+        Row: {
+          body: string
+          builder_result_id: string
+          created_at: string
+          id: string
+          sentiment: string | null
+          tool_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          builder_result_id: string
+          created_at?: string
+          id?: string
+          sentiment?: string | null
+          tool_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          builder_result_id?: string
+          created_at?: string
+          id?: string
+          sentiment?: string | null
+          tool_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_comments_builder_result_id_fkey"
+            columns: ["builder_result_id"]
+            isOneToOne: false
+            referencedRelation: "builder_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_notifications: {
         Row: {
           body: string | null
@@ -1118,9 +1237,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_votes: {
+        Row: {
+          builder_result_id: string
+          created_at: string
+          id: string
+          rating: number | null
+          tool_id: string
+          user_id: string
+          vote: number
+          vote_kind: string
+        }
+        Insert: {
+          builder_result_id: string
+          created_at?: string
+          id?: string
+          rating?: number | null
+          tool_id: string
+          user_id: string
+          vote: number
+          vote_kind?: string
+        }
+        Update: {
+          builder_result_id?: string
+          created_at?: string
+          id?: string
+          rating?: number | null
+          tool_id?: string
+          user_id?: string
+          vote?: number
+          vote_kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_votes_builder_result_id_fkey"
+            columns: ["builder_result_id"]
+            isOneToOne: false
+            referencedRelation: "builder_results"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      builder_leaderboard: {
+        Row: {
+          avg_pvi: number | null
+          best_pvi: number | null
+          last_scored_at: string | null
+          runs_with_preview: number | null
+          tool_id: string | null
+          total_runs: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
