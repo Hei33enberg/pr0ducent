@@ -119,15 +119,28 @@ function ToolTile({
 
         <div
           className={cn(
-            "rounded-lg overflow-hidden",
-            isFeatured ? "h-32" : "h-24",
+            "rounded-lg overflow-hidden relative",
+            isFeatured ? "h-48" : "h-40",
             "bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center"
           )}
         >
-          {run.status === "completed" ? (
+          {run.status === "completed" && builderResult?.previewUrl ? (
+            <iframe
+              src={builderResult.previewUrl}
+              title={`${tool.name} preview`}
+              className="w-full h-full border-0 pointer-events-none"
+              sandbox="allow-scripts allow-same-origin"
+              loading="lazy"
+            />
+          ) : run.status === "completed" ? (
             <div className="text-xs text-muted-foreground text-center px-4">{run.description.slice(0, 80)}…</div>
-          ) : run.status === "running" ? (
-            <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+          ) : run.status === "running" || builderResult?.status === "generating" ? (
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+              {builderResult?.status === "generating" && (
+                <span className="text-[10px] text-muted-foreground">Building on v0…</span>
+              )}
+            </div>
           ) : (
             <div className="text-xs text-muted-foreground">Waiting…</div>
           )}
