@@ -7,6 +7,7 @@ const corsHeaders = {
 };
 
 const V0_API_BASE = "https://api.v0.dev/v1";
+const V0_HANDSHAKE_TIMEOUT_MS = 110000;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -42,7 +43,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Call v0 API in async mode — allow longer handshake time
+    // Call v0 API in async mode — allow longer handshake time under load
     console.log("Calling v0 API async with prompt length:", prompt.length);
 
     const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
@@ -53,17 +54,31 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         message: prompt,
-        modelConfiguration: { responseMode: "async" },
+        modelConfiguration: {
+          responseMode: "async",
+          thinking: false,
+          imageGenerations: false,
+        },
       }),
-      signal: AbortSignal.timeout(55000),
+      signal: AbortSignal.timeout(V0_HANDSHAKE_TIMEOUT_MS),
     });
 
     if (!chatResponse.ok) {
       const errorBody = await chatResponse.text();
       console.error(`v0 API error [${chatResponse.status}]:`, errorBody);
+
+      const normalizedError = chatResponse.status === 429
+        ? "v0 daily limit reached for this API key."
+        : `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 300)}`;
+
       return new Response(
-        JSON.stringify({ success: false, error: `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 200)}` }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          success: false,
+          error: normalizedError,
+          upstreamStatus: chatResponse.status,
+          retryable: chatResponse.status >= 500,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
@@ -90,8 +105,12 @@ Deno.serve(async (req) => {
     const isTimeout = error instanceof DOMException && error.name === "TimeoutError";
 
     return new Response(
-      JSON.stringify({ success: false, error: isTimeout ? "v0 API timeout. Spróbuj ponownie." : message }),
-      { status: isTimeout ? 504 : 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({
+        success: false,
+        error: isTimeout ? "v0 handshake timeout (110s). Spróbuj ponownie za chwilę." : message,
+        retryable: isTimeout,
+      }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
