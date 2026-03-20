@@ -7,7 +7,7 @@ const corsHeaders = {
 };
 
 const V0_API_BASE = "https://api.v0.dev/v1";
-const V0_HANDSHAKE_TIMEOUT_MS = 110000;
+const V0_HANDSHAKE_TIMEOUT_MS = 25000;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
