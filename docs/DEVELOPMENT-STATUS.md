@@ -13,7 +13,8 @@
 - **Other builders** in the UI remain **benchmark** paths (tier 4 / disabled in config) until new adapters are registered.
 - **VBP (draft):** [`VBP-SPEC.md`](./VBP-SPEC.md) + `vbp-adapter`; builders can implement VBP to plug in without custom code per vendor.
 - **Task queue:** `dispatch-builders` enqueues `run_tasks` (`queued`), calls `process-task-queue` (service role), then **inline fallback** if tasks remain queued (e.g. worker not deployed).
-- **UI primitives:** `useOrchestrationRealtime`, `DemoPreviewFrame`, `VbpClaimButton` — compose in Compare / experiment views as needed.
+- **UI (AG cockpit):** `useRunTaskStream`, `BuilderProgressStream`, `DemoPreviewFrame`, `/marketplace`, `UserDashboard` plans/BYOA stub — see [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for deploy order vs Lovable.
+- **UI primitives (legacy hook):** `useOrchestrationRealtime`, `VbpClaimButton` — still available where used.
 
 ## Migrations (orchestrator)
 

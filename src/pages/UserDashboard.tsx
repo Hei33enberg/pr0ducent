@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { BUILDER_TOOLS } from "@/config/tools";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2 } from "lucide-react";
+import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2, Key } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface UserExperiment {
@@ -39,7 +40,7 @@ export default function UserDashboard() {
   const [experiments, setExperiments] = useState<UserExperiment[]>([]);
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
-  const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription">("history");
+  const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription" | "builders">("history");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const PRICE_IDS: Record<string, string> = {
@@ -112,6 +113,7 @@ export default function UserDashboard() {
     { key: "history" as const, label: "Build History", icon: ClipboardList, count: experiments.length },
     { key: "ratings" as const, label: "My Ratings", icon: Star, count: ratings.length },
     { key: "subscription" as const, label: "Subscription", icon: CreditCard },
+    { key: "builders" as const, label: "My Builders", icon: Key },
   ];
 
   return (
@@ -226,18 +228,23 @@ export default function UserDashboard() {
 
                 {subscription && (
                   <>
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm font-sans">
-                        <span className="text-muted-foreground">Prompts used</span>
-                        <span className="font-medium">{subscription.prompts_used} / {subscription.prompts_limit}</span>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-sm font-sans mb-1 items-end">
+                        <span className="text-muted-foreground font-medium">Credits (Prompts)</span>
+                        <span className="font-bold text-lg leading-none">{subscription.prompts_used} <span className="text-muted-foreground font-normal text-sm">/ {subscription.prompts_limit}</span></span>
                       </div>
-                      <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="w-full h-3 bg-muted/60 rounded-full overflow-hidden shadow-inner border border-border/40">
                         <div
-                          className="h-full bg-accent rounded-full transition-all"
+                          className={cn(
+                            "h-full rounded-full transition-all duration-1000",
+                            (subscription.prompts_used / subscription.prompts_limit) > 0.9 ? "bg-destructive" :
+                            (subscription.prompts_used / subscription.prompts_limit) > 0.75 ? "bg-warning" : "bg-primary"
+                          )}
                           style={{ width: `${Math.min((subscription.prompts_used / subscription.prompts_limit) * 100, 100)}%` }}
                         />
                       </div>
-                      <p className="text-[10px] text-muted-foreground font-sans">
+                      <p className="text-xs text-muted-foreground font-sans flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5" />
                         Resets on {new Date(subscription.current_period_end).toLocaleDateString()}
                       </p>
                     </div>
@@ -245,11 +252,12 @@ export default function UserDashboard() {
                 )}
 
                 {/* Plans */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
                   {[
-                    { name: "Free", price: "$0", prompts: "3/mo", features: ["1 builder per run", "Delayed results"] },
-                    { name: "Pro", price: "$9/mo", prompts: "30/mo", features: ["All builders", "Instant results", "Full history"] },
-                    { name: "Business", price: "$29/mo", prompts: "100/mo", features: ["Priority queue", "API access", "Team sharing"] },
+                    { name: "Free", price: "$0", prompts: "3/mo", features: ["1 builder per run", "Delayed results", "Community support"] },
+                    { name: "Starter", price: "$19/mo", prompts: "100/mo", features: ["Up to 3 builders per run", "Standard queue", "Email support"] },
+                    { name: "Pro", price: "$49/mo", prompts: "300/mo", features: ["All available builders", "Priority compute", "VBP API access"] },
+                    { name: "Enterprise", price: "Custom", prompts: "Unlimited", features: ["Dedicated instances", "SLA guarantees", "Custom integrations"] },
                   ].map((plan) => (
                     <div
                       key={plan.name}
@@ -281,6 +289,24 @@ export default function UserDashboard() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* BYOA Builders */}
+          {activeTab === "builders" && (
+            <div className="glass-card rounded-2xl p-8 text-center py-16 space-y-5 border-dashed border-2 border-border/50">
+              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
+                <Key className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-2xl font-serif font-bold">Bring Your Own API (BYOA)</h3>
+              <p className="text-muted-foreground font-sans max-w-md mx-auto text-base leading-relaxed">
+                Connect your own accounts for builders like v0, Lovable, or Bolt.new to bypass pr0ducent platform limits and use your own billing quotas directly.
+              </p>
+              <div className="pt-6">
+                <Button disabled variant="outline" className="opacity-60 cursor-not-allowed rounded-full px-8 py-5">
+                  Coming Soon in Phase 2
+                </Button>
               </div>
             </div>
           )}

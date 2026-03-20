@@ -22,6 +22,7 @@ const CalculatorPage = lazy(() => import("./pages/Calculator.tsx"));
 const UserDashboard = lazy(() => import("./pages/UserDashboard.tsx"));
 const BuilderProfile = lazy(() => import("./pages/BuilderProfile.tsx"));
 const BuildersIndex = lazy(() => import("./pages/BuildersIndex.tsx"));
+const Marketplace = lazy(() => import("./pages/Marketplace.tsx"));
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ const App = () => (
                 <Route path="/dashboard/updates" element={<BuilderDashboard />} />
                 <Route path="/dashboard/notifications" element={<Notifications />} />
                 <Route path="/runs-now" element={<RunsNow />} />
+                <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/calculator" element={<CalculatorPage />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
                 <Route path="/builders" element={<BuildersIndex />} />

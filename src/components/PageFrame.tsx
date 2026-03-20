@@ -85,6 +85,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     { label: t("nav.pricing"), href: "/pricing", icon: Calculator },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },
     { label: t("nav.runsNow"), href: "/runs-now", icon: Radio },
+    { label: "Marketplace", href: "/marketplace", icon: Compass },
     { label: t("nav.faq"), href: "#faq", icon: HelpCircle },
   ];
 

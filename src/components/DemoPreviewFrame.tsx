@@ -96,11 +96,7 @@ export function DemoPreviewFrame({ previewUrl, toolName, screenshotUrl, classNam
 
       {/* Frame Container */}
       <div 
-        className="flex-1 relative flex items-center justify-center overflow-hidden bg-muted/10 min-h-[200px]"
-        style={{
-          backgroundImage: "radial-gradient(circle at 1px 1px, hsl(var(--foreground)/0.1) 1px, transparent 0)",
-          backgroundSize: "24px 24px"
-        }}
+        className="flex-1 relative flex items-center justify-center overflow-hidden bg-muted/10 min-h-[200px] bg-[radial-gradient(circle_at_1px_1px,hsl(var(--foreground)/0.1)_1px,transparent_0)] bg-[size:24px_24px]"
       >
         <AnimatePresence>
           {isLoading && src && (
@@ -124,11 +120,9 @@ export function DemoPreviewFrame({ previewUrl, toolName, screenshotUrl, classNam
               "transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] origin-top bg-background shadow-2xl relative flex flex-col items-center",
               viewport === "mobile" ? "w-[375px] h-[812px] rounded-[2.5rem] border-[12px] border-foreground/10 overflow-hidden" :
               viewport === "tablet" ? "w-[768px] h-[1024px] rounded-xl border-8 border-foreground/10 overflow-hidden" :
-              "w-full h-full border-0 rounded-none shadow-inner"
+              "w-full h-full border-0 rounded-none shadow-inner",
+              viewport !== "desktop" && !isFullscreen ? "scale-[0.8] translate-y-[5%]" : ""
             )}
-            style={{
-              transform: viewport !== "desktop" && !isFullscreen ? "scale(min(0.8, 100%)) translateY(5%)" : "none"
-            }}
           >
             <iframe
               key={key}
