@@ -22,12 +22,14 @@ Rozszerzenie `pg_cron` jest w migracji bazowej projektu. Po wdrożeniu migracji 
 ```sql
 SELECT cron.schedule(
   'refresh-builder-leaderboard',
-  '*/15 * * * *',
+  '*/10 * * * *',
   $$REFRESH MATERIALIZED VIEW CONCURRENTLY public.builder_leaderboard$$
 );
 ```
 
-Jeśli `cron.schedule` z migracji SQL nie jest dozwolony w Waszym planie — ten sam SQL wykonać ręcznie w SQL Editor (jednorazowo).
+**Repo:** migracja `20260329100000_builder_arena_votes_leaderboard_cron.sql` próbuje zarejestrować ten job (co **10 min**). Jeśli `cron.schedule` z migracji SQL nie jest dozwolony w Waszym planie — ten sam SQL wykonać ręcznie w SQL Editor (jednorazowo).
+
+Audyt kompletności schematu Sprint 3 + arena: [AG-PHASE-E-SCHEMA-AUDIT.md](./AG-PHASE-E-SCHEMA-AUDIT.md).
 
 ## Prompt dla Lovable (po merge na `main`)
 

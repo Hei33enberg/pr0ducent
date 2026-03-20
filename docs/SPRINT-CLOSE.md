@@ -27,7 +27,7 @@
 - **Migration:** [`20260322120000_vbp_orchestration.sql`](../supabase/migrations/20260322120000_vbp_orchestration.sql) — `builder_integration_config` extensions, `builder_rate_limits`, `builder_crawl_sources`, `run_tasks.next_retry_at`.
 - **Functions:** `dispatch-builders` (enqueue + worker invoke + fallback), `process-task-queue`, `pbp-webhook`, `rag-crawl-builder`.
 - **Adapters:** `vbp-adapter`, `generic-rest-adapter`, registry (`v0` | `vbp` | `generic_rest` | `benchmark`).
-- **Docs:** [`VBP-SPEC.md`](./VBP-SPEC.md), [`BUILDER-CATALOG.md`](./BUILDER-CATALOG.md), [`ORCHESTRATOR.md`](./ORCHESTRATOR.md), [`CRON-RAG-CRAWL.md`](./CRON-RAG-CRAWL.md), [`WIRE-BUILDERS.md`](./WIRE-BUILDERS.md), [`AG-SPRINT3-HANDOFF.md`](./AG-SPRINT3-HANDOFF.md) (benchmark + social + MV Sprint 3).
+- **Docs:** [`VBP-SPEC.md`](./VBP-SPEC.md), [`BUILDER-CATALOG.md`](./BUILDER-CATALOG.md), [`ORCHESTRATOR.md`](./ORCHESTRATOR.md), [`CRON-RAG-CRAWL.md`](./CRON-RAG-CRAWL.md), [`WIRE-BUILDERS.md`](./WIRE-BUILDERS.md), [`AG-SPRINT3-HANDOFF.md`](./AG-SPRINT3-HANDOFF.md) (benchmark + social + MV Sprint 3), [`AG-PHASE-E-SCHEMA-AUDIT.md`](./AG-PHASE-E-SCHEMA-AUDIT.md) (checklist schematu + arena + cron).
 
 ---
 
