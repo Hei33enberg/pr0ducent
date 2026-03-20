@@ -184,11 +184,16 @@ export default function Pricing() {
                   <Button
                     onClick={() => handleCta(plan.name)}
                     variant={plan.highlight ? "secondary" : plan.variant}
+                    disabled={loadingPlan === plan.name}
                     className={`w-full rounded-full font-sans font-semibold ${
                       plan.highlight ? "bg-background text-foreground hover:bg-background/90" : ""
                     }`}
                   >
-                    {plan.cta}
+                    {loadingPlan === plan.name ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      plan.cta
+                    )}
                   </Button>
                 </div>
               );

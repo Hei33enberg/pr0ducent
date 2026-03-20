@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { BUILDER_TOOLS } from "@/config/tools";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2 } from "lucide-react";
+import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface UserExperiment {
   id: string;
