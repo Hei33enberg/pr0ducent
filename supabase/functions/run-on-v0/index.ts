@@ -98,24 +98,53 @@ Deno.serve(async (req) => {
 
     const startTime = Date.now();
 
-    // Call v0 Platform API — POST /v1/chats with message field
+    // Call v0 Platform API — use async response mode to avoid long edge-runtime blocking
     console.log("Calling v0 API with prompt length:", prompt.length);
-    const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${V0_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message: prompt,
-      }),
-    });
+
+    let chatResponse: Response;
+    try {
+      chatResponse = await fetch(`${V0_API_BASE}/chats`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${V0_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: prompt,
+          modelConfiguration: {
+            responseMode: "async",
+          },
+        }),
+        signal: AbortSignal.timeout(25000),
+      });
+    } catch (fetchError) {
+      const isTimeout =
+        fetchError instanceof DOMException && fetchError.name === "TimeoutError";
+      const errorMessage = isTimeout
+        ? "v0 API timeout (25s). Spróbuj krótszego promptu lub ponownie za chwilę."
+        : `v0 API request failed: ${
+            fetchError instanceof Error ? fetchError.message : "Unknown network error"
+          }`;
+
+      await supabase
+        .from("builder_results")
+        .update({
+          status: "error",
+          error_message: errorMessage,
+        })
+        .eq("experiment_id", experimentId)
+        .eq("tool_id", "v0");
+
+      return new Response(JSON.stringify({ success: false, error: errorMessage }), {
+        status: isTimeout ? 504 : 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     if (!chatResponse.ok) {
       const errorBody = await chatResponse.text();
       console.error(`v0 API error [${chatResponse.status}]:`, errorBody);
-      
-      // Update builder_results with error
+
       await supabase
         .from("builder_results")
         .update({
@@ -139,6 +168,7 @@ Deno.serve(async (req) => {
 
     const chatData = await chatResponse.json();
     const generationTime = Date.now() - startTime;
+    console.log("v0 API response status:", chatResponse.status, "in", generationTime, "ms");
 
     console.log("v0 API response keys:", Object.keys(chatData));
 
