@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
 import { getToolById } from "@/config/tools";
 import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
@@ -77,8 +78,23 @@ function StatusBadge({ status }: { status: RunStatus }) {
   );
 }
 
-function PVIScoreDisplay({ tool, run }: { tool: any; run: ExperimentRun }) {
-  const pvi = calculatePVI({
+function PVIScoreDisplay({ tool, run, builderResultId }: { tool: any; run: ExperimentRun; builderResultId?: string }) {
+  const [realScore, setRealScore] = useState<any>(null);
+
+  useEffect(() => {
+    if (!builderResultId) return;
+    
+    supabase
+      .from("builder_benchmark_scores")
+      .select("*")
+      .eq("builder_result_id", builderResultId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setRealScore(data);
+      });
+  }, [builderResultId]);
+
+  const pvi = realScore?.pvi_score || calculatePVI({
       tool_id: tool.id,
       plan_name: "pro",
       monthly_price: parseInt(tool.pricing.replace(/\D/g,'')) || 20,
@@ -91,7 +107,15 @@ function PVIScoreDisplay({ tool, run }: { tool: any; run: ExperimentRun }) {
   
   const { label, color } = getPVILabel(pvi);
 
-  const dimensions = [
+  const dimensions = realScore ? [
+    { label: "Speed", val: realScore.score_speed || 85 },
+    { label: "UI Quality", val: realScore.score_ui_quality || 90 },
+    { label: "Code Quality", val: realScore.score_code_quality || 75 },
+    { label: "Reliability", val: realScore.score_reliability || 88 },
+    { label: "Cost Eff.", val: realScore.score_cost_efficiency || 80 },
+    { label: "Mobile Resp.", val: realScore.score_mobile_responsiveness || 95 },
+    { label: "Deploy Read.", val: realScore.score_deploy_readiness || 70 },
+  ] : [
     { label: "Speed", val: run.scores.speed || 85 },
     { label: "UI Quality", val: run.scores.uiQuality || 90 },
     { label: "Code Quality", val: run.scores.backendLogic || 75 },
@@ -129,7 +153,9 @@ function PVIScoreDisplay({ tool, run }: { tool: any; run: ExperimentRun }) {
                    </div>
                    <div className="border-t border-border/50 mt-2 pt-2">
                      <div className="text-[10px] text-muted-foreground font-semibold mb-1">AI Reasoning</div>
-                     <p className="text-[10px] text-muted-foreground leading-relaxed">System estimated PVI based on structural analysis and developer ecosystem strength. Awaiting real telemetry from broker.</p>
+                     <p className="text-[10px] text-muted-foreground leading-relaxed">
+                       {realScore?.ai_reasoning?.summary || "System estimated PVI based on structural analysis and developer ecosystem strength. Awaiting real telemetry from broker."}
+                     </p>
                    </div>
                  </div>
                </TooltipContent>
@@ -137,7 +163,7 @@ function PVIScoreDisplay({ tool, run }: { tool: any; run: ExperimentRun }) {
            </TooltipProvider>
          </span>
          <div className="flex items-center gap-2">
-           <Badge variant="outline" className="text-[9px] bg-muted/20 border-muted font-normal text-muted-foreground h-4">Estimated</Badge>
+           {!realScore && <Badge variant="outline" className="text-[9px] bg-muted/20 border-muted font-normal text-muted-foreground h-4">Estimated</Badge>}
            <span className={cn("font-bold font-mono text-lg", color)}>{pvi.toFixed(1)}</span>
          </div>
       </div>
@@ -325,7 +351,7 @@ function ToolTile({
 
         {run.status === "completed" && (
           <div className="space-y-2">
-            <PVIScoreDisplay tool={tool} run={run} />
+            <PVIScoreDisplay tool={tool} run={run} builderResultId={builderResult?.id} />
             {builderResult && (
               <div className="pt-2">
                 <BuilderResultBadge result={builderResult} />

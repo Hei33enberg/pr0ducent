@@ -57,7 +57,7 @@ export function VoteWidget({
       if (newVote === null) {
         // Delete vote
         const { error } = await supabase
-          .from("user_votes" as any)
+          .from("user_votes")
           .delete()
           .eq("user_id", user.id)
           .eq("builder_result_id", builderResultId);
@@ -65,7 +65,7 @@ export function VoteWidget({
       } else {
         // Upsert vote
         const { error } = await supabase
-          .from("user_votes" as any)
+          .from("user_votes")
           .upsert({
             user_id: user.id,
             builder_result_id: builderResultId,
@@ -111,7 +111,7 @@ export function VoteWidget({
 
     try {
       const { error } = await supabase
-        .from("user_votes" as any)
+        .from("user_votes")
         .upsert({
           user_id: user.id,
           builder_result_id: builderResultId,

@@ -30,7 +30,7 @@ export function CommentsSection({ builderResultId, toolId, className }: Comments
     try {
       if (isInitial) setLoading(true);
       const { data, error } = await supabase
-        .from("user_comments" as any)
+        .from("user_comments")
         .select("*, profiles(email, avatar_url)")
         .eq("builder_result_id", builderResultId)
         .order("created_at", { ascending: false })
@@ -76,7 +76,7 @@ export function CommentsSection({ builderResultId, toolId, className }: Comments
     setIsSubmitting(true);
     try {
       const { data, error } = await supabase
-        .from("user_comments" as any)
+        .from("user_comments")
         .insert({
           user_id: user.id,
           builder_result_id: builderResultId,

@@ -16,7 +16,7 @@ export function usePairwiseVote() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       
-      const { error: sbError } = await supabase.from("builder_arena_votes" as any).insert({
+      const { error: sbError } = await supabase.from("builder_arena_votes").insert({
         experiment_id: experimentId,
         user_id: session?.user?.id || null, // Allow anonymous votes if db allows it
         winner_tool_id: winnerToolId,
