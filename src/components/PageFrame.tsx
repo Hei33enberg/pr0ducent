@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, type ReactNode } from "react";
 import { LogOut, Menu, X } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
+import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
