@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const items = [
   { label: "Home", icon: Home, href: "/" },
   { label: "Compare", icon: Swords, href: "#comparison" },
-  { label: "Calculator", icon: Calculator, href: "/calculator" },
+  { label: "Pricing", icon: Calculator, href: "/pricing" },
   { label: "Blog", icon: Newspaper, href: "/blog" },
   { label: "Live", icon: Radio, href: "/runs-now" },
   { label: "FAQ", icon: HelpCircle, href: "#faq" },
