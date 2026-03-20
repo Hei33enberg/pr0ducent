@@ -30,7 +30,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              <Route path="/compare" element={<Compare />} />
+              
               <Route path="/experiment/:id" element={<PublicExperiment />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
