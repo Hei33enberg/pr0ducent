@@ -128,13 +128,13 @@ export async function logReferralHandoff(
   metadata?: Record<string, unknown>
 ) {
   await logReferralClick(userId, experimentId, toolId);
-  await supabase.from("referral_conversions").insert({
+  await supabase.from("referral_conversions").insert([{
     user_id: userId,
     experiment_id: experimentId,
     tool_id: toolId,
     conversion_type: "builder_handoff",
-    metadata: metadata ?? { source: "compare_cta" },
-  });
+    metadata: (metadata ?? { source: "compare_cta" }) as unknown as import("@/integrations/supabase/types").Json,
+  }]);
 }
 
 export async function deleteExperimentFromDb(experimentId: string) {
