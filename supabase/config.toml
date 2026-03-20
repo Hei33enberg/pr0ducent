@@ -17,3 +17,7 @@ verify_jwt = false
 
 [functions.stripe-webhook]
 verify_jwt = false
+
+[functions.cron-blog-generator]
+verify_jwt = false
+

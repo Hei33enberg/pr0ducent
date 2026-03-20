@@ -43,6 +43,34 @@ const MOCK_CONS: Record<string, string[]> = {
   bolt: ["Browser-dependent", "Resource-intensive"],
 };
 
+// Mock build steps for animation
+export const MOCK_BUILD_STEPS: Record<string, string[]> = {
+  lovable: ["Analyzing prompt…", "Scaffolding React app…", "Setting up Supabase…", "Generating components…", "Applying Tailwind styles…", "Running type checks…", "Deploying…"],
+  replit: ["Creating workspace…", "Installing dependencies…", "Generating Express server…", "Building frontend…", "Running tests…"],
+  v0: ["Parsing design intent…", "Generating UI components…", "Applying shadcn/ui…", "Optimizing layout…"],
+  cursor: ["Analyzing codebase…", "Planning architecture…", "Writing modules…", "Generating tests…", "Formatting code…"],
+  base44: ["Designing schema…", "Building data models…", "Creating admin panel…", "Generating API…"],
+  antigravity: ["Creating wireframe…", "Building components…", "Adding animations…", "Mobile optimization…"],
+  build0: ["Selecting template…", "Customizing layout…", "Configuring Prisma…", "Deploying…"],
+  orchids: ["Designing UI system…", "Crafting animations…", "Building components…", "Adding transitions…"],
+  floot: ["Planning workflow…", "Creating API routes…", "Setting up integrations…", "Deploying to AWS…"],
+  bolt: ["Booting WebContainer…", "Installing packages…", "Generating code…", "Starting dev server…"],
+};
+
+// Mock gradient colors per builder for preview placeholders
+export const MOCK_PREVIEW_GRADIENTS: Record<string, string> = {
+  lovable: "from-rose-500/20 via-purple-500/20 to-indigo-500/20",
+  replit: "from-orange-500/20 via-amber-500/20 to-yellow-500/20",
+  v0: "from-zinc-900/30 via-zinc-700/20 to-zinc-500/10",
+  cursor: "from-emerald-500/20 via-teal-500/20 to-cyan-500/20",
+  base44: "from-blue-500/20 via-indigo-500/20 to-violet-500/20",
+  antigravity: "from-pink-500/20 via-fuchsia-500/20 to-purple-500/20",
+  build0: "from-green-500/20 via-emerald-500/20 to-teal-500/20",
+  orchids: "from-pink-400/20 via-rose-400/20 to-red-400/20",
+  floot: "from-slate-500/20 via-gray-500/20 to-zinc-500/20",
+  bolt: "from-yellow-500/20 via-orange-500/20 to-red-500/20",
+};
+
 function generateScores(toolId: string): EditorialScores {
   const base: Record<string, EditorialScores> = {
     lovable:      { uiQuality: 92, backendLogic: 88, speed: 95, easeOfEditing: 90 },
@@ -57,7 +85,6 @@ function generateScores(toolId: string): EditorialScores {
     bolt:         { uiQuality: 80, backendLogic: 78, speed: 82, easeOfEditing: 76 },
   };
   const scores = base[toolId] || { uiQuality: 70, backendLogic: 70, speed: 70, easeOfEditing: 70 };
-  // Add slight randomness
   return {
     uiQuality: Math.min(100, Math.max(0, scores.uiQuality + randomBetween(-5, 5))),
     backendLogic: Math.min(100, Math.max(0, scores.backendLogic + randomBetween(-5, 5))),
