@@ -5,11 +5,13 @@ import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
 import { saveExperiment } from "@/lib/mock-experiment";
 import { updateRunStatusInDb, logReferralClick } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import type { BuilderResult } from "@/hooks/useBuilderApi";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CanvasFilters, type SortOption } from "@/components/CanvasFilters";
 import { WinnerBanner } from "@/components/WinnerBanner";
+import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
@@ -17,6 +19,7 @@ interface ComparisonCanvasProps {
   experiment: Experiment;
   onExperimentUpdate: (exp: Experiment) => void;
   onToolClick: (toolId: string) => void;
+  builderResults?: Record<string, BuilderResult>;
 }
 
 function StatusBadge({ status }: { status: RunStatus }) {
