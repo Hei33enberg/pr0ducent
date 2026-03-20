@@ -292,7 +292,7 @@ Deno.serve(async (req) => {
         const ctx: AdapterDispatchContext = {
           admin,
           experimentId,
-          runJobId,
+          runJobId: runJobId!,
           traceId,
           prompt,
           toolId: row.tool_id,

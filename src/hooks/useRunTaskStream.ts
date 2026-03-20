@@ -8,16 +8,17 @@ export interface RunTaskRow {
   experiment_id: string;
   tool_id: string;
   status: TaskStatus;
-  started_at: string | null;
-  completed_at: string | null;
   adapter_tier: number | null;
-  provenance: string | null;
+  attempt_count: number;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface RunEventRow {
   id: string;
   experiment_id: string;
-  tool_id: string;
+  tool_id: string | null;
   event_type: string;
   payload: Record<string, any>;
   created_at: string;
@@ -29,9 +30,9 @@ export interface BuilderResultRow {
   tool_id: string;
   status: string;
   preview_url: string | null;
-  screenshot_url: string | null;
-  deploy_url: string | null;
-  provenance: string | null;
+  chat_url: string | null;
+  provenance: string;
+  execution_mode: string;
 }
 
 export interface StreamState {
@@ -53,40 +54,35 @@ export function useRunTaskStream(experimentId: string | undefined) {
 
   const loadInitialData = useCallback(async (expId: string) => {
     try {
-      // Używamy Promise.allSettled żeby bezpiecznie zignorować brak tabel w DB (np. gdy Cursor jeszcze pisze migracje)
-      const promises = [
+      const [tasksRes, eventsRes, resultsRes] = await Promise.all([
+        supabase.from("run_tasks").select("*").eq("experiment_id", expId),
+        supabase.from("run_events").select("*").eq("experiment_id", expId).order("created_at", { ascending: true }),
         supabase.from("builder_results").select("*").eq("experiment_id", expId),
-        supabase.from("run_events").select("*").eq("experiment_id", expId).order("created_at", { ascending: true })
-      ];
-
-      // Próbujemy pobrać run_tasks, ale jak nie ma, to failuje miękko
-      const tasksPromise = supabase.from("run_tasks").select("*").eq("experiment_id", expId);
-
-      const [resultsRes, eventsRes, tasksRes] = await Promise.allSettled([...promises, tasksPromise]);
+      ]);
 
       setState((prev) => {
         const next = { ...prev, isLoading: false };
         
-        if (tasksRes.status === "fulfilled" && tasksRes.value.data) {
-          tasksRes.value.data.forEach((t: RunTaskRow) => {
-            next.tasks[t.tool_id] = t;
-          });
+        if (tasksRes.data) {
+          for (const t of tasksRes.data) {
+            next.tasks[t.tool_id] = t as unknown as RunTaskRow;
+          }
         }
         
-        if (eventsRes.status === "fulfilled" && eventsRes.value.data) {
-          eventsRes.value.data.forEach((e: RunEventRow) => {
-            if (!next.events[e.tool_id]) next.events[e.tool_id] = [];
-            // zabezpieczenie przed duplikatami w initial data
-            if (!next.events[e.tool_id].find(ex => ex.id === e.id)) {
-              next.events[e.tool_id].push(e);
+        if (eventsRes.data) {
+          for (const e of eventsRes.data) {
+            const toolId = e.tool_id ?? "__global";
+            if (!next.events[toolId]) next.events[toolId] = [];
+            if (!next.events[toolId].find(ex => ex.id === e.id)) {
+              next.events[toolId].push(e as unknown as RunEventRow);
             }
-          });
+          }
         }
         
-        if (resultsRes.status === "fulfilled" && resultsRes.value.data) {
-          resultsRes.value.data.forEach((r: BuilderResultRow) => {
-            next.results[r.tool_id] = r;
-          });
+        if (resultsRes.data) {
+          for (const r of resultsRes.data) {
+            next.results[r.tool_id] = r as unknown as BuilderResultRow;
+          }
         }
 
         return next;
