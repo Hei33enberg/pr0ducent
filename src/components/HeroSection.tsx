@@ -145,8 +145,6 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 <ToolSelectionGrid
                   selectedTools={selectedTools}
                   onSelectionChange={onSelectedToolsChange}
-                  accountModel={accountModel}
-                  onAccountModelChange={setAccountModel}
                 />
               </div>
             </div>
