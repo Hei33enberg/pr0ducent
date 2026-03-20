@@ -1,55 +1,57 @@
-# Supabase: Database Webhook → `process-task-queue`
+# Supabase: `run_tasks` → `process-task-queue` (trigger `pg_net`)
 
-Cel: po **INSERT** do `public.run_tasks` worker Edge Function od razu zdejmuje kolejkę, zamiast polegać wyłącznie na wywołaniach z `dispatch-builders` (inline fallback).
+## Mechanizm w repozytorium
 
-## Wymagania
+Po **INSERT** do `public.run_tasks` może działać trigger **`trg_run_tasks_auto_dispatch`**, który wysyła asynchroniczny POST do Edge Function **`process-task-queue`** przez **`pg_net`** (migracja [`20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql`](../supabase/migrations/20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql)).
 
-- Edge Function **`process-task-queue`** wdrożona z `verify_jwt = false` i wywoływana **tylko** z **Service Role** (nigdy z anon w przeglądarce).
-- Sekret **`SUPABASE_SERVICE_ROLE_KEY`** znany tylko operatorowi (Dashboard → Settings → API).
+Trigger czyta Bearer token z:
 
-**Schemat bazy:** aktualny kod `process-task-queue` zakłada kolumny z migracji `20260322120000_vbp_orchestration.sql` (m.in. `builder_integration_config.circuit_state`, `run_tasks.next_retry_at`). Jeśli Supabase zwraca błąd „column does not exist”, **zastosuj brakujące migracje** — nie upraszczaj funkcji Edge zamiast aktualizacji bazy.
+1. `current_setting('supabase.service_role_key', true)` (gdy dostępne), albo  
+2. **`vault.decrypted_secrets`** o nazwie **`service_role_key`**.
 
-**Bez webhooka:** `dispatch-builders` nadal odpala `process-task-queue` i ma **inline fallback** — aplikacja może działać; webhook lub równoważny trigger tylko poprawia niezawodność przy dużym ruchu.
+**Sekret Vault ustawia się poza gitem** (UI Vault lub jednorazowe SQL) — patrz komentarz w [`20260320222502_85ade99a-2c89-4b30-bd3d-edbc091341f7.sql`](../supabase/migrations/20260320222502_85ade99a-2c89-4b30-bd3d-edbc091341f7.sql). **Nigdy nie commituj service_role JWT do repozytorium.**
 
-**Lovable / trigger `pg_net`:** jeśli operator doda w bazie trigger wołający Edge przez `pg_net`, **powinien dodać ten sam SQL do `supabase/migrations/`** w repozytorium; inaczej środowisko nie odtworzysz z GitHuba. Ograniczenia dostępu do Supabase przy Lovable Cloud: [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
+**Bez triggera / bez sekretu w Vault:** `dispatch-builders` nadal woła `process-task-queue` i ma **inline fallback**.
 
-## Kroki (Supabase Dashboard)
+**Lovable Cloud / brak własnego Supabase:** [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
 
-1. Zaloguj się do projektu → **Database**.
-2. Otwórz **Webhooks** (lub **Integrations** → Database Webhooks — nazwa zależy od wersji UI).
-3. **Create a new hook**:
-   - **Table:** `public.run_tasks`
-   - **Events:** `INSERT` (wystarczy; opcjonalnie też `UPDATE` jeśli kiedyś task wraca do `queued` przez update — dziś głównie INSERT).
-   - **Type:** Supabase Edge Function *albo* **HTTP Request** (jeśli wybierasz surowy URL funkcji).
+## Jak to działa (gdy trigger jest aktywny i Vault ma sekret)
 
-### Jeśli typ = HTTP Request
+1. `dispatch-builders` wstawia wiersze do `run_tasks` (status `queued`).
+2. Trigger `trg_run_tasks_auto_dispatch` odpala się dla każdego wiersza.
+3. `net.http_post` wysyła POST do `process-task-queue` z `{"run_job_id": "..."}`.
+4. Worker woła RPC `builder_try_dispatch_slot`, uwzględnia `circuit_state`, dispatchuje adapter.
+5. Inline fallback w `dispatch-builders` zostaje jako zapas.
 
-- **URL:**  
-  `https://<PROJECT_REF>.supabase.co/functions/v1/process-task-queue`  
-  (`PROJECT_REF` z Settings → API → Project URL.)
-- **HTTP method:** `POST`
-- **Headers:** dodaj dokładnie:
-  - `Authorization`: `Bearer <SERVICE_ROLE_KEY>`  
-  - `Content-Type`: `application/json`
-- **Body:** może być pusty `{}` lub domyślny payload webhooka — worker i tak czyta opcjonalnie `run_job_id` z JSON, jeśli go wyślesz.
+**Schemat:** pełna logika workerów wymaga m.in. `20260322120000_vbp_orchestration.sql` (`circuit_state`, `next_retry_at`).
 
-### Weryfikacja
+**URL Edge w triggerze** jest powiązany z hostem projektu w migracji — przy nowym projekcie zaktualizuj funkcję lub użyj ręcznego Database Webhook poniżej.
 
-1. Uruchom jeden dispatch (zalogowany user, v0) — patrz [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md).
-2. **Edge Functions → Logs** → `process-task-queue`: powinny pojawić się wywołania po każdym nowym wierszu `run_tasks`.
-3. SQL — brak „wiecznego” `queued`:
+## Weryfikacja
 
 ```sql
+SELECT tgname FROM pg_trigger WHERE tgname = 'trg_run_tasks_auto_dispatch';
+
+SELECT name FROM vault.decrypted_secrets WHERE name = 'service_role_key';
+
 SELECT count(*) FROM run_tasks
 WHERE status = 'queued' AND created_at < now() - interval '5 minutes';
 ```
 
+## Ręczna alternatywa: Database Webhook (Dashboard)
+
+1. **Database** → **Webhooks** → nowy hook.  
+2. Tabela `public.run_tasks`, zdarzenie **INSERT**.  
+3. URL: `https://<PROJECT_REF>.supabase.co/functions/v1/process-task-queue`  
+4. Nagłówki: `Authorization: Bearer <SERVICE_ROLE_KEY>`, `Content-Type: application/json`.
+
 ## Bezpieczeństwo
 
-- Nie wklejaj service role do repozytorium ani do Lovable jako publicznej zmiennej frontu.
-- Webhook trzymaj wyłącznie po stronie Supabase (sekret w konfiguracji hooka).
+- Service role tylko po stronie serwera (Vault, webhook, sekrety Edge).
+- `process-task-queue`: `verify_jwt = false`, walidacja nagłówka Authorization w kodzie.
 
 ## Powiązane
 
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
+- [ORCHESTRATOR.md](./ORCHESTRATOR.md)
