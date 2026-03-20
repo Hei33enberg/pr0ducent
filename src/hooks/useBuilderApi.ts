@@ -39,13 +39,30 @@ export function useBuilderApi() {
       const startTime = Date.now();
 
       try {
-        // Step 1: Initiate async generation
-        const { data, error } = await supabase.functions.invoke("run-on-v0", {
-          body: { prompt, experimentId },
-        });
+        // Step 1: Initiate async generation (with retries for transient 504 timeout)
+        let data: any = null;
+        let lastErrorMessage = "Failed to call run-on-v0";
 
-        if (error) throw new Error(error.message || "Failed to call run-on-v0");
-        if (!data?.success) throw new Error(data?.error || "v0 API error");
+        for (let attempt = 1; attempt <= RUN_ON_V0_MAX_RETRIES; attempt++) {
+          const { data: attemptData, error: attemptError } = await supabase.functions.invoke("run-on-v0", {
+            body: { prompt, experimentId },
+          });
+
+          if (!attemptError && attemptData?.success) {
+            data = attemptData;
+            break;
+          }
+
+          const combinedError = attemptError?.message || attemptData?.error || "v0 API error";
+          lastErrorMessage = combinedError;
+          const retryable = /504|timeout|non-2xx/i.test(combinedError);
+
+          if (!retryable || attempt === RUN_ON_V0_MAX_RETRIES) {
+            throw new Error(combinedError);
+          }
+
+          await sleep(RUN_ON_V0_RETRY_DELAY_MS * attempt);
+        }
 
         const chatId = data.chatId;
         const chatUrl = data.chatUrl;
