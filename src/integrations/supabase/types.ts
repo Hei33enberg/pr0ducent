@@ -71,6 +71,126 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_price_history: {
+        Row: {
+          annual_price: number | null
+          credits_included: number | null
+          id: string
+          monthly_price: number | null
+          plan_name: string
+          recorded_at: string | null
+          tool_id: string
+        }
+        Insert: {
+          annual_price?: number | null
+          credits_included?: number | null
+          id?: string
+          monthly_price?: number | null
+          plan_name: string
+          recorded_at?: string | null
+          tool_id: string
+        }
+        Update: {
+          annual_price?: number | null
+          credits_included?: number | null
+          id?: string
+          monthly_price?: number | null
+          plan_name?: string
+          recorded_at?: string | null
+          tool_id?: string
+        }
+        Relationships: []
+      }
+      builder_pricing_plans: {
+        Row: {
+          ai_models: string[] | null
+          annual_price: number | null
+          created_at: string | null
+          credit_unit: string | null
+          credits_included: number | null
+          dev_environment: string | null
+          features: Json | null
+          id: string
+          languages_supported: string[] | null
+          monthly_price: number | null
+          overage_cost: number | null
+          plan_name: string
+          promo_active: boolean | null
+          promo_description: string | null
+          promo_expires_at: string | null
+          tool_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ai_models?: string[] | null
+          annual_price?: number | null
+          created_at?: string | null
+          credit_unit?: string | null
+          credits_included?: number | null
+          dev_environment?: string | null
+          features?: Json | null
+          id?: string
+          languages_supported?: string[] | null
+          monthly_price?: number | null
+          overage_cost?: number | null
+          plan_name: string
+          promo_active?: boolean | null
+          promo_description?: string | null
+          promo_expires_at?: string | null
+          tool_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ai_models?: string[] | null
+          annual_price?: number | null
+          created_at?: string | null
+          credit_unit?: string | null
+          credits_included?: number | null
+          dev_environment?: string | null
+          features?: Json | null
+          id?: string
+          languages_supported?: string[] | null
+          monthly_price?: number | null
+          overage_cost?: number | null
+          plan_name?: string
+          promo_active?: boolean | null
+          promo_description?: string | null
+          promo_expires_at?: string | null
+          tool_id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      builder_ratings: {
+        Row: {
+          created_at: string | null
+          experiment_id: string | null
+          id: string
+          rating: number
+          review: string | null
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          experiment_id?: string | null
+          id?: string
+          rating: number
+          review?: string | null
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          experiment_id?: string | null
+          id?: string
+          rating?: number
+          review?: string | null
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       builder_results: {
         Row: {
           chat_url: string | null
@@ -224,9 +344,11 @@ export type Database = {
           account_model: string
           created_at: string
           id: string
+          is_free_run: boolean | null
           is_public: boolean
           prompt: string
           selected_tools: string[]
+          session_id: string | null
           updated_at: string
           use_case_tags: string[]
           user_id: string
@@ -235,9 +357,11 @@ export type Database = {
           account_model?: string
           created_at?: string
           id?: string
+          is_free_run?: boolean | null
           is_public?: boolean
           prompt: string
           selected_tools?: string[]
+          session_id?: string | null
           updated_at?: string
           use_case_tags?: string[]
           user_id: string
@@ -246,9 +370,11 @@ export type Database = {
           account_model?: string
           created_at?: string
           id?: string
+          is_free_run?: boolean | null
           is_public?: boolean
           prompt?: string
           selected_tools?: string[]
+          session_id?: string | null
           updated_at?: string
           use_case_tags?: string[]
           user_id?: string
@@ -340,6 +466,63 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      run_comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          experiment_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          experiment_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          experiment_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          plan: string
+          prompts_limit: number | null
+          prompts_used: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan?: string
+          prompts_limit?: number | null
+          prompts_used?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          plan?: string
+          prompts_limit?: number | null
+          prompts_used?: number | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_notifications: {
         Row: {
