@@ -1,10 +1,18 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Footer } from "@/components/Footer";
-import { CheckCircle2, X, Zap, Crown, Building2 } from "lucide-react";
+import { CheckCircle2, X, Zap, Crown, Building2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+const PRICE_IDS: Record<string, string> = {
+  Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
+  Business: "price_1TCy4iKTwW79ip00yNVhNgly",
+};
 
 const plans = [
   {
@@ -72,18 +80,35 @@ const plans = [
 export default function Pricing() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-  const handleCta = (planName: string) => {
+  const handleCta = async (planName: string) => {
     if (planName === "Free") {
       navigate(user ? "/dashboard" : "/auth");
-    } else {
-      // Will be wired to Stripe checkout
-      if (!user) {
-        navigate(`/auth?next=/pricing`);
-      } else {
-        // TODO: Stripe checkout
-        navigate("/dashboard");
+      return;
+    }
+
+    if (!user) {
+      navigate(`/auth?next=/pricing`);
+      return;
+    }
+
+    const priceId = PRICE_IDS[planName];
+    if (!priceId) return;
+
+    setLoadingPlan(planName);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { priceId },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
       }
+    } catch (err: any) {
+      toast.error(err.message || "Failed to start checkout");
+    } finally {
+      setLoadingPlan(null);
     }
   };
 
@@ -159,11 +184,16 @@ export default function Pricing() {
                   <Button
                     onClick={() => handleCta(plan.name)}
                     variant={plan.highlight ? "secondary" : plan.variant}
+                    disabled={loadingPlan === plan.name}
                     className={`w-full rounded-full font-sans font-semibold ${
                       plan.highlight ? "bg-background text-foreground hover:bg-background/90" : ""
                     }`}
                   >
-                    {plan.cta}
+                    {loadingPlan === plan.name ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      plan.cta
+                    )}
                   </Button>
                 </div>
               );

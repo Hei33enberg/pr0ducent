@@ -7,7 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { BUILDER_TOOLS } from "@/config/tools";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2 } from "lucide-react";
+import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface UserExperiment {
   id: string;
@@ -39,6 +40,29 @@ export default function UserDashboard() {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription">("history");
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const PRICE_IDS: Record<string, string> = {
+    Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
+    Business: "price_1TCy4iKTwW79ip00yNVhNgly",
+  };
+
+  const handleUpgrade = async (planName: string) => {
+    const priceId = PRICE_IDS[planName];
+    if (!priceId) return;
+    setLoadingPlan(planName);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { priceId },
+      });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+    } catch (err: any) {
+      toast.error(err.message || "Failed to start checkout");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -244,8 +268,14 @@ export default function UserDashboard() {
                         ))}
                       </ul>
                       {subscription?.plan !== plan.name.toLowerCase() && plan.name !== "Free" && (
-                        <Button size="sm" variant="outline" className="text-[10px] h-6 w-full mt-1">
-                          Upgrade
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-[10px] h-6 w-full mt-1"
+                          disabled={loadingPlan === plan.name}
+                          onClick={() => handleUpgrade(plan.name)}
+                        >
+                          {loadingPlan === plan.name ? <Loader2 className="w-3 h-3 animate-spin" /> : "Upgrade"}
                         </Button>
                       )}
                     </div>
