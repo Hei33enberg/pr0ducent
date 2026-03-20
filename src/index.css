@@ -269,6 +269,51 @@
     font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
+  .page-frame {
+    position: relative;
+    z-index: 1;
+    border: 2px solid hsla(0, 0%, 0%, 0.92);
+    border-radius: 20px;
+    overflow: visible;
+    background: hsla(0, 0%, 100%, 0.92);
+  }
+
+  .sticky-header {
+    position: fixed;
+    top: calc(0.5rem + 4px);
+    z-index: 450;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    background: hsla(30, 18%, 95%, 0.82);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .sticky-header {
+      background: hsla(30, 18%, 95%, 0.46);
+      backdrop-filter: blur(28px) saturate(1.9);
+      -webkit-backdrop-filter: blur(28px) saturate(1.9);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .sticky-header {
+      top: calc(0.75rem + 2px);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .sticky-header {
+      top: calc(1rem + 2px);
+    }
+  }
+
+  .header-glass {
+    background: transparent;
+    box-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.55) inset, 0 1px 0 hsla(0, 0%, 0%, 0.08);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
   .glass-card {
     background: hsla(0, 0%, 100%, 0.72);
     border: 1px solid hsla(0, 0%, 100%, 0.7);
