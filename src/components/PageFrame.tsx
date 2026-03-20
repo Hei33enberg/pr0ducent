@@ -63,6 +63,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
   const navLinks = [
     { label: t("nav.compare"), href: "/compare" },
+    { label: t("nav.blog"), href: "/blog" },
+    { label: t("nav.dashboard"), href: "/dashboard/updates" },
     { label: t("nav.howItWorks"), href: "#how-it-works" },
     { label: t("nav.faq"), href: "#faq" },
   ];
