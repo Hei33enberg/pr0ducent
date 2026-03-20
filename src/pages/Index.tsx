@@ -9,6 +9,7 @@ import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/com
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import { useBuilderApi } from "@/hooks/useBuilderApi";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BUILDER_TOOLS } from "@/config/tools";
 import type { Experiment, AccountModel } from "@/types/experiment";
