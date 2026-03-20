@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { BUILDER_TOOLS } from "@/config/tools";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard } from "lucide-react";
+import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2 } from "lucide-react";
 
 interface UserExperiment {
   id: string;
@@ -85,9 +85,9 @@ export default function UserDashboard() {
   const getTool = (id: string) => BUILDER_TOOLS.find((t) => t.id === id);
 
   const tabs = [
-    { key: "history" as const, label: "📋 Build History", count: experiments.length },
-    { key: "ratings" as const, label: "⭐ My Ratings", count: ratings.length },
-    { key: "subscription" as const, label: "💳 Subscription" },
+    { key: "history" as const, label: "Build History", icon: ClipboardList, count: experiments.length },
+    { key: "ratings" as const, label: "My Ratings", icon: Star, count: ratings.length },
+    { key: "subscription" as const, label: "Subscription", icon: CreditCard },
   ];
 
   return (
@@ -100,22 +100,26 @@ export default function UserDashboard() {
 
           {/* Tabs */}
           <div className="flex gap-1.5 mb-6">
-            {tabs.map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => setActiveTab(tab.key)}
-                className={`px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
-                  activeTab === tab.key
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border bg-card text-muted-foreground hover:border-foreground/30"
-                }`}
-              >
-                {tab.label}
-                {"count" in tab && tab.count !== undefined && (
-                  <span className="ml-1 text-[9px] opacity-70">({tab.count})</span>
-                )}
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveTab(tab.key)}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
+                    activeTab === tab.key
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border bg-card text-muted-foreground hover:border-foreground/30"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  {tab.label}
+                  {"count" in tab && tab.count !== undefined && (
+                    <span className="text-[9px] opacity-70">({tab.count})</span>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* History */}
@@ -234,7 +238,9 @@ export default function UserDashboard() {
                       <div className="text-[10px] text-muted-foreground font-sans">{plan.prompts} prompts</div>
                       <ul className="text-[10px] text-muted-foreground font-sans space-y-0.5">
                         {plan.features.map((f) => (
-                          <li key={f}>✓ {f}</li>
+                          <li key={f} className="inline-flex items-center gap-1">
+                            <CheckCircle2 className="w-2.5 h-2.5 text-success" /> {f}
+                          </li>
                         ))}
                       </ul>
                       {subscription?.plan !== plan.name.toLowerCase() && plan.name !== "Free" && (

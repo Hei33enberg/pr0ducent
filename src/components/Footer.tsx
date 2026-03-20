@@ -1,7 +1,9 @@
 import { useTranslation } from "@/lib/i18n";
+import { useNavigate } from "react-router-dom";
 
 export function Footer() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const year = new Date().getFullYear();
 
   return (
@@ -27,7 +29,8 @@ export function Footer() {
               {t("footer.product")}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-sans">
-              <li><a href="/compare" className="hover:text-foreground transition-colors">{t("footer.compare")}</a></li>
+              <li><a href="/compare" onClick={(e) => { e.preventDefault(); navigate("/compare"); }} className="hover:text-foreground transition-colors">{t("footer.compare")}</a></li>
+              <li><a href="/calculator" onClick={(e) => { e.preventDefault(); navigate("/calculator"); }} className="hover:text-foreground transition-colors">Calculator</a></li>
               <li><a href="#how-it-works" className="hover:text-foreground transition-colors">{t("footer.howItWorks")}</a></li>
               <li><a href="#faq" className="hover:text-foreground transition-colors">{t("footer.faq")}</a></li>
             </ul>
@@ -39,8 +42,8 @@ export function Footer() {
               {t("footer.resources")}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-sans">
-              <li><span className="opacity-50">{t("footer.blog")}</span></li>
-              <li><span className="opacity-50">{t("footer.docs")}</span></li>
+              <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigate("/blog"); }} className="hover:text-foreground transition-colors">{t("footer.blog")}</a></li>
+              <li><a href="/runs-now" onClick={(e) => { e.preventDefault(); navigate("/runs-now"); }} className="hover:text-foreground transition-colors">Runs Now</a></li>
             </ul>
           </div>
 
@@ -57,7 +60,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-border/50 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted-foreground font-sans">
-          <span>© {year} pr0ducent™. {t("footer.rights")}</span>
+          <span>&copy; {year} pr0ducent. {t("footer.rights")}</span>
           <LanguageToggleInline />
         </div>
       </div>

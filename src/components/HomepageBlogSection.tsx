@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/i18n";
-import { CalendarDays, ArrowRight } from "lucide-react";
+import { CalendarDays, ArrowRight, Newspaper } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface BlogPost {
@@ -39,8 +39,9 @@ export function HomepageBlogSection() {
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-10">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight">
-          📰 {t("blog.title")}
+        <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight inline-flex items-center gap-2">
+          <Newspaper className="w-6 h-6" />
+          {t("blog.title")}
         </h2>
         <button
           onClick={() => navigate("/blog")}
