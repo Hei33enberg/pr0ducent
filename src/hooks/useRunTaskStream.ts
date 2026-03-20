@@ -123,17 +123,16 @@ export function useRunTaskStream(experimentId: string | undefined) {
         { event: "INSERT", schema: "public", table: "run_events", filter: `experiment_id=eq.${experimentId}` },
         (payload) => {
           const newEvent = payload.new as RunEventRow;
-          if (newEvent && newEvent.tool_id) {
-            setState(prev => {
-              const toolEvents = prev.events[newEvent.tool_id] || [];
-              if (toolEvents.find(e => e.id === newEvent.id)) return prev;
-              
-              return {
-                ...prev,
-                events: { ...prev.events, [newEvent.tool_id]: [...toolEvents, newEvent] }
-              };
-            });
-          }
+          if (!newEvent) return;
+          const toolId = newEvent.tool_id ?? "__global";
+          setState((prev) => {
+            const toolEvents = prev.events[toolId] || [];
+            if (toolEvents.find((e) => e.id === newEvent.id)) return prev;
+            return {
+              ...prev,
+              events: { ...prev.events, [toolId]: [...toolEvents, newEvent] },
+            };
+          });
         }
       )
       .on(
