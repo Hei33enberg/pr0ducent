@@ -3,9 +3,10 @@ import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { Beaker, Zap, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import { Zap, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTranslation } from "@/lib/i18n";
+import { LanguageToggle } from "@/components/LanguageToggle";
 
 const TOP_TOOLS = BUILDER_TOOLS.filter((t) =>
   ["lovable", "replit", "v0", "cursor", "bolt"].includes(t.id)
@@ -13,19 +14,25 @@ const TOP_TOOLS = BUILDER_TOOLS.filter((t) =>
 
 export default function Compare() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div
-            className="flex items-center gap-2 cursor-pointer"
-            onClick={() => navigate("/")}
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); navigate("/"); }}
+            className="no-underline"
           >
-            <Beaker className="w-5 h-5 text-primary" />
-            <span className="font-bold text-foreground tracking-tight">PromptLab</span>
-          </div>
-          <ThemeToggle />
+            <span
+              className="font-serif font-bold tracking-tight leading-none"
+              style={{ color: "#000", fontSize: "1.3rem" }}
+            >
+              pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
+            </span>
+          </a>
+          <LanguageToggle />
         </div>
       </header>
 
@@ -35,16 +42,14 @@ export default function Compare() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground mb-3">
-            AI App Builder Comparison 2025
+          <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-foreground mb-3">
+            {t("compare.title")}
           </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Lovable vs Replit vs Vercel v0 vs Cursor vs Bolt — porównanie najlepszych AI app builderów.
-            Sprawdź, który najlepiej pasuje do Twojego projektu.
+          <p className="text-muted-foreground max-w-2xl mx-auto font-sans">
+            {t("compare.subtitle")}
           </p>
         </motion.div>
 
-        {/* Comparison table */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,11 +59,11 @@ export default function Compare() {
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left p-3 text-muted-foreground font-medium">Feature</th>
+                <th className="text-left p-3 text-muted-foreground font-medium font-sans">Feature</th>
                 {TOP_TOOLS.map((tool) => (
                   <th key={tool.id} className="p-3 text-center">
                     <div className="flex flex-col items-center gap-1">
-                      <span className="font-semibold text-foreground">{tool.name}</span>
+                      <span className="font-semibold text-foreground font-sans">{tool.name}</span>
                       {tool.featured && (
                         <Badge className="text-[9px] bg-featured text-featured-foreground border-0">★ Partner</Badge>
                       )}
@@ -69,20 +74,20 @@ export default function Compare() {
             </thead>
             <tbody>
               <tr className="border-b border-border/50">
-                <td className="p-3 text-muted-foreground font-medium">Stack</td>
+                <td className="p-3 text-muted-foreground font-medium font-sans">Stack</td>
                 {TOP_TOOLS.map((tool) => (
-                  <td key={tool.id} className="p-3 text-center text-xs text-foreground">{tool.stack}</td>
+                  <td key={tool.id} className="p-3 text-center text-xs text-foreground font-sans">{tool.stack}</td>
                 ))}
               </tr>
               <tr className="border-b border-border/50">
-                <td className="p-3 text-muted-foreground font-medium">Hosting</td>
+                <td className="p-3 text-muted-foreground font-medium font-sans">Hosting</td>
                 {TOP_TOOLS.map((tool) => (
-                  <td key={tool.id} className="p-3 text-center text-xs text-foreground">{tool.hosting}</td>
+                  <td key={tool.id} className="p-3 text-center text-xs text-foreground font-sans">{tool.hosting}</td>
                 ))}
               </tr>
               {COMPARISON_FEATURES.map((feature) => (
                 <tr key={feature.label} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                  <td className="p-3 text-foreground">{feature.label}</td>
+                  <td className="p-3 text-foreground font-sans">{feature.label}</td>
                   {TOP_TOOLS.map((tool) => (
                     <td key={tool.id} className="p-3 text-center">
                       {feature.tools.includes(tool.id) ? (
@@ -95,7 +100,7 @@ export default function Compare() {
                 </tr>
               ))}
               <tr className="border-b border-border/50">
-                <td className="p-3 text-muted-foreground font-medium">Key strengths</td>
+                <td className="p-3 text-muted-foreground font-medium font-sans">Key strengths</td>
                 {TOP_TOOLS.map((tool) => (
                   <td key={tool.id} className="p-3">
                     <div className="flex flex-wrap justify-center gap-1">
@@ -110,26 +115,24 @@ export default function Compare() {
           </table>
         </motion.div>
 
-        {/* CTA */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
           className="text-center space-y-4"
         >
-          <h2 className="text-xl font-bold text-foreground">Nie ufaj tabelkom — przetestuj sam!</h2>
-          <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-            Wpisz swój prompt i porównaj wyniki w realnych prototypach, nie na papierze.
+          <h2 className="text-xl font-serif font-bold text-foreground">{t("compare.ctaTitle")}</h2>
+          <p className="text-sm text-muted-foreground max-w-lg mx-auto font-sans">
+            {t("compare.ctaSubtitle")}
           </p>
           <Button size="lg" onClick={() => navigate("/")} className="rounded-xl shadow-lg shadow-primary/20">
             <Zap className="w-5 h-5 mr-2" />
-            Uruchom porównanie
+            {t("compare.runComparison")}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </motion.div>
       </main>
 
-      {/* JSON-LD */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -137,8 +140,7 @@ export default function Compare() {
             "@context": "https://schema.org",
             "@type": "WebPage",
             name: "AI App Builder Comparison — Lovable vs Replit vs v0 vs Cursor vs Bolt",
-            description:
-              "Compare the best AI app builders side by side. Test Lovable, Replit, Vercel v0, Cursor, and Bolt with one prompt.",
+            description: "Compare the best AI app builders side by side. Test Lovable, Replit, Vercel v0, Cursor, and Bolt with one prompt.",
             url: `${window.location.origin}/compare`,
           }),
         }}

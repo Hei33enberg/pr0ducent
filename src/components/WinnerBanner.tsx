@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { getToolById } from "@/config/tools";
 import type { ExperimentRun } from "@/types/experiment";
 import { Trophy } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 interface WinnerBannerProps {
   runs: ExperimentRun[];
@@ -13,6 +14,7 @@ function getOverallScore(run: ExperimentRun) {
 }
 
 export function WinnerBanner({ runs }: WinnerBannerProps) {
+  const { t } = useTranslation();
   const allCompleted = runs.every((r) => r.status === "completed");
   if (!allCompleted || runs.length < 2) return null;
 
@@ -33,11 +35,11 @@ export function WinnerBanner({ runs }: WinnerBannerProps) {
         <Trophy className="w-5 h-5 text-featured" />
       </div>
       <div className="flex-1">
-        <div className="text-sm font-semibold text-foreground">
-          🏆 Najlepszy wynik: <span className="text-featured">{tool.name}</span>
+        <div className="text-sm font-semibold text-foreground font-sans">
+          {t("winner.bestResult")} <span className="text-featured">{tool.name}</span>
         </div>
-        <div className="text-xs text-muted-foreground">
-          Średnia ocena: {avgScore}/100 · Czas: {winner.timeToFirstPrototype?.toFixed(1)}s
+        <div className="text-xs text-muted-foreground font-sans">
+          {t("winner.avgScore")} {avgScore}/100 · {t("winner.time")} {winner.timeToFirstPrototype?.toFixed(1)}s
         </div>
       </div>
     </motion.div>
