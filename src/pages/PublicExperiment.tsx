@@ -90,7 +90,7 @@ export default function PublicExperiment() {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-muted-foreground font-sans">{t("public.sharedExperiment")}</span>
-            {experiment && <ShareButton experimentId={experiment.id} />}
+            {experiment && <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />}
           </div>
         </div>
       </header>
