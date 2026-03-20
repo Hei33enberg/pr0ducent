@@ -34,7 +34,7 @@ export default function BuilderDashboard() {
         .from("builder_sync_data")
         .select("*")
         .order("tool_id");
-      setBuilders((data as BuilderSyncData[]) || []);
+      setBuilders((data || []) as unknown as BuilderSyncData[]);
       setLoading(false);
     }
     fetchData();
