@@ -636,7 +636,15 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
-              builderResult={builderResults[run.toolId] || stream.results[run.toolId]}
+              builderResult={builderResults[run.toolId] || (stream.results[run.toolId] ? {
+                id: stream.results[run.toolId].id,
+                toolId: stream.results[run.toolId].tool_id,
+                status: stream.results[run.toolId].status as BuilderResult["status"],
+                previewUrl: stream.results[run.toolId].preview_url ?? undefined,
+                chatUrl: stream.results[run.toolId].chat_url ?? undefined,
+                provenance: stream.results[run.toolId].provenance,
+                executionMode: stream.results[run.toolId].execution_mode,
+              } : undefined)}
               provenanceLabelText={provenanceLabel(builderResults[run.toolId], run)}
               task={stream.tasks[run.toolId]}
               events={stream.events[run.toolId]}
