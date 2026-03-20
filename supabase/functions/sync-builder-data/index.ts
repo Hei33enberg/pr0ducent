@@ -24,12 +24,15 @@ async function researchBuilder(
   perplexityKey: string
 ): Promise<any> {
   const prompt = `Research the AI app builder "${builderName}" and provide current information as of 2025-2026. Return a JSON object with these fields:
-- pricing_tiers: array of {name, price, features[]} objects for each plan (free, pro, team, enterprise if applicable)
+- pricing_tiers: array of {name (lowercase: free/pro/team/enterprise), monthly_price (number), annual_price (number or null), credits_included (number), credit_unit (string like "messages" or "generations"), overage_cost (number or null), features (array of feature strings)} for each plan
 - features: array of key feature strings
 - changelog: array of {date, title, description} for the 3 most recent updates/changes
 - official_url: the official website URL
 - docs_url: URL to their documentation
 - status: "active" or "discontinued"
+- ai_models: array of AI model names this builder uses (e.g. "GPT-4o", "Claude 3.5 Sonnet")
+- dev_environment: string describing the development environment (e.g. "Cloud IDE", "VS Code fork", "WebContainer")
+- active_promotions: array of {description, expires_at (ISO date or null)} for any current deals
 
 Only return valid JSON, no markdown.`;
 
@@ -63,9 +66,7 @@ Only return valid JSON, no markdown.`;
   const data = await response.json();
   const content = data.choices?.[0]?.message?.content || "{}";
 
-  // Try to parse JSON from the response
   try {
-    // Strip markdown code fences if present
     const cleaned = content.replace(/```json?\s*/g, "").replace(/```\s*/g, "").trim();
     return JSON.parse(cleaned);
   } catch {
@@ -146,6 +147,50 @@ Deno.serve(async (req) => {
         .upsert(upsertData, { onConflict: "tool_id" });
 
       if (error) throw error;
+
+      // Populate builder_pricing_plans from research
+      if (research.pricing_tiers && Array.isArray(research.pricing_tiers)) {
+        for (const tier of research.pricing_tiers) {
+          const planData = {
+            tool_id: builder.id,
+            plan_name: (tier.name || "free").toLowerCase(),
+            monthly_price: tier.monthly_price ?? 0,
+            annual_price: tier.annual_price ?? null,
+            credits_included: tier.credits_included ?? 0,
+            credit_unit: tier.credit_unit || "messages",
+            overage_cost: tier.overage_cost ?? null,
+            features: tier.features || [],
+            ai_models: research.ai_models || [],
+            dev_environment: research.dev_environment || null,
+            promo_active: false,
+            promo_description: null,
+            promo_expires_at: null,
+            updated_at: new Date().toISOString(),
+          };
+
+          // Check for promotions
+          if (research.active_promotions && Array.isArray(research.active_promotions) && research.active_promotions.length > 0) {
+            planData.promo_active = true;
+            planData.promo_description = research.active_promotions[0].description || null;
+            planData.promo_expires_at = research.active_promotions[0].expires_at || null;
+          }
+
+          await supabase
+            .from("builder_pricing_plans")
+            .upsert(planData, { onConflict: "tool_id,plan_name" });
+        }
+
+        // Record price history snapshot
+        for (const tier of research.pricing_tiers) {
+          await supabase.from("builder_price_history").insert({
+            tool_id: builder.id,
+            plan_name: (tier.name || "free").toLowerCase(),
+            monthly_price: tier.monthly_price ?? 0,
+            annual_price: tier.annual_price ?? null,
+            credits_included: tier.credits_included ?? 0,
+          });
+        }
+      }
 
       results.push({ tool_id: builder.id, success: true });
     } catch (err: any) {
