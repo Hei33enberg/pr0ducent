@@ -20,7 +20,7 @@ interface BlogPost {
 }
 
 export default function Blog() {
-  const { t, language } = useTranslation();
+  const { t, locale: language } = useTranslation();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);

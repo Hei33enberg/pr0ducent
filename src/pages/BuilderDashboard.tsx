@@ -13,11 +13,11 @@ interface BuilderSyncData {
   id: string;
   tool_id: string;
   pricing_tiers: any[];
-  features: string[];
-  changelog: { date: string; title: string; description: string }[];
-  official_url: string;
-  docs_url: string;
-  status: string;
+  features: any[];
+  changelog: any[];
+  official_url: string | null;
+  docs_url: string | null;
+  status: string | null;
   last_synced_at: string;
 }
 
