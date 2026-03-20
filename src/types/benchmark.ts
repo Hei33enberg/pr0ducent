@@ -41,6 +41,8 @@ export interface UserVoteRow {
   tool_id: string;
   vote: -1 | 1;
   rating: number | null; // 1-5
+  /** `result` = simple up/down; `pairwise` reserved for future Arena (schema parking lot). */
+  vote_kind?: "result" | "pairwise";
   created_at: string;
 }
 

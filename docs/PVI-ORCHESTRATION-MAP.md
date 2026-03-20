@@ -17,9 +17,11 @@ Cel: jedna strona łącząca plan AG (benchmark produktu) z istniejącym brokere
 ## Tabele i rozszerzenia (kierunek)
 
 - Dziś: `experiment_runs.scores` (JSON), `builder_results`, `run_events`.
-- Docelowo: osobna tabela np. `builder_metric_scores` (`experiment_id`, `tool_id`, `run_task_id`, `dimension`, `value`, `source`) zamiast rozpychania wszystkiego w jednym JSON — bez blokowania MVP; migracja w osobnym sprincie.
+- **Sprint 3:** `builder_benchmark_scores`, `user_votes`, `user_comments`, MV `builder_leaderboard` — migracja `20260328120000_sprint3_benchmark_social.sql`; zapis Grupy A z `score-builder-output` (szczegóły: [AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)).
+- Dalsze iteracje: opcjonalna tabela `builder_metric_scores` (`experiment_id`, `tool_id`, `run_task_id`, `dimension`, `value`, `source`) jeśli rozbitie kolumn na wiele wierszy będzie wygodniejsze niż jeden wiersz per wynik.
 
 ## Powiązane
 
 - [ORCHESTRATOR.md](./ORCHESTRATOR.md)
+- [AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)
 - [score-builder-output](../supabase/functions/score-builder-output/index.ts)
