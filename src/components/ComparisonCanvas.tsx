@@ -284,6 +284,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
+              builderResult={builderResults[run.toolId]}
             />
           ))}
         </AnimatePresence>
