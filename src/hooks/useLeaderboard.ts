@@ -26,9 +26,9 @@ function mapMvRow(row: LeaderboardRow): LeaderboardEntry | null {
     tool_id: tid,
     pvi_score: Number(row.avg_pvi ?? row.best_pvi ?? 0),
     total_runs: Number(row.total_runs ?? 0),
-    avg_speed: Number(row.avg_speed ?? 0),
-    avg_ui_quality: Number(row.avg_ui_quality ?? 0),
-    avg_code_quality: Number(row.avg_code_quality ?? 0),
+    avg_speed: 0,
+    avg_ui_quality: 0,
+    avg_code_quality: 0,
     user_rating: 0,
     trend: "flat",
   };
@@ -36,9 +36,9 @@ function mapMvRow(row: LeaderboardRow): LeaderboardEntry | null {
 
 const SORT_COLUMN: Record<SortDim, keyof LeaderboardRow> = {
   pvi_score: "avg_pvi",
-  avg_speed: "avg_speed",
-  avg_ui_quality: "avg_ui_quality",
-  avg_code_quality: "avg_code_quality",
+  avg_speed: "avg_pvi",
+  avg_ui_quality: "avg_pvi",
+  avg_code_quality: "avg_pvi",
   total_runs: "total_runs",
 };
 
