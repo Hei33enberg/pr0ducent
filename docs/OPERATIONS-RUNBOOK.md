@@ -9,7 +9,8 @@ Pull z GitHub `main` → build → Publish; ustaw `VITE_FF_*` i opcjonalnie `VIT
 
 ## 2. Backend Supabase (migracje + funkcje)
 
-→ [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) (sekcja deploy) oraz [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md) (lista migracji).
+→ [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) (sekcja deploy) oraz [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md) (lista migracji).  
+Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) (workflow `supabase-deploy`).
 
 ## 3. Webhook kolejki (krytyczne dla niezawodności)
 
@@ -36,4 +37,4 @@ Pull z GitHub `main` → build → Publish; ustaw `VITE_FF_*` i opcjonalnie `VIT
 - **Gość:** `run-on-v0` — bez pełnej kolejki.
 - **Zalogowany:** `dispatch-builders` → `run_tasks` → `process-task-queue` → adaptery → `builder_results`.
 
-Szczegóły: [ORCHESTRATOR.md](./ORCHESTRATOR.md).
+Szczegóły: [ORCHESTRATOR.md](./ORCHESTRATOR.md). Wprowadzenie PL: [BUILDERS-101-PL.md](./BUILDERS-101-PL.md).

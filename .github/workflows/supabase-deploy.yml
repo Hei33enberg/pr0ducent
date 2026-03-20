@@ -1,0 +1,42 @@
+# Apply migrations + deploy Edge Functions to the linked Supabase project.
+# Requires repository secrets: SUPABASE_ACCESS_TOKEN, SUPABASE_PROJECT_REF
+# Optional: SUPABASE_DB_PASSWORD if your CLI version needs it for db push.
+#
+# Default: manual only. Uncomment push trigger when ready for merge-to-main deploys.
+
+name: supabase-deploy
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+concurrency:
+  group: supabase-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Link project
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: supabase link --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Push database migrations
+        env:
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: supabase db push
+
+      - name: Deploy Edge Functions
+        run: supabase functions deploy

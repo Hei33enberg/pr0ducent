@@ -7,6 +7,8 @@ Cel: po **INSERT** do `public.run_tasks` worker Edge Function od razu zdejmuje k
 - Edge Function **`process-task-queue`** wdrożona z `verify_jwt = false` i wywoływana **tylko** z **Service Role** (nigdy z anon w przeglądarce).
 - Sekret **`SUPABASE_SERVICE_ROLE_KEY`** znany tylko operatorowi (Dashboard → Settings → API).
 
+**Schemat bazy:** aktualny kod `process-task-queue` zakłada kolumny z migracji `20260322120000_vbp_orchestration.sql` (m.in. `builder_integration_config.circuit_state`, `run_tasks.next_retry_at`). Jeśli Supabase zwraca błąd „column does not exist”, **zastosuj brakujące migracje** — nie upraszczaj funkcji Edge zamiast aktualizacji bazy.
+
 ## Kroki (Supabase Dashboard)
 
 1. Zaloguj się do projektu → **Database**.

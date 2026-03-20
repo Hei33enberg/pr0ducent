@@ -1,6 +1,6 @@
 # Orchestrator (broker MVP)
 
-Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md).
+Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md). Wprowadzenie po polsku (gość vs zalogowany, v0 vs inni): [BUILDERS-101-PL.md](./BUILDERS-101-PL.md).
 
 ## Flow
 
@@ -34,10 +34,10 @@ If `process-task-queue` is unreachable, `dispatch-builders` falls back to **inli
 | Table | Role |
 |-------|------|
 | `run_jobs` | One dispatch batch per call; `idempotency_key` (per user), `trace_id`, `workflow_engine` (default `supabase_edge`). |
-| `run_tasks` | One row per selected builder; status machine (`queued` → `dispatched` → `building` → `artifact_ready` → `scored` → `completed`, or `failed` / `benchmark`). |
+| `run_tasks` | One row per selected builder; status machine (`queued` → `dispatched` → `building` → `artifact_ready` → `scored` → `completed`, or `failed` / `benchmark`); opcjonalnie `next_retry_at` dla retry po rate limit (migracja `20260322120000_vbp_orchestration.sql`). |
 | `run_events` | Append-only log; optional `run_job_id`, `run_task_id`; Realtime for Run Center. |
 | `builder_results` | UI-facing row per `(experiment_id, tool_id)`; `provider_run_id`, `provenance`, `run_task_id`. |
-| `builder_integration_config` | Per-tool `tier`, `enabled`, polling hints. |
+| `builder_integration_config` | Per-tool `tier`, `enabled`, polling hints, VBP/REST fields; `circuit_state` dla breaker (ta sama migracja). |
 | `broker_pool_accounts` / `broker_account_leases` | Audit trail for broker v0 usage. |
 | `credit_transactions` | Debit on first live dispatch of an experiment (with subscription limits). |
 | `referral_clicks` / `referral_conversions` | Handoff attribution from Compare CTA. |
