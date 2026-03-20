@@ -66,9 +66,19 @@ Deno.serve(async (req) => {
     if (!chatResponse.ok) {
       const errorBody = await chatResponse.text();
       console.error(`v0 API error [${chatResponse.status}]:`, errorBody);
+
+      const normalizedError = chatResponse.status === 429
+        ? "v0 daily limit reached for this API key."
+        : `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 300)}`;
+
       return new Response(
-        JSON.stringify({ success: false, error: `v0 API error [${chatResponse.status}]: ${errorBody.slice(0, 200)}` }),
-        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({
+          success: false,
+          error: normalizedError,
+          upstreamStatus: chatResponse.status,
+          retryable: chatResponse.status >= 500,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
