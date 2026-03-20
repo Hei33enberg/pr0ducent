@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pr0ducent.dev/schemas/vbp/artifacts-response.json",
+  "title": "VBP Artifacts",
+  "type": "object",
+  "properties": {
+    "preview_url": { "type": "string", "format": "uri" },
+    "screenshot_url": { "type": "string", "format": "uri" },
+    "deploy_url": { "type": "string", "format": "uri" },
+    "tech_stack": { "type": "array", "items": { "type": "string" } },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {
+          "path": { "type": "string" },
+          "content": { "type": "string" },
+          "language": { "type": "string" }
+        }
+      }
+    },
+    "metadata": { "type": "object", "additionalProperties": true }
+  },
+  "additionalProperties": true
+}

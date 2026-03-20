@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pr0ducent.dev/schemas/vbp/dispatch-response.json",
+  "title": "VBP Dispatch Response",
+  "type": "object",
+  "required": ["provider_run_id"],
+  "properties": {
+    "provider_run_id": { "type": "string", "minLength": 1 },
+    "stream_url": { "type": "string", "format": "uri" },
+    "claim_token": { "type": "string" },
+    "phantom_ttl_hours": { "type": "integer", "minimum": 1, "maximum": 168 },
+    "status": { "type": "string" }
+  },
+  "additionalProperties": true
+}

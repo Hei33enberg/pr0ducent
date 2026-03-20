@@ -1,7 +1,9 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { resolveAdapterKind } from "../_shared/adapter-registry.ts";
 import { dispatchBenchmarkAdapter } from "../_shared/adapters/benchmark-adapter.ts";
+import { dispatchGenericRestAdapter } from "../_shared/adapters/generic-rest-adapter.ts";
 import { dispatchV0Adapter } from "../_shared/adapters/v0-adapter.ts";
+import { dispatchVbpAdapter } from "../_shared/adapters/vbp-adapter.ts";
 import type { AdapterDispatchContext, IntegrationConfigRow } from "../_shared/adapters/types.ts";
 import { taskRowToDispatched } from "../_shared/run-task-status.ts";
 
@@ -189,7 +191,7 @@ Deno.serve(async (req) => {
         idempotency_key: idempotencyKey && idempotencyKey.length > 0 ? idempotencyKey : null,
         trace_id: traceId,
         workflow_engine: wf,
-        metadata: { selectedTools },
+        metadata: { selectedTools, prompt },
       })
       .select("id")
       .single();
@@ -228,46 +230,93 @@ Deno.serve(async (req) => {
       trace_id: traceId,
     });
 
-    const dispatched: { toolId: string; tier: number; status: string; error?: string }[] = [];
-
     for (const toolId of selectedTools) {
       const cfg = configByTool.get(toolId);
 
-      const { data: taskIns, error: taskErr } = await admin
-        .from("run_tasks")
-        .insert({
-          run_job_id: runJobId,
-          experiment_id: experimentId,
-          tool_id: toolId,
-          status: "queued",
-          adapter_tier: cfg?.tier ?? 4,
-        })
-        .select("id")
-        .single();
+      const { error: taskErr } = await admin.from("run_tasks").insert({
+        run_job_id: runJobId,
+        experiment_id: experimentId,
+        tool_id: toolId,
+        status: "queued",
+        adapter_tier: cfg?.tier ?? 4,
+      });
 
-      if (taskErr || !taskIns) {
-        throw new Error(taskErr?.message || "run_tasks insert failed");
+      if (taskErr) {
+        throw new Error(taskErr.message || "run_tasks insert failed");
       }
-      const runTaskId = taskIns.id as string;
-
-      const ctx: AdapterDispatchContext = {
-        admin,
-        experimentId,
-        runJobId,
-        traceId,
-        prompt,
-        toolId,
-        runTaskId,
-        config: cfg,
-      };
-
-      const kind = resolveAdapterKind(toolId, cfg);
-      const entry =
-        kind === "v0_live" ? await dispatchV0Adapter(ctx) : await dispatchBenchmarkAdapter(ctx);
-      dispatched.push(entry);
     }
 
-    await admin.from("run_jobs").update({ status: "completed" }).eq("id", runJobId);
+    const workerUrl = `${supabaseUrl.replace(/\/$/, "")}/functions/v1/process-task-queue`;
+    try {
+      for (let wave = 0; wave < 10; wave++) {
+        const wr = await fetch(workerUrl, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${serviceKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ run_job_id: runJobId }),
+        });
+        if (!wr.ok) break;
+        const wj = (await wr.json()) as { partial?: boolean; timedOut?: boolean };
+        if (!wj.partial) break;
+        if (wj.timedOut && wave > 0) break;
+      }
+    } catch (e) {
+      console.error("process-task-queue invoke failed:", e);
+    }
+
+    const { data: finalTasks } = await admin
+      .from("run_tasks")
+      .select("tool_id, adapter_tier, status, error_message")
+      .eq("run_job_id", runJobId);
+
+    const dispatched = (finalTasks || []).map((t) =>
+      taskRowToDispatched(t as { tool_id: string; adapter_tier: number | null; status: string; error_message: string | null })
+    );
+
+    let { count: queuedLeft } = await admin
+      .from("run_tasks")
+      .select("id", { count: "exact", head: true })
+      .eq("run_job_id", runJobId)
+      .eq("status", "queued");
+
+    if ((queuedLeft ?? 0) > 0) {
+      const { data: qrows } = await admin
+        .from("run_tasks")
+        .select("id, tool_id")
+        .eq("run_job_id", runJobId)
+        .eq("status", "queued");
+      for (const row of qrows || []) {
+        const cfg = configByTool.get(row.tool_id);
+        const ctx: AdapterDispatchContext = {
+          admin,
+          experimentId,
+          runJobId,
+          traceId,
+          prompt,
+          toolId: row.tool_id,
+          runTaskId: row.id as string,
+          config: cfg,
+        };
+        const kind = resolveAdapterKind(row.tool_id, cfg);
+        if (kind === "v0_live") await dispatchV0Adapter(ctx);
+        else if (kind === "vbp_live") await dispatchVbpAdapter(ctx);
+        else if (kind === "generic_rest_live") await dispatchGenericRestAdapter(ctx);
+        else await dispatchBenchmarkAdapter(ctx);
+      }
+    }
+
+    const { count: stillQueued } = await admin
+      .from("run_tasks")
+      .select("id", { count: "exact", head: true })
+      .eq("run_job_id", runJobId)
+      .eq("status", "queued");
+
+    await admin
+      .from("run_jobs")
+      .update({ status: (stillQueued ?? 0) > 0 ? "failed" : "completed" })
+      .eq("id", runJobId);
 
     return new Response(
       JSON.stringify({

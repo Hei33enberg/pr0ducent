@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pr0ducent.dev/schemas/vbp/status-response.json",
+  "title": "VBP Status (poll)",
+  "type": "object",
+  "required": ["status"],
+  "properties": {
+    "build_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "building", "completed", "failed", "timeout", "cancelled"]
+    },
+    "progress": { "type": "number", "minimum": 0, "maximum": 1 },
+    "current_step": { "type": "string" },
+    "steps_completed": { "type": "array", "items": { "type": "string" } },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": true
+}

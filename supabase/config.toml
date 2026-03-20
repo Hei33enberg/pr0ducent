@@ -6,6 +6,15 @@ verify_jwt = false
 [functions.dispatch-builders]
 verify_jwt = true
 
+[functions.process-task-queue]
+verify_jwt = false
+
+[functions.pbp-webhook]
+verify_jwt = false
+
+[functions.rag-crawl-builder]
+verify_jwt = false
+
 [functions.poll-v0-status]
 verify_jwt = false
 

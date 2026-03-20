@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pr0ducent.dev/schemas/vbp/dispatch-request.json",
+  "title": "VBP Dispatch Request",
+  "type": "object",
+  "required": ["broker_id", "run_id", "prompt", "webhook_url"],
+  "properties": {
+    "broker_id": { "type": "string" },
+    "broker_auth_token": { "type": "string" },
+    "run_id": { "type": "string", "format": "uuid" },
+    "prompt": { "type": "string", "minLength": 1 },
+    "user_context": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "intent_id": { "type": "string" },
+        "experiment_id": { "type": "string", "format": "uuid" },
+        "theme": { "type": "string" }
+      }
+    },
+    "webhook_url": { "type": "string", "format": "uri" },
+    "options": {
+      "type": "object",
+      "properties": {
+        "max_build_time_s": { "type": "integer", "minimum": 30 },
+        "streaming": { "type": "boolean" }
+      }
+    }
+  },
+  "additionalProperties": true
+}

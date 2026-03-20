@@ -1,0 +1,10 @@
+{
+  "name": "vbp-validate",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CLI stub: VBP compliance checker (expand to probe endpoints)",
+  "bin": {
+    "vbp-validate": "./cli.mjs"
+  },
+  "type": "module"
+}
