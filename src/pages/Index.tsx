@@ -56,16 +56,16 @@ const Index = () => {
         incrementGuestCount();
       }
 
+      let dbId: string | undefined;
       if (user) {
-        const dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
+        dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags) || undefined;
         loadExperimentsFromDb(user.id).then(setPastExperiments);
-        // Trigger real builder APIs for tools that support it
-        if (dbId) {
-          runBuilders(prompt, dbId, selectedTools);
-        }
       } else {
         setPastExperiments(loadExperiments());
       }
+
+      // Trigger real builder APIs for all users (guests too)
+      runBuilders(prompt, dbId || exp.id, selectedTools);
     },
     [user]
   );
