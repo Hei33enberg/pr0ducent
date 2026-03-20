@@ -66,6 +66,7 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
 
   const runsMap = new Map<string, ExperimentRun[]>();
   (allRuns || []).forEach((r) => {
+    const row = r as typeof r & { scores_reasoning?: Record<string, unknown> | null };
     const run: ExperimentRun = {
       toolId: r.tool_id,
       status: r.status as ExperimentRun["status"],
@@ -76,6 +77,7 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
       scores: r.scores as unknown as EditorialScores,
       pros: r.pros as unknown as string[],
       cons: r.cons as unknown as string[],
+      scoresReasoning: row.scores_reasoning ?? undefined,
     };
     const list = runsMap.get(r.experiment_id) || [];
     list.push(run);
@@ -115,6 +117,23 @@ export async function logReferralClick(userId: string, experimentId: string, too
     user_id: userId,
     experiment_id: experimentId,
     tool_id: toolId,
+  });
+}
+
+/** Click + conversion row for broker handoff attribution (MVP). */
+export async function logReferralHandoff(
+  userId: string,
+  experimentId: string,
+  toolId: string,
+  metadata?: Record<string, unknown>
+) {
+  await logReferralClick(userId, experimentId, toolId);
+  await supabase.from("referral_conversions").insert({
+    user_id: userId,
+    experiment_id: experimentId,
+    tool_id: toolId,
+    conversion_type: "builder_handoff",
+    metadata: metadata ?? { source: "compare_cta" },
   });
 }
 

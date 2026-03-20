@@ -19,6 +19,8 @@ export interface ExperimentRun {
   scores: EditorialScores;
   pros: string[];
   cons: string[];
+  /** Populated when score orchestra attaches narrative (see experiment_runs.scores_reasoning). */
+  scoresReasoning?: Record<string, unknown>;
 }
 
 export interface Experiment {

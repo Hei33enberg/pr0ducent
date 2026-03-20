@@ -158,6 +158,22 @@ export function ToolDetailPanel({ run, open, onClose }: ToolDetailPanelProps) {
             <ScoreRow label="Ease of Editing" value={run.scores.easeOfEditing} />
           </div>
 
+          {run.scoresReasoning &&
+            typeof run.scoresReasoning.summary === "string" &&
+            run.scoresReasoning.summary.length > 0 && (
+              <div className="rounded-lg border border-border p-3 space-y-2">
+                <h4 className="text-sm font-semibold text-foreground">Score narrative</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {run.scoresReasoning.summary as string}
+                </p>
+                {run.scoresReasoning.modelVersion != null && (
+                  <p className="text-[10px] font-mono text-muted-foreground">
+                    Model: {String(run.scoresReasoning.modelVersion)}
+                  </p>
+                )}
+              </div>
+            )}
+
           {/* Pros / Cons */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">

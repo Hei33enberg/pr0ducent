@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { buildBaselineScoresReasoning } from "../_shared/orchestrator-scoring.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -71,6 +72,87 @@ Deno.serve(async (req) => {
           raw_response: chatData,
           error_message: isFailed ? "v0 generation failed" : null,
         }).eq("experiment_id", experimentId).eq("tool_id", "v0");
+
+        const { data: taskRef } = await supabase
+          .from("run_tasks")
+          .select("id, run_job_id")
+          .eq("experiment_id", experimentId)
+          .eq("tool_id", "v0")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (taskRef?.id) {
+          await supabase
+            .from("run_tasks")
+            .update({
+              status: isCompleted ? "artifact_ready" : "failed",
+              error_message: isFailed ? "v0 generation failed" : null,
+            })
+            .eq("id", taskRef.id);
+        }
+
+        await supabase.from("run_events").insert({
+          experiment_id: experimentId,
+          run_job_id: taskRef?.run_job_id ?? null,
+          run_task_id: taskRef?.id ?? null,
+          tool_id: "v0",
+          event_type: isCompleted ? "builder.poll_completed" : "builder.poll_error",
+          payload: {
+            versionStatus,
+            previewUrl: demoUrl,
+            screenshotUrl,
+          },
+        });
+
+        if (isCompleted) {
+          const { data: runRow } = await supabase
+            .from("experiment_runs")
+            .select("scores")
+            .eq("experiment_id", experimentId)
+            .eq("tool_id", "v0")
+            .maybeSingle();
+
+          const sc = (runRow?.scores as Record<string, number>) || {};
+          const reasoning = buildBaselineScoresReasoning(
+            {
+              uiQuality: sc.uiQuality,
+              backendLogic: sc.backendLogic,
+              speed: sc.speed,
+              easeOfEditing: sc.easeOfEditing,
+            },
+            { previewUrl: demoUrl, screenshotUrl, toolId: "v0" }
+          );
+
+          await supabase
+            .from("experiment_runs")
+            .update({ scores_reasoning: reasoning as unknown as Record<string, unknown> })
+            .eq("experiment_id", experimentId)
+            .eq("tool_id", "v0");
+
+          await supabase
+            .from("builder_results")
+            .update({ scores_reasoning: reasoning as unknown as Record<string, unknown> })
+            .eq("experiment_id", experimentId)
+            .eq("tool_id", "v0");
+
+          if (taskRef?.id) {
+            await supabase.from("run_tasks").update({ status: "scored" }).eq("id", taskRef.id);
+          }
+
+          await supabase.from("run_events").insert({
+            experiment_id: experimentId,
+            run_job_id: taskRef?.run_job_id ?? null,
+            run_task_id: taskRef?.id ?? null,
+            tool_id: "v0",
+            event_type: "score.baseline_attached",
+            payload: { modelVersion: reasoning.modelVersion },
+          });
+
+          if (taskRef?.id) {
+            await supabase.from("run_tasks").update({ status: "completed" }).eq("id", taskRef.id);
+          }
+        }
       }
     }
 

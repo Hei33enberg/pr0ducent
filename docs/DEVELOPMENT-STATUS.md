@@ -2,49 +2,42 @@
 
 ## Date
 
-2026-03-20
+2026-03-21
 
-## What Was Implemented
+## Execution model (current)
 
-- Product messaging was aligned with current execution model:
-  - `v0` runs are live.
-  - other builders are benchmark profiles (same prompt + scoring model), not direct live integrations yet.
-- Route `/compare` was wired and made first-class in navigation.
-- i18n and brand consistency were improved:
-  - removed trophy emoji from winner copy,
-  - moved hardcoded footer and header labels into translation dictionaries,
-  - localized v0 API timeout/failure messages via translation keys.
-- Housekeeping updates:
-  - package name changed to `pr0ducent`,
-  - duplicate toast stack simplified to one runtime toaster (`sonner`) in app shell,
-  - mock preview gradients switched from raw palette classes to semantic design tokens.
+- **Broker MVP:** runs use platform keys where integrated; **live API** only for **v0** today.
+- **Orchestrator:** authenticated users with a DB `experiments.id` (UUID) call [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts). Guests / non-UUID flows still use legacy `run-on-v0` + poll.
+- **Data plane:** `run_jobs`, `run_tasks`, `run_events`, extended `builder_results`, `builder_integration_config`, broker lease tables, `credit_transactions`, `referral_conversions`.
+- **Realtime:** `builder_results`, `run_events`, `run_tasks` (after migrations) for Compare + Run Center.
+- **Other builders** in the UI remain **benchmark** paths (tier 4 / disabled in config) until new adapters are registered.
 
-## Architecture Snapshot
+## Migrations (orchestrator)
 
-- Frontend: React + TypeScript + Vite + Tailwind + shadcn/ui
-- Data/Auth/Cloud: Supabase (Postgres, Auth, Edge Functions)
-- Routing: `react-router-dom` with lazy route loading
-- i18n: custom EN/PL dictionary context (`src/lib/i18n.tsx`)
+- [`20260321120000_orchestrator_core.sql`](../supabase/migrations/20260321120000_orchestrator_core.sql)
+- [`20260321140000_run_jobs_tasks_workflow_pool.sql`](../supabase/migrations/20260321140000_run_jobs_tasks_workflow_pool.sql)
 
-## Current Execution Model (Important)
+## Edge functions (orchestrator-related)
 
-- Live generation integration: `v0` only (`run-on-v0` + `poll-v0-status`).
-- Other builders are represented by benchmark/mock runs for side-by-side comparison UX.
+| Function | JWT (config.toml) | Notes |
+|----------|-------------------|--------|
+| `dispatch-builders` | `true` | User JWT; service role inside. |
+| `poll-v0-status` | `false` | Called from browser with anon key + body. |
+| `score-builder-output` | `true` | Manual / admin rescore. |
+| `sync-builder-data` | `false` | Cron / service; Perplexity + knowledge chunks + ingest alerts. |
 
-## Files Updated In This Iteration
+Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync), Stripe keys for checkout/webhook.
 
-- `package.json`
-- `src/App.tsx`
-- `src/components/BuilderRatingStars.tsx`
-- `src/components/Footer.tsx`
-- `src/components/PageFrame.tsx`
-- `src/hooks/useBuilderApi.ts`
-- `src/lib/mock-experiment.ts`
-- `src/locales/en.json`
-- `src/locales/pl.json`
-- `src/pages/Compare.tsx`
+## Frontend stack
 
-## Notes For Next Tasks
+- React + TypeScript + Vite + Tailwind + shadcn/ui
+- Supabase client + `invoke` for Edge Functions
+- i18n: EN/PL dictionaries
 
-- If product direction changes toward fully live multi-builder orchestration, extend `useBuilderApi` with per-builder adapters and explicit status badges (`live`, `benchmark`, `coming soon`).
-- If conversions matter on compare page, keep copy tightly synced with real backend capabilities to avoid trust drift.
+## Architecture reference
+
+See [ORCHESTRATOR.md](./ORCHESTRATOR.md) for sequence diagram and adapter layout.
+
+## Sprint close notes
+
+See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and follow-ups.

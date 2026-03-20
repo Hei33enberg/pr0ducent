@@ -150,5 +150,8 @@
   "notifications.signInDesc": "Sign in to manage your notification preferences.",
   "api.timeoutGenerating": "Timeout: generation is taking too long. Check the chat link.",
   "api.v0Failed": "v0 generation failed",
-  "api.failedWithV0": "Failed to generate with v0"
+  "api.failedWithV0": "Failed to generate with v0",
+
+  "runCenter.title": "Orchestrator activity",
+  "runCenter.empty": "No pipeline events yet."
 }

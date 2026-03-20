@@ -59,6 +59,11 @@ const Index = () => {
       let dbId: string | undefined;
       if (user) {
         dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags) || undefined;
+        if (dbId) {
+          const synced = { ...exp, id: dbId };
+          setExperiment(synced);
+          saveExperiment(synced);
+        }
         loadExperimentsFromDb(user.id).then(setPastExperiments);
       } else {
         setPastExperiments(loadExperiments());

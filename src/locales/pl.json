@@ -150,5 +150,8 @@
   "notifications.signInDesc": "Zaloguj się, aby zarządzać preferencjami powiadomień.",
   "api.timeoutGenerating": "Limit czasu: generowanie trwa zbyt długo. Sprawdź link do czatu.",
   "api.v0Failed": "Generowanie v0 nie powiodło się",
-  "api.failedWithV0": "Nie udało się wygenerować przez v0"
+  "api.failedWithV0": "Nie udało się wygenerować przez v0",
+
+  "runCenter.title": "Aktywność orkiestratora",
+  "runCenter.empty": "Brak zdarzeń pipeline."
 }

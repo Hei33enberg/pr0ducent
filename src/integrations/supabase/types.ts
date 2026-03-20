@@ -193,43 +193,58 @@ export type Database = {
       }
       builder_results: {
         Row: {
+          adapter_tier: number | null
           chat_url: string | null
           created_at: string
           error_message: string | null
+          execution_mode: string
           experiment_id: string
           files: Json | null
           generation_time_ms: number | null
           id: string
           preview_url: string | null
+          provenance: string
+          provider_run_id: string | null
           raw_response: Json | null
+          scores_reasoning: Json | null
           status: string
           tool_id: string
           updated_at: string
         }
         Insert: {
+          adapter_tier?: number | null
           chat_url?: string | null
           created_at?: string
           error_message?: string | null
+          execution_mode?: string
           experiment_id: string
           files?: Json | null
           generation_time_ms?: number | null
           id?: string
           preview_url?: string | null
+          provenance?: string
+          provider_run_id?: string | null
           raw_response?: Json | null
+          scores_reasoning?: Json | null
           status?: string
           tool_id: string
           updated_at?: string
         }
         Update: {
+          adapter_tier?: number | null
           chat_url?: string | null
           created_at?: string
           error_message?: string | null
+          execution_mode?: string
           experiment_id?: string
           files?: Json | null
           generation_time_ms?: number | null
           id?: string
           preview_url?: string | null
+          provenance?: string
+          provider_run_id?: string | null
           raw_response?: Json | null
+          scores_reasoning?: Json | null
           status?: string
           tool_id?: string
           updated_at?: string
@@ -298,6 +313,7 @@ export type Database = {
           id: string
           pros: Json
           scores: Json
+          scores_reasoning: Json | null
           started_at: string
           status: string
           time_to_prototype: number | null
@@ -311,6 +327,7 @@ export type Database = {
           id?: string
           pros?: Json
           scores?: Json
+          scores_reasoning?: Json | null
           started_at?: string
           status?: string
           time_to_prototype?: number | null
@@ -324,6 +341,7 @@ export type Database = {
           id?: string
           pros?: Json
           scores?: Json
+          scores_reasoning?: Json | null
           started_at?: string
           status?: string
           time_to_prototype?: number | null

@@ -162,6 +162,13 @@ Lovable (featured), Replit, Vercel v0, Cursor, Base44, Antigravity, Build0, Orch
 
 ---
 
+## Backend orchestration (technical)
+
+- **Docs:** `docs/ORCHESTRATOR.md` (flow, tables, adapters), `docs/DEVELOPMENT-STATUS.md` (migrations, functions, secrets), `docs/SPRINT-CLOSE.md` (deploy/smoke prompts).
+- **Live builder:** v0 via `dispatch-builders` + `poll-v0-status`; other tools benchmark until new adapters ship.
+
+---
+
 ## Do NOT
 
 - Use emoji in the UI (lucide-react icons only)

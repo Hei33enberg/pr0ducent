@@ -1,11 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getToolById } from "@/config/tools";
 import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
 import { saveExperiment, MOCK_BUILD_STEPS, MOCK_PREVIEW_GRADIENTS } from "@/lib/mock-experiment";
-import { updateRunStatusInDb, logReferralClick } from "@/lib/experiment-service";
+import { updateRunStatusInDb, logReferralHandoff } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
 import type { BuilderResult } from "@/hooks/useBuilderApi";
+import { RunCenter } from "@/components/RunCenter";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,18 @@ import { WinnerBanner } from "@/components/WinnerBanner";
 import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2 } from "lucide-react";
+
+function isDbExperimentId(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
+}
+
+function provenanceLabel(br: BuilderResult | undefined, run: ExperimentRun): string {
+  if (br?.provenance === "live_api") return "Live API";
+  if (br?.provenance === "browser_bridge") return "Browser bridge";
+  if (br?.provenance === "mcp") return "MCP";
+  if (br?.provenance === "benchmark" || !br) return "Benchmark";
+  return "Broker";
+}
 
 interface ComparisonCanvasProps {
   experiment: Experiment;
@@ -136,12 +149,14 @@ function ToolTile({
   onClick,
   onReferralClick,
   builderResult,
+  provenanceLabelText,
 }: {
   run: ExperimentRun;
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
   builderResult?: BuilderResult;
+  provenanceLabelText: string;
 }) {
   const tool = getToolById(run.toolId);
   if (!tool) return null;
@@ -167,7 +182,7 @@ function ToolTile({
       onClick={onClick}
     >
       <div className="p-4 space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
               {tool.logoUrl ? (
@@ -179,11 +194,16 @@ function ToolTile({
             <div>
               <div className="text-sm font-semibold text-foreground">{tool.name}</div>
               {isFeatured && (
-                <span className="text-[10px] font-medium text-primary">⭐ Partner</span>
+                <span className="text-[10px] font-medium text-primary">Partner</span>
               )}
             </div>
           </div>
-          <StatusBadge status={run.status} />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Badge variant="outline" className="text-[9px] font-sans border-border text-muted-foreground">
+              {provenanceLabelText}
+            </Badge>
+            <StatusBadge status={run.status} />
+          </div>
         </div>
 
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -266,6 +286,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
   const [elapsed, setElapsed] = useState<Record<string, number>>({});
   const [hiddenTools, setHiddenTools] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortOption>("default");
+  const syncedRef = useRef<Set<string>>(new Set());
 
   const completedCount = experiment.runs.filter((r) => r.status === "completed").length;
   const totalCount = experiment.runs.length;
@@ -275,6 +296,11 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
       const now = Date.now();
       let updated = false;
       const newRuns = experiment.runs.map((run) => {
+        const br = builderResults[run.toolId];
+        if (br && (br.status === "generating" || br.status === "completed" || br.status === "error")) {
+          return run;
+        }
+
         const elapsedSec = (now - run.startedAt) / 1000;
 
         if (run.status === "queued" && elapsedSec > 1) {
@@ -302,7 +328,50 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
     }, 100);
 
     return () => clearInterval(interval);
-  }, [experiment, onExperimentUpdate]);
+  }, [experiment, onExperimentUpdate, builderResults]);
+
+  useEffect(() => {
+    let changed = false;
+    const newRuns = experiment.runs.map((run) => {
+      const br = builderResults[run.toolId];
+      if (!br) return run;
+      if (br.status === "completed" && run.status !== "completed") {
+        changed = true;
+        return { ...run, status: "completed" as const, completedAt: Date.now() };
+      }
+      if (br.status === "error" && run.status !== "error") {
+        changed = true;
+        return { ...run, status: "error" as const };
+      }
+      if (br.status === "generating" && run.status === "queued") {
+        changed = true;
+        return { ...run, status: "running" as const };
+      }
+      return run;
+    });
+
+    if (changed) {
+      const updatedExp = { ...experiment, runs: newRuns };
+      onExperimentUpdate(updatedExp);
+      saveExperiment(updatedExp);
+    }
+
+    const runsForSync = changed ? newRuns : experiment.runs;
+    if (user && isDbExperimentId(experiment.id)) {
+      runsForSync.forEach((run) => {
+        const br = builderResults[run.toolId];
+        const key = `${experiment.id}:${run.toolId}`;
+        if (br?.status === "completed" && !syncedRef.current.has(key)) {
+          syncedRef.current.add(key);
+          void updateRunStatusInDb(experiment.id, run.toolId, "completed", Date.now());
+        }
+        if (br?.status === "error" && !syncedRef.current.has(`${key}:err`)) {
+          syncedRef.current.add(`${key}:err`);
+          void updateRunStatusInDb(experiment.id, run.toolId, "error");
+        }
+      });
+    }
+  }, [builderResults, experiment, onExperimentUpdate, user]);
 
   const toggleTool = (toolId: string) => {
     setHiddenTools((prev) => {
@@ -315,7 +384,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
 
   const handleReferralClick = (toolId: string) => {
     if (user) {
-      logReferralClick(user.id, experiment.id, toolId);
+      logReferralHandoff(user.id, experiment.id, toolId, { source: "compare_cta" });
     }
   };
 
@@ -340,6 +409,10 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      {user && isDbExperimentId(experiment.id) ? (
+        <RunCenter experimentId={experiment.id} />
+      ) : null}
+
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
           <span className="font-medium text-foreground">Experiment Progress</span>
@@ -373,6 +446,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
               builderResult={builderResults[run.toolId]}
+              provenanceLabelText={provenanceLabel(builderResults[run.toolId], run)}
             />
           ))}
         </AnimatePresence>

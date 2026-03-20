@@ -19,6 +19,13 @@ const BUILDERS = [
   { id: "floot", name: "Floot", url: "" },
 ];
 
+async function sha256Hex(text: string): Promise<string> {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 async function researchBuilder(
   builderName: string,
   perplexityKey: string
@@ -147,6 +154,48 @@ Deno.serve(async (req) => {
         .upsert(upsertData, { onConflict: "tool_id" });
 
       if (error) throw error;
+
+      // RAG foundation: store research snapshot chunk (pgvector / embeddings can be added later)
+      try {
+        const snapshot = JSON.stringify(research);
+        const checksum = await sha256Hex(snapshot);
+        const sourceUrl =
+          typeof research.official_url === "string" && research.official_url.length > 0
+            ? research.official_url
+            : builder.url || `internal://builder-snapshot/${builder.id}`;
+
+        const { data: lastChunk } = await supabase
+          .from("builder_knowledge_chunks")
+          .select("checksum")
+          .eq("tool_id", builder.id)
+          .eq("content_type", "research_snapshot")
+          .order("crawled_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (lastChunk?.checksum && lastChunk.checksum !== checksum) {
+          await supabase.from("builder_ingest_alerts").insert({
+            tool_id: builder.id,
+            alert_type: "research_snapshot_checksum_changed",
+            payload: {
+              previous_checksum: lastChunk.checksum,
+              next_checksum: checksum,
+              synced_at: upsertData.last_synced_at,
+            },
+          });
+        }
+
+        await supabase.from("builder_knowledge_chunks").insert({
+          tool_id: builder.id,
+          source_url: sourceUrl,
+          content: snapshot.slice(0, 100000),
+          content_type: "research_snapshot",
+          checksum,
+          metadata: { last_synced_at: upsertData.last_synced_at },
+        });
+      } catch (chunkErr) {
+        console.warn(`builder_knowledge_chunks insert skipped for ${builder.id}:`, chunkErr);
+      }
 
       // Populate builder_pricing_plans from research
       if (research.pricing_tiers && Array.isArray(research.pricing_tiers)) {
