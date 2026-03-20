@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolSelectionGrid } from "@/components/ToolSelectionGrid";
-import { BUILDER_TOOLS } from "@/config/tools";
 import { PROMPT_TEMPLATES, DEMO_TEMPLATE } from "@/config/prompt-templates";
 import { USE_CASE_TAGS } from "@/config/use-case-tags";
 import type { AccountModel } from "@/types/experiment";
 import { Zap, Sparkles, BarChart3, Shield } from "lucide-react";
+import caricatureClaude from "@/assets/caricature-claude.png";
 
 interface HeroSectionProps {
   onSubmit: (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => void;
@@ -45,29 +45,46 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   };
 
   return (
-    <section ref={heroRef} className="section-divider relative flex items-center" style={{ minHeight: "calc(80svh - 4rem)" }}>
+    <section ref={heroRef} className="section-divider relative" style={{ minHeight: "calc(80svh - 4rem)" }}>
       {/* Animated gradient washes */}
       <div className="absolute pointer-events-none hero-wash hero-wash--peach" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
-        <div className="max-w-4xl mx-auto">
-          {/* Headline */}
-          <div className="text-center mb-10 fade-up visible-immediate">
+        {/* Hero grid — copy + caricature */}
+        <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 md:gap-8 items-center mb-10">
+          {/* Left — copy */}
+          <div className="space-y-6 text-center md:text-left">
             <h1
-              className="font-serif leading-[0.92] tracking-[-0.02em] mb-6"
+              className="font-serif leading-[0.92] tracking-[-0.02em] fade-up visible-immediate"
               style={{ fontSize: "clamp(2.8rem, 6vw + 1rem, 7rem)", color: "#000" }}
             >
-              One prompt. Many
+              One prompt.
+              <br />
+              Many
               <br />
               <span className="text-accent-gradient">builders.</span>
             </h1>
-            <p className="font-sans text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="font-sans text-base sm:text-lg md:text-xl text-muted-foreground max-w-lg mx-auto md:mx-0 leading-relaxed fade-up stagger-1 visible-immediate">
               Run your idea through multiple AI app builders in parallel and see real prototypes side by side.
             </p>
           </div>
 
+          {/* Right — Claude caricature */}
+          <div className="flex items-center justify-center md:justify-end fade-up stagger-1 visible-immediate">
+            <img
+              src={caricatureClaude}
+              alt="Claude — the AI behind pr0ducent"
+              className="w-full max-w-[220px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[400px] object-contain select-none"
+              style={{ opacity: 0.92 }}
+              loading="eager"
+              decoding="async"
+            />
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
           {/* Prompt templates */}
           <div className="flex flex-wrap justify-center gap-2 mb-5 fade-up stagger-1 visible-immediate">
             {PROMPT_TEMPLATES.map((tpl) => (
@@ -100,7 +117,6 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               style={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
             >
               <div className="glass-card rounded-xl p-5 space-y-5">
-                {/* Use-case tags */}
                 <div>
                   <h3 className="text-sm font-semibold text-foreground mb-2 font-sans">Use Case (optional)</h3>
                   <div className="flex flex-wrap gap-1.5">
