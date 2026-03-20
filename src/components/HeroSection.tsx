@@ -5,7 +5,7 @@ import { PROMPT_TEMPLATES, DEMO_TEMPLATE } from "@/config/prompt-templates";
 import { USE_CASE_TAGS } from "@/config/use-case-tags";
 import type { AccountModel } from "@/types/experiment";
 import { Zap, Sparkles, BarChart3, Shield } from "lucide-react";
-import caricatureClaude from "@/assets/caricature-claude.png";
+import caricatureFounder from "@/assets/caricature-founder.png";
 
 interface HeroSectionProps {
   onSubmit: (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => void;
@@ -74,9 +74,9 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           {/* Right — Claude caricature */}
           <div className="flex items-center justify-center md:justify-end fade-up stagger-1 visible-immediate">
             <img
-              src={caricatureClaude}
-              alt="Claude — the AI behind pr0ducent"
-              className="w-full max-w-[220px] sm:max-w-[260px] md:max-w-[320px] lg:max-w-[400px] object-contain select-none"
+              src={caricatureFounder}
+              alt="pr0ducent founder caricature"
+              className="w-full max-w-[160px] sm:max-w-[200px] md:max-w-[260px] lg:max-w-[320px] object-contain select-none"
               style={{ opacity: 0.92 }}
               loading="eager"
               decoding="async"
