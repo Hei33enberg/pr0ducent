@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
     const meta = (job.metadata ?? {}) as Record<string, unknown>;
 
     await dispatchOne(
-      admin,
+      admin as any,
       task,
       { trace_id: job.trace_id as string, metadata: meta },
       configByTool

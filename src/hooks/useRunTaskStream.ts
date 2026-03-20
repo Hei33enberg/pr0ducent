@@ -8,16 +8,17 @@ export interface RunTaskRow {
   experiment_id: string;
   tool_id: string;
   status: TaskStatus;
-  started_at: string | null;
-  completed_at: string | null;
   adapter_tier: number | null;
-  provenance: string | null;
+  attempt_count: number;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface RunEventRow {
   id: string;
   experiment_id: string;
-  tool_id: string;
+  tool_id: string | null;
   event_type: string;
   payload: Record<string, any>;
   created_at: string;
@@ -29,9 +30,9 @@ export interface BuilderResultRow {
   tool_id: string;
   status: string;
   preview_url: string | null;
-  screenshot_url: string | null;
-  deploy_url: string | null;
-  provenance: string | null;
+  chat_url: string | null;
+  provenance: string;
+  execution_mode: string;
 }
 
 export interface StreamState {
