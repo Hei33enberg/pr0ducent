@@ -27,8 +27,19 @@ export function useBuilderApi() {
       }));
 
       try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+
+        if (!session?.access_token) {
+          throw new Error("Sesja wygasła. Zaloguj się ponownie.");
+        }
+
         const { data, error } = await supabase.functions.invoke("run-on-v0", {
           body: { prompt, experimentId },
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+          },
         });
 
         if (error) throw error;
