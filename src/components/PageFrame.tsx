@@ -64,7 +64,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
-    { label: t("nav.compare"), href: "/compare", icon: Swords },
+    { label: t("nav.compare"), href: "#comparison", icon: Swords },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },
     { label: t("nav.dashboard"), href: "/dashboard/updates", icon: RefreshCw },
     { label: "Runs Now", href: "/runs-now", icon: Radio },

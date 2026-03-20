@@ -106,7 +106,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
   ];
 
   return (
-    <section className="max-w-6xl mx-auto px-4 py-10">
+    <section id="comparison" className="max-w-6xl mx-auto px-4 py-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

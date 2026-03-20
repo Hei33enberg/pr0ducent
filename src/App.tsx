@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
-import Compare from "./pages/Compare.tsx";
+
 import PublicExperiment from "./pages/PublicExperiment.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Blog from "./pages/Blog.tsx";
@@ -30,7 +30,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              <Route path="/compare" element={<Compare />} />
+              
               <Route path="/experiment/:id" element={<PublicExperiment />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
