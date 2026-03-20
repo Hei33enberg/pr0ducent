@@ -122,20 +122,23 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 <div>
                   <h3 className="text-sm font-semibold text-foreground mb-2 font-sans">Use Case (optional)</h3>
                   <div className="flex flex-wrap gap-1.5">
-                    {USE_CASE_TAGS.map((tag) => (
-                      <button
-                        key={tag.id}
-                        onClick={() => toggleTag(tag.id)}
-                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border font-sans ${
-                          selectedTags.includes(tag.id)
-                            ? "border-accent bg-accent/10 text-accent"
-                            : "border-border bg-background text-muted-foreground hover:border-accent/30"
-                        }`}
-                      >
-                        <span>{tag.emoji}</span>
-                        <span>{tag.label}</span>
-                      </button>
-                    ))}
+                    {USE_CASE_TAGS.map((tag) => {
+                      const TagIcon = tag.icon;
+                      return (
+                        <button
+                          key={tag.id}
+                          onClick={() => toggleTag(tag.id)}
+                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border font-sans ${
+                            selectedTags.includes(tag.id)
+                              ? "border-accent bg-accent/10 text-accent"
+                              : "border-border bg-background text-muted-foreground hover:border-accent/30"
+                          }`}
+                        >
+                          <TagIcon className="w-3.5 h-3.5" />
+                          <span>{tag.label}</span>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
