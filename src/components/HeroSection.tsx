@@ -5,7 +5,7 @@ import { PROMPT_TEMPLATES, DEMO_TEMPLATE } from "@/config/prompt-templates";
 import { USE_CASE_TAGS } from "@/config/use-case-tags";
 import type { AccountModel } from "@/types/experiment";
 import { Zap, Sparkles, BarChart3, Shield } from "lucide-react";
-import caricatureClaude from "@/assets/caricature-claude.png";
+import caricatureFounder from "@/assets/caricature-founder.png";
 
 interface HeroSectionProps {
   onSubmit: (prompt: string, selectedTools: string[], accountModel: AccountModel, useCaseTags?: string[]) => void;
