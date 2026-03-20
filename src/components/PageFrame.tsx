@@ -111,6 +111,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 />
               )}
               <LanguageToggle />
+              <NotificationBell />
               {user ? (
                 <>
                   <span className="text-xs text-muted-foreground hidden sm:inline font-sans">{user.email}</span>
