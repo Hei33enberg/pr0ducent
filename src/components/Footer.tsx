@@ -46,6 +46,16 @@ export function Footer() {
               <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigate("/blog"); }} className="hover:text-foreground transition-colors">{t("footer.blog")}</a></li>
               <li><a href="/runs-now" onClick={(e) => { e.preventDefault(); navigate("/runs-now"); }} className="hover:text-foreground transition-colors">{t("footer.runsNow")}</a></li>
               <li><a href="/builders" onClick={(e) => { e.preventDefault(); navigate("/builders"); }} className="hover:text-foreground transition-colors">{t("footer.allBuilders")}</a></li>
+              <li>
+                <a
+                  href={import.meta.env.VITE_VBP_PROTOCOL_URL ?? "https://github.com/pr0ducent/vibecoding-broker-protocol"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
+                  {t("footer.vbpForBuilders")}
+                </a>
+              </li>
             </ul>
           </div>
 

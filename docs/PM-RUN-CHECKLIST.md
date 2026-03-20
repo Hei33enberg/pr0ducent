@@ -1,5 +1,7 @@
 # PM / QA — jak sprawdzić pełny run orkiestracji (5 min)
 
+Indeks operacyjny (Lovable, webhook, smoke): [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md).
+
 ## Ważne: `/compare` to nie silnik runów
 
 Strona **Compare** (`/compare`) to tabela marketingowa funkcji. **Nie uruchamia** builderów ani nie zapisuje `run_jobs`.

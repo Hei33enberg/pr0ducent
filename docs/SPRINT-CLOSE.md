@@ -127,6 +127,7 @@ Publikacja Lovable: dopiero po deploy funkcji + migracji jeśli UI korzysta z no
 
 ## Related docs (orchestration hardening)
 
+- [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable, webhook, smoke, AG, CI
 - [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md)
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md)

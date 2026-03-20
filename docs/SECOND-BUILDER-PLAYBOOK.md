@@ -1,5 +1,7 @@
 # Drugi (i kolejne) builder — playbook
 
+Szablon SQL (zakomentowany): [examples/second-builder-config.template.sql](./examples/second-builder-config.template.sql).
+
 ## Kolejność decyzji
 
 1. **Czy partner ma publiczne API lub wdroży VBP?**  

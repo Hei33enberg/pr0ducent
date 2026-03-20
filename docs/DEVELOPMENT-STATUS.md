@@ -54,6 +54,7 @@ See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and 
 
 ## QA / protocol pointers
 
+- [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable Publish, webhook, smoke, AG, CI (jedna strona startowa).
 - [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — how to verify a real orchestrated run (not `/compare`).
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md) — stuck `queued`, webhooks.
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md) — next integrations.

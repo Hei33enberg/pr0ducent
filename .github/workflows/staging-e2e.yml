@@ -1,6 +1,11 @@
 # Manual staging smoke: real JWT + experiment (costs v0 API if live).
-# Repo → Settings → Secrets → Actions:
-#   E2E_SUPABASE_URL, E2E_ANON_KEY, E2E_USER_JWT, E2E_EXPERIMENT_ID
+#
+# Setup: docs/GITHUB-ACTIONS-STAGING-E2E.md
+# Secrets (repo → Settings → Secrets → Actions):
+#   E2E_SUPABASE_URL   https://<ref>.supabase.co
+#   E2E_ANON_KEY       project anon key
+#   E2E_USER_JWT       test user access_token (owner of experiment)
+#   E2E_EXPERIMENT_ID  UUID from public.experiments
 
 name: staging-e2e-v0
 

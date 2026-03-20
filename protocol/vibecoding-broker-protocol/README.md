@@ -15,6 +15,7 @@ Mirror of what can be published as **`pr0ducent/vibecoding-broker-protocol`** on
 
 - [docs/VBP-SPEC.md](../../docs/VBP-SPEC.md)
 - [docs/VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) — VBP vs „pr0ducent Open Protocol”
+- [docs/POP-PUBLIC-REPO-STEPS.md](../../docs/POP-PUBLIC-REPO-STEPS.md) — wydzielenie tego folderu do publicznego repo GitHub
 
 ## Broker implementation
 
