@@ -99,14 +99,14 @@ Deno.serve(async (req) => {
     const startTime = Date.now();
 
     // Call v0 Platform API
-    const chatResponse = await fetch(`${V0_API_BASE}/chat`, {
+    const chatResponse = await fetch(`${V0_API_BASE}/chats`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${V0_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: [{ role: "user", content: prompt }],
+        message: prompt,
       }),
     });
 
