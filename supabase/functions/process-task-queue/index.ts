@@ -39,13 +39,6 @@ async function dispatchOne(
   }
 
   const cfg = configByTool.get(task.tool_id);
-  if (cfg?.circuit_state === "open") {
-    await admin
-      .from("run_tasks")
-      .update({ status: "failed", error_message: "Builder circuit is open (rate/errors)" })
-      .eq("id", task.id);
-    return;
-  }
 
   const ctx: AdapterDispatchContext = {
     admin,
@@ -87,13 +80,11 @@ async function pickNextQueuedOrRetrying(admin: SupabaseClient): Promise<Pickable
     .limit(1);
   if (queued?.length) return queued[0] as PickableTask;
 
-  const iso = new Date().toISOString();
   const { data: retrying } = await admin
     .from("run_tasks")
     .select("id, tool_id, experiment_id, run_job_id, attempt_count")
     .eq("status", "retrying")
-    .or(`next_retry_at.is.null,next_retry_at.lte.${iso}`)
-    .order("next_retry_at", { ascending: true, nullsFirst: true })
+    .order("updated_at", { ascending: true })
     .limit(1);
   return (retrying?.[0] as PickableTask) ?? null;
 }
@@ -112,7 +103,7 @@ Deno.serve(async (req) => {
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-  const admin = createClient(supabaseUrl, serviceKey);
+  const admin: SupabaseClient = createClient(supabaseUrl, serviceKey);
 
   let body: { run_job_id?: string } = {};
   try {
@@ -144,22 +135,21 @@ Deno.serve(async (req) => {
         .limit(1);
       task = (scoped?.[0] as PickableTask) ?? null;
       if (!task) {
-        const iso = new Date().toISOString();
         const { data: scopedR } = await admin
           .from("run_tasks")
           .select("id, tool_id, experiment_id, run_job_id, attempt_count")
           .eq("run_job_id", body.run_job_id)
           .eq("status", "retrying")
-          .or(`next_retry_at.is.null,next_retry_at.lte.${iso}`)
-          .order("next_retry_at", { ascending: true, nullsFirst: true })
+          .order("updated_at", { ascending: true })
           .limit(1);
         task = (scopedR?.[0] as PickableTask) ?? null;
       }
     } else {
-      task = await pickNextQueuedOrRetrying(admin as any);
+      task = await pickNextQueuedOrRetrying(admin);
     }
     if (!task) break;
 
+    // Rate limiting via RPC
     let rateAllowed = true;
     let rateReason = "";
     const { data: slot, error: slotErr } = await admin.rpc("builder_try_dispatch_slot", {
@@ -178,7 +168,6 @@ Deno.serve(async (req) => {
         .from("run_tasks")
         .update({
           status: "retrying",
-          next_retry_at: new Date(Date.now() + RATE_LIMIT_BACKOFF_MS).toISOString(),
           error_message: `rate_limit:${rateReason || "unknown"}`,
           attempt_count: (task.attempt_count ?? 0) + 1,
         })
