@@ -18,6 +18,8 @@ import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2, BarChar
 import { useRunTaskStream, type RunTaskRow, type RunEventRow } from "@/hooks/useRunTaskStream";
 import { DemoPreviewFrame } from "@/components/DemoPreviewFrame";
 import { BuilderProgressStream } from "@/components/BuilderProgressStream";
+import { GuestOrchestrationBanner } from "@/components/GuestOrchestrationBanner";
+import { DevExperimentInspector } from "@/components/DevExperimentInspector";
 
 function isDbExperimentId(id: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id);
@@ -279,36 +281,43 @@ function ToolTile({
           </div>
         )}
 
-        {run.status === "completed" && (
-          <Button
-            size="sm"
-            variant={isFeatured ? "default" : "outline"}
-            className={cn("w-full text-xs font-semibold", isFeatured && "bg-primary hover:bg-primary/90 text-primary-foreground")}
-            onClick={(e) => {
-              e.stopPropagation();
-              onReferralClick(run.toolId);
-              
-              // Sprawdzamy czy backend (Faza 4 Cursor) przekazał VBP claim_token w wyniku
-              const claimToken = (builderResult as any)?.metadata?.claim_token;
-              const toolAny = tool as any;
-              
-              if (claimToken && (toolAny.url || tool.referralUrl)) {
-                // VBP standard Handoff
-                const baseHost = toolAny.url ? new URL(toolAny.url).host : new URL(tool.referralUrl!).host;
-                window.open(`https://${baseHost}/vbp/claim?token=${claimToken}&ref=pr0ducent_click`, "_blank");
-              } else if (tool.referralUrl) {
-                // Std Affiliate Referral
-                window.open(tool.referralUrl, "_blank");
-              } else if (builderResult?.previewUrl) {
-                // Fallback do preview
-                window.open(builderResult.previewUrl, "_blank");
-              }
-            }}
-          >
-            Claim project in {tool.name}
-            <ExternalLink className="w-3.5 h-3.5 ml-1.5 opacity-80" />
-          </Button>
-        )}
+        {/* P2: CTA hide-if-empty — show only when there's something actionable */}
+        {run.status === "completed" && (() => {
+          const claimToken = (builderResult as any)?.metadata?.claim_token;
+          const toolAny = tool as any;
+          const hasReferral = !!tool.referralUrl;
+          const hasPreview = !!builderResult?.previewUrl;
+          const hasClaim = !!claimToken;
+          
+          // Hide CTA entirely if nothing actionable
+          if (!hasClaim && !hasReferral && !hasPreview) return null;
+          
+          const ctaLabel = hasClaim ? `Claim project in ${tool.name}` : hasReferral ? `Continue in ${tool.name}` : "Open preview";
+          
+          return (
+            <Button
+              size="sm"
+              variant={isFeatured ? "default" : "outline"}
+              className={cn("w-full text-xs font-semibold", isFeatured && "bg-primary hover:bg-primary/90 text-primary-foreground")}
+              onClick={(e) => {
+                e.stopPropagation();
+                onReferralClick(run.toolId);
+                
+                if (hasClaim && (toolAny.url || hasReferral)) {
+                  const baseHost = toolAny.url ? new URL(toolAny.url).host : new URL(tool.referralUrl!).host;
+                  window.open(`https://${baseHost}/vbp/claim?token=${claimToken}&ref=pr0ducent_click`, "_blank");
+                } else if (hasReferral) {
+                  window.open(tool.referralUrl!, "_blank");
+                } else if (hasPreview) {
+                  window.open(builderResult!.previewUrl!, "_blank");
+                }
+              }}
+            >
+              {ctaLabel}
+              <ExternalLink className="w-3.5 h-3.5 ml-1.5 opacity-80" />
+            </Button>
+          );
+        })()}
 
         {/* Pełnoekranowy Modal (Framer Motion) */}
         <AnimatePresence>
@@ -471,6 +480,8 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
 
   return (
     <section className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+      <GuestOrchestrationBanner />
+
       {user && isDbExperimentId(experiment.id) ? (
         <RunCenter experimentId={experiment.id} />
       ) : null}
@@ -515,6 +526,8 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
           ))}
         </AnimatePresence>
       </div>
+
+      <DevExperimentInspector experimentId={isDbExperimentId(experiment.id) ? experiment.id : undefined} stream={stream} />
     </section>
   );
 }

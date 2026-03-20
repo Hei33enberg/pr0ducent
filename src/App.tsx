@@ -6,6 +6,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
+import { FF } from "@/lib/featureFlags";
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Compare = lazy(() => import("./pages/Compare.tsx"));
@@ -53,7 +54,7 @@ const App = () => (
                 <Route path="/dashboard/updates" element={<BuilderDashboard />} />
                 <Route path="/dashboard/notifications" element={<Notifications />} />
                 <Route path="/runs-now" element={<RunsNow />} />
-                <Route path="/marketplace" element={<Marketplace />} />
+                {FF.MARKETPLACE_ENABLED && <Route path="/marketplace" element={<Marketplace />} />}
                 <Route path="/calculator" element={<CalculatorPage />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
                 <Route path="/builders" element={<BuildersIndex />} />
