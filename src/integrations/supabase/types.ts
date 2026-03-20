@@ -71,6 +71,177 @@ export type Database = {
         }
         Relationships: []
       }
+      broker_account_leases: {
+        Row: {
+          expires_at: string
+          id: string
+          leased_at: string
+          pool_account_id: string
+          released_at: string | null
+          run_task_id: string
+        }
+        Insert: {
+          expires_at?: string
+          id?: string
+          leased_at?: string
+          pool_account_id: string
+          released_at?: string | null
+          run_task_id: string
+        }
+        Update: {
+          expires_at?: string
+          id?: string
+          leased_at?: string
+          pool_account_id?: string
+          released_at?: string | null
+          run_task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broker_account_leases_pool_account_id_fkey"
+            columns: ["pool_account_id"]
+            isOneToOne: false
+            referencedRelation: "broker_pool_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broker_account_leases_run_task_id_fkey"
+            columns: ["run_task_id"]
+            isOneToOne: false
+            referencedRelation: "run_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      broker_pool_accounts: {
+        Row: {
+          created_at: string
+          health_score: number
+          id: string
+          label: string
+          status: string
+          tool_id: string
+        }
+        Insert: {
+          created_at?: string
+          health_score?: number
+          id?: string
+          label?: string
+          status?: string
+          tool_id: string
+        }
+        Update: {
+          created_at?: string
+          health_score?: number
+          id?: string
+          label?: string
+          status?: string
+          tool_id?: string
+        }
+        Relationships: []
+      }
+      builder_ingest_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          id: string
+          payload: Json
+          tool_id: string
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          tool_id: string
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          tool_id?: string
+        }
+        Relationships: []
+      }
+      builder_integration_config: {
+        Row: {
+          api_secret_env: string | null
+          browserbase_script: string | null
+          capabilities: Json
+          enabled: boolean
+          execution_modes: string[]
+          max_poll_time_ms: number
+          mcp_endpoint: string | null
+          poll_interval_ms: number
+          polling_function: string | null
+          tier: number
+          tool_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_secret_env?: string | null
+          browserbase_script?: string | null
+          capabilities?: Json
+          enabled?: boolean
+          execution_modes?: string[]
+          max_poll_time_ms?: number
+          mcp_endpoint?: string | null
+          poll_interval_ms?: number
+          polling_function?: string | null
+          tier?: number
+          tool_id: string
+          updated_at?: string
+        }
+        Update: {
+          api_secret_env?: string | null
+          browserbase_script?: string | null
+          capabilities?: Json
+          enabled?: boolean
+          execution_modes?: string[]
+          max_poll_time_ms?: number
+          mcp_endpoint?: string | null
+          poll_interval_ms?: number
+          polling_function?: string | null
+          tier?: number
+          tool_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_knowledge_chunks: {
+        Row: {
+          checksum: string | null
+          content: string
+          content_type: string
+          crawled_at: string
+          id: string
+          metadata: Json | null
+          source_url: string
+          tool_id: string
+        }
+        Insert: {
+          checksum?: string | null
+          content: string
+          content_type: string
+          crawled_at?: string
+          id?: string
+          metadata?: Json | null
+          source_url: string
+          tool_id: string
+        }
+        Update: {
+          checksum?: string | null
+          content?: string
+          content_type?: string
+          crawled_at?: string
+          id?: string
+          metadata?: Json | null
+          source_url?: string
+          tool_id?: string
+        }
+        Relationships: []
+      }
       builder_price_history: {
         Row: {
           annual_price: number | null
@@ -206,6 +377,7 @@ export type Database = {
           provenance: string
           provider_run_id: string | null
           raw_response: Json | null
+          run_task_id: string | null
           scores_reasoning: Json | null
           status: string
           tool_id: string
@@ -225,6 +397,7 @@ export type Database = {
           provenance?: string
           provider_run_id?: string | null
           raw_response?: Json | null
+          run_task_id?: string | null
           scores_reasoning?: Json | null
           status?: string
           tool_id: string
@@ -244,6 +417,7 @@ export type Database = {
           provenance?: string
           provider_run_id?: string | null
           raw_response?: Json | null
+          run_task_id?: string | null
           scores_reasoning?: Json | null
           status?: string
           tool_id?: string
@@ -255,6 +429,13 @@ export type Database = {
             columns: ["experiment_id"]
             isOneToOne: false
             referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "builder_results_run_task_id_fkey"
+            columns: ["run_task_id"]
+            isOneToOne: false
+            referencedRelation: "run_tasks"
             referencedColumns: ["id"]
           },
         ]
@@ -303,6 +484,44 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      credit_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          experiment_id: string | null
+          id: string
+          metadata: Json | null
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       experiment_runs: {
         Row: {
@@ -485,6 +704,44 @@ export type Database = {
           },
         ]
       }
+      referral_conversions: {
+        Row: {
+          conversion_type: string
+          created_at: string
+          experiment_id: string
+          id: string
+          metadata: Json
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          conversion_type?: string
+          created_at?: string
+          experiment_id: string
+          id?: string
+          metadata?: Json
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          conversion_type?: string
+          created_at?: string
+          experiment_id?: string
+          id?: string
+          metadata?: Json
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referral_conversions_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       run_comments: {
         Row: {
           content: string
@@ -508,6 +765,178 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      run_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          experiment_id: string
+          id: string
+          payload: Json
+          run_job_id: string | null
+          run_task_id: string | null
+          tool_id: string | null
+          trace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          experiment_id: string
+          id?: string
+          payload?: Json
+          run_job_id?: string | null
+          run_task_id?: string | null
+          tool_id?: string | null
+          trace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          experiment_id?: string
+          id?: string
+          payload?: Json
+          run_job_id?: string | null
+          run_task_id?: string | null
+          tool_id?: string | null
+          trace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "run_events_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "run_events_run_job_id_fkey"
+            columns: ["run_job_id"]
+            isOneToOne: false
+            referencedRelation: "run_jobs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "run_events_run_task_id_fkey"
+            columns: ["run_task_id"]
+            isOneToOne: false
+            referencedRelation: "run_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      run_jobs: {
+        Row: {
+          created_at: string
+          experiment_id: string
+          id: string
+          idempotency_key: string | null
+          metadata: Json
+          status: string
+          trace_id: string
+          updated_at: string
+          user_id: string
+          workflow_engine: string
+        }
+        Insert: {
+          created_at?: string
+          experiment_id: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          status?: string
+          trace_id: string
+          updated_at?: string
+          user_id: string
+          workflow_engine?: string
+        }
+        Update: {
+          created_at?: string
+          experiment_id?: string
+          id?: string
+          idempotency_key?: string | null
+          metadata?: Json
+          status?: string
+          trace_id?: string
+          updated_at?: string
+          user_id?: string
+          workflow_engine?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "run_jobs_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      run_tasks: {
+        Row: {
+          adapter_tier: number | null
+          attempt_count: number
+          broker_lease_id: string | null
+          created_at: string
+          error_message: string | null
+          experiment_id: string
+          id: string
+          metadata: Json
+          run_job_id: string
+          status: string
+          tool_id: string
+          updated_at: string
+        }
+        Insert: {
+          adapter_tier?: number | null
+          attempt_count?: number
+          broker_lease_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          experiment_id: string
+          id?: string
+          metadata?: Json
+          run_job_id: string
+          status?: string
+          tool_id: string
+          updated_at?: string
+        }
+        Update: {
+          adapter_tier?: number | null
+          attempt_count?: number
+          broker_lease_id?: string | null
+          created_at?: string
+          error_message?: string | null
+          experiment_id?: string
+          id?: string
+          metadata?: Json
+          run_job_id?: string
+          status?: string
+          tool_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "run_tasks_broker_lease_id_fkey"
+            columns: ["broker_lease_id"]
+            isOneToOne: false
+            referencedRelation: "broker_account_leases"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "run_tasks_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "run_tasks_run_job_id_fkey"
+            columns: ["run_job_id"]
+            isOneToOne: false
+            referencedRelation: "run_jobs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
@@ -539,6 +968,36 @@ export type Database = {
           prompts_limit?: number | null
           prompts_used?: number | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_builder_credentials: {
+        Row: {
+          created_at: string
+          credential_type: string
+          id: string
+          tool_id: string
+          updated_at: string
+          user_id: string
+          vault_ref: string
+        }
+        Insert: {
+          created_at?: string
+          credential_type: string
+          id?: string
+          tool_id: string
+          updated_at?: string
+          user_id: string
+          vault_ref: string
+        }
+        Update: {
+          created_at?: string
+          credential_type?: string
+          id?: string
+          tool_id?: string
+          updated_at?: string
+          user_id?: string
+          vault_ref?: string
         }
         Relationships: []
       }
