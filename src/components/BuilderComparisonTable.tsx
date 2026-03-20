@@ -1,12 +1,13 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BUILDER_TOOLS } from "@/config/tools";
-import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, XCircle, ChevronRight, Zap, Star, TrendingUp, Sparkles, BarChart3, DollarSign, Cpu, CheckSquare, Monitor, Clock, Tag, Swords } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Star, TrendingUp, Zap, ChevronRight, ExternalLink, Filter } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
+import { useNavigate } from "react-router-dom";
 
 interface BuilderComparisonTableProps {
   onSelectTool: (toolId: string) => void;
@@ -25,7 +26,6 @@ interface PricingPlan {
   features: any;
   promo_active: boolean | null;
   promo_description: string | null;
-  promo_expires_at: string | null;
 }
 
 interface BuilderRating {
@@ -34,14 +34,14 @@ interface BuilderRating {
   count: number;
 }
 
-const PLAN_ORDER = ["free", "pro", "team", "enterprise"];
+const CATEGORIES = ["All", ...new Set(BUILDER_TOOLS.map((t) => t.category))];
 
 export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableProps) {
-  const [hoveredCol, setHoveredCol] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState<"overview" | "pricing" | "models" | "features">("overview");
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
   const [ratings, setRatings] = useState<BuilderRating[]>([]);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [compareList, setCompareList] = useState<string[]>([]);
 
   useEffect(() => {
     supabase
@@ -71,20 +71,14 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
   }, []);
 
   const getPlansForTool = (toolId: string) =>
-    pricingPlans
-      .filter((p) => p.tool_id === toolId)
-      .sort((a, b) => PLAN_ORDER.indexOf(a.plan_name) - PLAN_ORDER.indexOf(b.plan_name));
+    pricingPlans.filter((p) => p.tool_id === toolId);
 
   const getRating = (toolId: string) => ratings.find((r) => r.tool_id === toolId);
-
-  const getPromo = (toolId: string) =>
-    pricingPlans.find((p) => p.tool_id === toolId && p.promo_active);
 
   const getPVI = (toolId: string): number => {
     const plans = getPlansForTool(toolId);
     const proPlan = plans.find((p) => p.plan_name === "pro") || plans[0];
     if (!proPlan) return 0;
-
     const pviPlan: PVIPlan = {
       tool_id: toolId,
       plan_name: proPlan.plan_name,
@@ -98,365 +92,236 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
     return calculatePVI(pviPlan);
   };
 
-  const sections = [
-    { key: "overview" as const, label: "Overview", icon: BarChart3 },
-    { key: "pricing" as const, label: "Pricing & Credits", icon: DollarSign },
-    { key: "models" as const, label: "AI Models & Stack", icon: Cpu },
-    { key: "features" as const, label: "Feature Matrix", icon: CheckSquare },
-  ];
+  const filteredTools = BUILDER_TOOLS.filter(
+    (t) => activeCategory === "All" || t.category === activeCategory
+  ).sort((a, b) => {
+    // featured first, then by PVI
+    if (a.featured && !b.featured) return -1;
+    if (!a.featured && b.featured) return 1;
+    return getPVI(b.id) - getPVI(a.id);
+  });
+
+  const toggleCompare = (id: string) => {
+    setCompareList((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : prev.length < 3 ? [...prev, id] : prev
+    );
+  };
 
   return (
-    <section id="comparison" className="max-w-6xl mx-auto px-4 py-10">
+    <section id="comparison" className="max-w-6xl mx-auto px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2 inline-flex items-center gap-2">
-            <Swords className="w-6 h-6" />
-            All Builders at a Glance
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2">
+            Compare AI Builders
           </h2>
-          <p className="text-sm text-muted-foreground font-sans">
-            Complete comparison of {BUILDER_TOOLS.length} AI builders — pricing, AI models, features, and our Value Index.
+          <p className="text-sm text-muted-foreground font-sans max-w-lg mx-auto">
+            {BUILDER_TOOLS.length} builders compared side-by-side. Real pricing, features, and our Value Index.
           </p>
         </div>
 
-        {/* Section tabs */}
-        <div className="flex flex-wrap justify-center gap-1.5 mb-4">
-          {sections.map((s) => {
-            const Icon = s.icon;
-            return (
-              <button
-                key={s.key}
-                onClick={() => setActiveSection(s.key)}
-                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
-                  activeSection === s.key
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border bg-card text-muted-foreground hover:border-foreground/30"
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                {s.label}
-              </button>
-            );
-          })}
+        {/* Category filters */}
+        <div className="flex flex-wrap justify-center gap-1.5 mb-6">
+          <Filter className="w-4 h-4 text-muted-foreground self-center mr-1" />
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-all border ${
+                activeCategory === cat
+                  ? "border-foreground bg-foreground text-background"
+                  : "border-border bg-card text-muted-foreground hover:border-foreground/30"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
-        <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none rounded-r-xl" />
+        {/* Compare bar */}
+        {compareList.length > 0 && (
+          <div className="mb-4 flex items-center justify-center gap-2 flex-wrap">
+            <span className="text-xs text-muted-foreground font-sans">Comparing:</span>
+            {compareList.map((id) => {
+              const tool = BUILDER_TOOLS.find((t) => t.id === id);
+              return (
+                <Badge key={id} variant="secondary" className="text-xs gap-1 cursor-pointer" onClick={() => toggleCompare(id)}>
+                  {tool?.name} ×
+                </Badge>
+              );
+            })}
+            <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => setCompareList([])}>
+              Clear
+            </Button>
+          </div>
+        )}
 
-          <div
-            ref={scrollRef}
-            className="overflow-x-auto rounded-xl border border-border bg-card shadow-lg scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
-          >
-            <table className="w-max min-w-full text-sm border-collapse">
-              {/* Header */}
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="sticky left-0 z-30 bg-card p-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider min-w-[150px] border-r border-border/50 font-sans">
-                    {activeSection === "pricing" ? "Plan / Builder" : "Feature"}
-                  </th>
-                  {BUILDER_TOOLS.map((tool) => (
-                    <th
-                      key={tool.id}
-                      className={`p-3 text-center min-w-[130px] transition-colors duration-150 ${
-                        hoveredCol === tool.id ? "bg-primary/5" : ""
-                      }`}
-                      onMouseEnter={() => setHoveredCol(tool.id)}
-                      onMouseLeave={() => setHoveredCol(null)}
-                    >
-                      <div className="flex flex-col items-center gap-1">
+        {/* Builder cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredTools.map((tool, i) => {
+            const pvi = getPVI(tool.id);
+            const { label: pviLabel, color: pviColor } = getPVILabel(pvi);
+            const rating = getRating(tool.id);
+            const plans = getPlansForTool(tool.id);
+            const proPlan = plans.find((p) => p.plan_name === "pro") || plans[0];
+            const promo = plans.find((p) => p.promo_active);
+            const isComparing = compareList.includes(tool.id);
+
+            return (
+              <motion.div
+                key={tool.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+              >
+                <Card
+                  className={`relative overflow-hidden transition-all hover:shadow-lg ${
+                    tool.featured
+                      ? "border-primary/40 shadow-md ring-1 ring-primary/20"
+                      : isComparing
+                      ? "border-accent ring-1 ring-accent/30"
+                      : "border-border"
+                  }`}
+                >
+                  {tool.featured && (
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/70 to-accent" />
+                  )}
+                  {promo && (
+                    <div className="absolute top-2 right-2">
+                      <Badge className="text-[9px] px-1.5 py-0.5 bg-warning text-warning-foreground border-0 animate-pulse">
+                        🔥 Promo
+                      </Badge>
+                    </div>
+                  )}
+
+                  <CardContent className="p-5 space-y-4">
+                    {/* Header */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center overflow-hidden shrink-0">
                         {tool.logoUrl ? (
-                          <img src={tool.logoUrl} alt={tool.name} className="w-5 h-5 rounded object-contain" loading="lazy" />
+                          <img
+                            src={tool.logoUrl}
+                            alt={tool.name}
+                            className="w-7 h-7 object-contain"
+                            loading="lazy"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).style.display = "none";
+                              (e.target as HTMLImageElement).parentElement!.innerHTML = `<span class="text-sm font-bold text-muted-foreground">${tool.name[0]}</span>`;
+                            }}
+                          />
                         ) : (
-                          <div className="w-5 h-5 rounded bg-muted flex items-center justify-center text-[9px] font-bold text-muted-foreground">{tool.name[0]}</div>
-                        )}
-                        <span className="font-semibold text-foreground text-xs font-sans">{tool.name}</span>
-                        {tool.featured && (
-                          <Badge className="text-[7px] px-1 py-0 bg-featured text-featured-foreground border-0">
-                            <Star className="w-2 h-2 mr-0.5 inline" /> Partner
-                          </Badge>
-                        )}
-                        {getPromo(tool.id) && (
-                          <Badge className="text-[7px] px-1 py-0 bg-warning text-warning-foreground border-0 animate-pulse">
-                            <Tag className="w-2 h-2 mr-0.5 inline" /> Promo
-                          </Badge>
+                          <span className="text-sm font-bold text-muted-foreground">{tool.name[0]}</span>
                         )}
                       </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-sm font-bold font-sans text-foreground">{tool.name}</h3>
+                          {tool.featured && (
+                            <Badge className="text-[8px] px-1.5 py-0 bg-primary/10 text-primary border-primary/20">
+                              ⭐ Partner
+                            </Badge>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground font-sans">{tool.category}</p>
+                      </div>
+                    </div>
 
-              <tbody>
-                {activeSection === "overview" && (
-                  <>
                     {/* PVI Score */}
-                    <Row label="Value Index (PVI)" icon={<TrendingUp className="w-3.5 h-3.5 inline mr-1 text-accent" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => {
-                        const pvi = getPVI(tool.id);
-                        const { label, color } = getPVILabel(pvi);
-                        return (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                            <div className="flex flex-col items-center gap-0.5">
-                              <span className={`text-lg font-bold font-sans ${color}`}>{pvi || "—"}</span>
-                              <span className="text-[9px] text-muted-foreground">{pvi ? label : "No data"}</span>
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </Row>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <TrendingUp className="w-3.5 h-3.5 text-accent" />
+                        <span className="text-[10px] text-muted-foreground font-sans">Value Index</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-lg font-bold font-sans ${pviColor}`}>{pvi || "—"}</span>
+                        {pvi > 0 && <span className="text-[9px] text-muted-foreground">{pviLabel}</span>}
+                      </div>
+                    </div>
 
-                    {/* Community Rating */}
-                    <Row label="Community Rating" icon={<Star className="w-3.5 h-3.5 inline mr-1 text-warning" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
-                      {BUILDER_TOOLS.map((tool) => {
-                        const r = getRating(tool.id);
-                        return (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
-                            {r ? (
-                              <div className="flex items-center justify-center gap-1">
-                                <Star className="w-3 h-3 text-warning fill-warning" />
-                                <span className="text-xs font-medium font-sans">{r.avg_rating.toFixed(1)}</span>
-                                <span className="text-[9px] text-muted-foreground">({r.count})</span>
-                              </div>
-                            ) : (
-                              <span className="text-[10px] text-muted-foreground">—</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </Row>
+                    {/* PVI bar */}
+                    <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        whileInView={{ width: `${pvi}%` }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                        className={`h-full rounded-full ${
+                          pvi >= 70 ? "bg-success" : pvi >= 40 ? "bg-primary" : "bg-warning"
+                        }`}
+                      />
+                    </div>
 
-                    {/* Pricing summary */}
-                    <Row label="Starting Price" icon={<DollarSign className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                          <span className="text-xs font-medium text-foreground font-sans">{tool.pricing}</span>
-                        </td>
+                    {/* Rating + Price row */}
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-1">
+                        {rating ? (
+                          <>
+                            <Star className="w-3 h-3 text-warning fill-warning" />
+                            <span className="font-medium font-sans">{rating.avg_rating.toFixed(1)}</span>
+                            <span className="text-muted-foreground">({rating.count})</span>
+                          </>
+                        ) : (
+                          <span className="text-muted-foreground">No ratings</span>
+                        )}
+                      </div>
+                      <span className="font-semibold font-sans text-foreground">
+                        {proPlan ? (proPlan.monthly_price === 0 ? "Free" : `$${proPlan.monthly_price}/mo`) : tool.pricing}
+                      </span>
+                    </div>
+
+                    {/* Strengths */}
+                    <div className="flex flex-wrap gap-1">
+                      {tool.strengths.slice(0, 3).map((s) => (
+                        <Badge key={s} variant="secondary" className="text-[8px] px-1.5 py-0.5 font-sans">
+                          {s}
+                        </Badge>
                       ))}
-                    </Row>
+                    </div>
 
-                    <Row label="Tech Stack" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
-                          <span className="text-[10px] font-mono text-foreground">{tool.stack}</span>
-                        </td>
-                      ))}
-                    </Row>
+                    {/* Stack */}
+                    <p className="text-[10px] font-mono text-muted-foreground truncate">{tool.stack}</p>
 
-                    <Row label="Category" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                          <Badge variant="secondary" className="text-[9px] px-1.5 py-0">{tool.category}</Badge>
-                        </td>
-                      ))}
-                    </Row>
-
-                    <Row label="Key Strengths" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
-                          <div className="flex flex-wrap justify-center gap-0.5">
-                            {tool.strengths.slice(0, 3).map((s) => (
-                              <Badge key={s} variant="secondary" className="text-[8px] px-1 py-0">{s}</Badge>
-                            ))}
-                          </div>
-                        </td>
-                      ))}
-                    </Row>
-                  </>
-                )}
-
-                {activeSection === "pricing" && (
-                  <>
-                    {PLAN_ORDER.map((planName, idx) => (
-                      <Row key={planName} label={`${planName.charAt(0).toUpperCase() + planName.slice(1)} Plan`} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt={idx % 2 === 1}>
-                        {BUILDER_TOOLS.map((tool) => {
-                          const plan = getPlansForTool(tool.id).find((p) => p.plan_name === planName);
-                          return (
-                            <td key={tool.id} className={cellClass(hoveredCol, tool.id, idx % 2 === 1)}>
-                              {plan ? (
-                                <div className="text-center space-y-0.5">
-                                  <div className="text-xs font-bold font-sans">
-                                    {plan.monthly_price === 0 ? "Free" : `$${plan.monthly_price}/mo`}
-                                  </div>
-                                  {plan.annual_price != null && plan.annual_price > 0 && (
-                                    <div className="text-[9px] text-muted-foreground">
-                                      ${plan.annual_price}/yr
-                                    </div>
-                                  )}
-                                  {plan.credits_included != null && (
-                                    <div className="text-[9px] text-muted-foreground">
-                                      {plan.credits_included} {plan.credit_unit || "credits"}
-                                    </div>
-                                  )}
-                                  {plan.promo_active && (
-                                    <Badge className="text-[7px] px-1 py-0 bg-warning text-warning-foreground border-0">
-                                      {plan.promo_description || "Promo!"}
-                                    </Badge>
-                                  )}
-                                </div>
-                              ) : (
-                                <span className="text-[10px] text-muted-foreground">—</span>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </Row>
-                    ))}
-
-                    <Row label="Overage Cost" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => {
-                        const plan = getPlansForTool(tool.id).find((p) => p.plan_name === "pro");
-                        return (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                            <span className="text-[10px] text-foreground font-sans">
-                              {plan?.overage_cost ? `$${plan.overage_cost}/msg` : "—"}
-                            </span>
-                          </td>
-                        );
-                      })}
-                    </Row>
-                  </>
-                )}
-
-                {activeSection === "models" && (
-                  <>
-                    <Row label="AI Models" icon={<Cpu className="w-3.5 h-3.5 inline mr-1 text-accent" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => {
-                        const plans = getPlansForTool(tool.id);
-                        const models = [...new Set(plans.flatMap((p) => p.ai_models || []))];
-                        return (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                            {models.length > 0 ? (
-                              <div className="flex flex-wrap justify-center gap-0.5">
-                                {models.map((m) => (
-                                  <Badge key={m} variant="secondary" className="text-[8px] px-1 py-0">{m}</Badge>
-                                ))}
-                              </div>
-                            ) : (
-                              <span className="text-[10px] text-muted-foreground">—</span>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </Row>
-
-                    <Row label="Dev Environment" icon={<Monitor className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
-                      {BUILDER_TOOLS.map((tool) => {
-                        const plans = getPlansForTool(tool.id);
-                        const env = plans[0]?.dev_environment;
-                        return (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
-                            <span className="text-[10px] text-foreground font-sans">{env || tool.stack}</span>
-                          </td>
-                        );
-                      })}
-                    </Row>
-
-                    <Row label="Hosting" hoveredCol={hoveredCol} setHoveredCol={setHoveredCol}>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id)}>
-                          <span className="text-[10px] text-foreground font-sans">{tool.hosting}</span>
-                        </td>
-                      ))}
-                    </Row>
-
-                    <Row label="Avg Build Time" icon={<Clock className="w-3.5 h-3.5 inline mr-1 text-muted-foreground" />} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt>
-                      {BUILDER_TOOLS.map((tool) => (
-                        <td key={tool.id} className={cellClass(hoveredCol, tool.id, true)}>
-                          <span className="text-xs text-foreground font-medium font-sans">
-                            {tool.mockDelayRange[0]}–{tool.mockDelayRange[1]}s
-                          </span>
-                        </td>
-                      ))}
-                    </Row>
-                  </>
-                )}
-
-                {activeSection === "features" && (
-                  <>
-                    {COMPARISON_FEATURES.map((feature, idx) => (
-                      <Row key={feature.id} label={feature.label} hoveredCol={hoveredCol} setHoveredCol={setHoveredCol} alt={idx % 2 === 0}>
-                        {BUILDER_TOOLS.map((tool) => (
-                          <td key={tool.id} className={cellClass(hoveredCol, tool.id, idx % 2 === 0)}>
-                            {feature.tools.includes(tool.id) ? (
-                              <CheckCircle2 className="w-4 h-4 text-success mx-auto" />
-                            ) : (
-                              <XCircle className="w-4 h-4 text-muted-foreground/20 mx-auto" />
-                            )}
-                          </td>
-                        ))}
-                      </Row>
-                    ))}
-                  </>
-                )}
-
-                {/* CTA row */}
-                <tr className="border-t border-border">
-                  <td className="sticky left-0 z-10 bg-card p-3 border-r border-border/50">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase font-sans">Action</span>
-                  </td>
-                  {BUILDER_TOOLS.map((tool) => (
-                    <td
-                      key={tool.id}
-                      className={`p-2 text-center transition-colors duration-150 ${hoveredCol === tool.id ? "bg-primary/5" : ""}`}
-                      onMouseEnter={() => setHoveredCol(tool.id)}
-                      onMouseLeave={() => setHoveredCol(null)}
-                    >
+                    {/* Actions */}
+                    <div className="flex gap-2">
                       <Button
                         size="sm"
                         variant={tool.featured ? "default" : "outline"}
-                        className="text-[10px] h-7 px-2.5 rounded-lg font-sans"
+                        className="flex-1 text-xs h-8"
                         onClick={() => onSelectTool(tool.id)}
                       >
                         <Zap className="w-3 h-3 mr-1" />
-                        Test
-                        <ChevronRight className="w-3 h-3 ml-0.5" />
+                        Test it
                       </Button>
-                    </td>
-                  ))}
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-xs h-8 px-2"
+                        onClick={() => navigate(`/builders/${tool.id}`)}
+                      >
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant={isComparing ? "secondary" : "ghost"}
+                        className="text-xs h-8 px-2"
+                        onClick={() => toggleCompare(tool.id)}
+                        title="Add to compare"
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       </motion.div>
     </section>
-  );
-}
-
-function cellClass(hoveredCol: string | null, toolId: string, alt = false) {
-  return `p-2 text-center transition-colors duration-150 ${
-    hoveredCol === toolId ? "bg-primary/5" : alt ? "bg-muted/20" : ""
-  }`;
-}
-
-function Row({
-  label,
-  icon,
-  children,
-  hoveredCol,
-  setHoveredCol,
-  alt = false,
-}: {
-  label: string;
-  icon?: React.ReactNode;
-  children: React.ReactNode;
-  hoveredCol: string | null;
-  setHoveredCol: (id: string | null) => void;
-  alt?: boolean;
-}) {
-  return (
-    <tr className="border-b border-border/50">
-      <td
-        className={`sticky left-0 z-10 p-2 text-xs font-medium text-foreground border-r border-border/50 font-sans ${
-          alt ? "bg-muted/20" : "bg-card"
-        }`}
-      >
-        {icon}{label}
-      </td>
-      {children}
-    </tr>
   );
 }

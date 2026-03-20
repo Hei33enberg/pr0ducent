@@ -143,6 +143,7 @@ const Index = () => {
                   heroRef.current?.scrollIntoView({ behavior: "smooth" });
                 }}
               />
+              <InlineCalculator />
               <FAQ />
               <HomepageBlogSection />
               <ExperimentHistory
