@@ -9,6 +9,7 @@ import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/com
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import { useBuilderApi } from "@/hooks/useBuilderApi";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BUILDER_TOOLS } from "@/config/tools";
 import type { Experiment, AccountModel } from "@/types/experiment";
@@ -19,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const { results: builderResults, runBuilders } = useBuilderApi();
   const navigate = useNavigate();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
@@ -55,8 +57,12 @@ const Index = () => {
       }
 
       if (user) {
-        await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
+        const dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags);
         loadExperimentsFromDb(user.id).then(setPastExperiments);
+        // Trigger real builder APIs for tools that support it
+        if (dbId) {
+          runBuilders(prompt, dbId, selectedTools);
+        }
       } else {
         setPastExperiments(loadExperiments());
       }
@@ -149,6 +155,7 @@ const Index = () => {
               experiment={experiment}
               onExperimentUpdate={handleExperimentUpdate}
               onToolClick={(toolId) => setSelectedToolId(toolId)}
+              builderResults={builderResults}
             />
           </motion.div>
         ) : (

@@ -5,11 +5,13 @@ import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
 import { saveExperiment } from "@/lib/mock-experiment";
 import { updateRunStatusInDb, logReferralClick } from "@/lib/experiment-service";
 import { useAuth } from "@/hooks/useAuth";
+import type { BuilderResult } from "@/hooks/useBuilderApi";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CanvasFilters, type SortOption } from "@/components/CanvasFilters";
 import { WinnerBanner } from "@/components/WinnerBanner";
+import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
@@ -17,6 +19,7 @@ interface ComparisonCanvasProps {
   experiment: Experiment;
   onExperimentUpdate: (exp: Experiment) => void;
   onToolClick: (toolId: string) => void;
+  builderResults?: Record<string, BuilderResult>;
 }
 
 function StatusBadge({ status }: { status: RunStatus }) {
@@ -62,11 +65,13 @@ function ToolTile({
   elapsed,
   onClick,
   onReferralClick,
+  builderResult,
 }: {
   run: ExperimentRun;
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
+  builderResult?: BuilderResult;
 }) {
   const tool = getToolById(run.toolId);
   if (!tool) return null;
@@ -129,11 +134,14 @@ function ToolTile({
         </div>
 
         {run.status === "completed" && (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-            <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
-            <ScoreBar label="Backend" value={run.scores.backendLogic} />
-            <ScoreBar label="Speed" value={run.scores.speed} />
-            <ScoreBar label="Editing" value={run.scores.easeOfEditing} />
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <ScoreBar label="UI Quality" value={run.scores.uiQuality} />
+              <ScoreBar label="Backend" value={run.scores.backendLogic} />
+              <ScoreBar label="Speed" value={run.scores.speed} />
+              <ScoreBar label="Editing" value={run.scores.easeOfEditing} />
+            </div>
+            {builderResult && <BuilderResultBadge result={builderResult} />}
           </div>
         )}
 
@@ -164,7 +172,7 @@ function getOverallScore(run: ExperimentRun) {
   return (s.uiQuality + s.backendLogic + s.speed + s.easeOfEditing) / 4;
 }
 
-export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }: ComparisonCanvasProps) {
+export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, builderResults = {} }: ComparisonCanvasProps) {
   const { user } = useAuth();
   const [elapsed, setElapsed] = useState<Record<string, number>>({});
   const [hiddenTools, setHiddenTools] = useState<Set<string>>(new Set());
@@ -276,6 +284,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick }
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
+              builderResult={builderResults[run.toolId]}
             />
           ))}
         </AnimatePresence>

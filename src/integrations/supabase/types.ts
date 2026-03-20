@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      builder_results: {
+        Row: {
+          chat_url: string | null
+          created_at: string
+          error_message: string | null
+          experiment_id: string
+          files: Json | null
+          generation_time_ms: number | null
+          id: string
+          preview_url: string | null
+          raw_response: Json | null
+          status: string
+          tool_id: string
+          updated_at: string
+        }
+        Insert: {
+          chat_url?: string | null
+          created_at?: string
+          error_message?: string | null
+          experiment_id: string
+          files?: Json | null
+          generation_time_ms?: number | null
+          id?: string
+          preview_url?: string | null
+          raw_response?: Json | null
+          status?: string
+          tool_id: string
+          updated_at?: string
+        }
+        Update: {
+          chat_url?: string | null
+          created_at?: string
+          error_message?: string | null
+          experiment_id?: string
+          files?: Json | null
+          generation_time_ms?: number | null
+          id?: string
+          preview_url?: string | null
+          raw_response?: Json | null
+          status?: string
+          tool_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_results_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiment_runs: {
         Row: {
           completed_at: string | null
