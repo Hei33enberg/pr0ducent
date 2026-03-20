@@ -1,7 +1,5 @@
 import { useRef, useState, useEffect, type ReactNode } from "react";
-import { Beaker, LogOut, LogIn } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { LogOut } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -51,14 +49,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 if (experiment) onBack();
                 else window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="shrink-0 no-underline flex items-center gap-2 h-full"
+              className="shrink-0 no-underline flex items-center h-full"
             >
-              <Beaker className="w-5 h-5" style={{ color: "hsl(4, 85%, 65%)" }} />
               <span
                 className="font-serif font-bold tracking-tight leading-none"
-                style={{ color: "#000", fontSize: "clamp(1.4rem, 2vw + 0.6rem, 2rem)" }}
+                style={{ color: "#000", fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
               >
-                Prompt<span style={{ color: "hsl(4, 85%, 65%)" }}>Lab</span>
+                pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, verticalAlign: "baseline", letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
               </span>
             </a>
 
@@ -88,7 +85,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   onClick={(e) => { e.preventDefault(); navigate("/auth"); }}
                   className="bg-foreground text-background px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
-                  Zaloguj się →
+                  Get Started →
                 </a>
               )}
             </div>
