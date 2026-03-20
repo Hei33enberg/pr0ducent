@@ -43,13 +43,17 @@ Deno.serve(async (req) => {
     }
 
     const chatData = await pollResponse.json();
+    console.log("poll response keys:", Object.keys(chatData));
+    console.log("latestVersion:", JSON.stringify(chatData.latestVersion)?.slice(0, 200));
 
     const latestVersion = chatData.latestVersion || {};
     const versionStatus = latestVersion.status || "unknown";
-    const demoUrl = latestVersion.demoUrl || null;
+    const demoUrl = latestVersion.demoUrl || chatData.demo || null;
+    const screenshotUrl = latestVersion.screenshotUrl || null;
     const chatUrl = chatData.webUrl || `https://v0.dev/chat/${chatId}`;
     const files = latestVersion.files || chatData.files || [];
 
+    // If no latestVersion yet, still generating
     const isCompleted = versionStatus === "completed";
     const isFailed = versionStatus === "failed" || versionStatus === "error";
 
