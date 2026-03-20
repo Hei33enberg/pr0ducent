@@ -145,6 +145,8 @@ const Index = () => {
                   heroRef.current?.scrollIntoView({ behavior: "smooth" });
                 }}
               />
+              <FeatureMatrix />
+              <PlanComparisonTable />
               <InlineCalculator />
               <FAQ />
               <HomepageBlogSection />
