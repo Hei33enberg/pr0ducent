@@ -1,6 +1,8 @@
 # Prompt dla Lovable (Sprint 3 AG — benchmark + social)
 
-Skopiuj poniżej do czatu z Lovable / ticketu dla operatora hostingu frontu.
+**Uwaga:** **Pull z GitHub** robi się w **UI Lovable** (Settings → GitHub → Pull). Ani chat AI w Lovable, ani Cursor nie mogą tego kliknąć za Ciebie.
+
+Skopiuj poniżej do **ticketu / runbooka dla operatora** (nie oczekuj, że asystent w Lovable wykona synchronizację repo).
 
 ---
 
