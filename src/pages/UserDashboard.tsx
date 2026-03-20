@@ -40,6 +40,29 @@ export default function UserDashboard() {
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription">("history");
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  const PRICE_IDS: Record<string, string> = {
+    Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
+    Business: "price_1TCy4iKTwW79ip00yNVhNgly",
+  };
+
+  const handleUpgrade = async (planName: string) => {
+    const priceId = PRICE_IDS[planName];
+    if (!priceId) return;
+    setLoadingPlan(planName);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { priceId },
+      });
+      if (error) throw error;
+      if (data?.url) window.location.href = data.url;
+    } catch (err: any) {
+      toast.error(err.message || "Failed to start checkout");
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
 
   useEffect(() => {
     if (!user) return;
