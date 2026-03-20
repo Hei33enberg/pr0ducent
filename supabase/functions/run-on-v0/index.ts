@@ -19,8 +19,18 @@ Deno.serve(async (req) => {
       throw new Error("V0_API_KEY is not configured");
     }
 
-    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
+
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY || !SUPABASE_ANON_KEY) {
+      console.error("Missing env vars:", {
+        hasUrl: !!SUPABASE_URL,
+        hasServiceKey: !!SUPABASE_SERVICE_ROLE_KEY,
+        hasAnonKey: !!SUPABASE_ANON_KEY,
+      });
+      throw new Error("Missing required Supabase environment variables");
+    }
 
     // Validate auth
     const authHeader = req.headers.get("authorization");
@@ -32,10 +42,8 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const anonClient = createClient(
-      SUPABASE_URL,
-      Deno.env.get("SUPABASE_ANON_KEY")!
-    );
+    const anonClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     const {
       data: { user },
       error: authError,
@@ -90,7 +98,7 @@ Deno.serve(async (req) => {
 
     const startTime = Date.now();
 
-    // Call v0 Platform API — create a chat with the prompt
+    // Call v0 Platform API
     const chatResponse = await fetch(`${V0_API_BASE}/chat`, {
       method: "POST",
       headers: {
@@ -98,34 +106,23 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+        messages: [{ role: "user", content: prompt }],
       }),
     });
 
     if (!chatResponse.ok) {
       const errorBody = await chatResponse.text();
-      throw new Error(
-        `v0 API error [${chatResponse.status}]: ${errorBody}`
-      );
+      throw new Error(`v0 API error [${chatResponse.status}]: ${errorBody}`);
     }
 
     const chatData = await chatResponse.json();
     const generationTime = Date.now() - startTime;
 
-    // Extract useful data from response
     const chatId = chatData.id || chatData.chat_id;
     const chatUrl = chatId ? `https://v0.dev/chat/${chatId}` : null;
-
-    // Try to get files from the response
     const files = chatData.files || chatData.messages?.[0]?.files || [];
     const previewUrl = chatData.preview_url || chatData.deployment_url || null;
 
-    // Update result in DB
     await supabase
       .from("builder_results")
       .update({
