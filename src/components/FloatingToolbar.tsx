@@ -50,10 +50,10 @@ export function FloatingToolbar() {
                     navigate(item.href);
                   }
                 }}
-                className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                className="flex flex-col items-center gap-0.5 px-2 sm:px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-[9px] font-sans font-medium">{item.label}</span>
+                <span className="text-[8px] sm:text-[9px] font-sans font-medium hidden xs:inline">{item.label}</span>
               </button>
             );
           })}
