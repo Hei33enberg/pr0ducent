@@ -1,51 +1,43 @@
-# Supabase: Database Webhook → `process-task-queue`
+# Supabase: Auto-webhook `run_tasks` → `process-task-queue`
 
-Cel: po **INSERT** do `public.run_tasks` worker Edge Function od razu zdejmuje kolejkę, zamiast polegać wyłącznie na wywołaniach z `dispatch-builders` (inline fallback).
+## Mechanizm (automatyczny od migracji)
 
-## Wymagania
+Po **INSERT** do `public.run_tasks` trigger bazodanowy `trg_run_tasks_auto_dispatch` automatycznie wysyła POST do Edge Function `process-task-queue` przez rozszerzenie `pg_net`.
 
-- Edge Function **`process-task-queue`** wdrożona z `verify_jwt = false` i wywoływana **tylko** z **Service Role** (nigdy z anon w przeglądarce).
-- Sekret **`SUPABASE_SERVICE_ROLE_KEY`** znany tylko operatorowi (Dashboard → Settings → API).
+**Nie trzeba konfigurować niczego ręcznie w dashboardzie.**
 
-**Schemat bazy:** aktualny kod `process-task-queue` zakłada kolumny z migracji `20260322120000_vbp_orchestration.sql` (m.in. `builder_integration_config.circuit_state`, `run_tasks.next_retry_at`). Jeśli Supabase zwraca błąd „column does not exist”, **zastosuj brakujące migracje** — nie upraszczaj funkcji Edge zamiast aktualizacji bazy.
+Trigger używa klucza `service_role_key` z Supabase Vault (zapisany automatycznie przez migrację).
 
-## Kroki (Supabase Dashboard)
+## Jak to działa
 
-1. Zaloguj się do projektu → **Database**.
-2. Otwórz **Webhooks** (lub **Integrations** → Database Webhooks — nazwa zależy od wersji UI).
-3. **Create a new hook**:
-   - **Table:** `public.run_tasks`
-   - **Events:** `INSERT` (wystarczy; opcjonalnie też `UPDATE` jeśli kiedyś task wraca do `queued` przez update — dziś głównie INSERT).
-   - **Type:** Supabase Edge Function *albo* **HTTP Request** (jeśli wybierasz surowy URL funkcji).
+1. `dispatch-builders` insertuje wiersze do `run_tasks` (status `queued`).
+2. Trigger `trg_run_tasks_auto_dispatch` odpala się per wiersz.
+3. `pg_net.http_post` wysyła async POST do `process-task-queue` z `run_job_id`.
+4. Worker zdejmuje zadanie z kolejki, sprawdza rate limit (RPC `builder_try_dispatch_slot`), circuit breaker (`builder_integration_config.circuit_state`), i dispatchuje do adaptera.
+5. Fallback inline w `dispatch-builders` zostaje jako backup.
 
-### Jeśli typ = HTTP Request
-
-- **URL:**  
-  `https://<PROJECT_REF>.supabase.co/functions/v1/process-task-queue`  
-  (`PROJECT_REF` z Settings → API → Project URL.)
-- **HTTP method:** `POST`
-- **Headers:** dodaj dokładnie:
-  - `Authorization`: `Bearer <SERVICE_ROLE_KEY>`  
-  - `Content-Type`: `application/json`
-- **Body:** może być pusty `{}` lub domyślny payload webhooka — worker i tak czyta opcjonalnie `run_job_id` z JSON, jeśli go wyślesz.
-
-### Weryfikacja
-
-1. Uruchom jeden dispatch (zalogowany user, v0) — patrz [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md).
-2. **Edge Functions → Logs** → `process-task-queue`: powinny pojawić się wywołania po każdym nowym wierszu `run_tasks`.
-3. SQL — brak „wiecznego” `queued`:
+## Weryfikacja
 
 ```sql
+-- Trigger istnieje?
+SELECT tgname FROM pg_trigger WHERE tgname = 'trg_run_tasks_auto_dispatch';
+
+-- Vault secret istnieje?
+SELECT name FROM vault.decrypted_secrets WHERE name = 'service_role_key';
+
+-- Brak zawieszonych tasków?
 SELECT count(*) FROM run_tasks
 WHERE status = 'queued' AND created_at < now() - interval '5 minutes';
 ```
 
 ## Bezpieczeństwo
 
-- Nie wklejaj service role do repozytorium ani do Lovable jako publicznej zmiennej frontu.
-- Webhook trzymaj wyłącznie po stronie Supabase (sekret w konfiguracji hooka).
+- Service role key jest w Supabase Vault (zaszyfrowany), nie w kodzie ani env frontu.
+- Trigger function jest `SECURITY DEFINER` z `search_path = 'public'`.
+- Edge Function `process-task-queue` ma `verify_jwt = false` ale sprawdza Bearer === service role.
 
 ## Powiązane
 
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
+- [ORCHESTRATOR.md](./ORCHESTRATOR.md)
