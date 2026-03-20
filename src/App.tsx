@@ -7,7 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
-
+import Pricing from "./pages/Pricing.tsx";
 import PublicExperiment from "./pages/PublicExperiment.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Blog from "./pages/Blog.tsx";
@@ -17,6 +17,7 @@ import Notifications from "./pages/Notifications.tsx";
 import RunsNow from "./pages/RunsNow.tsx";
 import CalculatorPage from "./pages/Calculator.tsx";
 import UserDashboard from "./pages/UserDashboard.tsx";
+import { ScrollToTop } from "./components/ScrollToTop.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,9 +29,10 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <ScrollToTop />
             <Routes>
               <Route path="/auth" element={<Auth />} />
-              
+              <Route path="/pricing" element={<Pricing />} />
               <Route path="/experiment/:id" element={<PublicExperiment />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />

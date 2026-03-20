@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const items = [
   { label: "Home", icon: Home, href: "/" },
   { label: "Compare", icon: Swords, href: "#comparison" },
-  { label: "Calculator", icon: Calculator, href: "/calculator" },
+  { label: "Pricing", icon: Calculator, href: "/pricing" },
   { label: "Blog", icon: Newspaper, href: "/blog" },
   { label: "Live", icon: Radio, href: "/runs-now" },
   { label: "FAQ", icon: HelpCircle, href: "#faq" },
@@ -36,7 +36,7 @@ export function FloatingToolbar() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 80, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-1.5 rounded-full bg-card/90 backdrop-blur-xl border border-border/60 shadow-2xl"
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-1.5 rounded-full bg-card/90 backdrop-blur-xl border border-border/60 shadow-2xl max-w-[calc(100vw-2rem)]"
         >
           {items.map((item) => {
             const Icon = item.icon;
@@ -50,10 +50,10 @@ export function FloatingToolbar() {
                     navigate(item.href);
                   }
                 }}
-                className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
+                className="flex flex-col items-center gap-0.5 px-2 sm:px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-foreground/5 transition-colors"
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-[9px] font-sans font-medium">{item.label}</span>
+                <span className="text-[8px] sm:text-[9px] font-sans font-medium hidden xs:inline">{item.label}</span>
               </button>
             );
           })}
