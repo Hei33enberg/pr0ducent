@@ -3,10 +3,15 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
+import { RunComments } from "@/components/RunComments";
+import { BuilderRatingStars } from "@/components/BuilderRatingStars";
+import { ShareButton } from "@/components/ShareButton";
 import { useTranslation } from "@/lib/i18n";
 import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@/types/experiment";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { BUILDER_TOOLS } from "@/config/tools";
 
 export default function PublicExperiment() {
   const { id } = useParams<{ id: string }>();
@@ -78,15 +83,15 @@ export default function PublicExperiment() {
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="no-underline">
-              <span
-                className="font-serif font-bold tracking-tight leading-none"
-                style={{ color: "#000", fontSize: "1.3rem" }}
-              >
+              <span className="font-serif font-bold tracking-tight leading-none text-foreground" style={{ fontSize: "1.3rem" }}>
                 pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
               </span>
             </a>
           </div>
-          <span className="text-xs text-muted-foreground font-sans">{t("public.sharedExperiment")}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground font-sans">{t("public.sharedExperiment")}</span>
+            {experiment && <ShareButton experimentId={experiment.id} />}
+          </div>
         </div>
       </header>
 
@@ -106,6 +111,41 @@ export default function PublicExperiment() {
             onExperimentUpdate={() => {}}
             onToolClick={(toolId) => setSelectedToolId(toolId)}
           />
+
+          {/* Social layer: Ratings + Comments */}
+          <section className="max-w-6xl mx-auto px-4 pb-12 space-y-8">
+            {/* Rate builders */}
+            <div className="border-t border-border pt-8">
+              <h2 className="text-lg font-serif font-bold mb-4">Rate the builders</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {experiment.selectedTools.map((toolId) => {
+                  const tool = BUILDER_TOOLS.find((t) => t.id === toolId);
+                  if (!tool) return null;
+                  return (
+                    <div key={toolId} className="bg-card border border-border rounded-xl p-4 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+                          {tool.logoUrl ? (
+                            <img src={tool.logoUrl} alt={tool.name} className="w-4 h-4 object-contain" loading="lazy" />
+                          ) : (
+                            <span className="text-[10px] font-bold text-muted-foreground">{tool.name[0]}</span>
+                          )}
+                        </div>
+                        <span className="text-sm font-semibold text-foreground">{tool.name}</span>
+                      </div>
+                      <BuilderRatingStars toolId={toolId} experimentId={experiment.id} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Comments */}
+            <div className="border-t border-border pt-8">
+              <RunComments experimentId={experiment.id} />
+            </div>
+          </section>
+
           <ToolDetailPanel
             run={selectedRun}
             open={!!selectedToolId}
