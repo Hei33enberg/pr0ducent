@@ -24,15 +24,14 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
   const [loading, setLoading] = useState(true);
 
   const load = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("run_events")
+    const { data, error } = await (supabase as unknown as { from: (t: string) => any }).from("run_events")
       .select("id, event_type, tool_id, payload, created_at")
       .eq("experiment_id", experimentId)
       .order("created_at", { ascending: false })
       .limit(40);
 
     if (!error && data) {
-      setEvents(data as RunEventRow[]);
+      setEvents(data as unknown as RunEventRow[]);
     }
     setLoading(false);
   }, [experimentId]);
