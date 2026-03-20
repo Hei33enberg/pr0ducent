@@ -168,6 +168,7 @@ export function VoteWidget({
         {[1, 2, 3, 4, 5].map(star => (
           <button
             key={star}
+            title={`Rate ${star} stars`}
             onClick={() => handleRating(star)}
             className="p-1 rounded-sm focus:outline-none focus:ring-1 focus:ring-accent transition-all"
           >

@@ -63,8 +63,8 @@ export default function PublicExperiment() {
         accountModel: exp.account_model as AccountModel,
         createdAt: new Date(exp.created_at).getTime(),
         runs: mappedRuns,
-        useCaseTags: (exp as any).use_case_tags || [],
-        isPublic: (exp as any).is_public ?? false,
+        useCaseTags: exp.use_case_tags || [],
+        isPublic: exp.is_public ?? false,
       });
       setLoading(false);
     }

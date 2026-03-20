@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCw, Clock, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
 import { getToolById } from "@/config/tools";
+import type { Json } from "@/integrations/supabase/types";
 
 interface BuilderSyncData {
   id: string;
@@ -174,11 +175,11 @@ export default function BuilderDashboard() {
                   {isExpanded && (
                     <div className="mt-4 space-y-6">
                       {/* Pricing tiers */}
-                      {(builder.pricing_tiers as any[])?.length > 0 && (
+                      {(builder.pricing_tiers as Json[])?.length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-foreground mb-3 font-sans">Pricing</h4>
                           <div className="space-y-2">
-                            {(builder.pricing_tiers as any[]).map((tier: any, i: number) => (
+                            {(builder.pricing_tiers as Json[]).map((tier: any, i: number) => (
                               <div
                                 key={i}
                                 className="flex items-center justify-between bg-muted/50 rounded-lg px-3 py-2"
@@ -196,11 +197,11 @@ export default function BuilderDashboard() {
                       )}
 
                       {/* Changelog */}
-                      {(builder.changelog as any[])?.length > 0 && (
+                      {(builder.changelog as Json[])?.length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-foreground mb-3 font-sans">Recent Updates</h4>
                           <div className="space-y-3">
-                            {(builder.changelog as any[]).map((entry: any, i: number) => (
+                            {(builder.changelog as Json[]).map((entry: any, i: number) => (
                               <div key={i} className="border-l-2 border-primary/30 pl-3">
                                 <div className="text-xs text-muted-foreground font-sans">{entry.date}</div>
                                 <div className="text-sm font-sans font-medium text-foreground">{entry.title}</div>

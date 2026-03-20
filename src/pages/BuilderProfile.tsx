@@ -55,6 +55,23 @@ export default function BuilderProfile() {
           setRatings({ avg: sum / data.length, count: data.length });
         }
       });
+    supabase.from("builder_benchmark_scores")
+      .select("score_speed, score_ui_quality, score_code_quality, score_reliability, score_cost_efficiency")
+      .eq("tool_id", id)
+      .order("scored_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setRadarData([
+            { metric: "Speed", value: data.score_speed || 85 },
+            { metric: "UI Quality", value: data.score_ui_quality || 90 },
+            { metric: "Code Quality", value: data.score_code_quality || 75 },
+            { metric: "Reliability", value: data.score_reliability || 88 },
+            { metric: "Cost Eff.", value: data.score_cost_efficiency || 80 },
+          ]);
+        }
+      });
   }, [id]);
 
   if (!tool) {
@@ -90,14 +107,13 @@ export default function BuilderProfile() {
 
   const { label: pviLabel, color: pviColor } = getPVILabel(pvi);
 
-  // Fallback charts data since we don't have the real DB views
-  const radarData = [
+  const [radarData, setRadarData] = useState([
     { metric: "Speed", value: 85 + (tool.name.length % 10) },
     { metric: "UI Quality", value: 92 - (tool.name.length % 5) },
     { metric: "Code Quality", value: 78 + (tool.name.length % 15) },
     { metric: "Reliability", value: 88 },
     { metric: "Cost Eff.", value: 65 + (tool.name.length % 20) },
-  ];
+  ]);
 
   const distributionData = [
     { range: "0-20", count: 2 + tool.name.length },

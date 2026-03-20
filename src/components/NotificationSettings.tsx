@@ -33,7 +33,7 @@ export function NotificationSettings() {
         .select("*")
         .eq("user_id", user!.id)
         .single();
-      if (data) setSub(data as any);
+      if (data) setSub(data as Subscription);
       setLoading(false);
     }
     fetch();

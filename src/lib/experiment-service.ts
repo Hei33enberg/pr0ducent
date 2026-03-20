@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@/types/experiment";
+import type { Database, Json } from "@/integrations/supabase/types";
 
 export async function createExperimentInDb(
   userId: string,
@@ -17,7 +18,7 @@ export async function createExperimentInDb(
       account_model: accountModel,
       selected_tools: selectedTools,
       use_case_tags: useCaseTags || [],
-    } as any)
+    } satisfies Database["public"]["Tables"]["experiments"]["Insert"])
     .select("id")
     .single();
 
@@ -33,9 +34,9 @@ export async function createExperimentInDb(
     started_at: new Date(r.startedAt).toISOString(),
     time_to_prototype: r.timeToFirstPrototype ?? null,
     description: r.description,
-    scores: r.scores as any,
-    pros: r.pros as any,
-    cons: r.cons as any,
+    scores: r.scores as unknown as Json,
+    pros: r.pros as unknown as Json,
+    cons: r.cons as unknown as Json,
   }));
 
   const { error: runsErr } = await supabase
@@ -84,7 +85,7 @@ export async function loadExperimentsFromDb(userId: string): Promise<Experiment[
     runsMap.set(r.experiment_id, list);
   });
 
-  return exps.map((e: any) => ({
+  return exps.map((e) => ({
     id: e.id,
     prompt: e.prompt,
     selectedTools: e.selected_tools,
@@ -133,7 +134,7 @@ export async function logReferralHandoff(
     experiment_id: experimentId,
     tool_id: toolId,
     conversion_type: "builder_handoff",
-    metadata: (metadata ?? { source: "compare_cta" }) as unknown as import("@/integrations/supabase/types").Json,
+    metadata: (metadata ?? { source: "compare_cta" }) as Json,
   }]);
 }
 

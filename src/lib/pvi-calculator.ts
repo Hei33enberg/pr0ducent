@@ -1,4 +1,5 @@
 /**
+ * @module PVI Marketing Calculator — plan comparison (Calculator, Compare, InlineCalculator)
  * pr0ducent Value Index (PVI) Calculator
  * Normalized 0-100 score per builder plan
  */

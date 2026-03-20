@@ -1,4 +1,19 @@
+/**
+ * @module PVI Benchmark Engine — 10-dim scoring (ComparisonCanvas, Leaderboard, BuilderProfile)
+ */
 import { BenchmarkScores, BuilderBenchmarkScoreRow, UserVoteRow } from "@/types/benchmark";
+
+export type PVIDimensions =
+  | "score_speed"
+  | "score_reliability"
+  | "score_cost_efficiency"
+  | "score_deploy_readiness"
+  | "score_mobile_responsiveness"
+  | "score_accessibility"
+  | "score_web_vitals"
+  | "score_ui_quality"
+  | "score_completeness"
+  | "score_code_quality";
 
 export const PVI_WEIGHTS: Record<keyof BenchmarkScores, number> = {
   speed: 0.10,

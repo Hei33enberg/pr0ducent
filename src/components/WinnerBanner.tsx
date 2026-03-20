@@ -4,6 +4,8 @@ import type { ExperimentRun } from "@/types/experiment";
 import { Trophy } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 import { calculatePVI } from "@/lib/pvi-calculator";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface WinnerBannerProps {
   runs: ExperimentRun[];
@@ -27,15 +29,36 @@ function getOverallScore(run: ExperimentRun) {
 
 export function WinnerBanner({ runs }: WinnerBannerProps) {
   const { t } = useTranslation();
+  const [realScores, setRealScores] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function fetchScores() {
+      const tIds = runs.map(r => r.toolId);
+      if (tIds.length === 0) return;
+      const { data } = await supabase.from("builder_leaderboard").select("tool_id, avg_pvi").in("tool_id", tIds);
+      if (data) {
+        const map: Record<string, number> = {};
+        data.forEach(r => { if (r.tool_id && r.avg_pvi) map[r.tool_id] = Number(r.avg_pvi); });
+        setRealScores(map);
+      }
+    }
+    fetchScores();
+  }, [runs]);
+
+  const getOverallScoreWithReal = (run: ExperimentRun) => {
+    if (realScores[run.toolId]) return realScores[run.toolId];
+    return getOverallScore(run);
+  };
+
   const allCompleted = runs.every((r) => r.status === "completed");
   if (!allCompleted || runs.length < 2) return null;
 
-  const sorted = [...runs].sort((a, b) => getOverallScore(b) - getOverallScore(a));
+  const sorted = [...runs].sort((a, b) => getOverallScoreWithReal(b) - getOverallScoreWithReal(a));
   const winner = sorted[0];
   const tool = getToolById(winner.toolId);
   if (!tool) return null;
 
-  const avgScore = getOverallScore(winner).toFixed(1);
+  const avgScore = getOverallScoreWithReal(winner).toFixed(1);
 
   return (
     <motion.div

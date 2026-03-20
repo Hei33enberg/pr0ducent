@@ -32,11 +32,11 @@ function isDbExperimentId(id: string): boolean {
 }
 
 function provenanceLabel(br: BuilderResult | undefined, run: ExperimentRun): string {
-  const r = run as any;
-  if (br?.provenance === "live_api" || r.provenance === "live_api") return "Live API";
-  if (br?.provenance === "browser_bridge" || r.provenance === "browser_bridge") return "Browser bridge";
-  if (br?.provenance === "mcp" || r.provenance === "mcp") return "MCP";
-  if (br?.provenance === "benchmark" || r.provenance === "benchmark" || !br) return "Benchmark";
+  const rProv = (run as ExperimentRun & { provenance?: string }).provenance;
+  if (br?.provenance === "live_api" || rProv === "live_api") return "Live API";
+  if (br?.provenance === "browser_bridge" || rProv === "browser_bridge") return "Browser bridge";
+  if (br?.provenance === "mcp" || rProv === "mcp") return "MCP";
+  if (br?.provenance === "benchmark" || rProv === "benchmark" || !br) return "Benchmark";
   return "Broker";
 }
 
@@ -268,7 +268,7 @@ function ToolTile({
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
-  builderResult?: BuilderResult;
+  builderResult?: BuilderResult | BuilderResultRow;
   provenanceLabelText: string;
   task?: RunTaskRow;
   events?: RunEventRow[];
@@ -401,8 +401,8 @@ function ToolTile({
 
         {/* P2: CTA hide-if-empty — show only when there's something actionable */}
         {run.status === "completed" && (() => {
-          const claimToken = (builderResult as any)?.metadata?.claim_token;
-          const toolAny = tool as any;
+          const claimToken = (builderResult as (BuilderResult & { metadata?: { claim_token?: string } }) | undefined)?.metadata?.claim_token;
+          const extendedTool = tool as typeof tool & { url?: string };
           const hasReferral = !!tool.referralUrl;
           const hasPreview = !!builderResult?.previewUrl;
           const hasClaim = !!claimToken;
@@ -421,8 +421,8 @@ function ToolTile({
                 e.stopPropagation();
                 onReferralClick(run.toolId);
                 
-                if (hasClaim && (toolAny.url || hasReferral)) {
-                  const baseHost = toolAny.url ? new URL(toolAny.url).host : new URL(tool.referralUrl!).host;
+                if (hasClaim && (extendedTool.url || hasReferral)) {
+                  const baseHost = extendedTool.url ? new URL(extendedTool.url).host : new URL(tool.referralUrl!).host;
                   window.open(`https://${baseHost}/vbp/claim?token=${claimToken}&ref=pr0ducent_click`, "_blank");
                 } else if (hasReferral) {
                   window.open(tool.referralUrl!, "_blank");
@@ -636,7 +636,7 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
-              builderResult={builderResults[run.toolId] || (stream.results[run.toolId] as any)}
+              builderResult={builderResults[run.toolId] || stream.results[run.toolId]}
               provenanceLabelText={provenanceLabel(builderResults[run.toolId], run)}
               task={stream.tasks[run.toolId]}
               events={stream.events[run.toolId]}
