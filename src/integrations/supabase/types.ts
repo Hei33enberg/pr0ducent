@@ -71,6 +71,84 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_integration_config: {
+        Row: {
+          api_secret_env: string | null
+          browserbase_script: string | null
+          capabilities: Json
+          enabled: boolean
+          execution_modes: string[]
+          max_poll_time_ms: number
+          mcp_endpoint: string | null
+          poll_interval_ms: number
+          polling_function: string | null
+          tier: number
+          tool_id: string
+          updated_at: string
+        }
+        Insert: {
+          api_secret_env?: string | null
+          browserbase_script?: string | null
+          capabilities?: Json
+          enabled?: boolean
+          execution_modes?: string[]
+          max_poll_time_ms?: number
+          mcp_endpoint?: string | null
+          poll_interval_ms?: number
+          polling_function?: string | null
+          tier?: number
+          tool_id: string
+          updated_at?: string
+        }
+        Update: {
+          api_secret_env?: string | null
+          browserbase_script?: string | null
+          capabilities?: Json
+          enabled?: boolean
+          execution_modes?: string[]
+          max_poll_time_ms?: number
+          mcp_endpoint?: string | null
+          poll_interval_ms?: number
+          polling_function?: string | null
+          tier?: number
+          tool_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      builder_knowledge_chunks: {
+        Row: {
+          checksum: string | null
+          content: string
+          content_type: string
+          crawled_at: string
+          id: string
+          metadata: Json | null
+          source_url: string
+          tool_id: string
+        }
+        Insert: {
+          checksum?: string | null
+          content: string
+          content_type: string
+          crawled_at?: string
+          id?: string
+          metadata?: Json | null
+          source_url: string
+          tool_id: string
+        }
+        Update: {
+          checksum?: string | null
+          content?: string
+          content_type?: string
+          crawled_at?: string
+          id?: string
+          metadata?: Json | null
+          source_url?: string
+          tool_id?: string
+        }
+        Relationships: []
+      }
       builder_price_history: {
         Row: {
           annual_price: number | null
@@ -193,43 +271,58 @@ export type Database = {
       }
       builder_results: {
         Row: {
+          adapter_tier: number | null
           chat_url: string | null
           created_at: string
           error_message: string | null
+          execution_mode: string
           experiment_id: string
           files: Json | null
           generation_time_ms: number | null
           id: string
           preview_url: string | null
+          provenance: string
+          provider_run_id: string | null
           raw_response: Json | null
+          scores_reasoning: Json | null
           status: string
           tool_id: string
           updated_at: string
         }
         Insert: {
+          adapter_tier?: number | null
           chat_url?: string | null
           created_at?: string
           error_message?: string | null
+          execution_mode?: string
           experiment_id: string
           files?: Json | null
           generation_time_ms?: number | null
           id?: string
           preview_url?: string | null
+          provenance?: string
+          provider_run_id?: string | null
           raw_response?: Json | null
+          scores_reasoning?: Json | null
           status?: string
           tool_id: string
           updated_at?: string
         }
         Update: {
+          adapter_tier?: number | null
           chat_url?: string | null
           created_at?: string
           error_message?: string | null
+          execution_mode?: string
           experiment_id?: string
           files?: Json | null
           generation_time_ms?: number | null
           id?: string
           preview_url?: string | null
+          provenance?: string
+          provider_run_id?: string | null
           raw_response?: Json | null
+          scores_reasoning?: Json | null
           status?: string
           tool_id?: string
           updated_at?: string
@@ -289,6 +382,44 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          experiment_id: string | null
+          id: string
+          metadata: Json | null
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          metadata?: Json | null
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_transactions_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiment_runs: {
         Row: {
           completed_at: string | null
@@ -298,6 +429,7 @@ export type Database = {
           id: string
           pros: Json
           scores: Json
+          scores_reasoning: Json | null
           started_at: string
           status: string
           time_to_prototype: number | null
@@ -311,6 +443,7 @@ export type Database = {
           id?: string
           pros?: Json
           scores?: Json
+          scores_reasoning?: Json | null
           started_at?: string
           status?: string
           time_to_prototype?: number | null
@@ -324,6 +457,7 @@ export type Database = {
           id?: string
           pros?: Json
           scores?: Json
+          scores_reasoning?: Json | null
           started_at?: string
           status?: string
           time_to_prototype?: number | null
@@ -491,6 +625,44 @@ export type Database = {
         }
         Relationships: []
       }
+      run_events: {
+        Row: {
+          created_at: string
+          event_type: string
+          experiment_id: string
+          id: string
+          payload: Json
+          tool_id: string | null
+          trace_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          experiment_id: string
+          id?: string
+          payload?: Json
+          tool_id?: string | null
+          trace_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          experiment_id?: string
+          id?: string
+          payload?: Json
+          tool_id?: string | null
+          trace_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "run_events_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           created_at: string | null
@@ -521,6 +693,36 @@ export type Database = {
           prompts_limit?: number | null
           prompts_used?: number | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_builder_credentials: {
+        Row: {
+          created_at: string
+          credential_type: string
+          id: string
+          tool_id: string
+          updated_at: string
+          user_id: string
+          vault_ref: string
+        }
+        Insert: {
+          created_at?: string
+          credential_type: string
+          id?: string
+          tool_id: string
+          updated_at?: string
+          user_id: string
+          vault_ref: string
+        }
+        Update: {
+          created_at?: string
+          credential_type?: string
+          id?: string
+          tool_id?: string
+          updated_at?: string
+          user_id?: string
+          vault_ref?: string
         }
         Relationships: []
       }
