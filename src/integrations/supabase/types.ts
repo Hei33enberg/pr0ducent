@@ -332,6 +332,36 @@ export type Database = {
         }
         Relationships: []
       }
+      builder_rate_limits: {
+        Row: {
+          circuit_state: string
+          max_concurrent: number
+          max_per_minute: number
+          requests_in_window: number
+          tool_id: string
+          updated_at: string
+          window_started_at: string
+        }
+        Insert: {
+          circuit_state?: string
+          max_concurrent?: number
+          max_per_minute?: number
+          requests_in_window?: number
+          tool_id: string
+          updated_at?: string
+          window_started_at?: string
+        }
+        Update: {
+          circuit_state?: string
+          max_concurrent?: number
+          max_per_minute?: number
+          requests_in_window?: number
+          tool_id?: string
+          updated_at?: string
+          window_started_at?: string
+        }
+        Relationships: []
+      }
       builder_ratings: {
         Row: {
           created_at: string | null
@@ -1054,6 +1084,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

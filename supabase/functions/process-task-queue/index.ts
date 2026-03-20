@@ -158,7 +158,7 @@ Deno.serve(async (req) => {
         task = (scopedR?.[0] as PickableTask) ?? null;
       }
     } else {
-      task = await pickNextQueuedOrRetrying(admin);
+      task = await pickNextQueuedOrRetrying(admin as any);
     }
     if (!task) break;
 
