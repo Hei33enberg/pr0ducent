@@ -16,7 +16,7 @@ import { WinnerBanner } from "@/components/WinnerBanner";
 import { BuilderResultBadge } from "@/components/BuilderResultBadge";
 import { cn } from "@/lib/utils";
 import { ExternalLink, Clock, CheckCircle2, Loader2, AlertCircle, Code2, BarChart3, MessageSquare, Info } from "lucide-react";
-import { useRunTaskStream, type RunTaskRow, type RunEventRow } from "@/hooks/useRunTaskStream";
+import { useRunTaskStream, type RunTaskRow, type RunEventRow, type BuilderResultRow } from "@/hooks/useRunTaskStream";
 import { DemoPreviewFrame } from "@/components/DemoPreviewFrame";
 import { BuilderProgressStream } from "@/components/BuilderProgressStream";
 import { GuestOrchestrationBanner } from "@/components/GuestOrchestrationBanner";
@@ -268,7 +268,7 @@ function ToolTile({
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
-  builderResult?: BuilderResult | BuilderResultRow;
+  builderResult?: BuilderResult;
   provenanceLabelText: string;
   task?: RunTaskRow;
   events?: RunEventRow[];
@@ -636,7 +636,15 @@ export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, 
               elapsed={elapsed[run.toolId] || 0}
               onClick={() => onToolClick(run.toolId)}
               onReferralClick={handleReferralClick}
-              builderResult={builderResults[run.toolId] || stream.results[run.toolId]}
+              builderResult={builderResults[run.toolId] || (stream.results[run.toolId] ? {
+                id: stream.results[run.toolId].id,
+                toolId: stream.results[run.toolId].tool_id,
+                status: stream.results[run.toolId].status as BuilderResult["status"],
+                previewUrl: stream.results[run.toolId].preview_url ?? undefined,
+                chatUrl: stream.results[run.toolId].chat_url ?? undefined,
+                provenance: stream.results[run.toolId].provenance,
+                executionMode: stream.results[run.toolId].execution_mode,
+              } : undefined)}
               provenanceLabelText={provenanceLabel(builderResults[run.toolId], run)}
               task={stream.tasks[run.toolId]}
               events={stream.events[run.toolId]}
