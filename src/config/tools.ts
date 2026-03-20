@@ -30,7 +30,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "replit",
     name: "Replit",
-    logoUrl: "https://replit.com/public/images/sm-og-image.png",
+    logoUrl: "https://www.google.com/s2/favicons?domain=replit.com&sz=64",
     featured: false,
     strengths: ["Multi-language", "Collaborative IDE", "Always-on hosting"],
     description: "Cloud IDE with AI agent for building and deploying apps.",
@@ -43,7 +43,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "v0",
     name: "Vercel v0",
-    logoUrl: "https://v0.dev/favicon.ico",
+    logoUrl: "https://www.google.com/s2/favicons?domain=v0.dev&sz=64",
     featured: false,
     strengths: ["UI components", "shadcn/ui native", "Quick iteration"],
     description: "AI-powered UI generation by Vercel, optimized for React components.",
@@ -56,7 +56,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "cursor",
     name: "Cursor",
-    logoUrl: "https://cursor.sh/favicon.ico",
+    logoUrl: "https://www.google.com/s2/favicons?domain=cursor.sh&sz=64",
     featured: false,
     strengths: ["Code-level control", "Multi-file editing", "Git integration"],
     description: "AI-powered code editor for professional developers.",
@@ -69,7 +69,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "base44",
     name: "Base44",
-    logoUrl: "https://www.base44.com/favicon.ico",
+    logoUrl: "https://www.google.com/s2/favicons?domain=base44.com&sz=64",
     featured: false,
     strengths: ["Business apps", "Database-first", "No-code friendly"],
     description: "AI app builder focused on business applications and databases.",
@@ -82,7 +82,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "antigravity",
     name: "Antigravity",
-    logoUrl: "",
+    logoUrl: "https://www.google.com/s2/favicons?domain=antigravity.dev&sz=64",
     featured: false,
     strengths: ["Rapid prototyping", "Design-to-code", "Mobile-first"],
     description: "AI design-to-code platform for rapid prototyping.",
@@ -95,7 +95,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "build0",
     name: "Build0",
-    logoUrl: "",
+    logoUrl: "https://www.google.com/s2/favicons?domain=build0.dev&sz=64",
     featured: false,
     strengths: ["Zero-config", "Instant deploy", "Template library"],
     description: "Zero-configuration AI app builder with instant deployments.",
@@ -108,7 +108,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "orchids",
     name: "Orchids",
-    logoUrl: "",
+    logoUrl: "https://www.google.com/s2/favicons?domain=orchids.dev&sz=64",
     featured: false,
     strengths: ["Beautiful UI", "Animation-rich", "Design systems"],
     description: "AI builder focused on beautiful, animation-rich interfaces.",
@@ -121,7 +121,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "floot",
     name: "Floot",
-    logoUrl: "",
+    logoUrl: "https://www.google.com/s2/favicons?domain=floot.ai&sz=64",
     featured: false,
     strengths: ["API integration", "Workflow automation", "Enterprise ready"],
     description: "Enterprise-grade AI app builder with workflow automation.",
@@ -134,7 +134,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
   {
     id: "bolt",
     name: "Bolt.new",
-    logoUrl: "https://bolt.new/favicon.ico",
+    logoUrl: "https://www.google.com/s2/favicons?domain=bolt.new&sz=64",
     featured: false,
     strengths: ["In-browser dev", "WebContainer", "Full-stack"],
     description: "AI-powered full-stack development environment in the browser.",

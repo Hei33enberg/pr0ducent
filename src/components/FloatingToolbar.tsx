@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Swords, Calculator, Newspaper, HelpCircle, Radio } from "lucide-react";
+import { Home, Swords, Calculator, Newspaper, HelpCircle, Radio, DollarSign } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const items = [
   { label: "Home", icon: Home, href: "/" },
   { label: "Compare", icon: Swords, href: "#comparison" },
-  { label: "Pricing", icon: Calculator, href: "/pricing" },
+  { label: "Calculator", icon: Calculator, href: "/calculator" },
+  { label: "Pricing", icon: DollarSign, href: "/pricing" },
   { label: "Blog", icon: Newspaper, href: "/blog" },
   { label: "Live", icon: Radio, href: "/runs-now" },
   { label: "FAQ", icon: HelpCircle, href: "#faq" },

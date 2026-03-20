@@ -4,7 +4,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/lib/i18n";
 import type { Experiment } from "@/types/experiment";
 
@@ -24,8 +24,8 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }
       className="shrink-0 no-underline flex items-center h-full"
     >
       <span
-        className="font-serif font-bold tracking-tight leading-none"
-        style={{ color: "#000", fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
+        className="font-serif font-bold tracking-tight leading-none text-foreground"
+        style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
       >
         pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, verticalAlign: "baseline", letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
       </span>
@@ -38,6 +38,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const frameRef = useRef<HTMLDivElement>(null);
   const [frameRect, setFrameRect] = useState<{ left: number; width: number } | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -58,18 +59,32 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     return () => window.removeEventListener("resize", update);
   }, []);
 
+  const isHomepage = location.pathname === "/";
+
   const handleLogoClick = () => {
-    if (experiment) onBack();
-    else window.scrollTo({ top: 0, behavior: "smooth" });
+    if (isHomepage && experiment) {
+      onBack();
+    } else if (isHomepage) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate("/");
+    }
+  };
+
+  const handleAnchorClick = (href: string) => {
+    if (isHomepage) {
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/" + href);
+    }
   };
 
   const navLinks = [
     { label: t("nav.compare"), href: "#comparison", icon: Swords },
+    { label: "Calculator", href: "/calculator", icon: Calculator },
     { label: "Pricing", href: "/pricing", icon: Calculator },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },
-    { label: t("nav.dashboard"), href: "/dashboard/updates", icon: RefreshCw },
     { label: "Runs Now", href: "/runs-now", icon: Radio },
-    { label: t("nav.howItWorks"), href: "#how-it-works", icon: Compass },
     { label: t("nav.faq"), href: "#faq", icon: HelpCircle },
   ];
 
@@ -92,11 +107,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                     key={link.href}
                     href={link.href}
                     onClick={(e) => {
+                      e.preventDefault();
                       if (link.href.startsWith("#")) {
-                        e.preventDefault();
-                        document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+                        handleAnchorClick(link.href);
                       } else {
-                        e.preventDefault();
                         navigate(link.href);
                       }
                     }}
@@ -167,12 +181,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                     key={link.href}
                     href={link.href}
                     onClick={(e) => {
+                      e.preventDefault();
                       setMobileMenuOpen(false);
                       if (link.href.startsWith("#")) {
-                        e.preventDefault();
-                        document.querySelector(link.href)?.scrollIntoView({ behavior: "smooth" });
+                        handleAnchorClick(link.href);
                       } else {
-                        e.preventDefault();
                         navigate(link.href);
                       }
                     }}

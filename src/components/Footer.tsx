@@ -13,8 +13,8 @@ export function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <span
-              className="font-serif font-bold tracking-tight leading-none block mb-3"
-              style={{ color: "hsl(var(--foreground))", fontSize: "1.5rem" }}
+              className="font-serif font-bold tracking-tight leading-none block mb-3 text-foreground"
+              style={{ fontSize: "1.5rem" }}
             >
               pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
             </span>
@@ -30,6 +30,7 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground font-sans">
               <li><a href="#comparison" className="hover:text-foreground transition-colors">{t("footer.compare")}</a></li>
+              <li><a href="/calculator" onClick={(e) => { e.preventDefault(); navigate("/calculator"); }} className="hover:text-foreground transition-colors">Calculator</a></li>
               <li><a href="/pricing" onClick={(e) => { e.preventDefault(); navigate("/pricing"); }} className="hover:text-foreground transition-colors">Pricing</a></li>
               <li><a href="#how-it-works" className="hover:text-foreground transition-colors">{t("footer.howItWorks")}</a></li>
               <li><a href="#faq" className="hover:text-foreground transition-colors">{t("footer.faq")}</a></li>
@@ -44,6 +45,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground font-sans">
               <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigate("/blog"); }} className="hover:text-foreground transition-colors">{t("footer.blog")}</a></li>
               <li><a href="/runs-now" onClick={(e) => { e.preventDefault(); navigate("/runs-now"); }} className="hover:text-foreground transition-colors">Runs Now</a></li>
+              <li><a href="/builders" onClick={(e) => { e.preventDefault(); navigate("/builders"); }} className="hover:text-foreground transition-colors">All Builders</a></li>
             </ul>
           </div>
 
