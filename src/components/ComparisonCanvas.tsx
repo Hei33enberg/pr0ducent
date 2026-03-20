@@ -268,7 +268,7 @@ function ToolTile({
   elapsed: number;
   onClick: () => void;
   onReferralClick: (toolId: string) => void;
-  builderResult?: BuilderResult | BuilderResultRow;
+  builderResult?: BuilderResult;
   provenanceLabelText: string;
   task?: RunTaskRow;
   events?: RunEventRow[];
