@@ -113,5 +113,31 @@
   "footer.docs": "Documentation",
   "footer.privacy": "Privacy Policy",
   "footer.terms": "Terms of Service",
-  "footer.rights": "All rights reserved."
+  "footer.rights": "All rights reserved.",
+
+  "nav.blog": "Blog",
+  "nav.dashboard": "Updates",
+  "nav.notifications": "Notifications",
+
+  "blog.title": "Blog",
+  "blog.subtitle": "Insights, comparisons, and updates from the AI builder world.",
+  "blog.all": "All",
+  "blog.empty": "No published posts yet. Check back soon!",
+
+  "dashboard.title": "Builder Updates",
+  "dashboard.subtitle": "Live-synced pricing, features, and changelogs for every AI builder.",
+  "dashboard.autoSync": "Auto-synced daily",
+  "dashboard.empty": "No builder data synced yet.",
+  "dashboard.emptyHint": "Data will appear after the first daily sync runs.",
+
+  "notifications.title": "Notification Settings",
+  "notifications.subtitle": "Choose what updates you want to be notified about.",
+  "notifications.alertTypes": "Alert Types",
+  "notifications.changelog": "Builder changelog updates",
+  "notifications.pricing": "Pricing changes",
+  "notifications.blogPosts": "New blog posts",
+  "notifications.watchBuilders": "Watch Builders",
+  "notifications.watchHint": "Select specific builders to watch, or leave empty to watch all.",
+  "notifications.signInRequired": "Sign in required",
+  "notifications.signInDesc": "Sign in to manage your notification preferences."
 }
