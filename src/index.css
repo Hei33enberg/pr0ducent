@@ -424,3 +424,10 @@
       radial-gradient(ellipse 35% 40% at 55% 40%, hsla(50, 85%, 77%, 0.25) 0%, transparent 70%);
   }
 }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .page-frame {
+    border-radius: 12px;
+  }
+}
