@@ -14,7 +14,6 @@ const corsHeaders = {
 
 const MAX_TASKS_PER_INVOCATION = 40;
 const DEADLINE_MS = 120_000;
-const RATE_LIMIT_BACKOFF_MS = 15_000;
 
 function isServiceRoleRequest(req: Request): boolean {
   const expected = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -23,11 +22,21 @@ function isServiceRoleRequest(req: Request): boolean {
   return auth.slice(7) === expected;
 }
 
+/* ── Circuit breaker check ─────────────────────────────── */
+
+function isCircuitOpen(cfg: IntegrationConfigRow | undefined): boolean {
+  // circuit_state lives on builder_integration_config (migration 20260322120000)
+  const state = (cfg as Record<string, unknown> | undefined)?.circuit_state;
+  return state === "open";
+}
+
+/* ── Dispatch one task to the correct adapter ──────────── */
+
 async function dispatchOne(
   admin: SupabaseClient,
   task: { id: string; tool_id: string; experiment_id: string; run_job_id: string },
   job: { trace_id: string; metadata: Record<string, unknown> | null },
-  configByTool: Map<string, IntegrationConfigRow>
+  configByTool: Map<string, IntegrationConfigRow>,
 ): Promise<void> {
   const prompt = typeof job.metadata?.prompt === "string" ? job.metadata.prompt : "";
   if (!prompt) {
@@ -39,6 +48,19 @@ async function dispatchOne(
   }
 
   const cfg = configByTool.get(task.tool_id);
+
+  // Circuit breaker — don't dispatch if builder is in open state
+  if (isCircuitOpen(cfg)) {
+    await admin
+      .from("run_tasks")
+      .update({
+        status: "retrying",
+        error_message: "circuit_breaker:open",
+        next_retry_at: new Date(Date.now() + 60_000).toISOString(),
+      })
+      .eq("id", task.id);
+    return;
+  }
 
   const ctx: AdapterDispatchContext = {
     admin,
@@ -63,6 +85,8 @@ async function dispatchOne(
   }
 }
 
+/* ── Pick next task from queue ─────────────────────────── */
+
 type PickableTask = {
   id: string;
   tool_id: string;
@@ -80,14 +104,18 @@ async function pickNextQueuedOrRetrying(admin: SupabaseClient): Promise<Pickable
     .limit(1);
   if (queued?.length) return queued[0] as PickableTask;
 
+  // For retrying tasks, respect next_retry_at if set
   const { data: retrying } = await admin
     .from("run_tasks")
     .select("id, tool_id, experiment_id, run_job_id, attempt_count")
     .eq("status", "retrying")
+    .or("next_retry_at.is.null,next_retry_at.lte." + new Date().toISOString())
     .order("updated_at", { ascending: true })
     .limit(1);
   return (retrying?.[0] as PickableTask) ?? null;
 }
+
+/* ── Main handler ──────────────────────────────────────── */
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -120,7 +148,7 @@ Deno.serve(async (req) => {
 
   const { data: configs } = await admin.from("builder_integration_config").select("*");
   const configByTool = new Map(
-    (configs || []).map((c: IntegrationConfigRow) => [c.tool_id, c as IntegrationConfigRow])
+    (configs || []).map((c: IntegrationConfigRow) => [c.tool_id, c as IntegrationConfigRow]),
   );
 
   while (processed < MAX_TASKS_PER_INVOCATION && Date.now() - started < DEADLINE_MS) {
@@ -140,6 +168,7 @@ Deno.serve(async (req) => {
           .select("id, tool_id, experiment_id, run_job_id, attempt_count")
           .eq("run_job_id", body.run_job_id)
           .eq("status", "retrying")
+          .or("next_retry_at.is.null,next_retry_at.lte." + new Date().toISOString())
           .order("updated_at", { ascending: true })
           .limit(1);
         task = (scopedR?.[0] as PickableTask) ?? null;
@@ -149,7 +178,7 @@ Deno.serve(async (req) => {
     }
     if (!task) break;
 
-    // Rate limiting via RPC
+    // ── Rate limiting via RPC ──
     let rateAllowed = true;
     let rateReason = "";
     const { data: slot, error: slotErr } = await admin.rpc("builder_try_dispatch_slot", {
@@ -164,18 +193,21 @@ Deno.serve(async (req) => {
       rateReason = slotObj?.reason ?? "";
     }
     if (!rateAllowed) {
+      const backoffMs = rateReason === "max_per_minute" ? 60_000 : 15_000;
       await admin
         .from("run_tasks")
         .update({
           status: "retrying",
           error_message: `rate_limit:${rateReason || "unknown"}`,
           attempt_count: (task.attempt_count ?? 0) + 1,
+          next_retry_at: new Date(Date.now() + backoffMs).toISOString(),
         })
         .eq("id", task.id);
       processed++;
       continue;
     }
 
+    // ── Fetch job metadata ──
     const { data: job, error: jobErr } = await admin
       .from("run_jobs")
       .select("trace_id, metadata")
@@ -214,6 +246,6 @@ Deno.serve(async (req) => {
       partial,
       timedOut: Date.now() - started >= DEADLINE_MS,
     }),
-    { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    { headers: { ...corsHeaders, "Content-Type": "application/json" } },
   );
 });
