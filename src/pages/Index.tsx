@@ -155,6 +155,7 @@ const Index = () => {
               experiment={experiment}
               onExperimentUpdate={handleExperimentUpdate}
               onToolClick={(toolId) => setSelectedToolId(toolId)}
+              builderResults={builderResults}
             />
           </motion.div>
         ) : (
