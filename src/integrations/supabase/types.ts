@@ -1344,16 +1344,16 @@ export type Database = {
     }
     Functions: {
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
-      subscription_try_increment_prompt: {
-        Args: { p_user_id: string }
-        Returns: Json
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      subscription_try_increment_prompt: {
+        Args: { p_user_id: string }
+        Returns: Json
       }
       validate_builder_integration_config: {
         Args: { p_tool_id: string }
