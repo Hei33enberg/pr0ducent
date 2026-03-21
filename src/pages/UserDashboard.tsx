@@ -83,7 +83,7 @@ export default function UserDashboard() {
     if (!connectingTool || !apiKeyInput.trim()) return;
     setIsConnecting(true);
     try {
-      const { error } = await supabase.rpc('save_user_builder_api_key', {
+      const { error } = await (supabase.rpc as Function)('save_user_builder_api_key', {
         p_tool_id: connectingTool,
         p_credential_type: 'api_key',
         p_plaintext_secret: apiKeyInput.trim(),
