@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { Slider } from "@/components/ui/slider";
@@ -20,6 +20,7 @@ interface PricingPlan {
 }
 
 export function InlineCalculator() {
+  const { tools: BUILDER_TOOLS } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [budget, setBudget] = useState(25);

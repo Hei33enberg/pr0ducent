@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
-import { BUILDER_TOOLS, getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,7 @@ interface PricingPlan {
 export default function BuilderProfile() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { getToolById } = useBuilderCatalog();
   const tool = getToolById(id || "");
   const [syncData, setSyncData] = useState<SyncData | null>(null);
   const [plans, setPlans] = useState<PricingPlan[]>([]);

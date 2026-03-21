@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight } from "lucide-react";
 
 export default function BuildersIndex() {
+  const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
 
   return (
@@ -24,7 +25,7 @@ export default function BuildersIndex() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {BUILDER_TOOLS.map((tool) => (
+            {tools.map((tool) => (
               <Card
                 key={tool.id}
                 className="cursor-pointer hover:shadow-md transition-shadow"

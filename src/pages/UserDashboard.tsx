@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
 import { supabase } from "@/integrations/supabase/client";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2, Key } from "lucide-react";
@@ -106,8 +106,8 @@ export default function UserDashboard() {
     );
   }
 
-  const getToolName = (id: string) => BUILDER_TOOLS.find((t) => t.id === id)?.name ?? id;
-  const getTool = (id: string) => BUILDER_TOOLS.find((t) => t.id === id);
+  const getToolName = (id: string) => tools.find((t) => t.id === id)?.name ?? id;
+  const getTool = (id: string) => tools.find((t) => t.id === id);
 
   const tabs = [
     { key: "history" as const, label: "Build History", icon: ClipboardList, count: experiments.length },

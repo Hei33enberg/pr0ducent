@@ -1,4 +1,4 @@
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ export function ToolSelectionGrid({
   selectedTools,
   onSelectionChange,
 }: ToolSelectionGridProps) {
+  const { tools } = useBuilderCatalog();
   const toggleTool = (id: string) => {
     if (selectedTools.includes(id)) {
       onSelectionChange(selectedTools.filter((t) => t !== id));
@@ -26,17 +27,17 @@ export function ToolSelectionGrid({
         <h3 className="text-sm font-semibold text-foreground font-sans">Select Builders</h3>
         <button
           onClick={() =>
-            selectedTools.length === BUILDER_TOOLS.length
-              ? onSelectionChange(BUILDER_TOOLS.filter((t) => t.featured).map((t) => t.id))
-              : onSelectionChange(BUILDER_TOOLS.map((t) => t.id))
+            selectedTools.length === tools.length
+              ? onSelectionChange(tools.filter((t) => t.featured).map((t) => t.id))
+              : onSelectionChange(tools.map((t) => t.id))
           }
           className="text-xs text-primary hover:underline font-sans"
         >
-          {selectedTools.length === BUILDER_TOOLS.length ? "Deselect all" : "Select all"}
+          {selectedTools.length === tools.length ? "Deselect all" : "Select all"}
         </button>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
-        {BUILDER_TOOLS.map((tool) => {
+        {tools.map((tool) => {
           const isSelected = selectedTools.includes(tool.id);
           return (
             <button

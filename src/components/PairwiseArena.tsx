@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { DemoPreviewFrame } from "@/components/DemoPreviewFrame";
 import { usePairwiseVote } from "@/hooks/usePairwiseVote";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ interface PairwiseArenaProps {
 }
 
 export function PairwiseArena({ experimentId, prompt, resultA, resultB, onNextPair }: PairwiseArenaProps) {
+  const { getToolById } = useBuilderCatalog();
   const [votedId, setVotedId] = useState<string | "tie" | null>(null);
   const [revealed, setRevealed] = useState(false);
   const { castVote, loading } = usePairwiseVote();

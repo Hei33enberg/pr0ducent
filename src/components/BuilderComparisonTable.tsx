@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -34,9 +34,9 @@ interface BuilderRating {
   count: number;
 }
 
-const CATEGORIES = ["All", ...new Set(BUILDER_TOOLS.map((t) => t.category))];
-
 export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableProps) {
+  const { tools } = useBuilderCatalog();
+  const CATEGORIES = ["All", ...new Set(tools.map((t) => t.category))];
   const navigate = useNavigate();
   const [pricingPlans, setPricingPlans] = useState<PricingPlan[]>([]);
   const [ratings, setRatings] = useState<BuilderRating[]>([]);
@@ -92,7 +92,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
     return calculatePVI(pviPlan);
   };
 
-  const filteredTools = BUILDER_TOOLS.filter(
+  const filteredTools = tools.filter(
     (t) => activeCategory === "All" || t.category === activeCategory
   ).sort((a, b) => {
     // featured first, then by PVI
@@ -120,7 +120,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
             Compare AI Builders
           </h2>
           <p className="text-sm text-muted-foreground font-sans max-w-lg mx-auto">
-            {BUILDER_TOOLS.length} builders compared side-by-side. Real pricing, features, and our Value Index.
+            {tools.length} builders compared side-by-side. Real pricing, features, and our Value Index.
           </p>
         </div>
 
@@ -147,7 +147,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
           <div className="mb-4 flex items-center justify-center gap-2 flex-wrap">
             <span className="text-xs text-muted-foreground font-sans">Comparing:</span>
             {compareList.map((id) => {
-              const tool = BUILDER_TOOLS.find((t) => t.id === id);
+              const tool = tools.find((t) => t.id === id);
               return (
                 <Badge key={id} variant="secondary" className="text-xs gap-1 cursor-pointer" onClick={() => toggleCompare(id)}>
                   {tool?.name} ×

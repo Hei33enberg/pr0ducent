@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { Tables } from "@/integrations/supabase/types";
 
 export interface LeaderboardEntry {
@@ -43,6 +43,7 @@ const SORT_COLUMN: Record<SortDim, keyof LeaderboardRow> = {
 };
 
 export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
+  const { tools: builderTools } = useBuilderCatalog();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +73,7 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
       setError(err instanceof Error ? err.message : "fetch_failed");
     }
 
-    const mockDb: LeaderboardEntry[] = BUILDER_TOOLS.map((t, idx) => ({
+    const mockDb: LeaderboardEntry[] = builderTools.map((t, idx) => ({
       tool_id: t.id,
       pvi_score: 85 - idx * 2 + Math.random() * 5,
       total_runs: 1200 - idx * 100 + Math.floor(Math.random() * 50),
@@ -92,7 +93,7 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
 
     setEntries(sorted);
     setLoading(false);
-  }, [timeframe, sortDim]);
+  }, [timeframe, sortDim, builderTools]);
 
   useEffect(() => {
     fetchLeaderboard();

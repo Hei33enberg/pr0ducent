@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan, type PVIWeights } from "@/lib/pvi-calculator";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ interface PricingPlan {
 }
 
 export default function CalculatorPage() {
+  const { tools: BUILDER_TOOLS } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [promptsPerMonth, setPromptsPerMonth] = useState(30);

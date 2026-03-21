@@ -11,9 +11,10 @@ import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@
 import { ArrowLeft, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 
 export default function PublicExperiment() {
+  const { tools } = useBuilderCatalog();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -119,7 +120,7 @@ export default function PublicExperiment() {
               <h2 className="text-lg font-serif font-bold mb-4">Rate the builders</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {experiment.selectedTools.map((toolId) => {
-                  const tool = BUILDER_TOOLS.find((t) => t.id === toolId);
+                  const tool = tools.find((t) => t.id === toolId);
                   if (!tool) return null;
                   return (
                     <div key={toolId} className="bg-card border border-border rounded-xl p-4 space-y-3">

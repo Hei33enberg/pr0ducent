@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -22,6 +22,7 @@ interface PricingPlan {
 const PLAN_TIERS = ["free", "pro", "team", "enterprise"];
 
 export function PlanComparisonTable() {
+  const { tools: BUILDER_TOOLS } = useBuilderCatalog();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [activeTier, setActiveTier] = useState("pro");
   const [loading, setLoading] = useState(true);

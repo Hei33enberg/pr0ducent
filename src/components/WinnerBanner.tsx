@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { ExperimentRun } from "@/types/experiment";
 import { Trophy } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
@@ -11,8 +11,7 @@ interface WinnerBannerProps {
   runs: ExperimentRun[];
 }
 
-function getOverallScore(run: ExperimentRun) {
-  const tool = getToolById(run.toolId);
+function getOverallScore(run: ExperimentRun, tool: any) {
   if (!tool) return 0;
   
   return calculatePVI({
@@ -29,6 +28,7 @@ function getOverallScore(run: ExperimentRun) {
 
 export function WinnerBanner({ runs }: WinnerBannerProps) {
   const { t } = useTranslation();
+  const { getToolById } = useBuilderCatalog();
   const [realScores, setRealScores] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function WinnerBanner({ runs }: WinnerBannerProps) {
 
   const getOverallScoreWithReal = (run: ExperimentRun) => {
     if (realScores[run.toolId]) return realScores[run.toolId];
-    return getOverallScore(run);
+    return getOverallScore(run, getToolById(run.toolId));
   };
 
   const allCompleted = runs.every((r) => r.status === "completed");

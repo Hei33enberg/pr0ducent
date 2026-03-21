@@ -11,6 +11,12 @@ export interface BuilderTool {
   pricing: string;
   category: string;
   referralUrl?: string;
+  /** Overlay from `builder_integration_config` when catalog is merged (POP onboarding). */
+  integrationEnabled?: boolean;
+  integrationTier?: number;
+  circuitState?: string;
+  circuitOpenedAt?: string | null;
+  integrationType?: string | null;
 }
 
 export const BUILDER_TOOLS: BuilderTool[] = [

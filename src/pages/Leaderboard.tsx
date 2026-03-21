@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PageFrame } from "@/components/PageFrame";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { useLeaderboard, Timeframe, SortDim, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useNavigate } from "react-router-dom";
 import { Trophy, TrendingUp, TrendingDown, Minus, Clock, Code2, Sparkles, Filter, ChevronUp, ChevronDown } from "lucide-react";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Leaderboard() {
+  const { getToolById } = useBuilderCatalog();
   const navigate = useNavigate();
   const [timeframe, setTimeframe] = useState<Timeframe>("all");
   const [sortDim, setSortDim] = useState<SortDim>("pvi_score");

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "@/lib/i18n";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
@@ -15,6 +15,7 @@ interface Subscription {
 }
 
 export function NotificationSettings() {
+  const { tools } = useBuilderCatalog();
   const { user } = useAuth();
   const { t } = useTranslation();
   const [sub, setSub] = useState<Subscription>({
@@ -110,7 +111,7 @@ export function NotificationSettings() {
           {t("notifications.watchHint")}
         </p>
         <div className="flex flex-wrap gap-2">
-          {BUILDER_TOOLS.map((tool) => (
+          {tools.map((tool) => (
             <button
               key={tool.id}
               onClick={() => toggleTool(tool.id)}

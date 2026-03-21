@@ -1,4 +1,4 @@
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Filter, ArrowUpDown, X } from "lucide-react";
@@ -22,7 +22,8 @@ export function CanvasFilters({
   availableToolIds,
 }: CanvasFiltersProps) {
   const { t } = useTranslation();
-  const tools = BUILDER_TOOLS.filter((tool) => availableToolIds.includes(tool.id));
+  const { tools: allTools } = useBuilderCatalog();
+  const tools = allTools.filter((tool) => availableToolIds.includes(tool.id));
 
   return (
     <div className="flex flex-wrap items-center gap-3">

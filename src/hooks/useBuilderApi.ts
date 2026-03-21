@@ -222,6 +222,29 @@ export function useBuilderApi() {
       stopDbResultsPolling();
 
       const tick = async () => {
+        const { data: rowsBefore } = await supabase
+          .from("builder_results")
+          .select("*")
+          .eq("experiment_id", experimentId)
+          .in("tool_id", others);
+        if (rowsBefore?.length) {
+          for (const row of rowsBefore) {
+            const toolId = String(row.tool_id);
+            const st = String(row.status ?? "");
+            if (
+              toolId !== "v0" &&
+              (st === "generating" || st === "dispatched" || st === "building")
+            ) {
+              const { error: pollErr } = await supabase.functions.invoke("poll-builder-status", {
+                body: { experimentId, toolId },
+              });
+              if (pollErr) {
+                console.warn("poll-builder-status", toolId, pollErr.message);
+              }
+            }
+          }
+        }
+
         const { data: rows } = await supabase
           .from("builder_results")
           .select("*")

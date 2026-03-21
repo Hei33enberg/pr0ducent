@@ -1,4 +1,4 @@
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,13 +8,13 @@ import { motion } from "framer-motion";
 import { useTranslation } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/LanguageToggle";
 
-const TOP_TOOLS = BUILDER_TOOLS.filter((t) =>
-  ["lovable", "replit", "v0", "cursor", "bolt"].includes(t.id)
-);
+const TOP_IDS = ["lovable", "replit", "v0", "cursor", "bolt"];
 
 export default function Compare() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { tools } = useBuilderCatalog();
+  const TOP_TOOLS = tools.filter((tool) => TOP_IDS.includes(tool.id));
 
   return (
     <div className="min-h-screen bg-background">

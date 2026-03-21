@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, ArrowRight, Trash2, FlaskConical, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { useTranslation } from "@/lib/i18n";
 
 interface ExperimentHistoryProps {
@@ -15,6 +15,7 @@ interface ExperimentHistoryProps {
 
 export function ExperimentHistory({ experiments, onSelect, onDelete }: ExperimentHistoryProps) {
   const { t } = useTranslation();
+  const { getToolById } = useBuilderCatalog();
 
   return (
     <section className="max-w-4xl mx-auto px-4 py-8">

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Zap, Clock, ArrowRight, MessageSquare, Star, Users, TrendingUp } from "lucide-react";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -23,6 +23,7 @@ interface RunStats {
 }
 
 export default function RunsNow() {
+  const { tools } = useBuilderCatalog();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [runs, setRuns] = useState<LiveRun[]>([]);
@@ -95,8 +96,8 @@ export default function RunsNow() {
     };
   }, []);
 
-  const getToolName = (id: string) => BUILDER_TOOLS.find((t) => t.id === id)?.name ?? id;
-  const getToolLogo = (id: string) => BUILDER_TOOLS.find((t) => t.id === id)?.logoUrl ?? "";
+  const getToolName = (id: string) => tools.find((t) => t.id === id)?.name ?? id;
+  const getToolLogo = (id: string) => tools.find((t) => t.id === id)?.logoUrl ?? "";
 
   const timeAgo = (date: string) => {
     const diff = Date.now() - new Date(date).getTime();
@@ -275,7 +276,7 @@ export default function RunsNow() {
                 {Object.entries(stats.avgRatings)
                   .sort(([, a], [, b]) => b.avg - a.avg)
                   .map(([toolId, { avg, count }]) => {
-                    const tool = BUILDER_TOOLS.find((t) => t.id === toolId);
+                    const tool = tools.find((t) => t.id === toolId);
                     if (!tool) return null;
                     return (
                       <div

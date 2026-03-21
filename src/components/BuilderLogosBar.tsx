@@ -1,10 +1,10 @@
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 
-const TOP_BUILDERS = BUILDER_TOOLS.filter((t) =>
-  ["lovable", "v0", "bolt", "cursor", "replit"].includes(t.id)
-);
+const TOP_IDS = ["lovable", "v0", "bolt", "cursor", "replit"];
 
 export function BuilderLogosBar() {
+  const { tools } = useBuilderCatalog();
+  const TOP_BUILDERS = tools.filter((t) => TOP_IDS.includes(t.id));
   return (
     <section className="py-10 md:py-14 section-divider">
       <div className="max-w-4xl mx-auto px-4 text-center">
@@ -23,7 +23,7 @@ export function BuilderLogosBar() {
               <span className="text-sm font-medium font-sans">{tool.name}</span>
             </div>
           ))}
-          <span className="text-xs text-muted-foreground/40 font-sans">+{BUILDER_TOOLS.length - TOP_BUILDERS.length} more</span>
+          <span className="text-xs text-muted-foreground/40 font-sans">+{tools.length - TOP_BUILDERS.length} more</span>
         </div>
       </div>
     </section>

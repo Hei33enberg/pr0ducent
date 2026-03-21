@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion, AnimatePresence } from "framer-motion";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { Experiment, ExperimentRun, RunStatus } from "@/types/experiment";
 import { saveExperiment, MOCK_BUILD_STEPS, MOCK_PREVIEW_GRADIENTS } from "@/lib/mock-experiment";
 import { updateRunStatusInDb, logReferralHandoff } from "@/lib/experiment-service";
@@ -221,6 +221,7 @@ function BuildStepAnimation({ toolId, elapsed, totalTime }: { toolId: string; el
 }
 
 function MockPreview({ toolId, description }: { toolId: string; description: string }) {
+  const { getToolById } = useBuilderCatalog();
   const gradient = MOCK_PREVIEW_GRADIENTS[toolId] || "from-muted to-muted/50";
   const tool = getToolById(toolId);
 
@@ -273,6 +274,7 @@ function ToolTile({
   task?: RunTaskRow;
   events?: RunEventRow[];
 }) {
+  const { getToolById } = useBuilderCatalog();
   const tool = getToolById(run.toolId);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showComments, setShowComments] = useState(false);
@@ -470,6 +472,7 @@ function getOverallScore(run: ExperimentRun) {
 
 export function ComparisonCanvas({ experiment, onExperimentUpdate, onToolClick, builderResults = {} }: ComparisonCanvasProps) {
   const { user } = useAuth();
+  const { getToolById } = useBuilderCatalog();
   const [elapsed, setElapsed] = useState<Record<string, number>>({});
   const [hiddenTools, setHiddenTools] = useState<Set<string>>(new Set());
   const [sortBy, setSortBy] = useState<SortOption>("default");

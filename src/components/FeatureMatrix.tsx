@@ -1,10 +1,10 @@
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FeatureMatrix() {
-  const tools = BUILDER_TOOLS;
+  const { tools } = useBuilderCatalog();
 
   return (
     <section id="features" className="max-w-6xl mx-auto px-4 py-12">

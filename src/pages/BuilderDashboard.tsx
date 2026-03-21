@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RefreshCw, Clock, ExternalLink, ChevronDown, ChevronUp } from "lucide-react";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { Json } from "@/integrations/supabase/types";
 
 interface BuilderSyncData {
@@ -24,6 +24,7 @@ interface BuilderSyncData {
 
 export default function BuilderDashboard() {
   const { t } = useTranslation();
+  const { getToolById } = useBuilderCatalog();
   const navigate = useNavigate();
   const [builders, setBuilders] = useState<BuilderSyncData[]>([]);
   const [loading, setLoading] = useState(true);

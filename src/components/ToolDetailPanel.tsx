@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { getToolById } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { ExperimentRun } from "@/types/experiment";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -109,6 +109,7 @@ function ScoreRow({ label, value }: { label: string; value: number }) {
 }
 
 export function ToolDetailPanel({ run, open, onClose }: ToolDetailPanelProps) {
+  const { getToolById } = useBuilderCatalog();
   if (!run) return null;
   const tool = getToolById(run.toolId);
   if (!tool) return null;
