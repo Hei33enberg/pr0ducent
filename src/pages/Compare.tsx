@@ -6,7 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Zap, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/lib/i18n";
-import { LanguageToggle } from "@/components/LanguageToggle";
+import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 
 const TOP_IDS = ["lovable", "replit", "v0", "cursor", "bolt"];
 
@@ -17,38 +18,23 @@ export default function Compare() {
   const TOP_TOOLS = tools.filter((tool) => TOP_IDS.includes(tool.id));
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a
-            href="/"
-            onClick={(e) => { e.preventDefault(); navigate("/"); }}
-            className="no-underline"
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
+        <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Compare" }]} />
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
           >
-            <span
-              className="font-serif font-bold tracking-tight leading-none"
-              style={{ color: "#000", fontSize: "1.3rem" }}
-            >
-              pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
-            </span>
-          </a>
-          <LanguageToggle />
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-foreground mb-3">
-            {t("compare.title")}
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto font-sans">
-            {t("compare.subtitle")}
-          </p>
-        </motion.div>
+            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-3">
+              {t("compare.title")}
+            </h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto font-sans">
+              {t("compare.subtitle")}
+            </p>
+          </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -66,6 +52,11 @@ export default function Compare() {
                       <span className="font-semibold text-foreground font-sans">{tool.name}</span>
                       {tool.featured && (
                         <Badge className="text-[9px] bg-featured text-featured-foreground border-0">★ Partner</Badge>
+                      )}
+                      {tool.integrationEnabled && (
+                        <Badge variant="outline" className="text-[9px] border-emerald-500/50 text-emerald-700 dark:text-emerald-400">
+                          POP live
+                        </Badge>
                       )}
                     </div>
                   </th>

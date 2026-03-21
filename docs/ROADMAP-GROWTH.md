@@ -22,7 +22,8 @@ Tracks **Priorytet 2** from the audit plan: second live builder, BYOA, marketpla
 - **CI:** `.github/workflows/ci.yml` — unit tests + production build on push/PR. Run `npm run lint` locally until legacy ESLint debt is cleared.
 - **E2E (local):** `npm run test:e2e` — Playwright smoke (`e2e/happy-path.spec.ts`, starts Vite on port 8080).
 - **E2E (staging):** `.github/workflows/staging-e2e.yml` — manual run against real backend (`docs/GITHUB-ACTIONS-STAGING-E2E.md`).
-- **Load:** add k6 or Artillery scripts against staging when ready; track p95 for `dispatch-builders` and pollers.
+- **Load:** baseline script `scripts/load/dispatch-smoke.k6.js` (requires [k6](https://k6.io/) installed); point `BASE_URL` / JWT at staging, track p95 for `dispatch-builders` and pollers.
+- **Cloud checklist:** [LOVABLE-OPERATIONS.md](./LOVABLE-OPERATIONS.md).
 
 ## Hand-off
 

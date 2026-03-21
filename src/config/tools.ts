@@ -37,7 +37,7 @@ export const BUILDER_TOOLS: BuilderTool[] = [
     id: "replit",
     name: "Replit",
     logoUrl: "https://www.google.com/s2/favicons?domain=replit.com&sz=64",
-    featured: false,
+    featured: true,
     strengths: ["Multi-language", "Collaborative IDE", "Always-on hosting"],
     description: "Cloud IDE with AI agent for building and deploying apps.",
     mockDelayRange: [12, 25],

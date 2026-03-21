@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2, Key } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { FF } from "@/lib/featureFlags";
 
 interface UserExperiment {
   id: string;
@@ -44,6 +45,9 @@ export default function UserDashboard() {
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription" | "builders">("history");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [byoaCredentials, setByoaCredentials] = useState<
+    { id: string; tool_id: string; credential_type: string; created_at: string }[]
+  >([]);
 
   const PRICE_IDS: Record<string, string> = {
     Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
@@ -296,21 +300,51 @@ export default function UserDashboard() {
             </div>
           )}
 
-          {/* BYOA Builders */}
+          {/* BYOA Builders — vault-backed rows (skeleton UI) */}
           {activeTab === "builders" && (
-            <div className="glass-card rounded-2xl p-8 text-center py-16 space-y-5 border-dashed border-2 border-border/50">
-              <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
-                <Key className="w-8 h-8 text-primary" />
+            <div className="glass-card rounded-2xl p-8 space-y-6 border border-border/50">
+              <div className="text-center space-y-2">
+                <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
+                  <Key className="w-8 h-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold">Bring Your Own API (BYOA)</h3>
+                <p className="text-muted-foreground font-sans max-w-md mx-auto text-base leading-relaxed">
+                  Connect your own builder accounts (OAuth/API keys). Credentials are stored as vault references — never raw secrets in the browser.
+                </p>
               </div>
-              <h3 className="text-2xl font-serif font-bold">Bring Your Own API (BYOA)</h3>
-              <p className="text-muted-foreground font-sans max-w-md mx-auto text-base leading-relaxed">
-                Connect your own accounts for builders like v0, Lovable, or Bolt.new to bypass pr0ducent platform limits and use your own billing quotas directly.
-              </p>
-              <div className="pt-6">
-                <Button disabled variant="outline" className="opacity-60 cursor-not-allowed rounded-full px-8 py-5">
-                  Coming Soon in Phase 2
-                </Button>
-              </div>
+              {!FF.BYOA_TAB ? (
+                <p className="text-center text-sm text-muted-foreground font-sans">This section is disabled (feature flag).</p>
+              ) : byoaCredentials.length === 0 ? (
+                <div className="text-center py-8 border border-dashed border-border rounded-xl">
+                  <p className="text-sm text-muted-foreground font-sans mb-4">No connected builders yet.</p>
+                  <p className="text-xs text-muted-foreground font-sans max-w-lg mx-auto">
+                    Backend table <code className="text-xs">user_builder_credentials</code> is ready; routing broker → BYOA is tracked in product backlog.
+                  </p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-left">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="p-2 font-sans text-muted-foreground">Tool</th>
+                        <th className="p-2 font-sans text-muted-foreground">Type</th>
+                        <th className="p-2 font-sans text-muted-foreground">Connected</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {byoaCredentials.map((c) => (
+                        <tr key={c.id} className="border-b border-border/50">
+                          <td className="p-2 font-mono text-xs">{c.tool_id}</td>
+                          <td className="p-2 font-sans">{c.credential_type}</td>
+                          <td className="p-2 text-muted-foreground text-xs">
+                            {new Date(c.created_at).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
         </div>

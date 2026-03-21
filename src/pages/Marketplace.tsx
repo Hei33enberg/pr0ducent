@@ -50,7 +50,10 @@ export default function Marketplace() {
                   </div>
                 </div>
                 <div className="p-5">
-                  <div className="flex flex-wrap gap-1.5 mb-4">
+                  <div
+                    className="flex flex-wrap gap-1.5 mb-4"
+                    title={`Builders: ${demo.selected_tools.join(", ")}`}
+                  >
                     {demo.selected_tools.slice(0, 3).map(tool => (
                       <Badge key={tool} variant="secondary" className="text-[9px] font-sans">
                         {tool}

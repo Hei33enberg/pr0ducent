@@ -2,6 +2,17 @@
 
 Szablon SQL (zakomentowany): [examples/second-builder-config.template.sql](./examples/second-builder-config.template.sql).
 
+## Replit — ścieżka w repozytorium (generic REST)
+
+Migracja [20260421120000_replit_second_builder_generic_rest_path.sql](../supabase/migrations/20260421120000_replit_second_builder_generic_rest_path.sql) ustawia `tool_id = 'replit'` na **tier 2**, `integration_type = rest_api`, pełne pola pod `generic-rest-adapter` + `poll-builder-status`, **`enabled = false`**. Przed włączeniem:
+
+1. Podmień `api_base_url` i `poll_url_template` na **realne** endpointy (pełny URL POST dla dispatch).
+2. Dodaj sekret w Edge (`REPLIT_ORCHESTRATOR_API_KEY` lub zmień `api_secret_env`).
+3. `UPDATE ... SET enabled = true WHERE tool_id = 'replit'` (trigger waliduje wymagane pola).
+4. Smoke: [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md) z `selectedTools` zawierającym `replit`.
+
+Operacje cloud: [LOVABLE-OPERATIONS.md](./LOVABLE-OPERATIONS.md).
+
 ## Kolejność decyzji
 
 1. **Czy partner ma publiczne API lub wdroży VBP?**  
