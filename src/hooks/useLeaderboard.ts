@@ -93,7 +93,7 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
 
     setEntries(sorted);
     setLoading(false);
-  }, [timeframe, sortDim, builderTools]);
+  }, [timeframe, sortDim, tools]);
 
   useEffect(() => {
     fetchLeaderboard();

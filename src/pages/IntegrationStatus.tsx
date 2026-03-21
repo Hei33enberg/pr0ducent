@@ -31,7 +31,7 @@ export default function IntegrationStatus() {
       try {
         const { data, error } = await supabase
           .from("builder_integration_config")
-          .select("tool_id, display_name, enabled, circuit_state, last_heartbeat");
+          .select("tool_id, enabled, circuit_state");
 
         if (cancelled) return;
         if (error) throw error;

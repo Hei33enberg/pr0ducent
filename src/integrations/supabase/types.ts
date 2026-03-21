@@ -319,8 +319,12 @@ export type Database = {
           browserbase_script: string | null
           capabilities: Json
           circuit_state: string
+          config_validation_errors: Json
+          display_name: string | null
           enabled: boolean
           execution_modes: string[]
+          last_config_validation_at: string | null
+          last_heartbeat: string | null
           max_poll_time_ms: number
           mcp_endpoint: string | null
           poll_interval_ms: number
@@ -334,8 +338,12 @@ export type Database = {
           browserbase_script?: string | null
           capabilities?: Json
           circuit_state?: string
+          config_validation_errors?: Json
+          display_name?: string | null
           enabled?: boolean
           execution_modes?: string[]
+          last_config_validation_at?: string | null
+          last_heartbeat?: string | null
           max_poll_time_ms?: number
           mcp_endpoint?: string | null
           poll_interval_ms?: number
@@ -349,8 +357,12 @@ export type Database = {
           browserbase_script?: string | null
           capabilities?: Json
           circuit_state?: string
+          config_validation_errors?: Json
+          display_name?: string | null
           enabled?: boolean
           execution_modes?: string[]
+          last_config_validation_at?: string | null
+          last_heartbeat?: string | null
           max_poll_time_ms?: number
           mcp_endpoint?: string | null
           poll_interval_ms?: number
@@ -1338,6 +1350,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      validate_builder_integration_config: {
+        Args: { p_tool_id: string }
+        Returns: Json
+      }
+      validate_builder_integration_config_row: {
+        Args: {
+          r: Database["public"]["Tables"]["builder_integration_config"]["Row"]
+        }
+        Returns: string[]
       }
     }
     Enums: {
