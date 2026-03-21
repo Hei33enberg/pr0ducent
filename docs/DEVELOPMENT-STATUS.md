@@ -43,6 +43,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 - React + TypeScript + Vite + Tailwind + shadcn/ui
 - Supabase client + `invoke` for Edge Functions
 - i18n: EN/PL dictionaries
+- **Nav (hamburger):** `PageFrame` uses the `.nav-dropdown-glass` utility in `src/index.css` (warm opaque background, optional backdrop blur) for the full-width dropdown under the sticky header so menu text never sits transparently over the hero.
 
 ## Architecture reference
 
