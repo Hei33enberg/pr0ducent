@@ -118,8 +118,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
       className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
       {frameRect && (
-        <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width }}>
-          <header className="header-glass flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 section-divider">
+        <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}>
+          <header className="header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 section-divider">
             <Logo onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
@@ -164,10 +164,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
 
-              {/* Dropdown */}
+              {/* Dropdown - FULL WIDTH */}
               {menuOpen && (
-                <div className="nav-dropdown absolute top-full right-0 mt-2 w-56 bg-card/98 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-50">
-                  <div className="p-2 space-y-0.5">
+                <div className="nav-dropdown absolute top-full left-2 right-2 sm:left-4 sm:right-4 mt-2 bg-card/98 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-[100]">
+                  <div className="p-3 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {navLinks.map((link) => {
                       const Icon = link.icon;
                       const active = isActive(link.href);
@@ -182,13 +182,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                               navigate(link.href);
                             }
                           }}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl transition-colors text-left ${
+                          className={`w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl transition-colors text-left ${
                             active
                               ? "bg-foreground text-background font-medium"
                               : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                           }`}
                         >
-                          <Icon className="w-4 h-4 shrink-0" />
+                          <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                           {link.label}
                         </button>
                       );
@@ -196,29 +196,31 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   </div>
 
                   {/* Divider + auth actions */}
-                  <div className="border-t border-border/40 p-2 space-y-0.5">
+                  <div className="border-t border-border/40 p-3 sm:p-5 bg-muted/10 grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {user ? (
                       <>
                         <button
                           onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
                         >
-                          <User className="w-4 h-4 shrink-0" />
+                          <User className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                           {t("nav.myAccount")}
-                          <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">{user.email?.split("@")[0]}</span>
+                          <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
+                            {user.email?.split("@")[0]}
+                          </span>
                         </button>
                         <button
                           onClick={() => { setMenuOpen(false); signOut(); }}
-                          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
+                          className="w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
                         >
-                          <LogOut className="w-4 h-4 shrink-0" />
+                          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                           {t("nav.signOut")}
                         </button>
                       </>
                     ) : (
                       <button
                         onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                        className="col-span-1 sm:col-span-2 w-full flex items-center justify-center gap-2 px-4 py-3 sm:py-4 text-sm font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
                       >
                         {t("nav.getStarted")} →
                       </button>

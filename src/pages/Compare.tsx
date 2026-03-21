@@ -51,11 +51,13 @@ export default function Compare() {
                     <div className="flex flex-col items-center gap-1">
                       <span className="font-semibold text-foreground font-sans">{tool.name}</span>
                       {tool.featured && (
-                        <Badge className="text-[9px] bg-featured text-featured-foreground border-0">★ Partner</Badge>
+                        <Badge className="text-[9px] bg-featured text-featured-foreground border-0">
+                          {t("compare.partner")}
+                        </Badge>
                       )}
                       {tool.integrationEnabled && (
                         <Badge variant="outline" className="text-[9px] border-emerald-500/50 text-emerald-700 dark:text-emerald-400">
-                          POP live
+                          {t("compare.popLive")}
                         </Badge>
                       )}
                     </div>

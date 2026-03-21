@@ -12,6 +12,7 @@ import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, C
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { FF } from "@/lib/featureFlags";
+import { useTranslation } from "@/lib/i18n";
 
 interface UserExperiment {
   id: string;
@@ -40,6 +41,7 @@ export default function UserDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tools } = useBuilderCatalog();
+  const { t } = useTranslation();
   const [experiments, setExperiments] = useState<UserExperiment[]>([]);
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
@@ -300,49 +302,59 @@ export default function UserDashboard() {
             </div>
           )}
 
-          {/* BYOA Builders — vault-backed rows (skeleton UI) */}
+          {/* BYOA Builders — catalog-driven rows */}
           {activeTab === "builders" && (
             <div className="glass-card rounded-2xl p-8 space-y-6 border border-border/50">
               <div className="text-center space-y-2">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
                   <Key className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold">Bring Your Own API (BYOA)</h3>
+                <h3 className="text-2xl font-serif font-bold">{t("byoa.title")}</h3>
                 <p className="text-muted-foreground font-sans max-w-md mx-auto text-base leading-relaxed">
-                  Connect your own builder accounts (OAuth/API keys). Credentials are stored as vault references — never raw secrets in the browser.
+                  {t("byoa.subtitle")}
                 </p>
               </div>
               {!FF.BYOA_TAB ? (
-                <p className="text-center text-sm text-muted-foreground font-sans">This section is disabled (feature flag).</p>
-              ) : byoaCredentials.length === 0 ? (
-                <div className="text-center py-8 border border-dashed border-border rounded-xl">
-                  <p className="text-sm text-muted-foreground font-sans mb-4">No connected builders yet.</p>
-                  <p className="text-xs text-muted-foreground font-sans max-w-lg mx-auto">
-                    Backend table <code className="text-xs">user_builder_credentials</code> is ready; routing broker → BYOA is tracked in product backlog.
-                  </p>
-                </div>
+                <p className="text-center text-sm text-muted-foreground font-sans">{t("byoa.disabledFlag")}</p>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead>
-                      <tr className="border-b border-border">
-                        <th className="p-2 font-sans text-muted-foreground">Tool</th>
-                        <th className="p-2 font-sans text-muted-foreground">Type</th>
-                        <th className="p-2 font-sans text-muted-foreground">Connected</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {byoaCredentials.map((c) => (
-                        <tr key={c.id} className="border-b border-border/50">
-                          <td className="p-2 font-mono text-xs">{c.tool_id}</td>
-                          <td className="p-2 font-sans">{c.credential_type}</td>
-                          <td className="p-2 text-muted-foreground text-xs">
-                            {new Date(c.created_at).toLocaleString()}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                  {tools.map((tool) => {
+                    const isConnected = byoaCredentials.some((c) => c.tool_id === tool.id);
+                    return (
+                      <div key={tool.id} className="glass-card rounded-xl p-4 flex items-center justify-between border border-border/50">
+                        <div className="flex items-center gap-3">
+                          {tool.logoUrl ? (
+                            <img src={tool.logoUrl} alt={tool.name} className="w-8 h-8 rounded object-contain" />
+                          ) : (
+                            <div className="w-8 h-8 rounded bg-muted flex items-center justify-center font-bold">
+                              {tool.name[0]}
+                            </div>
+                          )}
+                          <div>
+                            <div className="font-semibold font-sans flex items-center gap-2">
+                              {tool.name}
+                              {tool.featured && (
+                                <Badge className="text-[9px] bg-featured text-featured-foreground border-0 h-4 px-1.5">{t("compare.partner")}</Badge>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-muted-foreground">{tool.stack}</div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          {isConnected ? (
+                            <Badge variant="outline" className="border-success/50 text-success">{t("byoa.connected")}</Badge>
+                          ) : tool.integrationEnabled ? (
+                            <Button size="sm" variant="outline" className="h-7 text-xs rounded-full">
+                              {t("byoa.connectKey")}
+                            </Button>
+                          ) : (
+                            <Badge variant="secondary" className="opacity-60">{t("byoa.comingSoon")}</Badge>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

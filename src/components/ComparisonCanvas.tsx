@@ -345,6 +345,14 @@ function ToolTile({
             </div>
           ) : run.status === "completed" ? (
             <MockPreview toolId={run.toolId} description={run.description} />
+          ) : run.status === "error" || builderResult?.status === "error" ? (
+            <div className="w-full h-full bg-destructive/5 flex flex-col items-center justify-center p-4 text-center">
+              <AlertCircle className="w-8 h-8 text-destructive/50 mb-2" />
+              <div className="text-sm font-semibold text-destructive">Build Failed</div>
+              <div className="text-xs text-muted-foreground mt-1 line-clamp-3">
+                {builderResult?.error || "An unexpected error occurred during generation."}
+              </div>
+            </div>
           ) : run.status === "running" || builderResult?.status === "generating" ? (
             <BuilderProgressStream
               toolName={tool.name}

@@ -95,6 +95,20 @@
   "compare.ctaTitle": "Nie ufaj tabelkom — przetestuj sam!",
   "compare.ctaSubtitle": "Wpisz prompt, uruchom v0 na żywo i porównaj benchmarkowane wyniki pozostałych builderów.",
   "compare.runComparison": "Uruchom porównanie",
+  "compare.partner": "★ Partner",
+  "compare.popLive": "POP live",
+
+  "marketplace.title": "Dema Społeczności",
+  "marketplace.subtitle": "Eksploruj otwarte dema wygenerowane przez społeczność. Znajdź inspirację i twórz własne wersje.",
+  "marketplace.builders": "Buildery:",
+
+  "byoa.title": "Przynieś własne API (BYOA)",
+  "byoa.subtitle": "Podłącz własne konta builderów (OAuth/Klucze API). Dane uwierzytelniające są bezpiecznie przechowywane w skarbcu.",
+  "byoa.disabledFlag": "Ta sekcja jest wyłączona (feature flag).",
+  "byoa.comingSoon": "Wkrótce",
+  "byoa.connectKey": "Podłącz klucz API",
+  "byoa.connected": "Podłączono",
+  "byoa.noCredentials": "Brak podłączonych builderów.",
 
   "public.sharedExperiment": "Udostępniony eksperyment",
   "public.notFound": "Eksperyment nie znaleziony lub jest prywatny.",
