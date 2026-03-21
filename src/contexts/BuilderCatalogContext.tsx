@@ -53,3 +53,9 @@ export function useBuilderCatalog(): BuilderCatalogContextValue {
   }
   return ctx;
 }
+
+/** Sprint 4 / AG naming — alias of {@link useBuilderCatalog}. */
+export const useBuildersRegistry = useBuilderCatalog;
+
+/** Sprint 4 / AG naming — alias of {@link BuilderCatalogProvider}. */
+export { BuilderCatalogProvider as BuildersRegistryProvider };

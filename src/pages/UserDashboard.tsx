@@ -35,6 +35,7 @@ interface UserRating {
 }
 
 export default function UserDashboard() {
+  const { tools } = useBuilderCatalog();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tools } = useBuilderCatalog();

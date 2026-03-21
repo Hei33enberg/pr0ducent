@@ -1,8 +1,10 @@
 /**
  * VBP webhook receiver: builders POST build lifecycle events (optional path).
  * Verify X-PBP-Signature (HMAC-SHA256 of raw body) when VBP_WEBHOOK_SECRET is set.
+ * Applies status updates to builder_results + run_tasks when event is recognized.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { applyVbpWebhookPayload } from "../_shared/vbp-webhook-apply.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -24,6 +26,10 @@ async function verifySignature(rawBody: string, signature: string | null, secret
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
   return signature === `sha256=${hex}` || signature === hex;
+}
+
+function isUuid(s: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 }
 
 Deno.serve(async (req) => {
@@ -54,25 +60,56 @@ Deno.serve(async (req) => {
     });
   }
 
-  function isUuid(s: string): boolean {
-    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
-  }
-
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const expId = typeof payload.experiment_id === "string" ? payload.experiment_id : "";
-  if (supabaseUrl && serviceKey && expId && isUuid(expId)) {
+  const providerRunId = typeof payload.provider_run_id === "string" ? payload.provider_run_id : "";
+
+  let applyResult: {
+    applied: boolean;
+    detail: string;
+    experimentId?: string;
+    toolId?: string;
+  } | null = null;
+
+  const canApply =
+    supabaseUrl &&
+    serviceKey &&
+    (isUuid(expId) || providerRunId.length > 0);
+
+  if (canApply) {
+    const admin = createClient(supabaseUrl!, serviceKey!);
+    applyResult = await applyVbpWebhookPayload(admin, payload);
+  }
+
+  const logExperimentId =
+    isUuid(expId) ? expId
+    : applyResult?.experimentId && isUuid(applyResult.experimentId) ? applyResult.experimentId
+    : "";
+
+  if (supabaseUrl && serviceKey && logExperimentId) {
     const admin = createClient(supabaseUrl, serviceKey);
     await admin.from("run_events").insert({
-      experiment_id: expId,
+      experiment_id: logExperimentId,
       event_type: "vbp.webhook",
-      tool_id: typeof payload.tool_id === "string" ? payload.tool_id : null,
-      payload: { ...payload, received_at: new Date().toISOString() },
+      tool_id: applyResult?.toolId ?? (typeof payload.tool_id === "string" ? payload.tool_id : null),
+      payload: {
+        ...payload,
+        received_at: new Date().toISOString(),
+        apply: applyResult,
+      },
       trace_id: typeof payload.trace_id === "string" ? payload.trace_id : crypto.randomUUID(),
     });
   }
 
-  return new Response(JSON.stringify({ ok: true, received: true }), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+  return new Response(
+    JSON.stringify({
+      ok: true,
+      received: true,
+      apply: applyResult,
+    }),
+    {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    }
+  );
 });

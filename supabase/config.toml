@@ -18,6 +18,9 @@ verify_jwt = false
 [functions.poll-v0-status]
 verify_jwt = false
 
+[functions.poll-builder-status]
+verify_jwt = true
+
 [functions.score-builder-output]
 verify_jwt = true
 

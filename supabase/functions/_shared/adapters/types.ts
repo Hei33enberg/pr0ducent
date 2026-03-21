@@ -11,6 +11,7 @@ export type IntegrationConfigRow = {
   poll_url_template?: string | null;
   poll_status_path?: string | null;
   poll_completed_values?: string[] | null;
+  poll_failed_values?: string[] | null;
   poll_result_paths?: Record<string, unknown> | null;
   phantom_ttl_hours?: number | null;
   circuit_state?: string | null;

@@ -25,4 +25,5 @@ Katalog: [`protocol/vibecoding-broker-protocol/`](../protocol/vibecoding-broker-
 
 ## Powiązane
 
+- [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) — discovery, pilot, macierz zgodności
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)

@@ -32,3 +32,6 @@
 - **`pvi_score`:** licz zgodnie z wagami w `pvi-engine` (lub współdziel `computePartialPVI` w `supabase/functions/_shared/benchmark-group-a.ts` dla spójności Deno).
 - **`ai_reasoning`:** JSONB; struktura zgodna z tym, co czyta UI (np. pola per wymiar / `summary` tam gdzie ComparisonCanvas je wyświetla).
 - **Grupa B/C:** ciężkie joby (Lighthouse, batch AI) poza długim invoke — aktualizacja tego samego wiersza po `builder_result_id`, idempotencja, `run_events` do audytu; MV odświeżane przez `pg_cron` lub ręczny refresh po batchu.
+- **Polling non-v0:** Edge `poll-builder-status` (JWT) — `poll_url_template` / domyślny VBP `GET …/vbp/v1/status/{id}`; kolumna `poll_failed_values` (migracja) uzupełnia `poll_completed_values` dla stanów terminalnych błędu.
+- **Webhook VBP:** `pbp-webhook` mapuje zdarzenia (`completed`, `artifact_ready`, `failed`, …) na `builder_results` + `run_tasks`; korelacja po `provider_run_id` gdy brak `experiment_id` w payloadzie.
+- **Katalog UI:** `BuilderCatalogProvider` + `mergeBuilderCatalog` — metadane z `tools.ts` nakładane na wiersze `builder_integration_config` (bez drugiego rejestru `useBuildersRegistry`).
