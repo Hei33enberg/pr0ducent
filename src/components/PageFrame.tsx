@@ -164,67 +164,71 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
 
-              {/* Dropdown - FULL WIDTH EDGE-TO-EDGE */}
+              {/* Dropdown — edge-to-edge, near-opaque warm bg */}
               {menuOpen && (
-                <div className="nav-dropdown-glass absolute top-full left-0 right-0 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] rounded-b-[16px] overflow-hidden z-[100]">
-                  <div className="p-3 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                    {navLinks.map((link) => {
-                      const Icon = link.icon;
-                      const active = isActive(link.href);
-                      return (
-                        <button
-                          key={link.href}
-                          onClick={() => {
-                            setMenuOpen(false);
-                            if (link.href.startsWith("#")) {
-                              handleAnchorClick(link.href);
-                            } else {
-                              navigate(link.href);
-                            }
-                          }}
-                          className={`w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl transition-colors text-left ${
-                            active
-                              ? "bg-foreground text-background font-medium"
-                              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
-                          }`}
-                        >
-                          <Icon className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                          {link.label}
-                        </button>
-                      );
-                    })}
+                <div className="nav-dropdown-glass absolute top-full left-0 right-0 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden z-[100]">
+                  <div className="p-4 sm:p-5 md:px-8 lg:px-12">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
+                      {navLinks.map((link) => {
+                        const Icon = link.icon;
+                        const active = isActive(link.href);
+                        return (
+                          <button
+                            key={link.href}
+                            onClick={() => {
+                              setMenuOpen(false);
+                              if (link.href.startsWith("#")) {
+                                handleAnchorClick(link.href);
+                              } else {
+                                navigate(link.href);
+                              }
+                            }}
+                            className={`w-full flex items-center gap-3 p-3 sm:p-3.5 text-sm font-sans rounded-xl transition-colors duration-200 text-left group ${
+                              active
+                                ? "bg-foreground text-background font-semibold"
+                                : "text-foreground hover:bg-foreground/[0.05]"
+                            }`}
+                          >
+                            <Icon className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                            <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.06em]">{link.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
-                  {/* Divider + auth actions */}
-                  <div className="border-t border-border/40 p-3 sm:p-5 bg-muted/10 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {user ? (
-                      <>
+                  {/* Auth actions */}
+                  <div className="border-t border-foreground/[0.06] p-4 sm:p-5 md:px-8 lg:px-12">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                      {user ? (
+                        <>
+                          <button
+                            onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                            className="w-full flex items-center gap-3 p-3 sm:p-3.5 text-sm font-sans rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
+                          >
+                            <User className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                            <span className="font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.myAccount")}</span>
+                            <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
+                              {user.email?.split("@")[0]}
+                            </span>
+                          </button>
+                          <button
+                            onClick={() => { setMenuOpen(false); signOut(); }}
+                            className="w-full flex items-center gap-3 p-3 sm:p-3.5 text-sm font-sans rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
+                          >
+                            <LogOut className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                            <span className="font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.signOut")}</span>
+                          </button>
+                        </>
+                      ) : (
                         <button
-                          onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-                          className="w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
+                          onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                          className="col-span-1 sm:col-span-2 w-full flex items-center justify-center gap-2 p-3 sm:p-3.5 text-sm font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
                         >
-                          <User className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                          {t("nav.myAccount")}
-                          <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
-                            {user.email?.split("@")[0]}
-                          </span>
+                          {t("nav.getStarted")} →
                         </button>
-                        <button
-                          onClick={() => { setMenuOpen(false); signOut(); }}
-                          className="w-full flex items-center gap-3 px-4 py-3 sm:py-4 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
-                        >
-                          <LogOut className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
-                          {t("nav.signOut")}
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-                        className="col-span-1 sm:col-span-2 w-full flex items-center justify-center gap-2 px-4 py-3 sm:py-4 text-sm font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
-                      >
-                        {t("nav.getStarted")} →
-                      </button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
