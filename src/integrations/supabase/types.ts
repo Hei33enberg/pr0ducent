@@ -1351,6 +1351,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      subscription_try_increment_prompt: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
       validate_builder_integration_config: {
         Args: { p_tool_id: string }
         Returns: Json
