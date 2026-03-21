@@ -26,12 +26,12 @@ const RUN_ON_V0_RETRY_DELAY_MS = 1500;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-function isUuid(s: string | undefined): boolean {
+export function isUuid(s: string | undefined): boolean {
   if (!s) return false;
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 }
 
-function mapBuilderRow(row: Record<string, unknown>): BuilderResult {
+export function mapBuilderRow(row: Record<string, unknown>): BuilderResult {
   const st = String(row.status ?? "pending");
   const uiStatus: BuilderResult["status"] =
     st === "completed"
@@ -62,6 +62,8 @@ export function useBuilderApi() {
   const [loading, setLoading] = useState(false);
   const pollTimers = useRef<Record<string, number>>({});
   const channelRef = useRef<RealtimeChannel | null>(null);
+  /** Tracks all active setTimeout IDs so they can be cleared on unmount. */
+  const timeoutRefs = useRef<number[]>([]);
 
   const stopPolling = useCallback((toolId: string) => {
     if (pollTimers.current[toolId]) {
@@ -181,7 +183,7 @@ export function useBuilderApi() {
 
         pollTimers.current.v0 = window.setInterval(poll, POLL_INTERVAL);
 
-        setTimeout(() => {
+        timeoutRefs.current.push(window.setTimeout(() => {
           if (pollTimers.current.v0) {
             stopPolling("v0");
             setResults((prev) => {
@@ -202,7 +204,7 @@ export function useBuilderApi() {
               return prev;
             });
           }
-        }, MAX_POLL_TIME);
+        }, MAX_POLL_TIME));
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : t("api.failedWithV0");
         setResults((prev) => ({
@@ -275,9 +277,9 @@ export function useBuilderApi() {
       pollTimers.current[DB_RESULTS_POLL_KEY] = window.setInterval(tick, POLL_INTERVAL);
       void tick();
 
-      setTimeout(() => {
+      timeoutRefs.current.push(window.setTimeout(() => {
         stopDbResultsPolling();
-      }, MAX_POLL_TIME);
+      }, MAX_POLL_TIME));
     },
     [stopDbResultsPolling]
   );
@@ -334,7 +336,7 @@ export function useBuilderApi() {
 
       pollTimers.current.v0 = window.setInterval(poll, POLL_INTERVAL);
 
-      setTimeout(() => {
+      timeoutRefs.current.push(window.setTimeout(() => {
         if (pollTimers.current.v0) {
           stopPolling("v0");
           setResults((prev) => {
@@ -354,7 +356,7 @@ export function useBuilderApi() {
             return prev;
           });
         }
-      }, MAX_POLL_TIME);
+      }, MAX_POLL_TIME));
     },
     [stopPolling, t]
   );
@@ -475,6 +477,9 @@ export function useBuilderApi() {
       Object.keys(pollTimers.current).forEach((k) => {
         clearInterval(pollTimers.current[k]);
       });
+      // Clear all tracked setTimeout IDs to prevent state updates on unmounted component
+      timeoutRefs.current.forEach((id) => clearTimeout(id));
+      timeoutRefs.current = [];
     };
   }, [stopDbResultsPolling, unsubscribeRealtime]);
 
