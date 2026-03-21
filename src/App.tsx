@@ -6,11 +6,9 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { I18nProvider } from "@/lib/i18n";
 import { lazy, Suspense } from "react";
 import { ScrollToTop } from "./components/ScrollToTop.tsx";
+import { RequireAuth } from "@/components/RequireAuth";
 import { FF } from "@/lib/featureFlags";
 import { BuilderCatalogProvider } from "@/contexts/BuilderCatalogContext.tsx";
-
-/** AG Sprint 4 alias — BuildersRegistryProvider wraps BuilderCatalogProvider */
-const BuildersRegistryProvider = BuilderCatalogProvider;
 
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Compare = lazy(() => import("./pages/Compare.tsx"));
@@ -60,16 +58,16 @@ const App = () => (
                   <Route path="/experiment/:id" element={<PublicExperiment />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
-                  <Route path="/dashboard/updates" element={<BuilderDashboard />} />
-                  <Route path="/dashboard/notifications" element={<Notifications />} />
+                  <Route path="/dashboard/updates" element={<RequireAuth><BuilderDashboard /></RequireAuth>} />
+                  <Route path="/dashboard/notifications" element={<RequireAuth><Notifications /></RequireAuth>} />
                   <Route path="/runs-now" element={<RunsNow />} />
                   {FF.MARKETPLACE_ENABLED && <Route path="/marketplace" element={<Marketplace />} />}
                   <Route path="/leaderboard" element={<Leaderboard />} />
                   <Route path="/arena" element={<Arena />} />
                   <Route path="/docs" element={<DeveloperPortal />} />
-                  <Route path="/admin/integrations" element={<IntegrationStatus />} />
+                  <Route path="/admin/integrations" element={<RequireAuth><IntegrationStatus /></RequireAuth>} />
                   <Route path="/calculator" element={<CalculatorPage />} />
-                  <Route path="/dashboard" element={<UserDashboard />} />
+                  <Route path="/dashboard" element={<RequireAuth><UserDashboard /></RequireAuth>} />
                   <Route path="/builders" element={<BuildersIndex />} />
                   <Route path="/builders/:id" element={<BuilderProfile />} />
                   <Route path="/" element={<Index />} />
