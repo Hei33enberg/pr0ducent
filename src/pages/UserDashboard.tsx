@@ -37,7 +37,6 @@ interface UserRating {
 export default function UserDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { tools } = useBuilderCatalog();
   const [experiments, setExperiments] = useState<UserExperiment[]>([]);
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
