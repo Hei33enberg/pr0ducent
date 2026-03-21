@@ -20,7 +20,7 @@ export default function BuildersIndex() {
               All AI Builders
             </h1>
             <p className="text-sm text-muted-foreground font-sans">
-              Explore {BUILDER_TOOLS.length} AI app builders — in-depth profiles, pricing, and features.
+              Explore {tools.length} AI app builders — in-depth profiles, pricing, and features.
             </p>
           </div>
 

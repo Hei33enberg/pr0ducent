@@ -9,6 +9,9 @@ import { ScrollToTop } from "./components/ScrollToTop.tsx";
 import { FF } from "@/lib/featureFlags";
 import { BuilderCatalogProvider } from "@/contexts/BuilderCatalogContext.tsx";
 
+/** AG Sprint 4 alias — BuildersRegistryProvider wraps BuilderCatalogProvider */
+const BuildersRegistryProvider = BuilderCatalogProvider;
+
 const Index = lazy(() => import("./pages/Index.tsx"));
 const Compare = lazy(() => import("./pages/Compare.tsx"));
 const Auth = lazy(() => import("./pages/Auth.tsx"));
