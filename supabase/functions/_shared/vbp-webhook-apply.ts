@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { normalizeWebhookEvent, str } from "./webhook-event.ts";
 
 function mergeWebhookRaw(
   previous: unknown,
@@ -21,10 +22,6 @@ function isUuid(s: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 }
 
-function str(v: unknown): string | undefined {
-  return typeof v === "string" ? v : undefined;
-}
-
 function pickPreview(payload: Record<string, unknown>): string | undefined {
   return (
     str(payload.final_preview_url) ||
@@ -37,16 +34,6 @@ function pickPreview(payload: Record<string, unknown>): string | undefined {
 function pickNestedPreview(nested: Record<string, unknown> | undefined): string | undefined {
   if (!nested) return undefined;
   return str(nested.url) || str(nested.preview_url) || str(nested.final_preview_url);
-}
-
-function normalizeEvent(payload: Record<string, unknown>): string {
-  const raw =
-    str(payload.event) ||
-    str(payload.type) ||
-    str(payload.event_type) ||
-    str(payload.status) ||
-    "";
-  return raw.toLowerCase();
 }
 
 /**
@@ -84,7 +71,8 @@ export async function applyVbpWebhookPayload(
     return { applied: false, detail: "missing_experiment_or_tool" };
   }
 
-  const event = normalizeEvent(payload) || (nested ? normalizeEvent(nested) : "");
+  const event =
+    normalizeWebhookEvent(payload) || (nested ? normalizeWebhookEvent(nested) : "");
 
   const { data: brRow } = await admin
     .from("builder_results")

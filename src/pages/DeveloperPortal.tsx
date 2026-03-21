@@ -124,7 +124,10 @@ supabase functions deploy process-task-queue`}
           <Card>
             <CardHeader>
               <CardTitle>Webhook Signatures & Payloads</CardTitle>
-              <CardDescription>Detailed verifiable signatures from documentation VBP-SPEC.md</CardDescription>
+              <CardDescription>
+                Detailed verifiable signatures from documentation VBP-SPEC.md. Server contract:{" "}
+                <code className="text-xs">docs/WEBHOOK-PAYLOAD-CONTRACT.md</code>.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <h3 className="font-semibold text-sm">Completion Payload Example</h3>

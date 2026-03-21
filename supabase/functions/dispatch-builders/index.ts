@@ -6,18 +6,14 @@ import { dispatchV0Adapter } from "../_shared/adapters/v0-adapter.ts";
 import { dispatchVbpAdapter } from "../_shared/adapters/vbp-adapter.ts";
 import type { AdapterDispatchContext, IntegrationConfigRow } from "../_shared/adapters/types.ts";
 import { taskRowToDispatched } from "../_shared/run-task-status.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { corsHeadersForRequest } from "../_shared/cors.ts";
 
 function isUuid(s: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = corsHeadersForRequest(req);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -179,6 +175,41 @@ Deno.serve(async (req) => {
       return c?.enabled && c?.tier === 1;
     });
 
+    let chargedPromptsAfter: number | null = null;
+    if (firstDispatch && willLiveDispatch) {
+      const { data: chargeResult, error: rpcErr } = await admin.rpc("subscription_try_increment_prompt", {
+        p_user_id: userId,
+      });
+      if (rpcErr) {
+        throw new Error(rpcErr.message);
+      }
+      const cr = chargeResult as { ok?: boolean; reason?: string; prompts_used?: number };
+      if (!cr?.ok) {
+        if (cr?.reason === "limit_exceeded") {
+          await admin.from("run_events").insert({
+            experiment_id: experimentId,
+            event_type: "orchestrator.job_rejected",
+            payload: { reason: "prompt_limit", traceId },
+            trace_id: traceId,
+          });
+          return new Response(
+            JSON.stringify({
+              ok: false,
+              error: "Prompt limit reached for your plan",
+              code: "limit_exceeded",
+              traceId,
+            }),
+            { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        return new Response(
+          JSON.stringify({ ok: false, error: "Subscription not found", traceId }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      chargedPromptsAfter = cr.prompts_used ?? null;
+    }
+
     const wf =
       typeof workflowEngine === "string" && workflowEngine.length > 0 ? workflowEngine : "supabase_edge";
 
@@ -201,11 +232,7 @@ Deno.serve(async (req) => {
     }
     runJobId = jobRow.id;
 
-    if (firstDispatch && willLiveDispatch) {
-      await admin
-        .from("subscriptions")
-        .update({ prompts_used: (sub.prompts_used ?? 0) + 1 })
-        .eq("user_id", userId);
+    if (firstDispatch && willLiveDispatch && chargedPromptsAfter != null) {
       await admin.from("credit_transactions").insert({
         user_id: userId,
         amount: -1,
@@ -217,7 +244,7 @@ Deno.serve(async (req) => {
         experiment_id: experimentId,
         run_job_id: runJobId,
         event_type: "orchestrator.credit_charged",
-        payload: { prompts_used_after: (sub.prompts_used ?? 0) + 1, traceId },
+        payload: { prompts_used_after: chargedPromptsAfter, traceId },
         trace_id: traceId,
       });
     }
@@ -275,7 +302,7 @@ Deno.serve(async (req) => {
       taskRowToDispatched(t as { tool_id: string; adapter_tier: number | null; status: string; error_message: string | null })
     );
 
-    let { count: queuedLeft } = await admin
+    const { count: queuedLeft } = await admin
       .from("run_tasks")
       .select("id", { count: "exact", head: true })
       .eq("run_job_id", runJobId)

@@ -5,12 +5,8 @@ import { dispatchGenericRestAdapter } from "../_shared/adapters/generic-rest-ada
 import { dispatchV0Adapter } from "../_shared/adapters/v0-adapter.ts";
 import { dispatchVbpAdapter } from "../_shared/adapters/vbp-adapter.ts";
 import type { AdapterDispatchContext, IntegrationConfigRow } from "../_shared/adapters/types.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+import { corsHeadersForRequest } from "../_shared/cors.ts";
+import { timingSafeEqualString } from "../_shared/timing-safe.ts";
 
 const MAX_TASKS_PER_INVOCATION = 40;
 const DEADLINE_MS = 120_000;
@@ -19,7 +15,8 @@ function isServiceRoleRequest(req: Request): boolean {
   const expected = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const auth = req.headers.get("Authorization");
   if (!expected || !auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === expected;
+  const token = auth.slice(7);
+  return timingSafeEqualString(token, expected);
 }
 
 /* ── Circuit breaker check ─────────────────────────────── */
@@ -118,6 +115,7 @@ async function pickNextQueuedOrRetrying(admin: SupabaseClient): Promise<Pickable
 /* ── Main handler ──────────────────────────────────────── */
 
 Deno.serve(async (req) => {
+  const corsHeaders = corsHeadersForRequest(req);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }

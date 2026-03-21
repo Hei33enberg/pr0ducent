@@ -5,13 +5,8 @@
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { touchBuilderIntegrationHeartbeat } from "../_shared/builder-heartbeat.ts";
+import { corsHeadersForRequest } from "../_shared/cors.ts";
 import { applyVbpWebhookPayload } from "../_shared/vbp-webhook-apply.ts";
-
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-pbp-signature, x-supabase-client-platform",
-};
 
 async function verifySignature(rawBody: string, signature: string | null, secret: string): Promise<boolean> {
   if (!signature) return false;
@@ -34,6 +29,7 @@ function isUuid(s: string): boolean {
 }
 
 Deno.serve(async (req) => {
+  const corsHeaders = corsHeadersForRequest(req);
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
