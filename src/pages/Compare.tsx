@@ -126,7 +126,8 @@ export default function Compare() {
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </motion.div>
-      </main>
+        </div>
+      </PageFrame>
 
       <script
         type="application/ld+json"
