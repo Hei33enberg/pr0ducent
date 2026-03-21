@@ -31,11 +31,21 @@ export default function IntegrationStatus() {
       try {
         const { data, error } = await supabase
           .from("builder_integration_config")
-          .select("tool_id, display_name, enabled, circuit_state, last_heartbeat");
+          .select("tool_id, enabled, circuit_state");
 
         if (cancelled) return;
         if (error) throw error;
-        setIntegrations((data ?? []) as IntegrationConfig[]);
+        // New columns (display_name, last_heartbeat, config_validation_errors) may not
+        // be in generated types yet — cast rows and fill defaults for safety.
+        const rows: IntegrationConfig[] = (data ?? []).map((row: Record<string, unknown>) => ({
+          tool_id: String(row.tool_id ?? ""),
+          display_name: typeof row.display_name === "string" ? row.display_name : null,
+          enabled: Boolean(row.enabled),
+          circuit_state: (row.circuit_state as CircuitState) ?? "closed",
+          last_heartbeat: typeof row.last_heartbeat === "string" ? row.last_heartbeat : null,
+          config_validation_errors: Array.isArray(row.config_validation_errors) ? row.config_validation_errors as string[] : null,
+        }));
+        setIntegrations(rows);
         setFetchError(null);
       } catch (err) {
         console.warn("Integration config load failed:", err);

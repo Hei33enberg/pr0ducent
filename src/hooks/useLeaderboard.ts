@@ -73,7 +73,7 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
       setError(err instanceof Error ? err.message : "fetch_failed");
     }
 
-    const mockDb: LeaderboardEntry[] = builderTools.map((t, idx) => ({
+    const mockDb: LeaderboardEntry[] = tools.map((t, idx) => ({
       tool_id: t.id,
       pvi_score: 85 - idx * 2 + Math.random() * 5,
       total_runs: 1200 - idx * 100 + Math.floor(Math.random() * 50),
@@ -93,7 +93,7 @@ export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
 
     setEntries(sorted);
     setLoading(false);
-  }, [timeframe, sortDim, builderTools]);
+  }, [timeframe, sortDim, tools]);
 
   useEffect(() => {
     fetchLeaderboard();
