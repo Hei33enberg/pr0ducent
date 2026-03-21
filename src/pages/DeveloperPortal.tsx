@@ -128,22 +128,22 @@ supabase functions deploy process-task-queue`}
             </CardHeader>
             <CardContent className="space-y-4">
               <h3 className="font-semibold text-sm">Completion Payload Example</h3>
+              <p className="text-muted-foreground text-xs mb-2">
+                Broker applies lifecycle using <code className="text-xs">event</code>, <code className="text-xs">type</code>,{" "}
+                <code className="text-xs">event_type</code>, or <code className="text-xs">status</code> (see{" "}
+                <code className="text-xs">normalizeEvent</code> in Edge). Completion matches when that value is{" "}
+                <code className="text-xs">completed</code>, <code className="text-xs">success</code>, or{" "}
+                <code className="text-xs">done</code>. Require <code className="text-xs">experiment_id</code> +{" "}
+                <code className="text-xs">tool_id</code>, or <code className="text-xs">provider_run_id</code> to resolve the row.
+              </p>
               <CodeBlock 
                 title="POST /functions/v1/pbp-webhook"
                 code={`{
-  "event_type": "job.completed",
-  "run_id": "b0a2c3f8-5d12-4ee8-9c4c-21de3a2d",
+  "event_type": "completed",
+  "experiment_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "tool_id": "lovable",
-  "status": "completed",
-  "payload": {
-    "preview_url": "https://builder.dev/preview/123",
-    "project_url": "https://builder.dev/project/123",
-    "error_message": null
-  },
-  "metrics": {
-    "duration_ms": 14200,
-    "tokens_used": 4500
-  }
+  "preview_url": "https://builder.dev/preview/123",
+  "trace_id": "optional-correlation-id"
 }`} 
               />
               <h3 className="font-semibold text-sm mt-6">Generic Poller Response Example</h3>

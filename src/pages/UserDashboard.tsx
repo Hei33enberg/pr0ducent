@@ -43,7 +43,6 @@ export default function UserDashboard() {
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription" | "builders">("history");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const { tools } = useBuilderCatalog();
 
   const PRICE_IDS: Record<string, string> = {
     Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
