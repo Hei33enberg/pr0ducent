@@ -31,20 +31,32 @@ export default function IntegrationStatus() {
       try {
         const { data, error } = await supabase
           .from("builder_integration_config")
-          .select("tool_id, enabled, circuit_state");
+          .select("tool_id, display_name, enabled, circuit_state, last_heartbeat, config_validation_errors");
 
         if (cancelled) return;
         if (error) throw error;
-        // New columns (display_name, last_heartbeat, config_validation_errors) may not
-        // be in generated types yet — cast rows and fill defaults for safety.
-        const rows: IntegrationConfig[] = (data ?? []).map((row: Record<string, unknown>) => ({
-          tool_id: String(row.tool_id ?? ""),
-          display_name: typeof row.display_name === "string" ? row.display_name : null,
-          enabled: Boolean(row.enabled),
-          circuit_state: (row.circuit_state as CircuitState) ?? "closed",
-          last_heartbeat: typeof row.last_heartbeat === "string" ? row.last_heartbeat : null,
-          config_validation_errors: Array.isArray(row.config_validation_errors) ? row.config_validation_errors as string[] : null,
-        }));
+
+        const rows: IntegrationConfig[] = (data ?? []).map((row) => {
+          const raw = row as Record<string, unknown>;
+          const errRaw = raw.config_validation_errors;
+          let validation: string[] | null = null;
+          if (Array.isArray(errRaw)) {
+            validation = errRaw.filter((e): e is string => typeof e === "string");
+          } else if (errRaw != null && typeof errRaw === "object" && !Array.isArray(errRaw)) {
+            const j = errRaw as Record<string, unknown>;
+            if (Array.isArray(j.errors)) {
+              validation = j.errors.filter((e): e is string => typeof e === "string");
+            }
+          }
+          return {
+            tool_id: String(raw.tool_id ?? ""),
+            display_name: typeof raw.display_name === "string" ? raw.display_name : null,
+            enabled: Boolean(raw.enabled),
+            circuit_state: (raw.circuit_state as CircuitState) ?? "closed",
+            last_heartbeat: typeof raw.last_heartbeat === "string" ? raw.last_heartbeat : null,
+            config_validation_errors: validation,
+          };
+        });
         setIntegrations(rows);
         setFetchError(null);
       } catch (err) {
