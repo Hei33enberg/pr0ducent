@@ -1382,22 +1382,6 @@ export type Database = {
       }
     }
     Functions: {
-      disconnect_user_builder_api_key: {
-        Args: { p_credential_type?: string; p_tool_id: string }
-        Returns: Json
-      }
-      get_byoa_api_key_for_dispatch: {
-        Args: { p_credential_type?: string; p_tool_id: string; p_user_id: string }
-        Returns: string
-      }
-      save_user_builder_api_key: {
-        Args: {
-          p_credential_type: string
-          p_plaintext_secret: string
-          p_tool_id: string
-        }
-        Returns: Json
-      }
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
       get_byoa_api_key_for_dispatch: {
         Args: {
