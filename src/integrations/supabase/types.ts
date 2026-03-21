@@ -1383,6 +1383,10 @@ export type Database = {
     }
     Functions: {
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
+      disconnect_user_builder_api_key: {
+        Args: { p_credential_type?: string; p_tool_id: string }
+        Returns: Json
+      }
       get_byoa_api_key_for_dispatch: {
         Args: {
           p_credential_type?: string
