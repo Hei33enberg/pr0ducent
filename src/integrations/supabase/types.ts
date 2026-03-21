@@ -315,97 +315,46 @@ export type Database = {
       }
       builder_integration_config: {
         Row: {
-          api_base_url: string | null
           api_secret_env: string | null
-          auth_type: string | null
           browserbase_script: string | null
           capabilities: Json
-          circuit_opened_at: string | null
           circuit_state: string
-          config_validation_errors: Json
-          consecutive_failures: number | null
-          display_name: string | null
           enabled: boolean
           execution_modes: string[]
-          integration_type: string
-          last_config_validation_at: string | null
-          last_heartbeat: string | null
           max_poll_time_ms: number
           mcp_endpoint: string | null
-          phantom_ttl_hours: number
-          poll_completed_values: string[]
-          poll_failed_values: string[]
           poll_interval_ms: number
-          poll_result_paths: Json | null
-          poll_status_path: string | null
-          poll_url_template: string | null
           polling_function: string | null
-          request_template: Json | null
-          response_id_path: string | null
           tier: number
           tool_id: string
           updated_at: string
         }
         Insert: {
-          api_base_url?: string | null
           api_secret_env?: string | null
-          auth_type?: string | null
           browserbase_script?: string | null
           capabilities?: Json
-          circuit_opened_at?: string | null
           circuit_state?: string
-          config_validation_errors?: Json
-          consecutive_failures?: number | null
-          display_name?: string | null
           enabled?: boolean
           execution_modes?: string[]
-          integration_type?: string
-          last_config_validation_at?: string | null
-          last_heartbeat?: string | null
           max_poll_time_ms?: number
           mcp_endpoint?: string | null
-          phantom_ttl_hours?: number
-          poll_completed_values?: string[]
-          poll_failed_values?: string[]
           poll_interval_ms?: number
-          poll_result_paths?: Json | null
-          poll_status_path?: string | null
-          poll_url_template?: string | null
           polling_function?: string | null
-          request_template?: Json | null
-          response_id_path?: string | null
           tier?: number
           tool_id: string
           updated_at?: string
         }
         Update: {
-          api_base_url?: string | null
           api_secret_env?: string | null
-          auth_type?: string | null
           browserbase_script?: string | null
           capabilities?: Json
-          circuit_opened_at?: string | null
           circuit_state?: string
-          config_validation_errors?: Json
-          consecutive_failures?: number | null
-          display_name?: string | null
           enabled?: boolean
           execution_modes?: string[]
-          integration_type?: string
-          last_config_validation_at?: string | null
-          last_heartbeat?: string | null
           max_poll_time_ms?: number
           mcp_endpoint?: string | null
-          phantom_ttl_hours?: number
-          poll_completed_values?: string[]
-          poll_failed_values?: string[]
           poll_interval_ms?: number
-          poll_result_paths?: Json | null
-          poll_status_path?: string | null
-          poll_url_template?: string | null
           polling_function?: string | null
-          request_template?: Json | null
-          response_id_path?: string | null
           tier?: number
           tool_id?: string
           updated_at?: string
@@ -1383,10 +1332,6 @@ export type Database = {
     }
     Functions: {
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
-      validate_builder_integration_config: {
-        Args: { p_tool_id: string }
-        Returns: Json
-      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
