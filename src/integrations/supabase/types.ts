@@ -1383,12 +1383,28 @@ export type Database = {
     }
     Functions: {
       builder_try_dispatch_slot: { Args: { p_tool_id: string }; Returns: Json }
+      get_byoa_api_key_for_dispatch: {
+        Args: {
+          p_credential_type?: string
+          p_tool_id: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      save_user_builder_api_key: {
+        Args: {
+          p_credential_type: string
+          p_plaintext_secret: string
+          p_tool_id: string
+        }
+        Returns: Json
       }
       subscription_try_increment_prompt: {
         Args: { p_user_id: string }
