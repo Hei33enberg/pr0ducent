@@ -166,7 +166,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
               {/* Dropdown - FULL WIDTH */}
               {menuOpen && (
-                <div className="nav-dropdown absolute top-full left-2 right-2 sm:left-4 sm:right-4 mt-2 bg-card/98 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-[100]">
+                <div className="nav-dropdown absolute top-full left-2 right-2 sm:left-4 sm:right-4 mt-2 bg-background/95 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-[100]">
                   <div className="p-3 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {navLinks.map((link) => {
                       const Icon = link.icon;
