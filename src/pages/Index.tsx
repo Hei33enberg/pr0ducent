@@ -22,7 +22,7 @@ import { PageFrame } from "@/components/PageFrame";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useTranslation } from "@/lib/i18n";
 import AmbientBackground from "@/components/AmbientBackground";
-import { BUILDER_TOOLS } from "@/config/tools";
+import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -30,12 +30,13 @@ const Index = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { results: builderResults, runBuilders } = useBuilderApi();
+  const { tools } = useBuilderCatalog();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
   const [pastExperiments, setPastExperiments] = useState<Experiment[]>([]);
   const [showGuestLimit, setShowGuestLimit] = useState(false);
   const [selectedTools, setSelectedTools] = useState<string[]>(
-    BUILDER_TOOLS.filter((t) => t.featured).map((t) => t.id)
+    tools.filter((t) => t.featured).map((t) => t.id)
   );
   const heroRef = useRef<HTMLDivElement>(null);
 

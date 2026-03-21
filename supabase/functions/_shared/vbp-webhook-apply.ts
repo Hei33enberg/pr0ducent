@@ -1,5 +1,22 @@
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
+function mergeWebhookRaw(
+  previous: unknown,
+  payload: Record<string, unknown>
+): Record<string, unknown> {
+  const base =
+    previous && typeof previous === "object" && !Array.isArray(previous)
+      ? (previous as Record<string, unknown>)
+      : {};
+  return {
+    ...base,
+    pbp_webhook_last: {
+      received_at: new Date().toISOString(),
+      payload,
+    },
+  };
+}
+
 function isUuid(s: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s);
 }
@@ -71,7 +88,7 @@ export async function applyVbpWebhookPayload(
 
   const { data: brRow } = await admin
     .from("builder_results")
-    .select("id, experiment_id, tool_id, status")
+    .select("id, experiment_id, tool_id, status, raw_response")
     .eq("experiment_id", experimentId)
     .eq("tool_id", toolId)
     .maybeSingle();
@@ -116,6 +133,7 @@ export async function applyVbpWebhookPayload(
         preview_url: preview,
         status: "generating",
         error_message: null,
+        raw_response: mergeWebhookRaw(brRow?.raw_response, payload),
       })
       .eq("experiment_id", experimentId)
       .eq("tool_id", toolId);
@@ -138,7 +156,11 @@ export async function applyVbpWebhookPayload(
   }
 
   if (event === "completed" || event === "success" || event === "done") {
-    const upd: Record<string, unknown> = { status: "completed", error_message: null };
+    const upd: Record<string, unknown> = {
+      status: "completed",
+      error_message: null,
+      raw_response: mergeWebhookRaw(brRow?.raw_response, payload),
+    };
     if (preview) upd.preview_url = preview;
     await admin.from("builder_results").update(upd).eq("experiment_id", experimentId).eq("tool_id", toolId);
 
@@ -165,6 +187,7 @@ export async function applyVbpWebhookPayload(
       .update({
         status: "error",
         error_message: errMsg,
+        raw_response: mergeWebhookRaw(brRow?.raw_response, payload),
       })
       .eq("experiment_id", experimentId)
       .eq("tool_id", toolId);

@@ -9,6 +9,7 @@ import {
   expandPollUrlTemplate,
   parsePollResponse,
 } from "../_shared/poll-builder-core.ts";
+import { touchBuilderIntegrationHeartbeat } from "../_shared/builder-heartbeat.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -219,6 +220,8 @@ Deno.serve(async (req) => {
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    await touchBuilderIntegrationHeartbeat(admin, toolId);
 
     const outcome = parsePollResponse(json, config);
 

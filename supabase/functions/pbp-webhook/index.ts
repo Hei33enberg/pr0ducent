@@ -4,6 +4,7 @@
  * Applies status updates to builder_results + run_tasks when event is recognized.
  */
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { touchBuilderIntegrationHeartbeat } from "../_shared/builder-heartbeat.ts";
 import { applyVbpWebhookPayload } from "../_shared/vbp-webhook-apply.ts";
 
 const corsHeaders = {
@@ -80,6 +81,9 @@ Deno.serve(async (req) => {
   if (canApply) {
     const admin = createClient(supabaseUrl!, serviceKey!);
     applyResult = await applyVbpWebhookPayload(admin, payload);
+    if (applyResult.applied && applyResult.toolId) {
+      await touchBuilderIntegrationHeartbeat(admin, applyResult.toolId);
+    }
   }
 
   const logExperimentId =

@@ -10,6 +10,7 @@ export type BuilderCatalogRow = {
   circuit_opened_at?: string | null;
   consecutive_failures?: number | null;
   integration_type?: string | null;
+  display_name?: string | null;
   capabilities?: Json | null;
 };
 
@@ -27,7 +28,12 @@ export function mergeBuilderCatalog(defaults: BuilderTool[], rows: BuilderCatalo
 
   for (const row of rows) {
     const cap = capRecord(row.capabilities);
-    const displayName = typeof cap.displayName === "string" ? cap.displayName : undefined;
+    const displayName =
+      typeof row.display_name === "string" && row.display_name.trim() !== ""
+        ? row.display_name.trim()
+        : typeof cap.displayName === "string"
+          ? cap.displayName
+          : undefined;
     const logoUrl = typeof cap.logoUrl === "string" ? cap.logoUrl : undefined;
     const featuredOverride = typeof cap.featured === "boolean" ? cap.featured : undefined;
 

@@ -22,7 +22,7 @@ interface PricingPlan {
 const PLAN_TIERS = ["free", "pro", "team", "enterprise"];
 
 export function PlanComparisonTable() {
-  const { tools: BUILDER_TOOLS } = useBuilderCatalog();
+  const { tools } = useBuilderCatalog();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [activeTier, setActiveTier] = useState("pro");
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ export function PlanComparisonTable() {
     (a, b) => PLAN_TIERS.indexOf(a) - PLAN_TIERS.indexOf(b)
   );
 
-  const toolsWithPlans = BUILDER_TOOLS.filter((t) =>
+  const toolsWithPlans = tools.filter((t) =>
     plans.some((p) => p.tool_id === t.id && p.plan_name === activeTier)
   );
 

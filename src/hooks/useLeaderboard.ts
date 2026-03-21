@@ -43,7 +43,7 @@ const SORT_COLUMN: Record<SortDim, keyof LeaderboardRow> = {
 };
 
 export function useLeaderboard(timeframe: Timeframe, sortDim: SortDim) {
-  const { tools: builderTools } = useBuilderCatalog();
+  const { tools } = useBuilderCatalog();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

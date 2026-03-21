@@ -21,7 +21,7 @@ interface PricingPlan {
 }
 
 export default function CalculatorPage() {
-  const { tools: BUILDER_TOOLS } = useBuilderCatalog();
+  const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [promptsPerMonth, setPromptsPerMonth] = useState(30);
@@ -46,7 +46,7 @@ export default function CalculatorPage() {
     ecosystem: weights.ecosystem / 100,
   };
 
-  const results = BUILDER_TOOLS.map((tool) => {
+  const results = tools.map((tool) => {
     const toolPlans = plans.filter((p) => p.tool_id === tool.id);
     const bestPlan = toolPlans.find((p) => p.plan_name === "pro") || toolPlans[0];
 

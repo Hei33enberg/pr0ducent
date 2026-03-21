@@ -37,7 +37,7 @@ If `process-task-queue` is unreachable, `dispatch-builders` falls back to **inli
 | `run_tasks` | One row per selected builder; status machine (`queued` → `dispatched` → `building` → `artifact_ready` → `scored` → `completed`, or `failed` / `benchmark`); opcjonalnie `next_retry_at` dla retry po rate limit (migracja `20260322120000_vbp_orchestration.sql`). |
 | `run_events` | Append-only log; optional `run_job_id`, `run_task_id`; Realtime for Run Center. |
 | `builder_results` | UI-facing row per `(experiment_id, tool_id)`; `provider_run_id`, `provenance`, `run_task_id`. |
-| `builder_integration_config` | Per-tool `tier`, `enabled`, polling hints, VBP/REST fields; `circuit_state` dla breaker (ta sama migracja). |
+| `builder_integration_config` | Per-tool `tier`, `enabled`, polling hints, VBP/REST fields; `circuit_state` dla breaker (ta sama migracja). Dodatkowo: `display_name`, `last_heartbeat` (poll/webhook), `config_validation_errors` + RPC `validate_builder_integration_config` (admin), trigger blokuje `enabled` przy brakach w VBP/REST (tier 1–2). |
 | `broker_pool_accounts` / `broker_account_leases` | Audit trail for broker v0 usage. |
 | `credit_transactions` | Debit on first live dispatch of an experiment (with subscription limits). |
 | `referral_clicks` / `referral_conversions` | Handoff attribution from Compare CTA. |

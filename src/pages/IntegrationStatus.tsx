@@ -5,46 +5,51 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Activity, ShieldAlert, ShieldCheck, Clock } from "lucide-react";
 
+type CircuitState = "closed" | "open" | "half_open";
+
 interface IntegrationConfig {
   tool_id: string;
-  name?: string;
+  display_name: string | null;
   enabled: boolean;
-  circuit_state: "open" | "closed" | "half-open";
+  circuit_state: CircuitState;
   last_heartbeat: string | null;
+  config_validation_errors: string[] | null;
+}
+
+function formatCircuitLabel(s: CircuitState): string {
+  return s.replace(/_/g, "-");
 }
 
 export default function IntegrationStatus() {
   const [integrations, setIntegrations] = useState<IntegrationConfig[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
-    async function fetchStatus() {
+    let cancelled = false;
+    void (async () => {
       try {
-        // Querying the provisional DB view requested by Cursor.
-        // We use targeted generic typing mapped internally until migrations run.
         const { data, error } = await supabase
-          .from("builder_integration_config" as any)
-          .select("tool_id, name, enabled, circuit_state, last_heartbeat");
+          .from("builder_integration_config")
+          .select("tool_id, display_name, enabled, circuit_state, last_heartbeat");
 
+        if (cancelled) return;
         if (error) throw error;
-        
-        if (data && data.length > 0) {
-          setIntegrations(data as unknown as IntegrationConfig[]);
-        }
+        setIntegrations((data ?? []) as IntegrationConfig[]);
+        setFetchError(null);
       } catch (err) {
-        console.warn("Integration config view not ready. Displaying mock data.", err);
-        // Fallback to placeholder mock while waiting for MVP DB structure
-        setIntegrations([
-          { tool_id: "lovable", name: "Lovable", enabled: true, circuit_state: "closed", last_heartbeat: new Date().toISOString() },
-          { tool_id: "cursor", name: "Cursor", enabled: true, circuit_state: "closed", last_heartbeat: new Date().toISOString() },
-          { tool_id: "v0", name: "Vercel v0", enabled: false, circuit_state: "open", last_heartbeat: null },
-        ]);
+        console.warn("Integration config load failed:", err);
+        if (!cancelled) {
+          setFetchError(err instanceof Error ? err.message : "Failed to load integrations");
+          setIntegrations([]);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
-    }
-    
-    fetchStatus();
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (
@@ -55,6 +60,12 @@ export default function IntegrationStatus() {
           Technical broker management and POP ecosystem health.
         </p>
       </div>
+
+      {fetchError ? (
+        <p className="text-sm text-destructive" role="alert">
+          {fetchError}
+        </p>
+      ) : null}
 
       <Card>
         <CardHeader>
@@ -69,6 +80,7 @@ export default function IntegrationStatus() {
               <TableRow>
                 <TableHead>Builder (Tool ID)</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Config Validation</TableHead>
                 <TableHead>Circuit Breaker</TableHead>
                 <TableHead className="text-right">Last Heartbeat</TableHead>
               </TableRow>
@@ -76,14 +88,14 @@ export default function IntegrationStatus() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     <Activity className="w-6 h-6 animate-spin mx-auto mb-2" />
                     Loading ecosystem state...
                   </TableCell>
                 </TableRow>
               ) : integrations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                     No integrations configured.
                   </TableCell>
                 </TableRow>
@@ -91,14 +103,26 @@ export default function IntegrationStatus() {
                 integrations.map((integration) => (
                   <TableRow key={integration.tool_id}>
                     <TableCell className="font-medium">
-                      {integration.name || integration.tool_id}
+                      {integration.display_name?.trim() || integration.tool_id}
                       <div className="text-xs text-muted-foreground font-mono">{integration.tool_id}</div>
                     </TableCell>
                     <TableCell>
                       {integration.enabled ? (
-                        <Badge variant="default" className="bg-success text-success-foreground hover:bg-success/90">Enabled</Badge>
+                        <Badge variant="default" className="bg-success text-success-foreground hover:bg-success/90">
+                          Enabled
+                        </Badge>
                       ) : (
                         <Badge variant="secondary">Disabled</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {integration.config_validation_errors && integration.config_validation_errors.length > 0 ? (
+                        <div className="flex items-center gap-1.5 cursor-help" title={integration.config_validation_errors.join(", ")}>
+                          <ShieldAlert className="w-4 h-4 text-destructive" />
+                          <span className="text-sm font-medium text-destructive">{integration.config_validation_errors.length} Error(s)</span>
+                        </div>
+                      ) : (
+                        <Badge variant="outline" className="text-success border-success/30 bg-success/5">Valid</Badge>
                       )}
                     </TableCell>
                     <TableCell>
@@ -110,7 +134,7 @@ export default function IntegrationStatus() {
                         ) : (
                           <ShieldAlert className="w-4 h-4 text-warning" />
                         )}
-                        <span className="capitalize">{integration.circuit_state}</span>
+                        <span className="capitalize">{formatCircuitLabel(integration.circuit_state)}</span>
                       </div>
                     </TableCell>
                     <TableCell className="text-right">

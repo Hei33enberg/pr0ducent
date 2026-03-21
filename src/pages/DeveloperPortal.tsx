@@ -131,18 +131,29 @@ supabase functions deploy process-task-queue`}
               <CodeBlock 
                 title="POST /functions/v1/pbp-webhook"
                 code={`{
-  "event_type": "build.completed",
+  "event_type": "job.completed",
   "run_id": "b0a2c3f8-5d12-4ee8-9c4c-21de3a2d",
+  "tool_id": "lovable",
   "status": "completed",
-  "artifacts": {
+  "payload": {
     "preview_url": "https://builder.dev/preview/123",
-    "repo_url": "https://github.com/builder/123",
-    "deployment_log": "..."
+    "project_url": "https://builder.dev/project/123",
+    "error_message": null
   },
   "metrics": {
     "duration_ms": 14200,
     "tokens_used": 4500
   }
+}`} 
+              />
+              <h3 className="font-semibold text-sm mt-6">Generic Poller Response Example</h3>
+              <p className="text-muted-foreground text-sm">For Tier 2 integrations utilizing the standard \`poll-builder-status\` edge adapter.</p>
+              <CodeBlock 
+                title="GET /api/status/:id"
+                code={`{
+  "status": "completed",
+  "preview_url": "https://builder.dev/preview/123",
+  "error": null
 }`} 
               />
             </CardContent>
