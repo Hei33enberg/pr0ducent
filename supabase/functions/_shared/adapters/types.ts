@@ -46,4 +46,6 @@ export type AdapterDispatchContext = {
   toolId: string;
   runTaskId: string;
   config: IntegrationConfigRow | undefined;
+  /** User BYOA key from Vault; when set, adapters prefer this over platform env (broker mode). */
+  byoaApiKeyOverride?: string;
 };

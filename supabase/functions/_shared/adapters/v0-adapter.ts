@@ -1,3 +1,4 @@
+import { preferByoaOverBroker } from "../byoa.ts";
 import type { AdapterDispatchContext, DispatchedEntry } from "./types.ts";
 
 const V0_API_BASE = "https://api.v0.dev/v1";
@@ -43,7 +44,7 @@ export async function dispatchV0Adapter(ctx: AdapterDispatchContext): Promise<Di
   const toolId = "v0";
   const tier = 1;
 
-  const V0_API_KEY = Deno.env.get("V0_API_KEY");
+  const V0_API_KEY = preferByoaOverBroker(ctx.byoaApiKeyOverride, Deno.env.get("V0_API_KEY"));
   if (!V0_API_KEY) {
     await admin
       .from("run_tasks")

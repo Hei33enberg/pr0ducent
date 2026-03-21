@@ -119,7 +119,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     >
       {frameRect && (
         <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}>
-          <header className="header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 section-divider">
+          <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
@@ -164,9 +164,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
 
-              {/* Dropdown - FULL WIDTH */}
+              {/* Dropdown - FULL WIDTH EDGE-TO-EDGE */}
               {menuOpen && (
-                <div className="nav-dropdown absolute top-full left-2 right-2 sm:left-4 sm:right-4 mt-2 bg-background/95 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-[100]">
+                <div className="nav-dropdown-glass absolute top-full left-0 right-0 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)] rounded-b-[16px] overflow-hidden z-[100]">
                   <div className="p-3 sm:p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
                     {navLinks.map((link) => {
                       const Icon = link.icon;

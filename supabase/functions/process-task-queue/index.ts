@@ -6,6 +6,7 @@ import { dispatchV0Adapter } from "../_shared/adapters/v0-adapter.ts";
 import { dispatchVbpAdapter } from "../_shared/adapters/vbp-adapter.ts";
 import type { AdapterDispatchContext, IntegrationConfigRow } from "../_shared/adapters/types.ts";
 import { corsHeadersForRequest } from "../_shared/cors.ts";
+import { fetchByoaApiKey } from "../_shared/byoa.ts";
 import { timingSafeEqualString } from "../_shared/timing-safe.ts";
 
 const MAX_TASKS_PER_INVOCATION = 40;
@@ -32,7 +33,7 @@ function isCircuitOpen(cfg: IntegrationConfigRow | undefined): boolean {
 async function dispatchOne(
   admin: SupabaseClient,
   task: { id: string; tool_id: string; experiment_id: string; run_job_id: string },
-  job: { trace_id: string; metadata: Record<string, unknown> | null },
+  job: { trace_id: string; metadata: Record<string, unknown> | null; user_id: string },
   configByTool: Map<string, IntegrationConfigRow>,
 ): Promise<void> {
   const prompt = typeof job.metadata?.prompt === "string" ? job.metadata.prompt : "";
@@ -59,6 +60,7 @@ async function dispatchOne(
     return;
   }
 
+  const byoaKey = await fetchByoaApiKey(admin, job.user_id, task.tool_id);
   const ctx: AdapterDispatchContext = {
     admin,
     experimentId: task.experiment_id,
@@ -68,6 +70,7 @@ async function dispatchOne(
     toolId: task.tool_id,
     runTaskId: task.id,
     config: cfg,
+    byoaApiKeyOverride: byoaKey ?? undefined,
   };
 
   const kind = resolveAdapterKind(task.tool_id, cfg);
@@ -208,7 +211,7 @@ Deno.serve(async (req) => {
     // ── Fetch job metadata ──
     const { data: job, error: jobErr } = await admin
       .from("run_jobs")
-      .select("trace_id, metadata")
+      .select("trace_id, metadata, user_id")
       .eq("id", task.run_job_id)
       .single();
 
@@ -223,7 +226,16 @@ Deno.serve(async (req) => {
 
     const meta = (job.metadata ?? {}) as Record<string, unknown>;
 
-    await dispatchOne(admin, task, { trace_id: job.trace_id as string, metadata: meta }, configByTool);
+    await dispatchOne(
+      admin,
+      task,
+      {
+        trace_id: job.trace_id as string,
+        metadata: meta,
+        user_id: job.user_id as string,
+      },
+      configByTool,
+    );
     processed++;
   }
 

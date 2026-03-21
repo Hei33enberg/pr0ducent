@@ -1,3 +1,4 @@
+import { preferByoaOverBroker } from "../byoa.ts";
 import { getString } from "../jsonpath-lite.ts";
 import type { AdapterDispatchContext, DispatchedEntry } from "./types.ts";
 
@@ -31,7 +32,8 @@ export async function dispatchGenericRestAdapter(ctx: AdapterDispatchContext): P
     return { toolId, tier, status: "error", error: msg };
   }
 
-  const apiKey = secretEnv ? Deno.env.get(secretEnv) : undefined;
+  const brokerKey = secretEnv ? Deno.env.get(secretEnv) : undefined;
+  const apiKey = preferByoaOverBroker(ctx.byoaApiKeyOverride, brokerKey);
   if (secretEnv && !apiKey) {
     const msg = `generic_rest: missing env ${secretEnv}`;
     await admin.from("run_tasks").update({ status: "failed", error_message: msg }).eq("id", runTaskId);

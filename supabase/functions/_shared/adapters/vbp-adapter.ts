@@ -1,3 +1,4 @@
+import { preferByoaOverBroker } from "../byoa.ts";
 import type { AdapterDispatchContext, DispatchedEntry } from "./types.ts";
 
 /** Vibecoding Broker Protocol (VBP) v0.1 — POST {base}/dispatch */
@@ -6,7 +7,7 @@ export async function dispatchVbpAdapter(ctx: AdapterDispatchContext): Promise<D
   const tier = config?.tier ?? 1;
   const base = (config?.api_base_url ?? "").replace(/\/$/, "");
   const secretEnv = config?.api_secret_env ?? "VBP_PARTNER_KEY";
-  const partnerKey = Deno.env.get(secretEnv);
+  const partnerKey = preferByoaOverBroker(ctx.byoaApiKeyOverride, Deno.env.get(secretEnv));
 
   if (!partnerKey || !base) {
     const msg = !partnerKey ? `Missing env ${secretEnv}` : "Missing api_base_url in builder_integration_config";

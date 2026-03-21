@@ -11,6 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Clock, Zap, ExternalLink, Star, BarChart3, CreditCard, ClipboardList, CheckCircle2, Loader2, Key } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { FF } from "@/lib/featureFlags";
 import { useTranslation } from "@/lib/i18n";
 
@@ -50,6 +53,9 @@ export default function UserDashboard() {
   const [byoaCredentials, setByoaCredentials] = useState<
     { id: string; tool_id: string; credential_type: string; created_at: string }[]
   >([]);
+  const [connectingTool, setConnectingTool] = useState<string | null>(null);
+  const [apiKeyInput, setApiKeyInput] = useState("");
+  const [isConnecting, setIsConnecting] = useState(false);
 
   const PRICE_IDS: Record<string, string> = {
     Pro: "price_1TCy4hKTwW79ip00MhitTcY8",
@@ -70,6 +76,38 @@ export default function UserDashboard() {
       toast.error(err.message || "Failed to start checkout");
     } finally {
       setLoadingPlan(null);
+    }
+  };
+
+  const handleConnectApiKey = async () => {
+    if (!connectingTool || !apiKeyInput.trim()) return;
+    setIsConnecting(true);
+    try {
+      const { error } = await supabase.rpc('save_user_builder_api_key', {
+        p_tool_id: connectingTool,
+        p_credential_type: 'api_key',
+        p_plaintext_secret: apiKeyInput.trim(),
+      });
+      if (error) throw error;
+      
+      toast.success(t("byoa.connected") || "API Key connected securely!");
+      
+      setByoaCredentials((prev) => [
+        ...prev.filter(c => c.tool_id !== connectingTool),
+        { 
+          id: 'temp-' + Date.now(), 
+          tool_id: connectingTool, 
+          credential_type: 'api_key', 
+          created_at: new Date().toISOString() 
+        }
+      ]);
+      
+      setConnectingTool(null);
+      setApiKeyInput("");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to save API key");
+    } finally {
+      setIsConnecting(false);
     }
   };
 
@@ -97,6 +135,16 @@ export default function UserDashboard() {
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setRatings(data); });
+      
+    supabase
+      .from("user_builder_credentials")
+      .select("id, tool_id, credential_type, created_at")
+      .eq("user_id", user.id)
+      .then(({ data, error }) => {
+        if (!error && data) {
+          setByoaCredentials(data as unknown as { id: string; tool_id: string; credential_type: string; created_at: string }[]);
+        }
+      });
   }, [user]);
 
   if (!user) {
@@ -345,7 +393,12 @@ export default function UserDashboard() {
                           {isConnected ? (
                             <Badge variant="outline" className="border-success/50 text-success">{t("byoa.connected")}</Badge>
                           ) : tool.integrationEnabled ? (
-                            <Button size="sm" variant="outline" className="h-7 text-xs rounded-full">
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="h-7 text-xs rounded-full"
+                              onClick={() => setConnectingTool(tool.id)}
+                            >
                               {t("byoa.connectKey")}
                             </Button>
                           ) : (
@@ -361,6 +414,42 @@ export default function UserDashboard() {
           )}
         </div>
       </PageFrame>
+
+      <Dialog open={!!connectingTool} onOpenChange={(open) => {
+        if (!open) {
+          setConnectingTool(null);
+          setApiKeyInput("");
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Connect API Key for {getToolName(connectingTool || "")}</DialogTitle>
+            <DialogDescription>
+              Your API key will be encrypted and stored securely in Supabase Vault. It will only be used when you dispatch runs for this builder.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="apiKey">API Key</Label>
+              <Input
+                id="apiKey"
+                type="password"
+                placeholder="sk-..."
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                autoFocus
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setConnectingTool(null); setApiKeyInput(""); }}>Cancel</Button>
+            <Button onClick={handleConnectApiKey} disabled={!apiKeyInput.trim() || isConnecting}>
+              {isConnecting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+              Save Key
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

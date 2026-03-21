@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { fetchByoaApiKey } from "../_shared/byoa.ts";
 import { resolveAdapterKind } from "../_shared/adapter-registry.ts";
 import { dispatchBenchmarkAdapter } from "../_shared/adapters/benchmark-adapter.ts";
 import { dispatchGenericRestAdapter } from "../_shared/adapters/generic-rest-adapter.ts";
@@ -316,6 +317,7 @@ Deno.serve(async (req) => {
         .eq("status", "queued");
       for (const row of qrows || []) {
         const cfg = configByTool.get(row.tool_id);
+        const byoaKey = await fetchByoaApiKey(admin, userId, row.tool_id);
         const ctx: AdapterDispatchContext = {
           admin,
           experimentId,
@@ -325,6 +327,7 @@ Deno.serve(async (req) => {
           toolId: row.tool_id,
           runTaskId: row.id as string,
           config: cfg,
+          byoaApiKeyOverride: byoaKey ?? undefined,
         };
         const kind = resolveAdapterKind(row.tool_id, cfg);
         if (kind === "v0_live") await dispatchV0Adapter(ctx);

@@ -13,13 +13,24 @@ Table `public.user_builder_credentials` (see migration `20260321120000_orchestra
 - `user_id`, `tool_id`, `credential_type`, `vault_ref`
 - **Never** store raw secrets in plaintext; `vault_ref` points to Supabase Vault / external KMS / sealed blob.
 
+### Vault RPCs (migration `20260422130000_byoa_vault_credentials_rpc.sql`)
+
+- **`public.save_user_builder_api_key(p_tool_id text, p_credential_type text, p_plaintext_secret text) → jsonb`**  
+  - `SECURITY DEFINER`; **`authenticated`** only.  
+  - Writes the secret with `vault.create_secret`, stores the returned secret **UUID** in `vault_ref`, and upserts `user_builder_credentials`.  
+  - On replace, deletes the previous `vault.secrets` row by id when rotating.
+
+- **`public.get_byoa_api_key_for_dispatch(p_user_id uuid, p_tool_id text, p_credential_type text default 'api_key') → text`**  
+  - `SECURITY DEFINER`; **`service_role` only** (not callable by anon/authenticated).  
+  - Used by Edge (`dispatch-builders`, `process-task-queue`) to read `vault.decrypted_secrets` for the stored UUID. Returns `NULL` when no BYOA row exists (broker mode).
+
 ## Execution routing
 
 - `builder_integration_config` gains per-user override or separate `user_adapter_routes` mapping:
   - `broker` vs `byoa` per `(user_id, tool_id)`.
-- `dispatch-builders` (or successor orchestrator) chooses credential source:
-  - broker: pooled enterprise keys / browser sessions.
-  - byoa: resolve `vault_ref` and attach to adapter.
+- `dispatch-builders` and `process-task-queue` choose credential source per `(user_id, tool_id)`:
+  - **broker**: platform keys from `builder_integration_config.api_secret_env` / env (existing behavior).
+  - **byoa**: when a row exists in `user_builder_credentials`, `get_byoa_api_key_for_dispatch` resolves the Vault secret and adapters receive `byoaApiKeyOverride` (preferred over env).
 
 ## Security
 
