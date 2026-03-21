@@ -1,12 +1,19 @@
 /**
  * useBuilderApi — unit tests for exported pure helpers
  *
- * Tests isUuid (dispatch branching) and mapBuilderRow (status/field mapping).
- * The React hook integration is covered by the pure-logic exports to avoid
- * the @testing-library/dom peer-dep conflict (lovable-tagger blocks install).
+ * Tests isUuid (dispatch branching), mapBuilderRow (status/field mapping),
+ * and v0 poll/timeout reducers (shared by guest + experiment polling).
  */
 import { describe, it, expect } from "vitest";
-import { isUuid, mapBuilderRow, type BuilderResult } from "./useBuilderApi";
+import {
+  isUuid,
+  mapBuilderRow,
+  mapV0PollToTerminalResult,
+  reduceV0TimeoutError,
+  type BuilderResult,
+} from "./useBuilderApi";
+
+const t = (key: string) => (key === "api.v0Failed" ? "V0 failed" : key === "api.timeoutGenerating" ? "Timeout" : key);
 
 // ── isUuid — controls guest vs authenticated dispatch path ────────────────────
 
@@ -123,5 +130,72 @@ describe("mapBuilderRow", () => {
   it("result satisfies BuilderResult type shape", () => {
     const result: BuilderResult = mapBuilderRow(base);
     expect(result).toBeDefined();
+  });
+});
+
+// ── mapV0PollToTerminalResult — poll-v0-status terminal mapping ─────────────
+
+describe("mapV0PollToTerminalResult", () => {
+  const ctxBase = {
+    chatId: "chat-1",
+    fallbackChatUrl: "https://v0.dev/chat/chat-1",
+    startTime: 1000,
+    nowMs: 5000,
+    t,
+  };
+
+  it("returns null for non-terminal status", () => {
+    expect(mapV0PollToTerminalResult({ status: "generating" }, ctxBase)).toBeNull();
+    expect(mapV0PollToTerminalResult({}, ctxBase)).toBeNull();
+  });
+
+  it("maps completed with preview and generation time", () => {
+    const r = mapV0PollToTerminalResult(
+      { status: "completed", previewUrl: "https://p.example/x", chatUrl: "https://c.example" },
+      ctxBase
+    );
+    expect(r?.status).toBe("completed");
+    expect(r?.previewUrl).toBe("https://p.example/x");
+    expect(r?.generationTimeMs).toBe(4000);
+    expect(r?.providerRunId).toBe("chat-1");
+    expect(r?.provenance).toBe("live_api");
+  });
+
+  it("maps error and falls back to translated v0 failure message", () => {
+    const r = mapV0PollToTerminalResult({ status: "error", error: "boom" }, ctxBase);
+    expect(r?.status).toBe("error");
+    expect(r?.error).toBe("boom");
+  });
+
+  it("uses t(api.v0Failed) when error field missing", () => {
+    const r = mapV0PollToTerminalResult({ status: "error" }, ctxBase);
+    expect(r?.error).toBe("V0 failed");
+  });
+});
+
+// ── reduceV0TimeoutError — MAX_POLL_TIME branch ──────────────────────────────
+
+describe("reduceV0TimeoutError", () => {
+  const gen: BuilderResult = {
+    id: "x",
+    toolId: "v0",
+    status: "generating",
+    providerRunId: "chat-1",
+  };
+
+  it("returns null if v0 is not generating", () => {
+    expect(
+      reduceV0TimeoutError(
+        { v0: { ...gen, status: "completed" } },
+        { chatId: "chat-1", chatUrl: "https://u", nowMs: 99, t }
+      )
+    ).toBeNull();
+  });
+
+  it("sets error state when still generating", () => {
+    const next = reduceV0TimeoutError({ v0: gen }, { chatId: "chat-1", chatUrl: "https://u", nowMs: 99, t });
+    expect(next?.v0.status).toBe("error");
+    expect(next?.v0.error).toBe("Timeout");
+    expect(next?.v0.id).toBe("v0-99");
   });
 });

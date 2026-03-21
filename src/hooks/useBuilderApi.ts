@@ -56,14 +56,90 @@ export function mapBuilderRow(row: Record<string, unknown>): BuilderResult {
   };
 }
 
+/** Payload shape from `poll-v0-status` (subset used by UI). */
+export type V0PollPayload = {
+  status?: string;
+  chatUrl?: string;
+  previewUrl?: string;
+  error?: string;
+};
+
+/**
+ * Maps a terminal poll-v0-status response to a `BuilderResult` for tool `v0`.
+ * Returns null if status is not completed/error (still in progress or unknown).
+ */
+export function mapV0PollToTerminalResult(
+  pollData: V0PollPayload,
+  ctx: {
+    chatId: string;
+    fallbackChatUrl?: string;
+    startTime: number;
+    nowMs: number;
+    t: (key: string) => string;
+  }
+): BuilderResult | null {
+  if (pollData.status === "completed") {
+    return {
+      id: `v0-${ctx.nowMs}`,
+      toolId: "v0",
+      status: "completed",
+      chatUrl: pollData.chatUrl || ctx.fallbackChatUrl,
+      previewUrl: pollData.previewUrl,
+      generationTimeMs: ctx.nowMs - ctx.startTime,
+      provenance: "live_api",
+      executionMode: "live",
+      providerRunId: ctx.chatId,
+    };
+  }
+  if (pollData.status === "error") {
+    return {
+      id: `v0-${ctx.nowMs}`,
+      toolId: "v0",
+      status: "error",
+      error: pollData.error || ctx.t("api.v0Failed"),
+      chatUrl: pollData.chatUrl || ctx.fallbackChatUrl,
+      provenance: "live_api",
+      executionMode: "live",
+      providerRunId: ctx.chatId,
+    };
+  }
+  return null;
+}
+
+/** After MAX_POLL_TIME while v0 is still generating — error state or null if unchanged. */
+export function reduceV0TimeoutError(
+  prev: Record<string, BuilderResult>,
+  ctx: { chatId: string; chatUrl: string | undefined; nowMs: number; t: (key: string) => string }
+): Record<string, BuilderResult> | null {
+  const cur = prev.v0;
+  if (cur?.status !== "generating") return null;
+  return {
+    ...prev,
+    v0: {
+      ...cur,
+      id: `v0-${ctx.nowMs}`,
+      toolId: "v0",
+      status: "error",
+      error: ctx.t("api.timeoutGenerating"),
+      chatUrl: ctx.chatUrl,
+      providerRunId: ctx.chatId,
+    },
+  };
+}
+
 export function useBuilderApi() {
   const { t } = useTranslation();
   const [results, setResults] = useState<Record<string, BuilderResult>>({});
   const [loading, setLoading] = useState(false);
   const pollTimers = useRef<Record<string, number>>({});
   const channelRef = useRef<RealtimeChannel | null>(null);
-  /** Tracks all active setTimeout IDs so they can be cleared on unmount. */
+  /** Tracks all active setTimeout IDs so they can be cleared on unmount or new run. */
   const timeoutRefs = useRef<number[]>([]);
+
+  const clearTrackedTimeouts = useCallback(() => {
+    timeoutRefs.current.forEach((id) => clearTimeout(id));
+    timeoutRefs.current = [];
+  }, []);
 
   const stopPolling = useCallback((toolId: string) => {
     if (pollTimers.current[toolId]) {
@@ -144,37 +220,17 @@ export function useBuilderApi() {
 
             if (pollError) return;
 
-            if (pollData?.status === "completed") {
+            const nowMs = Date.now();
+            const terminal = mapV0PollToTerminalResult(pollData ?? {}, {
+              chatId,
+              fallbackChatUrl: chatUrl,
+              startTime,
+              nowMs,
+              t,
+            });
+            if (terminal) {
               stopPolling("v0");
-              setResults((prev) => ({
-                ...prev,
-                v0: {
-                  id: `v0-${Date.now()}`,
-                  toolId: "v0",
-                  status: "completed",
-                  chatUrl: pollData.chatUrl || chatUrl,
-                  previewUrl: pollData.previewUrl,
-                  generationTimeMs: Date.now() - startTime,
-                  provenance: "live_api",
-                  executionMode: "live",
-                  providerRunId: chatId,
-                },
-              }));
-            } else if (pollData?.status === "error") {
-              stopPolling("v0");
-              setResults((prev) => ({
-                ...prev,
-                v0: {
-                  id: `v0-${Date.now()}`,
-                  toolId: "v0",
-                  status: "error",
-                  error: pollData.error || t("api.v0Failed"),
-                  chatUrl: pollData.chatUrl || chatUrl,
-                  provenance: "live_api",
-                  executionMode: "live",
-                  providerRunId: chatId,
-                },
-              }));
+              setResults((prev) => ({ ...prev, v0: terminal }));
             }
           } catch {
             /* ignore */
@@ -183,28 +239,22 @@ export function useBuilderApi() {
 
         pollTimers.current.v0 = window.setInterval(poll, POLL_INTERVAL);
 
-        timeoutRefs.current.push(window.setTimeout(() => {
-          if (pollTimers.current.v0) {
-            stopPolling("v0");
-            setResults((prev) => {
-              if (prev.v0?.status === "generating") {
-                return {
-                  ...prev,
-                  v0: {
-                    ...prev.v0,
-                    id: `v0-${Date.now()}`,
-                    toolId: "v0",
-                    status: "error",
-                    error: t("api.timeoutGenerating"),
-                    chatUrl,
-                    providerRunId: chatId,
-                  },
-                };
-              }
-              return prev;
-            });
-          }
-        }, MAX_POLL_TIME));
+        timeoutRefs.current.push(
+          window.setTimeout(() => {
+            if (pollTimers.current.v0) {
+              stopPolling("v0");
+              setResults((prev) => {
+                const next = reduceV0TimeoutError(prev, {
+                  chatId,
+                  chatUrl,
+                  nowMs: Date.now(),
+                  t,
+                });
+                return next ?? prev;
+              });
+            }
+          }, MAX_POLL_TIME)
+        );
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : t("api.failedWithV0");
         setResults((prev) => ({
@@ -297,37 +347,17 @@ export function useBuilderApi() {
 
           if (pollError) return;
 
-          if (pollData?.status === "completed") {
+          const nowMs = Date.now();
+          const terminal = mapV0PollToTerminalResult(pollData ?? {}, {
+            chatId,
+            fallbackChatUrl: chatUrl,
+            startTime,
+            nowMs,
+            t,
+          });
+          if (terminal) {
             stopPolling("v0");
-            setResults((prev) => ({
-              ...prev,
-              v0: {
-                id: `v0-${Date.now()}`,
-                toolId: "v0",
-                status: "completed",
-                chatUrl: pollData.chatUrl || chatUrl,
-                previewUrl: pollData.previewUrl,
-                generationTimeMs: Date.now() - startTime,
-                provenance: "live_api",
-                executionMode: "live",
-                providerRunId: chatId,
-              },
-            }));
-          } else if (pollData?.status === "error") {
-            stopPolling("v0");
-            setResults((prev) => ({
-              ...prev,
-              v0: {
-                id: `v0-${Date.now()}`,
-                toolId: "v0",
-                status: "error",
-                error: pollData.error || t("api.v0Failed"),
-                chatUrl: pollData.chatUrl || chatUrl,
-                provenance: "live_api",
-                executionMode: "live",
-                providerRunId: chatId,
-              },
-            }));
+            setResults((prev) => ({ ...prev, v0: terminal }));
           }
         } catch {
           /* ignore */
@@ -336,27 +366,22 @@ export function useBuilderApi() {
 
       pollTimers.current.v0 = window.setInterval(poll, POLL_INTERVAL);
 
-      timeoutRefs.current.push(window.setTimeout(() => {
-        if (pollTimers.current.v0) {
-          stopPolling("v0");
-          setResults((prev) => {
-            if (prev.v0?.status === "generating") {
-              return {
-                ...prev,
-                v0: {
-                  ...prev.v0,
-                  toolId: "v0",
-                  status: "error",
-                  error: t("api.timeoutGenerating"),
-                  chatUrl,
-                  providerRunId: chatId,
-                },
-              };
-            }
-            return prev;
-          });
-        }
-      }, MAX_POLL_TIME));
+      timeoutRefs.current.push(
+        window.setTimeout(() => {
+          if (pollTimers.current.v0) {
+            stopPolling("v0");
+            setResults((prev) => {
+              const next = reduceV0TimeoutError(prev, {
+                chatId,
+                chatUrl,
+                nowMs: Date.now(),
+                t,
+              });
+              return next ?? prev;
+            });
+          }
+        }, MAX_POLL_TIME)
+      );
     },
     [stopPolling, t]
   );
@@ -366,6 +391,7 @@ export function useBuilderApi() {
       unsubscribeRealtime();
       stopDbResultsPolling();
       Object.keys(pollTimers.current).forEach(stopPolling);
+      clearTrackedTimeouts();
       setResults({});
 
       if (!isUuid(experimentId)) {
@@ -460,6 +486,7 @@ export function useBuilderApi() {
       setLoading(false);
     },
     [
+      clearTrackedTimeouts,
       runOnV0Guest,
       startDbResultsPolling,
       startV0PollingForExperiment,
@@ -477,11 +504,9 @@ export function useBuilderApi() {
       Object.keys(pollTimers.current).forEach((k) => {
         clearInterval(pollTimers.current[k]);
       });
-      // Clear all tracked setTimeout IDs to prevent state updates on unmounted component
-      timeoutRefs.current.forEach((id) => clearTimeout(id));
-      timeoutRefs.current = [];
+      clearTrackedTimeouts();
     };
-  }, [stopDbResultsPolling, unsubscribeRealtime]);
+  }, [clearTrackedTimeouts, stopDbResultsPolling, unsubscribeRealtime]);
 
   return { results, loading, runBuilders };
 }
