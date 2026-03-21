@@ -431,3 +431,64 @@
     border-radius: 12px;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   SHARED INNER CONTENT CONTAINER
+   Use instead of ad-hoc max-w-* mx-auto px-* on each page.
+   ═══════════════════════════════════════════════════ */
+
+@layer utilities {
+  .page-inner {
+    max-width: 72rem; /* ~1152px — roomy but not full-bleed */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .page-inner {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .page-inner {
+      padding-left: 2.5rem;
+      padding-right: 2.5rem;
+    }
+  }
+
+  /* Narrower variant for account/form pages */
+  .page-inner-narrow {
+    max-width: 52rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   HAMBURGER NAV DROPDOWN
+   ═══════════════════════════════════════════════════ */
+
+@layer utilities {
+  @keyframes nav-dropdown-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .nav-dropdown {
+    animation: nav-dropdown-in 0.18s ease-out both;
+    transform-origin: top right;
+  }
+}
+

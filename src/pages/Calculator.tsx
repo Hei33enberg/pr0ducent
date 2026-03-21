@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,7 +83,8 @@ export default function CalculatorPage() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+        <div className="page-inner-narrow">
+          <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2 inline-flex items-center gap-2">
               <Calculator className="w-8 h-8" />

@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, forwardRef, type ReactNode } from "react";
-import { LogOut, Menu, X, Swords, Newspaper, RefreshCw, Radio, Compass, HelpCircle, Calculator, User, BarChart3 } from "lucide-react";
+import { LogOut, Menu, X, Swords, Newspaper, Radio, Compass, HelpCircle, Calculator, User, BarChart3, Home, ShoppingBag } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -41,8 +41,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const navigate = useNavigate();
   const location = useLocation();
   const frameRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [frameRect, setFrameRect] = useState<{ left: number; width: number } | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -59,6 +60,21 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     document.fonts?.ready?.then(update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [menuOpen]);
+
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
   const isHomepage = location.pathname === "/";
 
@@ -81,6 +97,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks = [
+    { label: "Home", href: "/", icon: Home },
     { label: "Arena", href: "/arena", icon: Swords },
     { label: "Leaderboard", href: "/leaderboard", icon: BarChart3 },
     { label: t("nav.compare"), href: "/compare", icon: Compass },
@@ -88,9 +105,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     { label: t("nav.pricing"), href: "/pricing", icon: Calculator },
     { label: t("nav.blog"), href: "/blog", icon: Newspaper },
     { label: t("nav.runsNow"), href: "/runs-now", icon: Radio },
-    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", href: "/marketplace", icon: Compass }] : []),
+    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", href: "/marketplace", icon: ShoppingBag }] : []),
     { label: t("nav.faq"), href: "#faq", icon: HelpCircle },
   ];
+
+  const isActive = (href: string) =>
+    href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
 
   return (
     <div
@@ -102,32 +122,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           <header className="header-glass flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 section-divider">
             <Logo onClick={handleLogoClick} />
 
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-5 font-sans text-sm">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (link.href.startsWith("#")) {
-                        handleAnchorClick(link.href);
-                      } else {
-                        navigate(link.href);
-                      }
-                    }}
-                    className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1.5"
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    {link.label}
-                  </a>
-                );
-              })}
-            </nav>
-
-            <div className="flex items-center gap-2">
+            {/* Right side: utility buttons + hamburger */}
+            <div className="flex items-center gap-1.5" ref={menuRef}>
               {experiment && user && (
                 <ShareButton
                   experimentId={experiment.id}
@@ -138,89 +134,100 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               )}
               <LanguageToggle />
               <NotificationBell />
+
+              {/* User avatar / sign-in CTA */}
               {user ? (
-                <>
-                  <button
-                    onClick={() => navigate("/dashboard")}
-                    title={t("nav.myAccount")}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
-                  >
-                    <User className="w-4 h-4" />
-                  </button>
-                  <span className="text-xs text-muted-foreground hidden sm:inline font-sans">{user.email}</span>
-                  <button
-                    onClick={signOut}
-                    title={t("nav.signOut")}
-                    className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
-                </>
+                <button
+                  onClick={() => navigate("/dashboard")}
+                  title={t("nav.myAccount")}
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                </button>
               ) : (
                 <a
                   href="/auth"
                   onClick={(e) => { e.preventDefault(); navigate("/auth"); }}
-                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
+                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
-                  {t("nav.getStarted")}
+                  {t("nav.getStarted")} →
                 </a>
               )}
-              {/* Mobile hamburger */}
+
+              {/* Hamburger — always visible */}
               <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
+
+              {/* Dropdown */}
+              {menuOpen && (
+                <div className="nav-dropdown absolute top-full right-0 mt-2 w-56 bg-card/98 backdrop-blur-2xl border border-border/60 rounded-2xl shadow-2xl overflow-hidden z-50">
+                  <div className="p-2 space-y-0.5">
+                    {navLinks.map((link) => {
+                      const Icon = link.icon;
+                      const active = isActive(link.href);
+                      return (
+                        <button
+                          key={link.href}
+                          onClick={() => {
+                            setMenuOpen(false);
+                            if (link.href.startsWith("#")) {
+                              handleAnchorClick(link.href);
+                            } else {
+                              navigate(link.href);
+                            }
+                          }}
+                          className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl transition-colors text-left ${
+                            active
+                              ? "bg-foreground text-background font-medium"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+                          }`}
+                        >
+                          <Icon className="w-4 h-4 shrink-0" />
+                          {link.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Divider + auth actions */}
+                  <div className="border-t border-border/40 p-2 space-y-0.5">
+                    {user ? (
+                      <>
+                        <button
+                          onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
+                        >
+                          <User className="w-4 h-4 shrink-0" />
+                          {t("nav.myAccount")}
+                          <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">{user.email?.split("@")[0]}</span>
+                        </button>
+                        <button
+                          onClick={() => { setMenuOpen(false); signOut(); }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 text-sm font-sans rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/40 transition-colors text-left"
+                        >
+                          <LogOut className="w-4 h-4 shrink-0" />
+                          {t("nav.signOut")}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                      >
+                        {t("nav.getStarted")} →
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </header>
-
-          {/* Mobile menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden bg-card/95 backdrop-blur-xl border-b border-border/50 px-6 py-4 space-y-3 font-sans">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setMobileMenuOpen(false);
-                      if (link.href.startsWith("#")) {
-                        handleAnchorClick(link.href);
-                      } else {
-                        navigate(link.href);
-                      }
-                    }}
-                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
-                  >
-                    <Icon className="w-4 h-4" />
-                    {link.label}
-                  </a>
-                );
-              })}
-              {user && (
-                <a
-                  href="/dashboard"
-                  onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate("/dashboard"); }}
-                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors py-1"
-                >
-                  <User className="w-4 h-4" />
-                  {t("nav.myAccount")}
-                </a>
-              )}
-              {!user && (
-                <a
-                  href="/auth"
-                  onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); navigate("/auth"); }}
-                  className="block bg-foreground text-background text-center px-4 py-2.5 text-xs font-semibold rounded-full mt-2"
-                >
-                  {t("nav.getStarted")}
-                </a>
-              )}
-            </div>
-          )}
         </div>
       )}
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Footer } from "@/components/Footer";
 import { CheckCircle2, X, Zap, Crown, Building2, Loader2 } from "lucide-react";
@@ -116,7 +117,8 @@ export default function Pricing() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-20">
+        <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Pricing" }]} />
           {/* Header */}
           <div className="text-center mb-12 md:mb-16">
             <h1 className="text-4xl md:text-5xl font-serif font-bold tracking-tight mb-4">

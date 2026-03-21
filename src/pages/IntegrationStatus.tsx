@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -74,14 +77,19 @@ export default function IntegrationStatus() {
     };
   }, []);
 
+  const navigate = useNavigate();
+
   return (
-    <div className="container mx-auto py-10 max-w-5xl space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Integration Status</h1>
-        <p className="text-muted-foreground mt-2">
-          Technical broker management and POP ecosystem health.
-        </p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
+        <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Admin" }, { label: "Integration Status" }]} />
+          <div className="mt-4">
+            <h1 className="text-3xl font-bold tracking-tight">Integration Status</h1>
+            <p className="text-muted-foreground mt-2">
+              Technical broker management and POP ecosystem health.
+            </p>
+          </div>
 
       {fetchError ? (
         <p className="text-sm text-destructive" role="alert">
@@ -176,6 +184,8 @@ export default function IntegrationStatus() {
           </Table>
         </CardContent>
       </Card>
+        </div>
+      </PageFrame>
     </div>
   );
 }

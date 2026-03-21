@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Footer } from "@/components/Footer";
@@ -45,7 +46,8 @@ export default function Blog() {
 
   return (
     <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-      <div className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 max-w-4xl mx-auto">
+      <div className="page-inner-narrow">
+        <PageBreadcrumb crumbs={[{ label: "Blog" }]} />
         <h1 className="font-serif text-4xl sm:text-5xl font-bold text-foreground mb-4">
           {t("blog.title")}
         </h1>

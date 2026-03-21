@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { supabase } from "@/integrations/supabase/client";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
@@ -121,7 +122,8 @@ export default function UserDashboard() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+        <div className="page-inner-narrow">
+          <PageBreadcrumb crumbs={[{ label: "Dashboard" }]} />
           <h1 className="text-3xl font-serif font-bold tracking-tight mb-2">Dashboard</h1>
           <p className="text-sm text-muted-foreground font-sans mb-6">{user.email}</p>
 

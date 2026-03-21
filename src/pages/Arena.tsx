@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { PairwiseArena } from "@/components/PairwiseArena";
 import { usePublicExperiments } from "@/hooks/usePublicExperiments";
@@ -47,7 +48,8 @@ export default function ArenaPage() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => {}} onVisibilityChange={() => {}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12">
+        <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Arena" }]} />
           
           <div className="text-center max-w-2xl mx-auto mb-10">
             <h1 className="text-3xl md:text-5xl font-serif font-bold tracking-tight mb-4 flex justify-center items-center gap-3">

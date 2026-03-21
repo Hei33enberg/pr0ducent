@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { useLeaderboard, Timeframe, SortDim, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useNavigate } from "react-router-dom";
-import { Trophy, TrendingUp, TrendingDown, Minus, Clock, Code2, Sparkles, Filter, ChevronUp, ChevronDown } from "lucide-react";
+import { Trophy, TrendingUp, TrendingDown, Minus, Code2, Sparkles, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -26,7 +27,9 @@ export default function Leaderboard() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-6xl mx-auto px-4 py-8 lg:py-12 w-full flex-grow">
+        <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Leaderboard" }]} />
+
           {/* Header */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
             <div>
