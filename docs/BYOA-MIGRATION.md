@@ -24,6 +24,14 @@ Table `public.user_builder_credentials` (see migration `20260321120000_orchestra
   - `SECURITY DEFINER`; **`service_role` only** (not callable by anon/authenticated).  
   - Used by Edge (`dispatch-builders`, `process-task-queue`) to read `vault.decrypted_secrets` for the stored UUID. Returns `NULL` when no BYOA row exists (broker mode).
 
+- **`public.disconnect_user_builder_api_key(p_tool_id text, p_credential_type text default 'api_key') → jsonb`** (migration `20260423120000_disconnect_user_builder_api_key.sql`)  
+  - `SECURITY DEFINER`; **`authenticated`** only.  
+  - Deletes matching `vault.secrets` by id and stable name, then deletes the `user_builder_credentials` row. Returns `{ ok: true, removed: true|false }`.
+
+## Observability
+
+- Live adapter dispatches (non-benchmark) emit **`run_events.event_type = 'orchestrator.credential_source'`** with `payload.credential_source` of **`byoa`** or **`broker`** (no secrets in payload).
+
 ## Execution routing
 
 - `builder_integration_config` gains per-user override or separate `user_adapter_routes` mapping:
@@ -47,3 +55,10 @@ Table `public.user_builder_credentials` (see migration `20260321120000_orchestra
 
 - Broker runs consume pr0ducent credits / subscription.
 - BYOA runs may be cheaper or metered differently (policy TBD).
+
+## Rollback / operations (Sprint C)
+
+1. **Disable a builder integration** without touching Vault: `UPDATE builder_integration_config SET enabled = false WHERE tool_id = '…';` then redeploy Edge if needed.
+2. **Emergency BYOA off for a user+tool**: run `disconnect_user_builder_api_key` as the user (UI) or delete the row + Vault secret via SQL as superuser (same logic as disconnect RPC).
+3. **Revert Edge** to a prior deployment if orchestration changes misbehave; DB RPCs are backward-compatible if migrations are not rolled back.
+4. **Never** log `byoaApiKeyOverride`, RPC plaintext arguments, or `vault.decrypted_secrets` contents in application logs.

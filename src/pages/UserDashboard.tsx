@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
@@ -16,6 +16,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FF } from "@/lib/featureFlags";
 import { useTranslation } from "@/lib/i18n";
+import type { Tables } from "@/integrations/supabase/types";
+import { throwIfByoaRpcFailed } from "@/lib/byoa-rpc";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface UserExperiment {
   id: string;
@@ -40,6 +51,20 @@ interface UserRating {
   created_at: string;
 }
 
+type ByoaCredentialRow = Pick<
+  Tables<"user_builder_credentials">,
+  "id" | "tool_id" | "credential_type" | "created_at"
+>;
+
+/** Optional analytics hook — detail contains only action + toolId (no secrets). */
+function emitByoaUiTelemetry(
+  action: "connect_ok" | "rotate_ok" | "disconnect_ok",
+  toolId: string,
+) {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new CustomEvent("pr0ducent:byoa", { detail: { action, toolId } }));
+}
+
 export default function UserDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -50,10 +75,10 @@ export default function UserDashboard() {
   const [ratings, setRatings] = useState<UserRating[]>([]);
   const [activeTab, setActiveTab] = useState<"history" | "ratings" | "subscription" | "builders">("history");
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const [byoaCredentials, setByoaCredentials] = useState<
-    { id: string; tool_id: string; credential_type: string; created_at: string }[]
-  >([]);
-  const [connectingTool, setConnectingTool] = useState<string | null>(null);
+  const [byoaCredentials, setByoaCredentials] = useState<ByoaCredentialRow[]>([]);
+  const [keyDialog, setKeyDialog] = useState<{ toolId: string; mode: "connect" | "rotate" } | null>(null);
+  const [disconnectToolId, setDisconnectToolId] = useState<string | null>(null);
+  const [disconnectLoading, setDisconnectLoading] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
 
@@ -79,35 +104,59 @@ export default function UserDashboard() {
     }
   };
 
-  const handleConnectApiKey = async () => {
-    if (!connectingTool || !apiKeyInput.trim()) return;
+  const loadByoaCredentials = useCallback(async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("user_builder_credentials")
+      .select("id, tool_id, credential_type, created_at")
+      .eq("user_id", user.id);
+    if (!error && data) setByoaCredentials(data);
+  }, [user]);
+
+  const handleSaveApiKey = async () => {
+    if (!keyDialog || !apiKeyInput.trim()) return;
     setIsConnecting(true);
     try {
-      const { error } = await (supabase.rpc as Function)('save_user_builder_api_key', {
-        p_tool_id: connectingTool,
-        p_credential_type: 'api_key',
+      const { data, error } = await supabase.rpc("save_user_builder_api_key", {
+        p_tool_id: keyDialog.toolId,
+        p_credential_type: "api_key",
         p_plaintext_secret: apiKeyInput.trim(),
       });
       if (error) throw error;
-      
-      toast.success(t("byoa.connected") || "API Key connected securely!");
-      
-      setByoaCredentials((prev) => [
-        ...prev.filter(c => c.tool_id !== connectingTool),
-        { 
-          id: 'temp-' + Date.now(), 
-          tool_id: connectingTool, 
-          credential_type: 'api_key', 
-          created_at: new Date().toISOString() 
-        }
-      ]);
-      
-      setConnectingTool(null);
+      throwIfByoaRpcFailed(data);
+
+      toast.success(t("byoa.connected"));
+      emitByoaUiTelemetry(keyDialog.mode === "rotate" ? "rotate_ok" : "connect_ok", keyDialog.toolId);
+      await loadByoaCredentials();
+      setKeyDialog(null);
       setApiKeyInput("");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to save API key");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(msg || t("byoa.errorSave"));
     } finally {
       setIsConnecting(false);
+    }
+  };
+
+  const handleConfirmDisconnect = async () => {
+    if (!disconnectToolId) return;
+    setDisconnectLoading(true);
+    try {
+      const { data, error } = await supabase.rpc("disconnect_user_builder_api_key", {
+        p_tool_id: disconnectToolId,
+        p_credential_type: "api_key",
+      });
+      if (error) throw error;
+      throwIfByoaRpcFailed(data);
+      toast.success(t("byoa.disconnected"));
+      emitByoaUiTelemetry("disconnect_ok", disconnectToolId);
+      await loadByoaCredentials();
+      setDisconnectToolId(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(msg || t("byoa.errorDisconnect"));
+    } finally {
+      setDisconnectLoading(false);
     }
   };
 
@@ -136,16 +185,8 @@ export default function UserDashboard() {
       .order("created_at", { ascending: false })
       .then(({ data }) => { if (data) setRatings(data); });
       
-    supabase
-      .from("user_builder_credentials")
-      .select("id, tool_id, credential_type, created_at")
-      .eq("user_id", user.id)
-      .then(({ data, error }) => {
-        if (!error && data) {
-          setByoaCredentials(data as unknown as { id: string; tool_id: string; credential_type: string; created_at: string }[]);
-        }
-      });
-  }, [user]);
+    void loadByoaCredentials();
+  }, [user, loadByoaCredentials]);
 
   if (!user) {
     return (
@@ -391,18 +432,45 @@ export default function UserDashboard() {
                         
                         <div>
                           {isConnected ? (
-                            <Badge variant="outline" className="border-success/50 text-success">{t("byoa.connected")}</Badge>
+                            <div className="flex flex-wrap items-center justify-end gap-1.5">
+                              <Badge variant="outline" className="border-success/50 text-success shrink-0">
+                                {t("byoa.connected")}
+                              </Badge>
+                              {tool.integrationEnabled && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 text-xs rounded-full"
+                                    onClick={() => setKeyDialog({ toolId: tool.id, mode: "rotate" })}
+                                  >
+                                    {t("byoa.rotateKey")}
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="h-7 text-xs text-destructive hover:text-destructive"
+                                    disabled={disconnectToolId === tool.id}
+                                    onClick={() => setDisconnectToolId(tool.id)}
+                                  >
+                                    {t("byoa.disconnectKey")}
+                                  </Button>
+                                </>
+                              )}
+                            </div>
                           ) : tool.integrationEnabled ? (
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
+                            <Button
+                              size="sm"
+                              variant="outline"
                               className="h-7 text-xs rounded-full"
-                              onClick={() => setConnectingTool(tool.id)}
+                              onClick={() => setKeyDialog({ toolId: tool.id, mode: "connect" })}
                             >
                               {t("byoa.connectKey")}
                             </Button>
                           ) : (
-                            <Badge variant="secondary" className="opacity-60">{t("byoa.comingSoon")}</Badge>
+                            <Badge variant="secondary" className="opacity-60">
+                              {t("byoa.comingSoon")}
+                            </Badge>
                           )}
                         </div>
                       </div>
@@ -415,18 +483,23 @@ export default function UserDashboard() {
         </div>
       </PageFrame>
 
-      <Dialog open={!!connectingTool} onOpenChange={(open) => {
-        if (!open) {
-          setConnectingTool(null);
-          setApiKeyInput("");
-        }
-      }}>
+      <Dialog
+        open={!!keyDialog}
+        onOpenChange={(open) => {
+          if (!open) {
+            setKeyDialog(null);
+            setApiKeyInput("");
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Connect API Key for {getToolName(connectingTool || "")}</DialogTitle>
-            <DialogDescription>
-              Your API key will be encrypted and stored securely in Supabase Vault. It will only be used when you dispatch runs for this builder.
-            </DialogDescription>
+            <DialogTitle>
+              {keyDialog?.mode === "rotate"
+                ? t("byoa.rotateTitle").replace("{name}", getToolName(keyDialog.toolId))
+                : t("byoa.connectTitle").replace("{name}", getToolName(keyDialog?.toolId ?? ""))}
+            </DialogTitle>
+            <DialogDescription>{t("byoa.vaultNotice")}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -442,14 +515,41 @@ export default function UserDashboard() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => { setConnectingTool(null); setApiKeyInput(""); }}>Cancel</Button>
-            <Button onClick={handleConnectApiKey} disabled={!apiKeyInput.trim() || isConnecting}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setKeyDialog(null);
+                setApiKeyInput("");
+              }}
+            >
+              {t("byoa.cancel")}
+            </Button>
+            <Button onClick={handleSaveApiKey} disabled={!apiKeyInput.trim() || isConnecting}>
               {isConnecting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              Save Key
+              {keyDialog?.mode === "rotate" ? t("byoa.saveRotatedKey") : t("byoa.saveKey")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!disconnectToolId} onOpenChange={(open) => !open && setDisconnectToolId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("byoa.disconnectConfirmTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("byoa.disconnectConfirmDesc")}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={disconnectLoading}>{t("byoa.cancel")}</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              disabled={disconnectLoading}
+              onClick={() => void handleConfirmDisconnect()}
+            >
+              {disconnectLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t("byoa.disconnectConfirm")}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

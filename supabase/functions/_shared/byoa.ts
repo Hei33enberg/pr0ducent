@@ -13,6 +13,11 @@ export function preferByoaOverBroker(
  * Resolves decrypted BYOA API key via RPC (service_role only).
  * Returns null if no row or Vault miss (broker mode).
  */
+/** Maps resolved Vault key to audit label (no secret material). */
+export function credentialSourceFromByoaKey(byoaKey: string | null | undefined): "byoa" | "broker" {
+  return byoaKey != null && byoaKey.length > 0 ? "byoa" : "broker";
+}
+
 export async function fetchByoaApiKey(
   admin: SupabaseClient,
   userId: string,

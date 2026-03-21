@@ -6,7 +6,8 @@ import { dispatchV0Adapter } from "../_shared/adapters/v0-adapter.ts";
 import { dispatchVbpAdapter } from "../_shared/adapters/vbp-adapter.ts";
 import type { AdapterDispatchContext, IntegrationConfigRow } from "../_shared/adapters/types.ts";
 import { corsHeadersForRequest } from "../_shared/cors.ts";
-import { fetchByoaApiKey } from "../_shared/byoa.ts";
+import { credentialSourceFromByoaKey, fetchByoaApiKey } from "../_shared/byoa.ts";
+import { emitCredentialSourceEvent } from "../_shared/orchestrator-events.ts";
 import { timingSafeEqualString } from "../_shared/timing-safe.ts";
 
 const MAX_TASKS_PER_INVOCATION = 40;
@@ -74,6 +75,16 @@ async function dispatchOne(
   };
 
   const kind = resolveAdapterKind(task.tool_id, cfg);
+  if (kind !== "benchmark") {
+    await emitCredentialSourceEvent(admin, {
+      experimentId: task.experiment_id,
+      runJobId: task.run_job_id,
+      runTaskId: task.id,
+      toolId: task.tool_id,
+      traceId: job.trace_id,
+      credentialSource: credentialSourceFromByoaKey(byoaKey),
+    });
+  }
   if (kind === "v0_live") {
     await dispatchV0Adapter(ctx);
   } else if (kind === "vbp_live") {

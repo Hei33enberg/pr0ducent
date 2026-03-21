@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts";
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { fetchByoaApiKey, preferByoaOverBroker } from "../_shared/byoa.ts";
+import { credentialSourceFromByoaKey, fetchByoaApiKey, preferByoaOverBroker } from "../_shared/byoa.ts";
 
 Deno.test("preferByoaOverBroker uses BYOA when non-empty", () => {
   assertEquals(preferByoaOverBroker("user-key", "platform-key"), "user-key");
@@ -13,6 +13,13 @@ Deno.test("preferByoaOverBroker falls back to broker when BYOA empty", () => {
 
 Deno.test("preferByoaOverBroker returns undefined when both absent", () => {
   assertEquals(preferByoaOverBroker(undefined, undefined), undefined);
+});
+
+Deno.test("credentialSourceFromByoaKey labels byoa vs broker", () => {
+  assertEquals(credentialSourceFromByoaKey("x"), "byoa");
+  assertEquals(credentialSourceFromByoaKey(""), "broker");
+  assertEquals(credentialSourceFromByoaKey(null), "broker");
+  assertEquals(credentialSourceFromByoaKey(undefined), "broker");
 });
 
 Deno.test("fetchByoaApiKey returns decrypted string from RPC", async () => {

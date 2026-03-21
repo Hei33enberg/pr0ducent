@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { fetchByoaApiKey } from "../_shared/byoa.ts";
+import { credentialSourceFromByoaKey, fetchByoaApiKey } from "../_shared/byoa.ts";
+import { emitCredentialSourceEvent } from "../_shared/orchestrator-events.ts";
 import { resolveAdapterKind } from "../_shared/adapter-registry.ts";
 import { dispatchBenchmarkAdapter } from "../_shared/adapters/benchmark-adapter.ts";
 import { dispatchGenericRestAdapter } from "../_shared/adapters/generic-rest-adapter.ts";
@@ -330,6 +331,16 @@ Deno.serve(async (req) => {
           byoaApiKeyOverride: byoaKey ?? undefined,
         };
         const kind = resolveAdapterKind(row.tool_id, cfg);
+        if (kind !== "benchmark") {
+          await emitCredentialSourceEvent(admin, {
+            experimentId,
+            runJobId: runJobId!,
+            runTaskId: row.id as string,
+            toolId: row.tool_id,
+            traceId,
+            credentialSource: credentialSourceFromByoaKey(byoaKey),
+          });
+        }
         if (kind === "v0_live") await dispatchV0Adapter(ctx);
         else if (kind === "vbp_live") await dispatchVbpAdapter(ctx);
         else if (kind === "generic_rest_live") await dispatchGenericRestAdapter(ctx);
