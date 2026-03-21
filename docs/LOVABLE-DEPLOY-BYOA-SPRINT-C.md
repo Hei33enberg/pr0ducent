@@ -8,12 +8,15 @@ If not already applied:
 
 1. `20260422130000_byoa_vault_credentials_rpc.sql` — `save_user_builder_api_key`, `get_byoa_api_key_for_dispatch`
 2. `20260423120000_disconnect_user_builder_api_key.sql` — `disconnect_user_builder_api_key`
+3. `20260424120000_byoa_rpc_grants_hardening.sql` — explicit `REVOKE` from `anon` / `authenticated` where needed (aligns with prod hardening)
 
-Grant sanity (same as prior Lovable fix):
+Grant sanity:
 
-- `save_user_builder_api_key` → `authenticated` only  
-- `get_byoa_api_key_for_dispatch` → `service_role` only  
-- `disconnect_user_builder_api_key` → `authenticated` only  
+- `save_user_builder_api_key` → `authenticated` only (not `anon`)
+- `get_byoa_api_key_for_dispatch` → `service_role` only (not `anon` / `authenticated`)
+- `disconnect_user_builder_api_key` → `authenticated` only (not `anon`). Uses `auth.uid()`; do **not** rely on `service_role` for this RPC from Edge (no user context).
+
+Note: If a deploy checklist mentions `service_role` on `disconnect`, treat it as redundant or a misread — the function is designed for logged-in users only.
 
 ## Edge Functions (redeploy)
 
