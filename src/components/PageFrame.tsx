@@ -95,7 +95,7 @@ function useScrollDirection() {
 
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
