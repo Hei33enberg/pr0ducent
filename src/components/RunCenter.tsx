@@ -65,7 +65,7 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card/80 backdrop-blur-sm overflow-hidden">
+    <div className="rounded-xl border border-border bg-card overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-border/60">
         <div className="flex items-center gap-2 text-xs font-semibold text-foreground font-sans uppercase tracking-wider">
           <Activity className="w-3.5 h-3.5 text-accent" />

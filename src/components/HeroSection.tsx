@@ -126,7 +126,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="overflow-hidden"
                 >
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="bg-card border border-border/50 rounded-xl p-5 shadow-sm">
                     <ToolSelectionGrid
                       selectedTools={selectedTools}
                       onSelectionChange={onSelectedToolsChange}
