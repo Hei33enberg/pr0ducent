@@ -5,16 +5,21 @@ on:
     paths:
       - "protocol/vibecoding-broker-protocol/**"
       - "docs/vbp-schemas/**"
+      - "scripts/validate-openapi-refs.mjs"
   pull_request:
     paths:
       - "protocol/vibecoding-broker-protocol/**"
       - "docs/vbp-schemas/**"
+      - "scripts/validate-openapi-refs.mjs"
 
 jobs:
   validate-json-schemas:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validate OpenAPI $ref paths
+        run: node scripts/validate-openapi-refs.mjs
+
       - name: Parse OSS protocol schemas
         run: |
           node -e "

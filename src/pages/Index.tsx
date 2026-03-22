@@ -26,6 +26,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 const Index = () => {
   const { user } = useAuth();
@@ -64,18 +65,20 @@ const Index = () => {
       let dbId: string | undefined;
       if (user) {
         dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags) || undefined;
-        if (dbId) {
-          const synced = { ...exp, id: dbId };
-          setExperiment(synced);
-          saveExperiment(synced);
+        if (!dbId) {
+          toast.error(t("experiment.createFailed"));
+          return;
         }
+        const synced = { ...exp, id: dbId };
+        setExperiment(synced);
+        saveExperiment(synced);
         loadExperimentsFromDb(user.id).then(setPastExperiments);
       } else {
         setPastExperiments(loadExperiments());
       }
       runBuilders(prompt, dbId, selectedTools);
     },
-    [user]
+    [user, t]
   );
 
   const handleExperimentUpdate = useCallback((updated: Experiment) => {

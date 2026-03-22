@@ -73,6 +73,18 @@ Fork for a new prompt / user. Schema: [vbp-schemas/remix-request.json](./vbp-sch
 
 `POST webhook_url` with optional header `X-VBP-Signature: sha256=<hmac>` over raw body (secret agreed out-of-band). pr0ducent receiver: `supabase/functions/pbp-webhook` (also accepts legacy `X-PBP-Signature` / `x-pbp-signature`; duplicate identical raw bodies are deduped after successful JSON parse). Optional env: `VBP_WEBHOOK_SECRET_REQUIRED=true` fails closed if secret missing.
 
+### Signing header aliases (single HMAC over raw bytes)
+
+| Name | Notes |
+|------|--------|
+| `X-VBP-Signature` | Normative in this spec (`sha256=<hex>` or raw hex) |
+| `x-vbp-signature` | Same header; HTTP stacks normalize case |
+| `X-PBP-Signature` / `x-pbp-signature` | Legacy alias accepted by pr0ducent |
+
+### `dispatch` body: `webhook_url`
+
+- **JSON Schema:** `webhook_url` is **not** in the `required` array — required in practice when the builder does **not** rely on SSE/`/stream/{run_id}` only (see `dispatch-request.json` property description).
+
 ## MCP mapping (informative)
 
 Optional MCP server exposing tools: `vbp_dispatch`, `vbp_stream`, `vbp_status`, `vbp_artifacts`, `vbp_export`, `vbp_claim`, `vbp_remix` — same semantics as REST.

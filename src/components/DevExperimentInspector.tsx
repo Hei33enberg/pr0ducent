@@ -54,6 +54,8 @@ export function DevExperimentInspector({ experimentId, stream }: DevExperimentIn
       <div className="px-4 py-2 border-b border-border/50 bg-muted/10">
         <div className="text-[10px] text-muted-foreground font-mono">experiment_id</div>
         <div className="text-xs font-mono select-all text-foreground">{experimentId || "—"}</div>
+        <div className="text-[10px] text-muted-foreground font-mono mt-2">realtime</div>
+        <div className="text-xs font-mono text-foreground">{stream.realtimeChannelStatus}</div>
       </div>
 
       <div className="flex-1 overflow-auto">

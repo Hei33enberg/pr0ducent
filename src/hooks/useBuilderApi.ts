@@ -15,6 +15,8 @@ export interface BuilderResult {
   provenance?: string;
   executionMode?: string;
   providerRunId?: string;
+  /** DB `builder_results.updated_at` — for merge vs Realtime stream (Slice C). */
+  updatedAt?: string;
 }
 
 const POLL_INTERVAL = 3000;
@@ -23,6 +25,8 @@ const MAX_POLL_TIME = 120000;
 const DB_RESULTS_POLL_KEY = "__db_results__";
 const RUN_ON_V0_MAX_RETRIES = 3;
 const RUN_ON_V0_RETRY_DELAY_MS = 1500;
+const DISPATCH_MAX_ATTEMPTS = 3;
+const DISPATCH_RETRY_DELAY_MS = 600;
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -53,6 +57,7 @@ export function mapBuilderRow(row: Record<string, unknown>): BuilderResult {
     provenance: (row.provenance as string) ?? undefined,
     executionMode: (row.execution_mode as string) ?? undefined,
     providerRunId: (row.provider_run_id as string) ?? undefined,
+    updatedAt: typeof row.updated_at === "string" ? row.updated_at : undefined,
   };
 }
 
@@ -135,6 +140,8 @@ export function useBuilderApi() {
   const channelRef = useRef<RealtimeChannel | null>(null);
   /** Tracks all active setTimeout IDs so they can be cleared on unmount or new run. */
   const timeoutRefs = useRef<number[]>([]);
+  /** Last orchestrated experiment — v0 polling deferred out of setResults (Slice C). */
+  const lastDispatchExperimentIdRef = useRef<string | null>(null);
 
   const clearTrackedTimeouts = useCallback(() => {
     timeoutRefs.current.forEach((id) => clearTimeout(id));
@@ -395,6 +402,7 @@ export function useBuilderApi() {
       setResults({});
 
       if (!isUuid(experimentId)) {
+        lastDispatchExperimentIdRef.current = null;
         setLoading(true);
         if (selectedTools.includes("v0")) {
           await runOnV0Guest(prompt);
@@ -403,6 +411,7 @@ export function useBuilderApi() {
         return;
       }
 
+      lastDispatchExperimentIdRef.current = experimentId;
       setLoading(true);
 
       const idempotencyKey =
@@ -410,15 +419,25 @@ export function useBuilderApi() {
           ? crypto.randomUUID()
           : `${experimentId}-${Date.now()}`;
 
-      const { data, error } = await supabase.functions.invoke("dispatch-builders", {
-        body: { prompt, experimentId, selectedTools, idempotencyKey },
-      });
+      let dispatchData: Record<string, unknown> | null = null;
+      let invokeError: { message: string } | null = null;
+      for (let attempt = 1; attempt <= DISPATCH_MAX_ATTEMPTS; attempt++) {
+        const res = await supabase.functions.invoke("dispatch-builders", {
+          body: { prompt, experimentId, selectedTools, idempotencyKey },
+        });
+        dispatchData = (res.data as Record<string, unknown>) ?? null;
+        invokeError = res.error ?? null;
+        if (!invokeError) break;
+        if (attempt < DISPATCH_MAX_ATTEMPTS) await sleep(DISPATCH_RETRY_DELAY_MS * attempt);
+      }
 
-      if (error) {
-        toast.error(error.message || "Dispatch failed");
+      if (invokeError) {
+        toast.error(invokeError.message || "Dispatch failed");
         setLoading(false);
         return;
       }
+
+      const data = dispatchData;
 
       if (data?.code === "limit_exceeded") {
         toast.error(data.error || t("guest.limitReached"));
@@ -465,18 +484,7 @@ export function useBuilderApi() {
             const row = (payload.new ?? payload.old) as Record<string, unknown>;
             if (!row?.tool_id) return;
             const br = mapBuilderRow(row);
-            setResults((prev) => {
-              const merged = { ...prev, [br.toolId]: br };
-              if (
-                br.toolId === "v0" &&
-                br.status === "generating" &&
-                br.providerRunId &&
-                !pollTimers.current.v0
-              ) {
-                startV0PollingForExperiment(experimentId, br.providerRunId, br.chatUrl);
-              }
-              return merged;
-            });
+            setResults((prev) => ({ ...prev, [br.toolId]: br }));
           }
         )
         .subscribe();
@@ -507,6 +515,15 @@ export function useBuilderApi() {
       clearTrackedTimeouts();
     };
   }, [clearTrackedTimeouts, stopDbResultsPolling, unsubscribeRealtime]);
+
+  useEffect(() => {
+    const expId = lastDispatchExperimentIdRef.current;
+    if (!expId || !isUuid(expId)) return;
+    const v0 = results["v0"];
+    if (!v0?.providerRunId || v0.status !== "generating") return;
+    if (pollTimers.current.v0) return;
+    startV0PollingForExperiment(expId, v0.providerRunId, v0.chatUrl);
+  }, [results, startV0PollingForExperiment]);
 
   return { results, loading, runBuilders };
 }

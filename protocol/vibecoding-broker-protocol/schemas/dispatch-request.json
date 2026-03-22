@@ -3,7 +3,7 @@
   "$id": "https://pr0ducent.dev/schemas/vbp/dispatch-request.json",
   "title": "VBP Dispatch Request",
   "type": "object",
-  "required": ["broker_id", "run_id", "prompt", "webhook_url"],
+  "required": ["broker_id", "run_id", "prompt"],
   "properties": {
     "broker_id": { "type": "string" },
     "broker_auth_token": { "type": "string" },
@@ -18,7 +18,11 @@
         "theme": { "type": "string" }
       }
     },
-    "webhook_url": { "type": "string", "format": "uri" },
+    "webhook_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Callback URL for lifecycle events. Omit when the builder delivers updates only via SSE/stream (see VBP-SPEC)."
+    },
     "options": {
       "type": "object",
       "properties": {

@@ -4,7 +4,7 @@
 **Zakres:** full-stack (Edge Functions, DB/RPC, frontend realtime/stream, kontrakty POP/VBP).  
 **Źródło prawdy implementacji:** [`supabase/functions/`](../supabase/functions/), [`src/hooks/`](../src/hooks/), [`docs/VBP-SPEC.md`](./VBP-SPEC.md).
 
-**Uwaga (zakres audytu):** Ten dokument jest **inwentaryzacją, macierzami ryzyk, raportem driftu i planem slice’ów** (A–D) z opisem testów i rollbacku per slice. **Nie wdraża sam w sobie kodu** — implementacja slice’ów to **osobne PR-e**. Następny krok inżynierski: wybrać slice (np. **B** bezpieczeństwo webhooka + **A** terminale stanów kolejki) i zrobić implementację.
+**Uwaga (zakres audytu):** Ten dokument jest **inwentaryzacją, macierzami ryzyk, raportem driftu i planem slice’ów** (A–D). **Implementacja A–D jest w repozytorium** (Edge, migracje, frontend stream, OpenAPI/docs/CI) — patrz §5 dla szczegółów i ścieżek plików.
 
 ---
 
@@ -143,18 +143,20 @@ sequenceDiagram
 ### Slice C — Frontend stream
 
 - **Cel:** merge bezpieczny load+realtime, status kanału, DELETE tasks, dispatch retry.  
-- **Testy:** vitest hook z mockiem supabase; e2e smoke compare.  
+- **Status (repo):** `useRunTaskStream` — merge po `updated_at`, obsługa DELETE `run_tasks` / `builder_results`, status kanału + ponowne `subscribe`, toast przy błędzie; `mergePreferredBuilderResult` w Compare; `RunCenter` dedupe po `id`; `useBuilderApi` — retry dispatch (3×), start v0 poll w `useEffect`; `Index` toast gdy `createExperimentInDb` zwróci pusty id.  
+- **Testy:** `src/lib/realtime-merge.test.ts` (Vitest).  
 - **Rollback:** revert commit hooków; UI dalej działa na polling-only jeśli dodany fallback.
 
 ### Slice D — Docs / CI / OpenAPI
 
 - **Cel:** naprawa `$ref`, tabela aliasów nagłówków w VBP-SPEC, sync schema, CI validate against JSON Schema.  
-- **Testy:** workflow `vbp-protocol.yml` rozszerzony; `vbp-validate` na przykładowym URL.  
+- **Status (repo):** OpenAPI `vbp-v1.openapi.yaml` — spójne `$ref: ../schemas/...`; `dispatch-request.json` (docs + protocol) — `webhook_url` opcjonalne w `required` + opis; VBP-SPEC — tabela aliasów nagłówków + `webhook_url`; `scripts/validate-openapi-refs.mjs` + krok w `vbp-protocol.yml`.  
+- **Testy:** workflow `vbp-protocol.yml` rozszerzony; `vbp-validate` na przykładowym URL (bez zmian).  
 - **Rollback:** docs-only, niski ryzyko.
 
 **Kolejność zalecana:** B (security) częściowo równolegle z A (data integrity) → C → D.
 
-**Status implementacji:** Opisy w §5 to **plan prac**; włączenie zmian w repozytorium następuje **dopiero w PR-ach slice’owych** (migracje, Edge, frontend według wybranego slice’a).
+**Status implementacji:** Slice **A–D** są opisane w §5; **A, B, C, D** mają teraz wdrożenie w repozytorium (ostatnie: C frontend + D docs/CI).
 
 ---
 
@@ -178,7 +180,7 @@ Powiązane: [`UI-PARITY-LOVABLE-SYNC.md`](./UI-PARITY-LOVABLE-SYNC.md), [`DEVELO
 - [x] Mapa przepływu prompt → queue → adapter → stream → wynik.  
 - [x] Macierz ryzyk backend + frontend z severity i ścieżką naprawy.  
 - [x] Raport driftu kontraktów + rekomendacja single source of truth.  
-- [x] Plan slice’ów A–D (zakres, testy, rollback) — §5; **nie mylić z merge’em kodu.**  
-- [x] Checklist Lovable Cloud (§6) — do użycia **po** wdrożeniu zmian z wybranego slice’a.
+- [x] Plan slice’ów A–D (zakres, testy, rollback) — §5; implementacja A–D w repo.  
+- [x] Checklist Lovable Cloud (§6) — używana przy rolloutcie migracji/Edge/UI.
 
-**Poza zakresem samego audytu (następne PR-e):** implementacja kodu dla slice’ów A–D — wybrać pierwszy slice (np. B + A, zgodnie z §5) i zrealizować w osobnych merge’ach.
+**Utrzymanie:** kolejne zmiany w kontraktach VBP — aktualizować równolegle `docs/vbp-schemas/`, `protocol/.../schemas/` i Edge (`pbp-webhook`, adaptery); CI: `vbp-protocol.yml` + `validate-openapi-refs.mjs`.

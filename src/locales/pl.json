@@ -4,6 +4,7 @@
   "nav.faq": "FAQ",
   "nav.getStarted": "Zacznij →",
   "nav.signOut": "Wyloguj",
+  "experiment.createFailed": "Nie udało się zapisać eksperymentu. Spróbuj ponownie.",
 
   "hero.title1": "Jeden prompt.",
   "hero.title2": "Wiele",

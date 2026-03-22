@@ -50,7 +50,10 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
         },
         (payload) => {
           const row = payload.new as RunEventRow;
-          setEvents((prev) => [row, ...prev].slice(0, 40));
+          setEvents((prev) => {
+            if (prev.some((e) => e.id === row.id)) return prev;
+            return [row, ...prev].slice(0, 40);
+          });
         }
       )
       .subscribe();

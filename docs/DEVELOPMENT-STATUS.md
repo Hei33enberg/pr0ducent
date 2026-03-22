@@ -46,7 +46,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 
 ## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
 
-- **Pełny audyt:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A + B** wdrożone w kodzie (migracja `20260425140000`, `process-task-queue`, `pbp-webhook`); **Slice C + D** nadal jako osobne PR-e.
+- **Pełny audyt:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A–D** w repo: kolejka/webhook (A/B), stream Compare + dispatch/retry (C), OpenAPI/VBP-SPEC/CI walidacja `$ref` (D).
 
 ## Frontend stack
 
