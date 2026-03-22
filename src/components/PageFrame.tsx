@@ -196,57 +196,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     );
   };
 
-  /* ── Desktop dropdown ── */
-  const desktopDropdown = (
-    <div
-      className="nav-dropdown-glass nav-dropdown-animate hidden sm:block absolute top-full left-0 right-0 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden z-[100]"
-      style={{
-        transform: menuOpen ? "scaleY(1)" : "scaleY(0)",
-        opacity: menuOpen ? 1 : 0,
-      }}
-    >
-      <div className="p-5 md:px-8 lg:px-12">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
-          {navLinks.map((link) => renderNavItem(link, "sm"))}
-        </div>
-      </div>
-
-      {/* Auth actions */}
-      <div className="border-t border-foreground/[0.06] p-5 md:px-8 lg:px-12">
-        <div className="grid grid-cols-2 gap-1">
-          {user ? (
-            <>
-              <button
-                onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-                className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
-              >
-                <User className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
-                <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.myAccount")}</span>
-                <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
-                  {user.email?.split("@")[0]}
-                </span>
-              </button>
-              <button
-                onClick={() => { setMenuOpen(false); signOut(); }}
-                className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
-              >
-                <LogOut className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
-                <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.signOut")}</span>
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-              className="col-span-2 w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
-            >
-              {t("nav.getStarted")} →
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-
   /* ── Mobile full-screen overlay ── */
   const mobileOverlay = menuOpen && (
     <div className="menu-overlay-mobile sm:hidden fixed inset-0 z-[200] flex flex-col">
@@ -306,12 +255,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
       className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
       {frameRect && (
-        <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}>
+        <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }} ref={menuRef}>
           <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
-            <div className="flex items-center gap-1.5" ref={menuRef}>
+            <div className="flex items-center gap-1.5">
               {experiment && user && (
                 <ShareButton
                   experimentId={experiment.id}
@@ -351,11 +300,58 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               >
                 <Hamburger open={menuOpen} />
               </button>
-
-              {/* Desktop dropdown */}
-              {menuOpen && desktopDropdown}
             </div>
           </header>
+
+          {/* Desktop dropdown — direct child of sticky-header */}
+          <div
+            className="nav-dropdown-glass nav-dropdown-animate hidden sm:block shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden"
+            style={{
+              transform: menuOpen ? "scaleY(1)" : "scaleY(0)",
+              opacity: menuOpen ? 1 : 0,
+              pointerEvents: menuOpen ? "auto" : "none",
+            }}
+          >
+            <div className="p-5 md:px-8 lg:px-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
+                {navLinks.map((link) => renderNavItem(link, "sm"))}
+              </div>
+            </div>
+
+            {/* Auth actions */}
+            <div className="border-t border-foreground/[0.06] p-5 md:px-8 lg:px-12">
+              <div className="grid grid-cols-2 gap-1">
+                {user ? (
+                  <>
+                    <button
+                      onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                      className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
+                    >
+                      <User className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.myAccount")}</span>
+                      <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
+                        {user.email?.split("@")[0]}
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => { setMenuOpen(false); signOut(); }}
+                      className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
+                    >
+                      <LogOut className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
+                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.signOut")}</span>
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                    className="col-span-2 w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
+                  >
+                    {t("nav.getStarted")} →
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

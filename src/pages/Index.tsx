@@ -13,6 +13,7 @@ import { HomepageBlogSection } from "@/components/HomepageBlogSection";
 import { InlineCalculator } from "@/components/InlineCalculator";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
+import BigHeadline from "@/components/BigHeadline";
 
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
@@ -158,22 +159,46 @@ const Index = () => {
               ) : null}
               
               <HowItWorks />
-              <BuilderComparisonTable
-                onSelectTool={(toolId) => {
-                  setSelectedTools([toolId]);
-                  heroRef.current?.scrollIntoView({ behavior: "smooth" });
-                }}
-              />
-              <FeatureMatrix />
-              <PlanComparisonTable />
-              <InlineCalculator />
+
+              <BigHeadline text="One prompt. Every builder." wash="blush" />
+
+              <div className="section-gradient-peach section-cv">
+                <BuilderComparisonTable
+                  onSelectTool={(toolId) => {
+                    setSelectedTools([toolId]);
+                    heroRef.current?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                />
+              </div>
+
+              <div className="section-wash-blush section-cv">
+                <FeatureMatrix />
+              </div>
+
+              <div className="section-wash-indigo section-cv">
+                <PlanComparisonTable />
+              </div>
+
+              <BigHeadline text="Know your cost before you build." wash="gold" />
+
+              <div className="section-wash-gold">
+                <InlineCalculator />
+              </div>
+
               <FAQ />
-              <HomepageBlogSection />
-              <ExperimentHistory
-                experiments={pastExperiments}
-                onSelect={(exp) => setExperiment(exp)}
-                onDelete={handleDelete}
-              />
+
+              <div className="section-wash-teal">
+                <HomepageBlogSection />
+              </div>
+
+              <div className="section-gradient-lavender section-cv">
+                <ExperimentHistory
+                  experiments={pastExperiments}
+                  onSelect={(exp) => setExperiment(exp)}
+                  onDelete={handleDelete}
+                />
+              </div>
+
               <Footer />
             </motion.div>
           )}
