@@ -5,15 +5,16 @@ interface BrandTextProps {
   className?: string;
   as?: keyof JSX.IntrinsicElements;
   showTm?: boolean;
+  style?: React.CSSProperties;
 }
 
 const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
-  ({ text, className = "", as: Tag = "span", showTm = false }, ref) => {
+  ({ text, className = "", as: Tag = "span", showTm = false, style }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
 
     return (
-      <Component ref={ref as never} className={className}>
+      <Component ref={ref as never} className={className} style={style}>
         {parts.map((part, i) =>
           /\d/.test(part) ? (
             <span
