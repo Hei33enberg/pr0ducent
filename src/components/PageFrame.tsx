@@ -95,7 +95,7 @@ function useScrollDirection() {
 
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -247,33 +247,39 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
         </div>
       </div>
 
-      {/* Sticky CTA at bottom */}
-      <div className="shrink-0 p-4 border-t border-foreground/[0.06]">
-        {user ? (
-          <div className="grid grid-cols-2 gap-2">
+      {/* Language + CTA at bottom */}
+      <div className="shrink-0 border-t border-foreground/[0.06]">
+        <div className="px-4 py-3 flex items-center gap-2">
+          <LanguageToggle />
+          <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
+        </div>
+        <div className="px-4 pb-4">
+          {user ? (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              >
+                <User className="w-4 h-4" />
+                {t("nav.myAccount")}
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); signOut(); }}
+                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                {t("nav.signOut")}
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-              className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
+              className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
             >
-              <User className="w-4 h-4" />
-              {t("nav.myAccount")}
+              {t("nav.getStarted")}
             </button>
-            <button
-              onClick={() => { setMenuOpen(false); signOut(); }}
-              className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
-            >
-              <LogOut className="w-4 h-4" />
-              {t("nav.signOut")}
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => { setMenuOpen(false); navigate("/auth"); }}
-            className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
-          >
-            {t("nav.getStarted")} →
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
@@ -305,7 +311,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   onVisibilityChange={onVisibilityChange}
                 />
               )}
-              <LanguageToggle />
               <NotificationBell />
 
               {/* User avatar / sign-in CTA */}
@@ -319,11 +324,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 </button>
               ) : (
                 <a
-                  href="/auth"
-                  onClick={(e) => { e.preventDefault(); navigate("/auth"); }}
+                  href="/pricing"
+                  onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
                   className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
-                  {t("nav.getStarted")} →
+                  {t("nav.getStarted")}
                 </a>
               )}
 
@@ -354,6 +359,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               </div>
             </div>
 
+            {/* Language toggle row */}
+            <div className="border-t border-foreground/[0.06] px-5 md:px-8 lg:px-12 py-3 flex items-center gap-2">
+              <LanguageToggle />
+              <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
+            </div>
             {/* Auth actions */}
             <div className="border-t border-foreground/[0.06] p-5 md:px-8 lg:px-12">
               <div className="grid grid-cols-2 gap-1">
@@ -379,10 +389,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   </>
                 ) : (
                   <button
-                    onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+                    onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
                     className="col-span-2 w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
                   >
-                    {t("nav.getStarted")} →
+                    {t("nav.getStarted")}
                   </button>
                 )}
               </div>
