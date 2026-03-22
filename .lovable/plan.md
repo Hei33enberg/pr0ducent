@@ -1,87 +1,113 @@
 
 
-# Plan: Menu Design Overhaul — newsc0rp Style
+# Full Design & Brand Audit: pr0ducent vs newsc0rp Reference
 
-## Problem
+## Current State Summary
 
-Current pr0ducent menu uses tiny Lucide SVG icons (generic line icons) with no subtitles. The newsc0rp reference uses **hand-drawn sketch-style emblem images** (48-56px) with bold labels + subtitle descriptions, creating a rich editorial feel. Current menu looks bare and unfinished.
+After comparing every major file in both projects, here are the gaps between pr0ducent and the newsc0rp reference implementation.
 
-## What needs to change
+---
 
-### 1. Generate hand-drawn sketch icons for each nav item
+## CRITICAL ISSUES
 
-The newsc0rp project uses AI-generated monochrome ink sketch illustrations as menu emblems. pr0ducent needs the same treatment — 9 unique icons generated and saved to `src/assets/nav-icons/`:
+### 1. Nav icon images are broken/empty placeholders
+The last diff shows all 10 `src/assets/nav-icons/*.png` files were created as binary but generated in a single batch with no visual QA. These are likely corrupted or empty 1x1px files. The menu currently shows blank squares where emblems should be.
 
-| Nav Item | Icon concept |
-|----------|-------------|
-| Home | Blueprint sketch of a house/building facade |
-| Arena | Sketch of crossed swords / colosseum |
-| Leaderboard | Sketch of a trophy / podium chart |
-| Compare | Sketch of a compass / side-by-side scales |
-| Calculator | Sketch of an abacus / mechanical calculator |
-| Pricing | Sketch of price tags / coins stack |
-| Blog | Sketch of a newspaper / printing press |
-| Runs Now | Sketch of a radio tower / broadcast antenna |
-| FAQ | Sketch of a question mark magnifying glass |
-| Marketplace | Sketch of a market stall / shopping bag (if FF enabled) |
+**Fix:** Regenerate all 10 icons one-by-one using AI image generation, QA each one, and replace the broken files.
 
-Style: "Monochrome black ink lines, engineering sketch style, technical blueprint, clean detailed line art, cross-hatching for shadows, no text, no labels, no color, high contrast black on white, transparent background."
+### 2. Desktop dropdown is positioned inside `menuRef` (inside header flex)
+In newsc0rp, the menu dropdown is an `absolute top-full left-0 right-0` child of the `sticky-header` wrapper. In pr0ducent, `desktopDropdown` is rendered inside the right-side `<div ref={menuRef}>` flex container, which means it inherits wrong positioning and clips.
 
-These will be generated via the Lovable AI image generation model (`google/gemini-3.1-flash-image-preview`) and saved as PNG files.
+**Fix:** Move `desktopDropdown` render out of the right-side flex div, make it a direct child of the `sticky-header` wrapper (like newsc0rp lines 196-228).
 
-### 2. Add subtitles to each nav item
+### 3. Missing `section-cv` containment wrapper
+newsc0rp wraps heavy sections in `<div className="section-cv">` (`contain: layout style`) for paint isolation. pr0ducent has the CSS class but never uses it on any section.
 
-Following the newsc0rp pattern, each menu item gets a short subtitle:
+**Fix:** Wrap `FeatureMatrix`, `PlanComparisonTable`, `BuilderComparisonTable`, `ExperimentHistory` in `section-cv` divs.
 
-| Item | Subtitle |
-|------|----------|
-| Home | Back to main |
-| Arena | Head-to-head battles |
-| Leaderboard | Builder rankings |
-| Compare | Side-by-side tools |
-| Calculator | ROI estimator |
-| Pricing | Plans & billing |
-| Blog | News & insights |
-| Runs Now | Live experiments |
-| FAQ | Common questions |
-| Marketplace | Templates & remixes |
+---
 
-### 3. Refactor PageFrame menu rendering
+## DESIGN & LAYOUT GAPS
 
-- Change `navLinks` to include `subtitle: string` and `emblem: string` (imported image) instead of `icon: LucideIcon`
-- Menu item layout: `img` (48x48 emblem) + stacked `label` (bold uppercase) + `subtitle` (muted small text)
-- Exactly matches newsc0rp pattern from lines 211-224
+### 4. No section background washes on homepage sections
+newsc0rp applies unique gradient washes to each section (`section-gradient-peach`, `section-wash-blush`, `section-wash-indigo`, etc.) creating a continuous color tapestry. pr0ducent only uses `section-gradient-gold` on HowItWorks and `section-gradient-rose` on FAQ. The other 5 sections (BuilderComparisonTable, FeatureMatrix, PlanComparisonTable, InlineCalculator, HomepageBlogSection) have no background wash -- they look flat and disconnected.
 
-### 4. Hamburger animation (CSS lines → animated X)
+**Fix:** Assign alternating washes to every homepage section:
+| Section | Wash class |
+|---------|-----------|
+| HowItWorks | `section-gradient-gold` (already) |
+| BuilderComparisonTable | `section-gradient-peach` |
+| FeatureMatrix | `section-wash-blush` |
+| PlanComparisonTable | `section-wash-indigo` |
+| InlineCalculator | `section-wash-gold` |
+| FAQ | `section-gradient-rose` (already) |
+| HomepageBlogSection | `section-wash-teal` |
+| ExperimentHistory | `section-gradient-lavender` |
 
-Replace the Lucide `<Menu>` / `<X>` toggle with the newsc0rp animated 3-line hamburger using CSS transforms (rotate on open).
+### 5. No BigHeadline / editorial section dividers
+newsc0rp uses `BigHeadline` components with massive serif text between major sections (e.g. "One engine. Infinite media." at `clamp(3.2rem, 9vw, 9rem)`). pr0ducent has no equivalent -- sections just stack with no dramatic pacing.
 
-### 5. Menu open/close animation
+**Fix:** Create a `BigHeadline` component (copy from newsc0rp) and insert 2-3 between key sections on the Index page:
+- Before BuilderComparisonTable: "One prompt. Every builder."
+- Before InlineCalculator: "Know your cost before you build."
+- Before FAQ: "Still have questions?"
 
-Add `scaleY` transition from newsc0rp instead of abrupt show/hide:
-```css
-transform: menuOpen ? "scaleY(1)" : "scaleY(0)"
-opacity: menuOpen ? 1 : 0
-transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease
-```
+### 6. No IllustDivider between sections
+newsc0rp places large monochrome illustrations between sections with float/pulse animations. pr0ducent has no visual breaks between content blocks.
 
-### 6. Mobile menu — full-screen overlay
+**Fix:** Create `IllustDivider` component (copy from newsc0rp). Use 2-3 of the existing caricature assets or generate new editorial illustrations for section breaks.
 
-On mobile (`sm:hidden`), use a full-screen overlay with larger icons (64px), single-column layout, and sticky CTA button at bottom — matching newsc0rp's `menu-overlay-mobile` pattern.
+### 7. Missing `section-wash-*` CSS classes
+pr0ducent has `section-gradient-*` classes but is missing the subtler `section-wash-blush`, `section-wash-indigo`, `section-wash-gold`, `section-wash-teal` classes that newsc0rp uses for transition sections.
 
-## Files to create/edit
+**Fix:** Copy the 4 `section-wash-*` classes from newsc0rp's `index.css` (lines 432-451) plus `section-gradient-teal` and `section-gradient-lavender`.
+
+### 8. Footer is light-only, not dark section
+newsc0rp footer uses `section-dark dot-grid-bg` (dark background with dot grid pattern). pr0ducent footer is a plain light section with no visual weight.
+
+**Fix:** Refactor `Footer.tsx` to use `section-dark dot-grid-bg` pattern matching newsc0rp's `FooterSection.tsx`. Keep existing links/content but apply the dark treatment.
+
+### 9. Missing `section-cv` on FeatureMatrix, PlanComparisonTable
+These heavy DOM sections should use `contain: layout style` for rendering performance.
+
+---
+
+## COMPONENT PARITY GAPS
+
+### 10. No `BrandText` utility component
+newsc0rp has a reusable `BrandText` component that auto-sizes digits to 2em. pr0ducent manually inlines the brand styling everywhere (Logo, Footer). This leads to inconsistency.
+
+**Fix:** Create `src/components/BrandText.tsx` (copy from newsc0rp). Refactor Logo in PageFrame and Footer to use it.
+
+### 11. `useInView` hook missing
+newsc0rp's `BigHeadline` uses a `useInView` hook for scroll-triggered fade-up. pr0ducent doesn't have this hook.
+
+**Fix:** Create `src/hooks/useInView.ts` with IntersectionObserver logic.
+
+---
+
+## FILES TO CREATE/EDIT
 
 | File | Action |
 |------|--------|
-| `src/assets/nav-icons/*.png` | Create ~10 generated sketch icons |
-| `src/components/PageFrame.tsx` | Major refactor: emblem images, subtitles, hamburger animation, mobile overlay |
-| `src/index.css` | Add `menu-overlay-mobile` styles, refine `.nav-dropdown-glass` transition |
+| `src/assets/nav-icons/*.png` | Regenerate all 10 sketch icons with QA |
+| `src/components/BrandText.tsx` | Create (copy from newsc0rp) |
+| `src/components/BigHeadline.tsx` | Create (copy from newsc0rp) |
+| `src/components/IllustDivider.tsx` | Create (copy from newsc0rp, no video support needed initially) |
+| `src/hooks/useInView.ts` | Create (IntersectionObserver hook) |
+| `src/index.css` | Add 6 missing wash/gradient classes |
+| `src/components/PageFrame.tsx` | Fix dropdown positioning (move outside flex) |
+| `src/pages/Index.tsx` | Add BigHeadline dividers, section washes, section-cv wrappers |
+| `src/components/Footer.tsx` | Dark section treatment |
+| `src/components/BuilderComparisonTable.tsx` | Add section wash class |
+| `src/components/FeatureMatrix.tsx` | Add section wash + section-cv |
+| `src/components/InlineCalculator.tsx` | Add section wash |
+| `src/components/HomepageBlogSection.tsx` | Add section wash |
 
-## What stays the same
+## WHAT STAYS THE SAME
 
-- Nav links list (routes, labels, translations)
-- Logo component
-- Auth section (account/sign-out/get started)
-- Overall page-frame structure
-- Backend — zero changes
+- All backend/edge functions -- zero changes
+- Route structure, auth flow, data fetching
+- Tailwind config, design tokens, CSS variables
+- Core component logic (forms, tables, experiments)
 
