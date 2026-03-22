@@ -98,6 +98,7 @@ export default function Marketplace() {
             </div>
           )}
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );
