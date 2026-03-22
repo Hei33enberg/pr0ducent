@@ -40,7 +40,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   const visibleTemplates = showMoreTemplates ? PROMPT_TEMPLATES : PROMPT_TEMPLATES.slice(0, 7);
 
   return (
-    <section ref={heroRef} className="section-divider relative" style={{ minHeight: "calc(80svh - 4rem)" }}>
+    <section ref={heroRef} className="section-divider relative" style={{ minHeight: "auto" }}>
       {/* Animated gradient washes */}
       <div className="absolute pointer-events-none hero-wash hero-wash--peach" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />

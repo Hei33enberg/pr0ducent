@@ -278,7 +278,7 @@
     z-index: 1;
     border: 2px solid hsla(0, 0%, 0%, 0.92);
     border-radius: 20px;
-    overflow: visible;
+    overflow: visible !important;
     background: hsl(30, 20%, 97%);
   }
 
@@ -466,7 +466,7 @@
   }
 
   .section-cv {
-    contain: layout style;
+    /* removed contain: layout style — caused 0-height sections */
   }
 }
 
