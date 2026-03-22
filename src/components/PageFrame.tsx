@@ -1,26 +1,16 @@
-import { useRef, useState, useEffect, forwardRef, type ReactNode } from "react";
-import { LogOut, User } from "lucide-react";
+import { useRef, useState, useEffect, useCallback, forwardRef, type ReactNode } from "react";
+import { LogOut, User, Home, Swords, Trophy, GitCompareArrows, Calculator, CreditCard, BookOpen, Radio, HelpCircle, Store } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
+import BrandText from "@/components/BrandText";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
-
-// Nav icon imports
-import iconHome from "@/assets/nav-icons/home.png";
-import iconArena from "@/assets/nav-icons/arena.png";
-import iconLeaderboard from "@/assets/nav-icons/leaderboard.png";
-import iconCompare from "@/assets/nav-icons/compare.png";
-import iconCalculator from "@/assets/nav-icons/calculator.png";
-import iconPricing from "@/assets/nav-icons/pricing.png";
-import iconBlog from "@/assets/nav-icons/blog.png";
-import iconRunsNow from "@/assets/nav-icons/runs-now.png";
-import iconFaq from "@/assets/nav-icons/faq.png";
-import iconMarketplace from "@/assets/nav-icons/marketplace.png";
+import type { LucideIcon } from "lucide-react";
 
 interface PageFrameProps {
   children: ReactNode;
@@ -33,7 +23,7 @@ interface NavItem {
   label: string;
   subtitle: string;
   href: string;
-  emblem: string;
+  icon: LucideIcon;
 }
 
 const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }, ref) => {
@@ -44,12 +34,13 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }
       onClick={(e) => { e.preventDefault(); onClick(); }}
       className="shrink-0 no-underline flex items-center h-full"
     >
-      <span
+      <BrandText
+        text="pr0ducent"
+        showTm
         className="font-serif font-bold tracking-tight leading-none text-foreground"
+        as="span"
         style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
-      >
-        pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, verticalAlign: "baseline", letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
-      </span>
+      />
     </a>
   );
 });
@@ -66,6 +57,31 @@ function Hamburger({ open }: { open: boolean }) {
   );
 }
 
+/* ── Scroll-direction detection hook ── */
+function useScrollDirection() {
+  const [hidden, setHidden] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        if (y > 80 && y - lastY.current > 6) setHidden(true);
+        if (lastY.current - y > 6 || y < 40) setHidden(false);
+        lastY.current = y;
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return hidden;
+}
+
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
   const { t } = useTranslation();
@@ -76,6 +92,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const menuRef = useRef<HTMLDivElement>(null);
   const [frameRect, setFrameRect] = useState<{ left: number; width: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerHidden = useScrollDirection();
 
   useEffect(() => {
     const update = () => {
@@ -137,16 +154,16 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks: NavItem[] = [
-    { label: "Home", subtitle: "Back to main", href: "/", emblem: iconHome },
-    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", emblem: iconArena },
-    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", emblem: iconLeaderboard },
-    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", emblem: iconCompare },
-    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", emblem: iconCalculator },
-    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", emblem: iconPricing },
-    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", emblem: iconBlog },
-    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", emblem: iconRunsNow },
-    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", emblem: iconMarketplace }] : []),
-    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", emblem: iconFaq },
+    { label: "Home", subtitle: "Back to main", href: "/", icon: Home },
+    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", icon: Swords },
+    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", icon: Trophy },
+    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", icon: GitCompareArrows },
+    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", icon: Calculator },
+    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", icon: CreditCard },
+    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", icon: BookOpen },
+    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", icon: Radio },
+    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", icon: Store }] : []),
+    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", icon: HelpCircle },
   ];
 
   const isActive = (href: string) =>
@@ -164,7 +181,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   /* ── Nav item renderer (shared between desktop & mobile) ── */
   const renderNavItem = (link: NavItem, size: "sm" | "lg" = "sm") => {
     const active = isActive(link.href);
-    const imgSize = size === "lg" ? "w-16 h-16" : "w-12 h-12";
+    const IconComp = link.icon;
+    const iconSize = size === "lg" ? 28 : 22;
 
     return (
       <button
@@ -176,11 +194,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
             : "text-foreground hover:bg-foreground/[0.05]"
         }`}
       >
-        <img
-          src={link.emblem}
-          alt=""
-          className={`${imgSize} shrink-0 object-contain ${active ? "invert" : "opacity-80 group-hover:opacity-100"} transition-all`}
-          loading="lazy"
+        <IconComp
+          size={iconSize}
+          strokeWidth={1.5}
+          className={`shrink-0 ${active ? "text-background" : "text-foreground/60 group-hover:text-foreground/80"} transition-all`}
         />
         <div className="flex flex-col min-w-0">
           <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.06em] leading-tight">
@@ -249,13 +266,20 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     </div>
   );
 
+  // Don't hide header when menu is open
+  const shouldHide = headerHidden && !menuOpen;
+
   return (
     <div
       ref={frameRef}
       className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
       {frameRect && (
-        <div className={`sticky-header ${menuOpen ? 'menu-open' : ''}`} style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }} ref={menuRef}>
+        <div
+          className={`sticky-header ${menuOpen ? 'menu-open' : ''} ${shouldHide ? 'header-hidden' : ''}`}
+          style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}
+          ref={menuRef}
+        >
           <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 

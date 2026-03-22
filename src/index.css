@@ -595,7 +595,9 @@
    ═══════════════════════════════════════════════════ */
 
 .menu-overlay-mobile {
-  background: hsl(30, 18%, 95%);
+  background: hsla(30, 18%, 95%, 0.97);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   animation: menu-overlay-in 0.25s ease-out both;
 }
 
