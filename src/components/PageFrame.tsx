@@ -329,7 +329,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
           {/* Desktop dropdown — direct child of sticky-header */}
           <div
-            className="nav-dropdown-glass nav-dropdown-animate hidden sm:block shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden"
+            className="nav-dropdown-glass nav-dropdown-animate hidden sm:block absolute left-0 right-0 top-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden"
             style={{
               transform: menuOpen ? "scaleY(1)" : "scaleY(0)",
               opacity: menuOpen ? 1 : 0,
