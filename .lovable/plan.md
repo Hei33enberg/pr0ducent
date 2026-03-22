@@ -1,106 +1,78 @@
 
 
-# Plan: Expand builder catalog, more prompt templates, fix visual issues
+## Fix: Navigation, Footer Links, Layout Consistency Across All Views
 
-## Summary
+### Problem Summary
 
-Five changes addressing the user's complaints: (1) expand prompt templates, (2) expand builder list to 20+, (3) hide builder grid until user interacts, (4) fix section headers to be truly large, (5) fix background transitions between sections.
+1. **Anchor links broken in footer**: `#how-it-works` and `#faq` are plain `<a>` tags without SPA navigation -- they don't work from subpages
+2. **Missing Footer** on 6 pages: Arena, Leaderboard, Calculator, RunsNow, BuildersIndex, Marketplace, Compare
+3. **Missing AmbientBackground** on 5 pages: Blog, BlogPost, Notifications, BuilderDashboard, Leaderboard, Compare
+4. **Inconsistent inner containers**: Some pages use `page-inner`, others use ad-hoc `max-w-*` with varying padding
+5. **Heading styles inconsistent**: Some pages use small `text-3xl` headings instead of the editorial `clamp()` sizing
+6. **`glass-card` with backdrop effects** still present on some components despite "Solid UI" design system rule
 
-## 1. Expand prompt templates to 12+
+---
 
-**File:** `src/config/prompt-templates.ts`
+### Plan
 
-Add more template categories beyond the current 7. New ones:
-- CRM / Client Portal
-- AI Chatbot
-- Social Media Dashboard
-- Booking / Scheduling App
-- Learning Management System (LMS)
-- Real Estate Listings
-- Restaurant / Food Ordering
-- HR / Recruitment Tool
-- Event Management
-- Invoice / Billing Tool
-- Health & Wellness App
-- Community Forum
+#### 1. Fix footer anchor links (Footer.tsx)
+- Replace plain `<a href="#how-it-works">` and `<a href="#faq">` with onClick handlers that:
+  - If on homepage (`/`): smooth-scroll to section
+  - If on subpage: `navigate("/#faq")` or `navigate("/#how-it-works")` -- then scroll after navigation
 
-Show first 7 as chips above input. Add a "More templates" expandable row or small dropdown that reveals remaining templates.
+#### 2. Fix nav anchor handling (PageFrame.tsx)
+- In `handleAnchorClick`: the current code does `navigate("/" + href)` which produces `"/" + "#faq"` = `"/#faq"` -- verify this works with ScrollToTop resetting scroll. May need to add hash-scroll logic in ScrollToTop or Index.
 
-## 2. Expand builder catalog to 20+ tools
+#### 3. Add hash-scroll support (ScrollToTop.tsx or Index.tsx)
+- After navigating to `/#faq`, detect `location.hash` and scroll to that element after page renders
 
-**File:** `src/config/tools.ts`
+#### 4. Add Footer to all subpages missing it
+Files to update:
+- `src/pages/Arena.tsx` -- add Footer import + render
+- `src/pages/Leaderboard.tsx` -- add Footer
+- `src/pages/Calculator.tsx` -- add Footer
+- `src/pages/RunsNow.tsx` -- add Footer
+- `src/pages/BuildersIndex.tsx` -- add Footer
+- `src/pages/Compare.tsx` -- add Footer
+- `src/pages/Marketplace.tsx` -- add Footer (check if present)
 
-Based on research, add the following builders to `BUILDER_TOOLS` (currently 10):
-- Windsurf (Codeium IDE)
-- GitHub Copilot
-- Claude Code
-- Emergent.sh
-- Aider
-- Zed.dev
-- Codeium (free assistant)
-- Tabnine
-- Amazon Q Developer
-- Gemini Code Assist
-- Continue.dev
-- Sourcegraph / Cody
-- Canva Code / A0.dev
-- Devin
-- Tempo Labs
-- Dora AI
+#### 5. Add AmbientBackground to pages missing it
+Files to update:
+- `src/pages/Blog.tsx` -- wrap in `min-h-screen` div + AmbientBackground
+- `src/pages/BlogPost.tsx` -- same
+- `src/pages/Notifications.tsx` -- same
+- `src/pages/BuilderDashboard.tsx` -- same
+- `src/pages/Leaderboard.tsx` -- already has wrapper but no AmbientBackground
+- `src/pages/Compare.tsx` -- no AmbientBackground
 
-This brings total to ~25 builders. Each with proper `id`, `name`, `logoUrl` (Google favicon proxy), `featured: false`, `strengths`, `description`, `mockDelayRange`, `stack`, `hosting`, `pricing`, `category`.
+#### 6. Standardize page containers
+Normalize all subpages to use `page-inner` class instead of custom padding/max-width:
+- `src/pages/RunsNow.tsx`: `max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10` --> `page-inner`
+- `src/pages/BuildersIndex.tsx`: `max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10` --> `page-inner`
+- `src/pages/BuilderProfile.tsx`: custom padding --> `page-inner`
 
-## 3. Hide builder grid until user interaction
+#### 7. Standardize heading typography
+Ensure all page `<h1>` elements use the editorial serif style with `clamp()` sizing consistent with the design system:
+- Arena, Leaderboard, Compare, RunsNow, BuildersIndex, Calculator pages -- upgrade headings to match `font-serif font-bold tracking-[-0.02em]` with appropriate `clamp()` font-size
 
-**File:** `src/components/HeroSection.tsx`
+---
 
-- Track a `showBuilders` state, initially `false`
-- Set `showBuilders = true` when:
-  - User types anything in the textarea (`onChange`)
-  - User clicks a prompt template chip
-- The `ToolSelectionGrid` + submit button are wrapped in an animated container that only renders when `showBuilders` is true
-- Use framer-motion `AnimatePresence` for smooth reveal
+### Technical Details
 
-## 4. Fix section headers to be truly large (like murd0ch.com)
+**Files modified** (~12 files):
+- `src/components/Footer.tsx` -- anchor link SPA handling
+- `src/components/ScrollToTop.tsx` -- hash-scroll support
+- `src/pages/Arena.tsx` -- Footer, heading style
+- `src/pages/Leaderboard.tsx` -- AmbientBackground, Footer, heading style
+- `src/pages/Calculator.tsx` -- Footer
+- `src/pages/RunsNow.tsx` -- Footer, container class
+- `src/pages/BuildersIndex.tsx` -- Footer, container class, heading style
+- `src/pages/Compare.tsx` -- AmbientBackground, Footer
+- `src/pages/Marketplace.tsx` -- Footer (verify)
+- `src/pages/Blog.tsx` -- AmbientBackground wrapper
+- `src/pages/BlogPost.tsx` -- AmbientBackground wrapper
+- `src/pages/BuilderDashboard.tsx` -- AmbientBackground wrapper
+- `src/pages/BuilderProfile.tsx` -- container normalization
 
-The current headers use `clamp(2.4rem, 5vw + 0.5rem, 5rem)` which is too small. murd0ch.com uses massive serif headings at roughly `clamp(3rem, 6vw + 1rem, 7rem)`.
-
-**Files:** `BuilderComparisonTable.tsx`, `FeatureMatrix.tsx`, `PlanComparisonTable.tsx`, `InlineCalculator.tsx`, `FAQ.tsx`, `HomepageBlogSection.tsx`
-
-- Increase all section h2 sizes to `clamp(3rem, 6vw + 1rem, 7rem)`
-- Ensure the FAQ title also uses this size (currently `text-3xl md:text-4xl` which is much smaller)
-
-## 5. Fix background transitions (no visible "cuts")
-
-**File:** `src/index.css` and `src/pages/Index.tsx`
-
-The problem: each section has a hard-edged background class (`section-gradient-peach`, `section-wash-blush`, etc.) creating visible seams between sections.
-
-Solution:
-- Add generous vertical padding overlap between sections: `py-20 md:py-32` on each section
-- Add pseudo-element gradient fades at top/bottom of each wash class to blend into the neutral page background
-- In CSS, add `::before` and `::after` on section-wash/gradient classes with ~80px tall transparent-to-wash gradient overlaps
-- Alternatively, use a single ambient background approach with the `.gradient-canvas` and remove per-section backgrounds, relying on subtle section-level tints via very low-opacity overlays
-
-The murd0ch.com approach: the page uses one continuous ambient gradient wash behind the entire page (peach/rose/gold), and sections don't have individual backgrounds. Instead the content just flows over the continuous gradient.
-
-**Approach for pr0ducent:**
-- Keep the `gradient-canvas` fixed background as the primary atmosphere
-- Remove or dramatically reduce opacity of per-section backgrounds (`section-gradient-peach`, `section-wash-blush`, etc.) so they become barely-visible tints rather than distinct bands
-- Add CSS transitions between sections using 80px gradient "bleed" pseudo-elements
-
-## 6. Nav icon display improvements
-
-**File:** `src/components/PageFrame.tsx`
-
-The nav icons currently use basic `<img>` with `invert` class for active state. To make them "prettier" like murd0ch.com:
-- Increase icon sizes slightly (28px default, 36px in mobile)
-- Remove the harsh `invert` filter on active items; instead use `opacity-100` with a subtle drop-shadow
-- Add a gentle hover scale transform `group-hover:scale-110`
-
-## Technical details
-
-- All changes are CSS/component-level, no database or backend changes needed
-- Builder catalog additions are static fallbacks in `tools.ts`; the DB merge via `BuilderCatalogProvider` continues to work as before
-- The `ToolSelectionGrid` already uses `useBuilderCatalog()` so it will automatically show all 25 builders once `tools.ts` is expanded
+**No database changes needed.**
 
