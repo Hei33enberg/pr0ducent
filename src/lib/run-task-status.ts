@@ -22,7 +22,12 @@ export function taskRowToDispatched(row: {
   ) {
     status = "generating";
   }
-  if (row.status === "failed" || row.status === "expired" || row.status === "cancelled") {
+  if (
+    row.status === "failed" ||
+    row.status === "dead_letter" ||
+    row.status === "expired" ||
+    row.status === "cancelled"
+  ) {
     status = "error";
   }
   if (row.status === "benchmark") {

@@ -23,14 +23,15 @@
 - [`20260322120000_vbp_orchestration.sql`](../supabase/migrations/20260322120000_vbp_orchestration.sql) — VBP config columns, `builder_rate_limits`, `builder_crawl_sources`, `run_tasks.next_retry_at`.
 - [`20260325100000_builder_dispatch_slot_rpc.sql`](../supabase/migrations/20260325100000_builder_dispatch_slot_rpc.sql) — `builder_try_dispatch_slot()` RPC for atomic rate window + inflight cap (`process-task-queue`).
 - [`20260326120000_ensure_builder_rate_limits.sql`](../supabase/migrations/20260326120000_ensure_builder_rate_limits.sql) — idempotentne `CREATE TABLE` jeśli `22120000` było pominięte przed RPC.
+- [`20260425140000_slice_a_b_hardening.sql`](../supabase/migrations/20260425140000_slice_a_b_hardening.sql) — `run_tasks.status` + `dead_letter`; tabela `pbp_webhook_deliveries` (idempotencja webhooka).
 
 ## Edge functions (orchestrator-related)
 
 | Function | JWT (config.toml) | Notes |
 |----------|-------------------|--------|
 | `dispatch-builders` | `true` | User JWT; service role inside. |
-| `process-task-queue` | `false` | **Service role Bearer only** — drains `queued` tasks. |
-| `pbp-webhook` | `false` | Optional VBP builder callbacks; verify `VBP_WEBHOOK_SECRET` when set. |
+| `process-task-queue` | `false` | **Service role Bearer only** — drains `queued` tasks. Env: `RUN_TASK_MAX_ATTEMPTS` (default 25) → terminal `dead_letter`. |
+| `pbp-webhook` | `false` | VBP callbacks; HMAC when `VBP_WEBHOOK_SECRET` set; `x-pbp-signature` / `x-vbp-signature`; duplicate body dedupe (`pbp_webhook_deliveries`). Optional `VBP_WEBHOOK_SECRET_REQUIRED=true`. |
 | `rag-crawl-builder` | `false` | Service role; see [CRON-RAG-CRAWL.md](./CRON-RAG-CRAWL.md). |
 | `poll-v0-status` | `false` | Called from browser with anon key + body. |
 | `score-builder-output` | `true` | Manual / admin rescore. |
@@ -45,7 +46,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 
 ## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
 
-- **Pełny audyt (inventory, macierze ryzyk, drift kontraktów, plan slice’ów A–D z testami/rollback, checklist Lovable):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — dokument **nie zawiera implementacji** slice’ów; kod to osobne PR-e (następny krok: wybrać slice, np. B + A).
+- **Pełny audyt:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A + B** wdrożone w kodzie (migracja `20260425140000`, `process-task-queue`, `pbp-webhook`); **Slice C + D** nadal jako osobne PR-e.
 
 ## Frontend stack
 

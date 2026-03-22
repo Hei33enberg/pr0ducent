@@ -71,7 +71,7 @@ Fork for a new prompt / user. Schema: [vbp-schemas/remix-request.json](./vbp-sch
 
 ## Webhooks (builder → broker)
 
-`POST webhook_url` with optional header `X-VBP-Signature: sha256=<hmac>` over raw body (secret agreed out-of-band). pr0ducent receiver: `supabase/functions/pbp-webhook`.
+`POST webhook_url` with optional header `X-VBP-Signature: sha256=<hmac>` over raw body (secret agreed out-of-band). pr0ducent receiver: `supabase/functions/pbp-webhook` (also accepts legacy `X-PBP-Signature` / `x-pbp-signature`; duplicate identical raw bodies are deduped after successful JSON parse). Optional env: `VBP_WEBHOOK_SECRET_REQUIRED=true` fails closed if secret missing.
 
 ## MCP mapping (informative)
 

@@ -13,6 +13,13 @@ import { timingSafeEqualString } from "../_shared/timing-safe.ts";
 const MAX_TASKS_PER_INVOCATION = 40;
 const DEADLINE_MS = 120_000;
 
+/** Max dispatch/rate-limit attempts before terminal dead_letter (Slice A). */
+function maxTaskAttempts(): number {
+  const raw = Deno.env.get("RUN_TASK_MAX_ATTEMPTS");
+  const n = raw ? parseInt(raw, 10) : NaN;
+  return Number.isFinite(n) && n > 0 ? n : 25;
+}
+
 function isServiceRoleRequest(req: Request): boolean {
   const expected = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   const auth = req.headers.get("Authorization");
@@ -190,6 +197,20 @@ Deno.serve(async (req) => {
     }
     if (!task) break;
 
+    const cap = maxTaskAttempts();
+    const attempts = task.attempt_count ?? 0;
+    if (attempts >= cap) {
+      await admin
+        .from("run_tasks")
+        .update({
+          status: "dead_letter",
+          error_message: `max_attempts_exceeded:${cap}`,
+        })
+        .eq("id", task.id);
+      processed++;
+      continue;
+    }
+
     // ── Rate limiting via RPC ──
     let rateAllowed = true;
     let rateReason = "";
@@ -206,13 +227,17 @@ Deno.serve(async (req) => {
     }
     if (!rateAllowed) {
       const backoffMs = rateReason === "max_per_minute" ? 60_000 : 15_000;
+      const nextAttempt = (task.attempt_count ?? 0) + 1;
+      const terminal = nextAttempt >= cap;
       await admin
         .from("run_tasks")
         .update({
-          status: "retrying",
-          error_message: `rate_limit:${rateReason || "unknown"}`,
-          attempt_count: (task.attempt_count ?? 0) + 1,
-          next_retry_at: new Date(Date.now() + backoffMs).toISOString(),
+          status: terminal ? "dead_letter" : "retrying",
+          error_message: terminal
+            ? `max_attempts_exceeded:${cap} (rate_limit:${rateReason || "unknown"})`
+            : `rate_limit:${rateReason || "unknown"}`,
+          attempt_count: nextAttempt,
+          next_retry_at: terminal ? null : new Date(Date.now() + backoffMs).toISOString(),
         })
         .eq("id", task.id);
       processed++;

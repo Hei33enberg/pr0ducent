@@ -881,6 +881,24 @@ export type Database = {
         }
         Relationships: []
       }
+      pbp_webhook_deliveries: {
+        Row: {
+          body_sha256: string
+          id: string
+          received_at: string
+        }
+        Insert: {
+          body_sha256: string
+          id?: string
+          received_at?: string
+        }
+        Update: {
+          body_sha256?: string
+          id?: string
+          received_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

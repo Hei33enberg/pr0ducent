@@ -129,12 +129,14 @@ sequenceDiagram
 ### Slice A — Kolejka i terminale stanów
 
 - **Cel:** max attempts, terminal `failed` / zgodny `dead_letter`, spójność z CHECK w DB.  
+- **Status (repo):** migracja [`20260425140000_slice_a_b_hardening.sql`](../supabase/migrations/20260425140000_slice_a_b_hardening.sql) dodaje `dead_letter`; `process-task-queue` ustawia `dead_letter` po `RUN_TASK_MAX_ATTEMPTS` (domyślnie 25) lub gdy `attempt_count` już przekroczy limit.  
 - **Testy:** integracja `process-task-queue` z mockiem RPC rate limit; unit status transitions.  
 - **Rollback:** migracja revert + deploy poprzedniej wersji funkcji; feature flag jeśli dodany.
 
 ### Slice B — Webhook security i idempotencja
 
 - **Cel:** jeden nagłówek (alias obu nazw w odbiorniku), dedupe eventów, prod wymaga sekretu.  
+- **Status (repo):** `pbp-webhook` akceptuje `x-pbp-signature` i `x-vbp-signature` (VBP-SPEC); tabela `pbp_webhook_deliveries` (SHA-256 body) — powtórny POST z tym samym body → `deduped: true` bez ponownego apply; opcjonalnie `VBP_WEBHOOK_SECRET_REQUIRED=true` (fail closed gdy brak sekretu).  
 - **Testy:** replay tego samego body; kolejność zdarzeń; signature invalid → 401.  
 - **Rollback:** wyłączenie strict mode env; revert apply logic.
 
