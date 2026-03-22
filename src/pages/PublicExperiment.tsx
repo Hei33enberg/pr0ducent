@@ -8,10 +8,12 @@ import { BuilderRatingStars } from "@/components/BuilderRatingStars";
 import { ShareButton } from "@/components/ShareButton";
 import { useTranslation } from "@/lib/i18n";
 import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@/types/experiment";
-import { ArrowLeft, Loader2, Share2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
+import { PageFrame } from "@/components/PageFrame";
+import { Footer } from "@/components/Footer";
+import AmbientBackground from "@/components/AmbientBackground";
 
 export default function PublicExperiment() {
   const { tools } = useBuilderCatalog();
@@ -76,84 +78,74 @@ export default function PublicExperiment() {
   const selectedRun = experiment?.runs.find((r) => r.toolId === selectedToolId) ?? null;
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="mr-1">
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <a href="/" onClick={(e) => { e.preventDefault(); navigate("/"); }} className="no-underline">
-              <span className="font-serif font-bold tracking-tight leading-none text-foreground" style={{ fontSize: "1.3rem" }}>
-                pr<span style={{ fontSize: "1.6em", fontWeight: 800, lineHeight: 0.8, letterSpacing: "-0.02em" }}>0</span>ducent<span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
-              </span>
-            </a>
+    <div className="min-h-screen">
+      <AmbientBackground />
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
+        {loading ? (
+          <div className="flex items-center justify-center py-32">
+            <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground font-sans">{t("public.sharedExperiment")}</span>
-            {experiment && <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />}
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-32 gap-4">
+            <p className="text-muted-foreground font-sans">{error}</p>
+            <Button variant="outline" onClick={() => navigate("/")}>{t("public.backHome")}</Button>
           </div>
-        </div>
-      </header>
+        ) : experiment ? (
+          <>
+            <div className="flex items-center justify-end px-4 py-2">
+              <span className="text-xs text-muted-foreground font-sans mr-2">{t("public.sharedExperiment")}</span>
+              <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />
+            </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-32">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-        </div>
-      ) : error ? (
-        <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <p className="text-muted-foreground font-sans">{error}</p>
-          <Button variant="outline" onClick={() => navigate("/")}>{t("public.backHome")}</Button>
-        </div>
-      ) : experiment ? (
-        <>
-          <ComparisonCanvas
-            experiment={experiment}
-            onExperimentUpdate={() => {}}
-            onToolClick={(toolId) => setSelectedToolId(toolId)}
-          />
+            <ComparisonCanvas
+              experiment={experiment}
+              onExperimentUpdate={() => {}}
+              onToolClick={(toolId) => setSelectedToolId(toolId)}
+            />
 
-          {/* Social layer: Ratings + Comments */}
-          <section className="max-w-6xl mx-auto px-4 pb-12 space-y-8">
-            {/* Rate builders */}
-            <div className="border-t border-border pt-8">
-              <h2 className="text-lg font-serif font-bold mb-4">Rate the builders</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {experiment.selectedTools.map((toolId) => {
-                  const tool = tools.find((t) => t.id === toolId);
-                  if (!tool) return null;
-                  return (
-                    <div key={toolId} className="bg-card border border-border rounded-xl p-4 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
-                          {tool.logoUrl ? (
-                            <img src={tool.logoUrl} alt={tool.name} className="w-4 h-4 object-contain" loading="lazy" />
-                          ) : (
-                            <span className="text-[10px] font-bold text-muted-foreground">{tool.name[0]}</span>
-                          )}
+            {/* Social layer: Ratings + Comments */}
+            <section className="max-w-6xl mx-auto px-4 pb-12 space-y-8">
+              {/* Rate builders */}
+              <div className="border-t border-border pt-8">
+                <h2 className="text-lg font-serif font-bold mb-4">Rate the builders</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {experiment.selectedTools.map((toolId) => {
+                    const tool = tools.find((t) => t.id === toolId);
+                    if (!tool) return null;
+                    return (
+                      <div key={toolId} className="bg-card border border-border rounded-xl p-4 space-y-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
+                            {tool.logoUrl ? (
+                              <img src={tool.logoUrl} alt={tool.name} className="w-4 h-4 object-contain" loading="lazy" />
+                            ) : (
+                              <span className="text-[10px] font-bold text-muted-foreground">{tool.name[0]}</span>
+                            )}
+                          </div>
+                          <span className="text-sm font-semibold text-foreground">{tool.name}</span>
                         </div>
-                        <span className="text-sm font-semibold text-foreground">{tool.name}</span>
+                        <BuilderRatingStars toolId={toolId} experimentId={experiment.id} />
                       </div>
-                      <BuilderRatingStars toolId={toolId} experimentId={experiment.id} />
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            {/* Comments */}
-            <div className="border-t border-border pt-8">
-              <RunComments experimentId={experiment.id} />
-            </div>
-          </section>
+              {/* Comments */}
+              <div className="border-t border-border pt-8">
+                <RunComments experimentId={experiment.id} />
+              </div>
+            </section>
+          </>
+        ) : null}
+        <Footer />
+      </PageFrame>
 
-          <ToolDetailPanel
-            run={selectedRun}
-            open={!!selectedToolId}
-            onClose={() => setSelectedToolId(null)}
-          />
-        </>
-      ) : null}
+      <ToolDetailPanel
+        run={selectedRun}
+        open={!!selectedToolId}
+        onClose={() => setSelectedToolId(null)}
+      />
     </div>
   );
 }

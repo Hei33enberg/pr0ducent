@@ -1,26 +1,52 @@
 import { useTranslation } from "@/lib/i18n";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import BrandText from "@/components/BrandText";
+import { FF } from "@/lib/featureFlags";
 
 export function Footer() {
-  const { t } = useTranslation();
+  const { t, locale, setLocale } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const year = new Date().getFullYear();
 
   const handleAnchor = (id: string) => {
-    if (window.location.pathname === "/") {
+    if (location.pathname === "/") {
       document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     } else {
       navigate("/#" + id);
     }
   };
 
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Arena", href: "/arena" },
+    { label: "Leaderboard", href: "/leaderboard" },
+    { label: t("nav.compare"), href: "/compare" },
+    { label: t("nav.calculator"), href: "/calculator" },
+    { label: t("nav.pricing"), href: "/pricing" },
+    { label: t("nav.blog"), href: "/blog" },
+    { label: t("nav.runsNow"), href: "/runs-now" },
+    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", href: "/marketplace" }] : []),
+    { label: t("nav.faq"), href: "#faq" },
+    { label: "Docs", href: "/docs" },
+    { label: "All Builders", href: "/builders" },
+  ];
+
+  const handleClick = (href: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    if (href.startsWith("#")) {
+      handleAnchor(href.slice(1));
+    } else {
+      navigate(href);
+    }
+  };
+
   return (
     <footer className="section-dark dot-grid-bg mt-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-8 mb-12">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
+          <div>
             <BrandText
               text="pr0ducent"
               showTm
@@ -32,39 +58,24 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Product */}
+          {/* Nav links — mirrors dropdown 1:1 */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider mb-3 font-sans" style={{ color: "hsla(0, 0%, 100%, 0.7)" }}>
-              {t("footer.product")}
+              Navigation
             </h4>
-            <ul className="space-y-2 text-sm font-sans" style={{ color: "hsla(0, 0%, 100%, 0.45)" }}>
-              <li><a href="/compare" onClick={(e) => { e.preventDefault(); navigate("/compare"); }} className="hover:text-white transition-colors">{t("footer.compare")}</a></li>
-              <li><a href="/calculator" onClick={(e) => { e.preventDefault(); navigate("/calculator"); }} className="hover:text-white transition-colors">{t("footer.calculator")}</a></li>
-              <li><a href="/pricing" onClick={(e) => { e.preventDefault(); navigate("/pricing"); }} className="hover:text-white transition-colors">{t("footer.pricing")}</a></li>
-              <li><a href="/#how-it-works" onClick={(e) => { e.preventDefault(); handleAnchor("how-it-works"); }} className="hover:text-white transition-colors">{t("footer.howItWorks")}</a></li>
-              <li><a href="/#faq" onClick={(e) => { e.preventDefault(); handleAnchor("faq"); }} className="hover:text-white transition-colors">{t("footer.faq")}</a></li>
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider mb-3 font-sans" style={{ color: "hsla(0, 0%, 100%, 0.7)" }}>
-              {t("footer.resources")}
-            </h4>
-            <ul className="space-y-2 text-sm font-sans" style={{ color: "hsla(0, 0%, 100%, 0.45)" }}>
-              <li><a href="/blog" onClick={(e) => { e.preventDefault(); navigate("/blog"); }} className="hover:text-white transition-colors">{t("footer.blog")}</a></li>
-              <li><a href="/runs-now" onClick={(e) => { e.preventDefault(); navigate("/runs-now"); }} className="hover:text-white transition-colors">{t("footer.runsNow")}</a></li>
-              <li><a href="/builders" onClick={(e) => { e.preventDefault(); navigate("/builders"); }} className="hover:text-white transition-colors">{t("footer.allBuilders")}</a></li>
-              <li>
+            <div className="flex flex-wrap gap-x-6 gap-y-2">
+              {navLinks.map((link) => (
                 <a
-                  href="/docs"
-                  onClick={(e) => { e.preventDefault(); navigate("/docs"); }}
-                  className="hover:text-white transition-colors"
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => handleClick(link.href, e)}
+                  className="text-sm font-sans hover:text-white transition-colors"
+                  style={{ color: "hsla(0, 0%, 100%, 0.45)" }}
                 >
-                  {t("footer.vbpForBuilders")}
+                  {link.label}
                 </a>
-              </li>
-            </ul>
+              ))}
+            </div>
           </div>
 
           {/* Legal */}
@@ -81,31 +92,24 @@ export function Footer() {
 
         <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans" style={{ borderColor: "hsla(0, 0%, 100%, 0.1)", color: "hsla(0, 0%, 100%, 0.4)" }}>
           <span>&copy; {year} pr0ducent. {t("footer.rights")}</span>
-          <LanguageToggleInline />
+          <div className="flex items-center gap-1.5 text-xs font-sans">
+            <button
+              onClick={() => setLocale("en")}
+              className={`px-2 py-1 rounded-md transition-colors ${locale === "en" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
+              style={locale !== "en" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
+            >
+              EN
+            </button>
+            <button
+              onClick={() => setLocale("pl")}
+              className={`px-2 py-1 rounded-md transition-colors ${locale === "pl" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
+              style={locale !== "pl" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
+            >
+              PL
+            </button>
+          </div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function LanguageToggleInline() {
-  const { locale, setLocale } = useTranslation();
-  return (
-    <div className="flex items-center gap-1.5 text-xs font-sans">
-      <button
-        onClick={() => setLocale("en")}
-        className={`px-2 py-1 rounded-md transition-colors ${locale === "en" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
-        style={locale !== "en" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
-      >
-        EN
-      </button>
-      <button
-        onClick={() => setLocale("pl")}
-        className={`px-2 py-1 rounded-md transition-colors ${locale === "pl" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
-        style={locale !== "pl" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
-      >
-        PL
-      </button>
-    </div>
   );
 }
