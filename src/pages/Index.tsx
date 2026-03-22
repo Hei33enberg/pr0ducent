@@ -149,6 +149,7 @@ const Index = () => {
 
             
 
+            <div className="bg-destructive text-white p-8 text-2xl font-bold">DEBUG: SECTIONS SHOULD BE BELOW</div>
             <div className="section-gradient-peach">
               <BuilderComparisonTable
                 onSelectTool={(toolId) => {
