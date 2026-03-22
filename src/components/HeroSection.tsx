@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ToolSelectionGrid } from "@/components/ToolSelectionGrid";
-import { PROMPT_TEMPLATES, DEMO_TEMPLATE } from "@/config/prompt-templates";
-import { USE_CASE_TAGS } from "@/config/use-case-tags";
+import { PROMPT_TEMPLATES } from "@/config/prompt-templates";
 import type { AccountModel } from "@/types/experiment";
-import { Zap, Sparkles, BarChart3, Shield } from "lucide-react";
+import { Zap, BarChart3, Shield } from "lucide-react";
 import caricatureFounder from "@/assets/caricature-founder-nobg.png";
 
 interface HeroSectionProps {
@@ -16,32 +15,15 @@ interface HeroSectionProps {
 
 export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, heroRef }: HeroSectionProps) {
   const [prompt, setPrompt] = useState("");
-  const [accountModel, setAccountModel] = useState<AccountModel>("broker");
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [accountModel] = useState<AccountModel>("broker");
 
   const handleSubmit = () => {
     if (!prompt.trim() || selectedTools.length === 0) return;
-    onSubmit(prompt.trim(), selectedTools, accountModel, selectedTags.length > 0 ? selectedTags : undefined);
+    onSubmit(prompt.trim(), selectedTools, accountModel);
   };
 
   const handleTemplateClick = (template: typeof PROMPT_TEMPLATES[0]) => {
     setPrompt(template.prompt);
-    setSelectedTags(template.tags);
-    setIsExpanded(true);
-  };
-
-  const handleDemo = () => {
-    const demo = DEMO_TEMPLATE;
-    setPrompt(demo.prompt);
-    setSelectedTags(demo.tags);
-    onSubmit(demo.prompt, selectedTools, accountModel, demo.tags);
-  };
-
-  const toggleTag = (tagId: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
-    );
   };
 
   return (
@@ -84,9 +66,9 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Prompt templates */}
+          {/* Prompt templates — 7 chips above input */}
           <div className="flex flex-wrap justify-center gap-2 mb-5 fade-up stagger-1 visible-immediate">
-            {PROMPT_TEMPLATES.map((tpl) => {
+            {PROMPT_TEMPLATES.slice(0, 7).map((tpl) => {
               const Icon = tpl.icon;
               return (
                 <button
@@ -108,48 +90,19 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
-                className="min-h-[120px] text-base bg-card backdrop-blur-sm shadow-xl border-2 border-foreground/25 resize-none rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
-                onFocus={() => setIsExpanded(true)}
+                className="min-h-[120px] text-base bg-card shadow-xl border-2 border-foreground/25 resize-none rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
               />
             </div>
 
-            {/* Config panel */}
-            <div
-              className="overflow-hidden transition-all duration-300"
-              style={{ height: isExpanded ? "auto" : 0, opacity: isExpanded ? 1 : 0 }}
-            >
-              <div className="glass-card rounded-xl p-5 space-y-5">
-                <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-2 font-sans">Use Case (optional)</h3>
-                  <div className="flex flex-wrap gap-1.5">
-                    {USE_CASE_TAGS.map((tag) => {
-                      const TagIcon = tag.icon;
-                      return (
-                        <button
-                          key={tag.id}
-                          onClick={() => toggleTag(tag.id)}
-                          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition-all border font-sans ${
-                            selectedTags.includes(tag.id)
-                              ? "border-accent bg-accent/10 text-accent"
-                              : "border-border bg-background text-muted-foreground hover:border-accent/30"
-                          }`}
-                        >
-                          <TagIcon className="w-3.5 h-3.5" />
-                          <span>{tag.label}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <ToolSelectionGrid
-                  selectedTools={selectedTools}
-                  onSelectionChange={onSelectedToolsChange}
-                />
-              </div>
+            {/* Builder selection — always visible below input */}
+            <div className="glass-card rounded-xl p-5">
+              <ToolSelectionGrid
+                selectedTools={selectedTools}
+                onSelectionChange={onSelectedToolsChange}
+              />
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex items-center justify-center">
               <button
                 onClick={handleSubmit}
                 disabled={!prompt.trim() || selectedTools.length === 0}
@@ -162,13 +115,6 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                     {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
                   </span>
                 )}
-              </button>
-              <button
-                onClick={handleDemo}
-                className="glass-card px-6 py-3 text-sm rounded-full inline-flex items-center gap-2 font-sans font-medium hover:scale-[1.02] transition-all duration-300"
-              >
-                <Sparkles className="w-4 h-4" />
-                Try Demo Prompt
               </button>
             </div>
           </div>

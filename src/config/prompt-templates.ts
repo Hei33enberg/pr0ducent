@@ -1,4 +1,4 @@
-import { ShoppingCart, BarChart3, Palette, ClipboardList, Store, Smartphone } from "lucide-react";
+import { ShoppingCart, BarChart3, Palette, ClipboardList, Store, Smartphone, MessageSquare } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface PromptTemplate {
@@ -52,6 +52,11 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     prompt: "Build a fitness tracking mobile app with workout logging, progress charts, social feed, achievement badges, and push notifications.",
     tags: ["mobile"],
   },
+  {
+    id: "chat-app",
+    label: "Team Chat",
+    icon: MessageSquare,
+    prompt: "Build a real-time team chat application with channels, direct messages, file sharing, user presence indicators, and message search.",
+    tags: ["saas"],
+  },
 ];
-
-export const DEMO_TEMPLATE = PROMPT_TEMPLATES[0];
