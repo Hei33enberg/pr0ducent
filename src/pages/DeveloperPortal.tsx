@@ -193,6 +193,10 @@ supabase functions deploy process-task-queue`}
           </Card>
         </TabsContent>
       </Tabs>
+        </div>
+
+        <Footer />
+      </PageFrame>
     </div>
   );
 }
