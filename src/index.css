@@ -580,7 +580,7 @@
    ═══════════════════════════════════════════════════ */
 
 .menu-overlay-mobile {
-  background: hsla(30, 18%, 95%, 0.99);
+  background: hsl(30, 18%, 95%);
   animation: menu-overlay-in 0.25s ease-out both;
 }
 
