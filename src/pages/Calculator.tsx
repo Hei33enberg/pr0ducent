@@ -148,7 +148,7 @@ export default function CalculatorPage() {
               return (
                 <div
                   key={tool.id}
-                  className={`glass-card rounded-xl p-4 flex items-center gap-4 ${i === 0 ? "ring-2 ring-accent" : ""}`}
+                  className={`bg-card border border-border/50 rounded-xl p-4 flex items-center gap-4 shadow-sm ${i === 0 ? "ring-2 ring-accent" : ""}`}
                 >
                   <div className="text-lg font-bold text-muted-foreground font-sans w-6 text-center">
                     {i + 1}
