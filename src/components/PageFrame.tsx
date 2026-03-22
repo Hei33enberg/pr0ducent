@@ -34,7 +34,7 @@ interface NavItem {
   label: string;
   subtitle: string;
   href: string;
-  icon: LucideIcon;
+  iconSrc: string;
 }
 
 const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }, ref) => {
