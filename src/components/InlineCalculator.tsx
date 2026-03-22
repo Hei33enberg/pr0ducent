@@ -61,10 +61,10 @@ export function InlineCalculator() {
     <section id="calculator" className="max-w-4xl mx-auto px-4 py-12">
       <div className="text-center mb-8">
         <h2
-          className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3 inline-flex items-center gap-3"
-          style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}
+          className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
+          style={{ fontSize: "clamp(2rem, 4vw + 0.5rem, 5rem)" }}
         >
-          <Calculator className="w-8 h-8 md:w-10 md:h-10" />
+          <Calculator className="w-6 h-6 md:w-8 md:h-8 inline-block mr-2 align-middle" />
           Quick Value Check
         </h2>
         <p className="text-base text-muted-foreground font-sans">

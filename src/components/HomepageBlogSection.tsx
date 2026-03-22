@@ -39,7 +39,7 @@ export function HomepageBlogSection() {
   return (
     <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-10">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground inline-flex items-center gap-2" style={{ fontSize: "clamp(2.4rem, 5vw + 0.5rem, 5rem)" }}>
+        <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground inline-flex items-center gap-2" style={{ fontSize: "clamp(1.8rem, 3vw + 0.5rem, 4rem)" }}>
           <Newspaper className="w-6 h-6" />
           {t("blog.title")}
         </h2>
