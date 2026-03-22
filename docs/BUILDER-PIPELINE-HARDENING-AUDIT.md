@@ -4,6 +4,8 @@
 **Zakres:** full-stack (Edge Functions, DB/RPC, frontend realtime/stream, kontrakty POP/VBP).  
 **Źródło prawdy implementacji:** [`supabase/functions/`](../supabase/functions/), [`src/hooks/`](../src/hooks/), [`docs/VBP-SPEC.md`](./VBP-SPEC.md).
 
+**Uwaga (zakres audytu):** Ten dokument jest **inwentaryzacją, macierzami ryzyk, raportem driftu i planem slice’ów** (A–D) z opisem testów i rollbacku per slice. **Nie wdraża sam w sobie kodu** — implementacja slice’ów to **osobne PR-e**. Następny krok inżynierski: wybrać slice (np. **B** bezpieczeństwo webhooka + **A** terminale stanów kolejki) i zrobić implementację.
+
 ---
 
 ## 1. Mapa przepływu (inventory)
@@ -150,11 +152,13 @@ sequenceDiagram
 
 **Kolejność zalecana:** B (security) częściowo równolegle z A (data integrity) → C → D.
 
+**Status implementacji:** Opisy w §5 to **plan prac**; włączenie zmian w repozytorium następuje **dopiero w PR-ach slice’owych** (migracje, Edge, frontend według wybranego slice’a).
+
 ---
 
 ## 6. Checklist rollout — Lovable Cloud
 
-Użyj po merge do `main` i przed pełnym trust na produkcji.
+Użyj po merge do `main` i przed pełnym trust na produkcji — **po** wdrożeniu zmian z wybranego slice’a (nie wymaga tego sam dokument audytu).
 
 - [ ] **Git:** Lovable Sync / Pull = ten sam commit co `origin/main`.  
 - [ ] **Migracje:** jeśli Slice A wprowadza nową migrację — uruchom na cloud Supabase (Lovable); sprawdź `run_tasks` CHECK.  
@@ -167,12 +171,12 @@ Powiązane: [`UI-PARITY-LOVABLE-SYNC.md`](./UI-PARITY-LOVABLE-SYNC.md), [`DEVELO
 
 ---
 
-## Kryteria ukończenia audytu (te deliverables)
+## Kryteria ukończenia audytu (deliverables dokumentu)
 
 - [x] Mapa przepływu prompt → queue → adapter → stream → wynik.  
 - [x] Macierz ryzyk backend + frontend z severity i ścieżką naprawy.  
 - [x] Raport driftu kontraktów + rekomendacja single source of truth.  
-- [x] Slice A–D z testami i rollback.  
-- [x] Checklist Lovable Cloud.
+- [x] Plan slice’ów A–D (zakres, testy, rollback) — §5; **nie mylić z merge’em kodu.**  
+- [x] Checklist Lovable Cloud (§6) — do użycia **po** wdrożeniu zmian z wybranego slice’a.
 
-Następny krok inżynierski: **wybrać Slice** i zrobić PR implementacyjny (poza zakresem samego dokumentu audytu).
+**Poza zakresem samego audytu (następne PR-e):** implementacja kodu dla slice’ów A–D — wybrać pierwszy slice (np. B + A, zgodnie z §5) i zrealizować w osobnych merge’ach.

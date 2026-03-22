@@ -45,7 +45,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 
 ## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
 
-- **Pełny audyt (inventory, macierze ryzyk, drift kontraktów, slice’y A–D, checklist Lovable):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)
+- **Pełny audyt (inventory, macierze ryzyk, drift kontraktów, plan slice’ów A–D z testami/rollback, checklist Lovable):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — dokument **nie zawiera implementacji** slice’ów; kod to osobne PR-e (następny krok: wybrać slice, np. B + A).
 
 ## Frontend stack
 

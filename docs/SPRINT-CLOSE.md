@@ -50,6 +50,8 @@
 | `npm run test:deno` | Run after backend edits; adapter + jsonpath tests in `supabase/functions/__tests__/` |
 | ESLint full repo | May fail legacy debt; scope new paths in CI if needed |
 
+**Hardening audit ([BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)):** dokument zawiera plan slice’ów A–D; **implementacja w kodzie to osobne PR-e** (kolejność sugerowana: B + A → C → D).
+
 ---
 
 ## Deploy prompt — Lovable / Supabase (copy-paste)
