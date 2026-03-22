@@ -59,12 +59,15 @@ export function InlineCalculator() {
 
   return (
     <section id="calculator" className="max-w-4xl mx-auto px-4 py-12">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2 inline-flex items-center gap-2">
-          <Calculator className="w-6 h-6" />
+      <div className="text-center mb-8">
+        <h2
+          className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3 inline-flex items-center gap-3"
+          style={{ fontSize: "clamp(2.4rem, 5vw + 0.5rem, 5rem)" }}
+        >
+          <Calculator className="w-8 h-8 md:w-10 md:h-10" />
           Quick Value Check
         </h2>
-        <p className="text-sm text-muted-foreground font-sans">
+        <p className="text-base text-muted-foreground font-sans">
           Set your budget to find the best builder for you.
         </p>
       </div>

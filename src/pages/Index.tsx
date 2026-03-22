@@ -160,7 +160,7 @@ const Index = () => {
               
               
 
-              <BigHeadline text="One prompt. Every builder." wash="blush" />
+              
 
               <div className="section-gradient-peach section-cv">
                 <BuilderComparisonTable
@@ -179,7 +179,7 @@ const Index = () => {
                 <PlanComparisonTable />
               </div>
 
-              <BigHeadline text="Know your cost before you build." wash="gold" />
+              
 
               <div className="section-wash-gold">
                 <InlineCalculator />

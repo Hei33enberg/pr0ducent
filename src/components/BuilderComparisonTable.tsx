@@ -115,11 +115,14 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-foreground mb-2">
+        <div className="text-center mb-10">
+          <h2
+            className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
+            style={{ fontSize: "clamp(2.4rem, 5vw + 0.5rem, 5rem)" }}
+          >
             Compare AI Builders
           </h2>
-          <p className="text-sm text-muted-foreground font-sans max-w-lg mx-auto">
+          <p className="text-base text-muted-foreground font-sans max-w-lg mx-auto">
             {tools.length} builders compared side-by-side. Real pricing, features, and our Value Index.
           </p>
         </div>
