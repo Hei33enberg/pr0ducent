@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback, forwardRef, type ReactNode } from "react";
-import { LogOut, User, Home, Swords, Trophy, GitCompareArrows, Calculator, CreditCard, BookOpen, Radio, HelpCircle, Store } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -10,7 +10,18 @@ import { useTranslation } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
-import type { LucideIcon } from "lucide-react";
+
+// Custom illustrated nav icons
+import navHome from "@/assets/nav-icons/home.png";
+import navArena from "@/assets/nav-icons/arena.png";
+import navLeaderboard from "@/assets/nav-icons/leaderboard.png";
+import navCompare from "@/assets/nav-icons/compare.png";
+import navCalculator from "@/assets/nav-icons/calculator.png";
+import navPricing from "@/assets/nav-icons/pricing.png";
+import navBlog from "@/assets/nav-icons/blog.png";
+import navRunsNow from "@/assets/nav-icons/runs-now.png";
+import navMarketplace from "@/assets/nav-icons/marketplace.png";
+import navFaq from "@/assets/nav-icons/faq.png";
 
 interface PageFrameProps {
   children: ReactNode;
@@ -23,7 +34,7 @@ interface NavItem {
   label: string;
   subtitle: string;
   href: string;
-  icon: LucideIcon;
+  iconSrc: string;
 }
 
 const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }, ref) => {
@@ -154,16 +165,16 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks: NavItem[] = [
-    { label: "Home", subtitle: "Back to main", href: "/", icon: Home },
-    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", icon: Swords },
-    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", icon: Trophy },
-    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", icon: GitCompareArrows },
-    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", icon: Calculator },
-    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", icon: CreditCard },
-    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", icon: BookOpen },
-    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", icon: Radio },
-    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", icon: Store }] : []),
-    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", icon: HelpCircle },
+    { label: "Home", subtitle: "Back to main", href: "/", iconSrc: navHome },
+    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", iconSrc: navArena },
+    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", iconSrc: navLeaderboard },
+    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", iconSrc: navCompare },
+    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", iconSrc: navCalculator },
+    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", iconSrc: navPricing },
+    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", iconSrc: navBlog },
+    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", iconSrc: navRunsNow },
+    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", iconSrc: navMarketplace }] : []),
+    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", iconSrc: navFaq },
   ];
 
   const isActive = (href: string) =>
@@ -181,8 +192,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   /* ── Nav item renderer (shared between desktop & mobile) ── */
   const renderNavItem = (link: NavItem, size: "sm" | "lg" = "sm") => {
     const active = isActive(link.href);
-    const IconComp = link.icon;
-    const iconSize = size === "lg" ? 28 : 22;
+    const imgSize = size === "lg" ? 32 : 24;
 
     return (
       <button
@@ -194,10 +204,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
             : "text-foreground hover:bg-foreground/[0.05]"
         }`}
       >
-        <IconComp
-          size={iconSize}
-          strokeWidth={1.5}
-          className={`shrink-0 ${active ? "text-background" : "text-foreground/60 group-hover:text-foreground/80"} transition-all`}
+        <img
+          src={link.iconSrc}
+          alt=""
+          width={imgSize}
+          height={imgSize}
+          className={`shrink-0 object-contain ${active ? "invert" : "opacity-70 group-hover:opacity-90"} transition-all`}
         />
         <div className="flex flex-col min-w-0">
           <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.06em] leading-tight">
