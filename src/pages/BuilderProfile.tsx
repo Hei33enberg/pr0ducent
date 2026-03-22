@@ -396,6 +396,7 @@ export default function BuilderProfile() {
             </p>
           )}
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );
