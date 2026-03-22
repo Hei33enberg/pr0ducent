@@ -92,9 +92,15 @@ export default function PublicExperiment() {
           </div>
         ) : experiment ? (
           <>
-            <div className="flex items-center justify-end px-4 py-2">
-              <span className="text-xs text-muted-foreground font-sans mr-2">{t("public.sharedExperiment")}</span>
-              <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />
+            <div className="px-4 pt-3 pb-2 border-b border-border/40">
+              <h1 className="font-serif text-xl md:text-2xl font-bold text-foreground leading-tight">
+                {t("public.experimentDocumentTitle")}
+              </h1>
+              <p className="text-sm text-muted-foreground font-sans mt-2 line-clamp-3">{experiment.prompt}</p>
+              <div className="flex items-center justify-end gap-2 mt-3">
+                <span className="text-xs text-muted-foreground font-sans mr-auto">{t("public.sharedExperiment")}</span>
+                <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />
+              </div>
             </div>
 
             <ComparisonCanvas

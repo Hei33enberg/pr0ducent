@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { PageFrame } from "@/components/PageFrame";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
+import { useNavigate } from "react-router-dom";
 
 function CodeBlock({ code, title }: { code: string; title?: string }) {
   const [copied, setCopied] = useState(false);
@@ -38,10 +39,11 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
 }
 
 export default function DeveloperPortal() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen">
       <AmbientBackground />
-      <PageFrame experiment={null} onBack={() => {}} onVisibilityChange={() => {}}>
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner max-w-5xl space-y-8">
           <div>
             <h1

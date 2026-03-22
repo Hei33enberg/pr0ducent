@@ -40,6 +40,7 @@
   "faq.q5": "Jak zarabiacie?",
   "faq.a5": "Zarabiamy przez partnerstwa referralowe z builderami. Gdy wybierasz kontynuację z builderem, możemy otrzymać prowizję. Twoje wyniki nigdy nie są stronnicze — ocenianie jest ślepe i audytowalne.",
 
+  "auth.pageTitle": "Zaloguj się do pr0ducent",
   "auth.signIn": "Zaloguj się, aby kontynuować",
   "auth.createAccount": "Utwórz konto",
   "auth.email": "Email",
@@ -78,7 +79,9 @@
   "share.nowPrivate": "Eksperyment jest teraz prywatny",
   "share.enablePublic": "Włącz tryb publiczny, aby inni mogli zobaczyć ten eksperyment.",
 
+  "history.eyebrow": "Twoja przestrzeń",
   "history.title": "Poprzednie eksperymenty",
+  "history.subtitle": "Otwórz ponownie run, żeby porównać buildery.",
   "history.empty": "Brak eksperymentów. Wpisz prompt powyżej i uruchom swój pierwszy test!",
 
   "status.queued": "W kolejce",
@@ -104,6 +107,36 @@
   "featureMatrix.subtitle": "Który builder co oferuje — w jednej tabeli.",
   "featureMatrix.featureCol": "Funkcja",
   "featureMatrix.totalRow": "Łącznie funkcji",
+
+  "planComparison.eyebrow": "Plany i ceny",
+  "planComparison.title": "Porównanie planów cenowych",
+  "planComparison.subtitle": "Porównaj poziomy cen wszystkich builderów. Dane na żywo, aktualizowane regularnie.",
+  "planComparison.builderCol": "Builder",
+  "planComparison.monthly": "Miesięcznie",
+  "planComparison.annual": "Rocznie",
+  "planComparison.credits": "Kredyty",
+  "planComparison.aiModels": "Modele AI",
+  "planComparison.environment": "Środowisko",
+  "planComparison.noTierData": "Żaden builder nie ma jeszcze planu „{tier}” w naszej bazie.",
+  "planComparison.free": "Darmowy",
+
+  "builderComparison.eyebrow": "Obok siebie",
+  "builderComparison.title": "Porównaj AI buildery",
+  "builderComparison.subtitle": "{count} builderów obok siebie. Prawdziwe ceny, funkcje i nasz Value Index.",
+  "builderComparison.comparing": "Porównujesz:",
+  "builderComparison.clear": "Wyczyść",
+  "builderComparison.valueIndex": "Value Index",
+  "builderComparison.noRatings": "Brak ocen",
+  "builderComparison.free": "Darmowy",
+  "builderComparison.testIt": "Przetestuj",
+  "builderComparison.addToCompare": "Dodaj do porównania",
+  "builderComparison.categoryAll": "Wszystkie",
+
+  "inlineCalc.title": "Szybki check wartości",
+  "inlineCalc.subtitle": "Ustaw budżet, żeby znaleźć najlepszego buildera.",
+  "inlineCalc.monthlyBudget": "Budżet miesięczny",
+  "inlineCalc.noMatch": "Żaden builder nie mieści się w tym budżecie.",
+  "inlineCalc.fullCalculatorCta": "Pełny kalkulator z wagami",
 
   "marketplace.title": "Dema Społeczności",
   "marketplace.subtitle": "Eksploruj otwarte dema wygenerowane przez społeczność. Znajdź inspirację i twórz własne wersje.",
@@ -131,6 +164,7 @@
   "byoa.errorSave": "Nie udało się zapisać klucza API.",
   "byoa.errorDisconnect": "Nie udało się odłączyć klucza API.",
 
+  "public.experimentDocumentTitle": "Udostępnione porównanie buildów",
   "public.sharedExperiment": "Udostępniony eksperyment",
   "public.notFound": "Eksperyment nie znaleziony lub jest prywatny.",
   "public.backHome": "Wróć na stronę główną",

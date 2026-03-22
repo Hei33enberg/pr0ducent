@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
-import { Zap, Clock, ArrowRight, MessageSquare, Star, Users, TrendingUp } from "lucide-react";
+import { Clock, ArrowRight, MessageSquare, Star, Users, TrendingUp } from "lucide-react";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";

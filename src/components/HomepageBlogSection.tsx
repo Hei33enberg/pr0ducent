@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/i18n";
 import { CalendarDays, ArrowRight, Newspaper } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface BlogPost {
   id: string;
@@ -37,7 +38,13 @@ export function HomepageBlogSection() {
   const rest = posts.slice(1, 6);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+    <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
       <div className="flex items-center justify-between mb-6">
         <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground inline-flex items-center gap-2" style={{ fontSize: "clamp(1.8rem, 3vw + 0.5rem, 4rem)" }}>
           <Newspaper className="w-6 h-6" />
@@ -98,6 +105,7 @@ export function HomepageBlogSection() {
           ))}
         </div>
       </div>
+      </motion.div>
     </section>
   );
 }

@@ -7,8 +7,10 @@ import { PairwiseArena } from "@/components/PairwiseArena";
 import { usePublicExperiments } from "@/hooks/usePublicExperiments";
 import { Loader2, Swords, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export default function ArenaPage() {
+  const navigate = useNavigate();
   const { experiments, loading } = usePublicExperiments(20);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
   
@@ -36,7 +38,7 @@ export default function ArenaPage() {
   return (
     <div className="min-h-screen">
       <AmbientBackground />
-      <PageFrame experiment={null} onBack={() => {}} onVisibilityChange={() => {}}>
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
           <PageBreadcrumb crumbs={[{ label: "Arena" }]} />
           

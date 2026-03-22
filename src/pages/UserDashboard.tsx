@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
+import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
@@ -199,6 +200,7 @@ export default function UserDashboard() {
             <Button onClick={() => navigate("/auth")}>Sign In</Button>
           </div>
         </PageFrame>
+        <Footer />
       </div>
     );
   }
@@ -482,6 +484,8 @@ export default function UserDashboard() {
           )}
         </div>
       </PageFrame>
+
+      <Footer />
 
       <Dialog
         open={!!keyDialog}

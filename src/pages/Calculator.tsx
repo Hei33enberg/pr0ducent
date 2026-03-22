@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
+import { Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
 
 interface PricingPlan {
   tool_id: string;
@@ -102,7 +102,7 @@ export default function CalculatorPage() {
 
           {/* Weight sliders */}
           <div className="bg-card border border-border/50 rounded-xl p-5 mb-6 space-y-4 shadow-sm">
-            <h3 className="text-sm font-semibold font-sans text-foreground">Adjust Your Priorities</h3>
+            <h2 className="text-sm font-semibold font-sans text-foreground">Adjust Your Priorities</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {sliders.map(({ key, label, icon: Icon, value }) => (
                 <div key={key} className="space-y-1">

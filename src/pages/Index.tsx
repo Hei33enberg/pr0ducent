@@ -13,7 +13,6 @@ import { HomepageBlogSection } from "@/components/HomepageBlogSection";
 import { InlineCalculator } from "@/components/InlineCalculator";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
-import BigHeadline from "@/components/BigHeadline";
 
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
@@ -25,7 +24,6 @@ import { useTranslation } from "@/lib/i18n";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext";
 import type { Experiment, AccountModel } from "@/types/experiment";
-import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 const Index = () => {
@@ -163,13 +161,9 @@ const Index = () => {
               <FeatureMatrix />
             </div>
 
-            <BigHeadline text="Plans & Pricing" wash="gold" />
-
             <div className="section-wash-indigo">
               <PlanComparisonTable />
             </div>
-
-            
 
             <div className="section-wash-gold">
               <InlineCalculator />

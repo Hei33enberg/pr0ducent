@@ -6,7 +6,9 @@ import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Calculator, Trophy, ArrowRight } from "lucide-react";
+import { Calculator, Trophy, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -20,6 +22,7 @@ interface PricingPlan {
 }
 
 export function InlineCalculator() {
+  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
@@ -59,22 +62,28 @@ export function InlineCalculator() {
 
   return (
     <section id="calculator" className="max-w-4xl mx-auto px-4 py-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
       <div className="text-center mb-8">
         <h2
           className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
           style={{ fontSize: "clamp(2rem, 4vw + 0.5rem, 5rem)" }}
         >
-          <Calculator className="w-6 h-6 md:w-8 md:h-8 inline-block mr-2 align-middle" />
-          Quick Value Check
+          <Calculator className="w-6 h-6 md:w-8 md:h-8 inline-block mr-2 align-middle" aria-hidden />
+          {t("inlineCalc.title")}
         </h2>
         <p className="text-base text-muted-foreground font-sans">
-          Set your budget to find the best builder for you.
+          {t("inlineCalc.subtitle")}
         </p>
       </div>
 
       <div className="bg-card border border-border/50 rounded-xl p-5 mb-4 shadow-sm">
         <div className="flex justify-between text-sm font-sans items-center mb-2">
-          <span>Monthly budget</span>
+          <span>{t("inlineCalc.monthlyBudget")}</span>
           <span className="font-bold text-foreground">${budget}/mo</span>
         </div>
         <Slider
@@ -114,16 +123,17 @@ export function InlineCalculator() {
           );
         })}
         {results.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground py-4">No builders match this budget yet.</p>
+          <p className="text-center text-sm text-muted-foreground py-4">{t("inlineCalc.noMatch")}</p>
         )}
       </div>
 
       <div className="text-center">
         <Button variant="outline" size="sm" onClick={() => navigate("/calculator")}>
-          Full Calculator with custom weights
+          {t("inlineCalc.fullCalculatorCta")}
           <ArrowRight className="w-3.5 h-3.5 ml-1" />
         </Button>
       </div>
+      </motion.div>
     </section>
   );
 }

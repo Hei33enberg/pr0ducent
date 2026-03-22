@@ -17,7 +17,10 @@ export default function Notifications() {
         <AmbientBackground />
         <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
           <div className="px-4 sm:px-8 lg:px-12 py-20 text-center max-w-2xl mx-auto">
-            <h1 className="font-serif text-3xl font-bold text-foreground mb-4">
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
+              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+            >
               {t("notifications.signInRequired")}
             </h1>
             <p className="text-muted-foreground font-sans mb-6">

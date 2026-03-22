@@ -45,7 +45,7 @@ export default function BuildersIndex() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-bold font-sans">{tool.name}</span>
+                      <h2 className="text-sm font-bold font-sans">{tool.name}</h2>
                       {tool.featured && <Badge className="text-[8px] px-1 py-0 bg-primary/10 text-primary border-primary/20">Partner</Badge>}
                     </div>
                     <p className="text-[10px] text-muted-foreground font-sans truncate">{tool.description}</p>

@@ -90,6 +90,9 @@ export default function Auth() {
             className="w-full max-w-sm space-y-6"
           >
             <div className="text-center space-y-2">
+              <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                {t("auth.pageTitle")}
+              </h1>
               <p className="text-sm text-muted-foreground font-sans">
                 {isLogin ? t("auth.signIn") : t("auth.createAccount")}
               </p>

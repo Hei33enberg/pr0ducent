@@ -129,6 +129,8 @@ export default function Pricing() {
             </p>
           </div>
 
+          <h2 className="sr-only">Subscription plans</h2>
+
           {/* Plans grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {plans.map((plan) => {
@@ -150,7 +152,7 @@ export default function Pricing() {
 
                   <div className="flex items-center gap-2 mb-4">
                     <Icon className={`w-5 h-5 ${plan.highlight ? "text-background/70" : "text-muted-foreground"}`} />
-                    <h3 className="text-lg font-bold font-sans">{plan.name}</h3>
+                    <h2 className="text-lg font-bold font-sans">{plan.name}</h2>
                   </div>
 
                   <div className="mb-1">

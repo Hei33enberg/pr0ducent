@@ -200,7 +200,7 @@ export default function BuilderProfile() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base font-sans flex items-center gap-2">
+                <CardTitle as="h2" className="text-base font-sans flex items-center gap-2">
                   <Activity className="w-4 h-4 text-primary" />
                   Performance Radar (PVI)
                 </CardTitle>
@@ -229,7 +229,7 @@ export default function BuilderProfile() {
 
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base font-sans flex items-center gap-2">
+                <CardTitle as="h2" className="text-base font-sans flex items-center gap-2">
                   <BarChart2 className="w-4 h-4 text-primary" />
                   PVI Score Distribution
                 </CardTitle>
@@ -255,7 +255,7 @@ export default function BuilderProfile() {
           {/* Strengths */}
           <Card className="mb-6">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-sans">Key Strengths</CardTitle>
+              <CardTitle as="h2" className="text-base font-sans">Key Strengths</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
               {tool.strengths.map((s) => (
@@ -268,7 +268,7 @@ export default function BuilderProfile() {
           {plans.length > 0 && (
             <Card className="mb-6">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-sans">Pricing Plans</CardTitle>
+                <CardTitle as="h2" className="text-base font-sans">Pricing Plans</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -309,7 +309,7 @@ export default function BuilderProfile() {
           {syncData?.features && Array.isArray(syncData.features) && syncData.features.length > 0 && (
             <Card className="mb-6">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-sans">Features</CardTitle>
+                <CardTitle as="h2" className="text-base font-sans">Features</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -328,7 +328,7 @@ export default function BuilderProfile() {
           {syncData?.changelog && Array.isArray(syncData.changelog) && syncData.changelog.length > 0 && (
             <Card className="mb-6">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base font-sans">Recent Changes</CardTitle>
+                <CardTitle as="h2" className="text-base font-sans">Recent Changes</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {syncData.changelog.map((entry: any, i: number) => (
@@ -347,7 +347,7 @@ export default function BuilderProfile() {
           {/* Public Runs Feed */}
           <Card className="mb-6">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-sans flex items-center gap-2">
+              <CardTitle as="h2" className="text-base font-sans flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
                 Recent Public Runs
               </CardTitle>

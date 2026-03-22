@@ -18,11 +18,21 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
   const { getToolById } = useBuilderCatalog();
 
   return (
-    <section className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center gap-2 mb-4">
-        <FlaskConical className="w-4 h-4 text-muted-foreground" />
-        <h2 className="text-lg font-serif font-bold text-foreground">{t("history.title")}</h2>
-      </div>
+    <section className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+      <header className="mb-6 max-w-2xl">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-2">
+          {t("history.eyebrow")}
+        </p>
+        <div className="flex items-start gap-2">
+          <FlaskConical className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
+          <div>
+            <h2 className="font-serif font-bold tracking-[-0.02em] text-foreground text-2xl sm:text-3xl md:text-4xl leading-tight">
+              {t("history.title")}
+            </h2>
+            <p className="text-sm text-muted-foreground font-sans mt-2">{t("history.subtitle")}</p>
+          </div>
+        </div>
+      </header>
 
       {experiments.length === 0 ? (
         <motion.div

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { DollarSign, CreditCard, Cpu, Layers } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -22,6 +23,7 @@ interface PricingPlan {
 const PLAN_TIERS = ["free", "pro", "team", "enterprise"];
 
 export function PlanComparisonTable() {
+  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [activeTier, setActiveTier] = useState("pro");
@@ -68,17 +70,17 @@ export function PlanComparisonTable() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-center mb-10">
-          <h2
-            className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
-            style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}
-          >
-            Pricing Plans Compared
-          </h2>
-          <p className="text-base text-muted-foreground font-sans max-w-lg mx-auto">
-            Compare pricing tiers across all builders. Real data, updated daily.
+        <header className="text-center mb-10 max-w-3xl mx-auto">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+            {t("planComparison.eyebrow")}
           </p>
-        </div>
+          <h2 className="font-serif font-bold tracking-[-0.02em] text-foreground text-3xl sm:text-4xl md:text-5xl leading-tight">
+            {t("planComparison.title")}
+          </h2>
+          <p className="text-base text-muted-foreground font-sans mt-4">
+            {t("planComparison.subtitle")}
+          </p>
+        </header>
 
         {/* Tier selector */}
         <div className="flex flex-wrap justify-center gap-1.5 mb-6 px-2">
@@ -99,7 +101,7 @@ export function PlanComparisonTable() {
 
         {toolsWithPlans.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground">
-            No builders have a "{activeTier}" plan in our database yet.
+            {t("planComparison.noTierData").replace("{tier}", activeTier)}
           </p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-border">
@@ -107,31 +109,31 @@ export function PlanComparisonTable() {
               <thead>
                 <tr className="bg-muted/50">
                   <th className="text-left p-3 font-semibold text-foreground sticky left-0 bg-muted/50 min-w-[120px]">
-                    Builder
+                    {t("planComparison.builderCol")}
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[90px]">
                     <div className="flex items-center justify-center gap-1">
-                      <DollarSign className="w-3 h-3" /> Monthly
+                      <DollarSign className="w-3 h-3" /> {t("planComparison.monthly")}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[90px]">
                     <div className="flex items-center justify-center gap-1">
-                      <DollarSign className="w-3 h-3" /> Annual
+                      <DollarSign className="w-3 h-3" /> {t("planComparison.annual")}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[100px]">
                     <div className="flex items-center justify-center gap-1">
-                      <CreditCard className="w-3 h-3" /> Credits
+                      <CreditCard className="w-3 h-3" /> {t("planComparison.credits")}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[120px]">
                     <div className="flex items-center justify-center gap-1">
-                      <Cpu className="w-3 h-3" /> AI Models
+                      <Cpu className="w-3 h-3" /> {t("planComparison.aiModels")}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[100px]">
                     <div className="flex items-center justify-center gap-1">
-                      <Layers className="w-3 h-3" /> Environment
+                      <Layers className="w-3 h-3" /> {t("planComparison.environment")}
                     </div>
                   </th>
                 </tr>
@@ -173,14 +175,14 @@ export function PlanComparisonTable() {
                       <td className="p-3 text-center font-semibold text-foreground">
                         {plan.monthly_price != null
                           ? plan.monthly_price === 0
-                            ? "Free"
+                            ? t("planComparison.free")
                             : `$${plan.monthly_price}`
                           : "—"}
                       </td>
                       <td className="p-3 text-center text-muted-foreground">
                         {plan.annual_price != null
                           ? plan.annual_price === 0
-                            ? "Free"
+                            ? t("planComparison.free")
                             : `$${plan.annual_price}/yr`
                           : "—"}
                       </td>

@@ -1,5 +1,6 @@
 import { useTranslation } from "@/lib/i18n";
 import { PenLine, Layers, Trophy } from "lucide-react";
+import { motion } from "framer-motion";
 
 const steps = [
   { icon: PenLine, key: "step1" },
@@ -11,8 +12,14 @@ export function HowItWorks() {
   const { t } = useTranslation();
 
   return (
-    <section id="how-it-works" className="section-gradient-gold py-6 md:py-10">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8">
+    <section id="how-it-works" className="section-gradient-gold py-10 md:py-14">
+      <motion.div
+        className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+      >
         <h2 className="text-2xl md:text-3xl font-serif font-bold tracking-tight text-center mb-6">
           {t("howItWorks.title")}
         </h2>
@@ -40,7 +47,7 @@ export function HowItWorks() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
