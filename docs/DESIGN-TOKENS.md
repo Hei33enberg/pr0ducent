@@ -146,3 +146,13 @@ box-shadow:
 | Wash drift 3 | 26s | ease-in-out | Background blob 3 |
 | Pulse glow | 2s | ease-in-out | Featured badge |
 | Status pulse | 1.5s | ease-in-out | Status indicators |
+
+## Compliance (quick checklist)
+
+- **Colors:** prefer Tailwind semantic classes (`text-foreground`, `bg-muted`, `border-border`) or `hsl(var(--token))` in CSS — avoid raw hex in TSX except documented gradients.
+- **Headings:** global serif rules in `src/index.css`; in `.section-dark*`, headings follow light text via existing overrides.
+- **Brand wordmark:** use `BrandText` from `src/components/BrandText.tsx` — do not duplicate inline digit/™ styling.
+- **Illustrations:** classes `.illust-float` / `.illust-pulse` / `.illust-rotate`; **`prefers-reduced-motion`** disables these animations in `index.css`.
+- **Sections:** reuse `section-gradient-*`, `section-wash-*`, or `section-dark` from `index.css` for rhythm.
+
+See also [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md).

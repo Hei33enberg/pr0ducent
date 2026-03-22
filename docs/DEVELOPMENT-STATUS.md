@@ -38,6 +38,11 @@
 
 Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync), Stripe keys for checkout/webhook, optional `VBP_PARTNER_KEY` / `VBP_BROKER_OUTBOUND_SECRET` / `VBP_WEBHOOK_SECRET`.
 
+## UI / brand parity (Lovable + murd0ch alignment)
+
+- **Status i macierz:** [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md) — co weszło z Lovable, co domknięte w repo, prompt operatora dla migracji / Edge na cloud.
+- Tokeny i guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
+
 ## Frontend stack
 
 - React + TypeScript + Vite + Tailwind + shadcn/ui

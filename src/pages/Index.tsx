@@ -144,10 +144,8 @@ const Index = () => {
                 </Alert>
               </div>
             ) : null}
-            
-            
 
-            
+            <HowItWorks />
 
             <div className="section-gradient-peach">
               <BuilderComparisonTable

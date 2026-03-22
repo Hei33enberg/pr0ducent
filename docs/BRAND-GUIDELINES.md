@@ -20,7 +20,7 @@ pr0ducent™
 |---------|------|----------------|
 | Header nav | `clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)` | Fluid responsive |
 | Footer | `1.5rem` | Fixed |
-| Favicon | — | Default Lovable favicon |
+| Favicon | `public/favicon.svg` (wordmark “0” on dark tile) | Also `favicon.ico` if present for legacy clients |
 
 ### Logo Don'ts
 

@@ -52,8 +52,8 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           {/* Left — copy */}
           <div className="space-y-4 md:space-y-6 text-left">
             <h1
-              className="font-serif leading-[0.92] tracking-[-0.02em] fade-up visible-immediate"
-              style={{ fontSize: "clamp(2.2rem, 5vw + 0.8rem, 7rem)", color: "#000" }}
+              className="font-serif leading-[0.92] tracking-[-0.02em] text-foreground fade-up visible-immediate"
+              style={{ fontSize: "clamp(2.2rem, 5vw + 0.8rem, 7rem)" }}
             >
               One prompt.
               <br />
@@ -71,7 +71,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             <img
               src={caricatureFounder}
               alt="pr0ducent founder caricature"
-              className="w-[100px] sm:w-[140px] md:w-[220px] lg:w-[280px] object-contain select-none"
+              className="illust-float w-[100px] sm:w-[140px] md:w-[220px] lg:w-[280px] object-contain select-none mix-blend-multiply opacity-95"
               loading="eager"
               decoding="async"
             />

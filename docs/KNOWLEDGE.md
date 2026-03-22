@@ -2,6 +2,8 @@
 
 > Paste this file into Lovable → Settings → Manage Knowledge
 
+**Engineering handoff (parity Lovable / migracje / Edge):** see repo doc `docs/UI-PARITY-LOVABLE-SYNC.md`.
+
 ---
 
 ## Brand Identity
