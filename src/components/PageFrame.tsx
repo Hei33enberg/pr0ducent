@@ -268,10 +268,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           </div>
         ) : (
           <button
-            onClick={() => { setMenuOpen(false); navigate("/auth"); }}
+            onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
             className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
           >
-            {t("nav.getStarted")} →
+            {t("nav.getStarted")}
           </button>
         )}
       </div>
