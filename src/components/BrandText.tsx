@@ -5,6 +5,7 @@ interface BrandTextProps {
   className?: string;
   as?: keyof JSX.IntrinsicElements;
   showTm?: boolean;
+  style?: React.CSSProperties;
 }
 
 const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
