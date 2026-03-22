@@ -72,7 +72,7 @@ export function InlineCalculator() {
         </p>
       </div>
 
-      <div className="glass-card rounded-xl p-5 mb-4">
+      <div className="bg-card border border-border/50 rounded-xl p-5 mb-4 shadow-sm">
         <div className="flex justify-between text-sm font-sans items-center mb-2">
           <span>Monthly budget</span>
           <span className="font-bold text-foreground">${budget}/mo</span>
