@@ -1,124 +1,87 @@
 
-# pr0ducent — Project Plan
 
-## Overview
+# Plan: Menu Design Overhaul — newsc0rp Style
 
-**pr0ducent™** is an AI builder comparison platform. Users enter a prompt, select AI builders (Lovable, v0, Bolt, Cursor, Replit, etc.), and get a side-by-side comparison of generated outputs — scores, pros/cons, time-to-prototype, and community ratings.
+## Problem
 
----
+Current pr0ducent menu uses tiny Lucide SVG icons (generic line icons) with no subtitles. The newsc0rp reference uses **hand-drawn sketch-style emblem images** (48-56px) with bold labels + subtitle descriptions, creating a rich editorial feel. Current menu looks bare and unfinished.
 
-## Architecture
+## What needs to change
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18 + TypeScript + Vite 8 |
-| Styling | Tailwind CSS 3 + custom CSS utilities |
-| State | React Query (server) + useState (local) |
-| Backend | Lovable Cloud (Supabase) |
-| Auth | Supabase Auth (email/password) |
-| Database | PostgreSQL via Supabase |
-| Edge Functions | Deno (Supabase Edge Functions) |
-| i18n | Custom React context (EN/PL) |
-| Routing | React Router v6 (lazy-loaded) |
+### 1. Generate hand-drawn sketch icons for each nav item
 
----
+The newsc0rp project uses AI-generated monochrome ink sketch illustrations as menu emblems. pr0ducent needs the same treatment — 9 unique icons generated and saved to `src/assets/nav-icons/`:
 
-## Routes
+| Nav Item | Icon concept |
+|----------|-------------|
+| Home | Blueprint sketch of a house/building facade |
+| Arena | Sketch of crossed swords / colosseum |
+| Leaderboard | Sketch of a trophy / podium chart |
+| Compare | Sketch of a compass / side-by-side scales |
+| Calculator | Sketch of an abacus / mechanical calculator |
+| Pricing | Sketch of price tags / coins stack |
+| Blog | Sketch of a newspaper / printing press |
+| Runs Now | Sketch of a radio tower / broadcast antenna |
+| FAQ | Sketch of a question mark magnifying glass |
+| Marketplace | Sketch of a market stall / shopping bag (if FF enabled) |
 
-| Path | Page | Description |
-|------|------|-------------|
-| `/` | Index | Hero + comparison + calculator + FAQ + blog |
-| `/auth` | Auth | Login/signup |
-| `/pricing` | Pricing | Plans & pricing |
-| `/calculator` | Calculator | PVI cost calculator |
-| `/blog` | Blog | AI-generated blog posts |
-| `/blog/:slug` | BlogPost | Single post |
-| `/builders` | BuildersIndex | All builders listing |
-| `/builders/:id` | BuilderProfile | Individual builder profile |
-| `/runs-now` | RunsNow | Public experiments feed |
-| `/experiment/:id` | PublicExperiment | Shared experiment view |
-| `/dashboard` | UserDashboard | User account |
-| `/dashboard/updates` | BuilderDashboard | Builder sync updates |
-| `/dashboard/notifications` | Notifications | User notifications |
+Style: "Monochrome black ink lines, engineering sketch style, technical blueprint, clean detailed line art, cross-hatching for shadows, no text, no labels, no color, high contrast black on white, transparent background."
 
----
+These will be generated via the Lovable AI image generation model (`google/gemini-3.1-flash-image-preview`) and saved as PNG files.
 
-## Database Tables
+### 2. Add subtitles to each nav item
 
-| Table | Purpose |
-|-------|---------|
-| `experiments` | User comparison experiments |
-| `experiment_runs` | Individual builder runs per experiment |
-| `builder_results` | Raw API results from builders |
-| `builder_ratings` | Community ratings per builder |
-| `builder_pricing_plans` | Pricing data per builder |
-| `builder_price_history` | Historical pricing snapshots |
-| `builder_sync_data` | Synced builder metadata |
-| `blog_posts` | AI-generated blog content |
-| `profiles` | User profiles |
-| `subscriptions` | User subscription plans |
-| `user_roles` | Admin/moderator/user roles |
-| `user_notifications` | In-app notifications |
-| `notification_subscriptions` | Notification preferences |
-| `run_comments` | Comments on experiments |
-| `referral_clicks` | Affiliate referral tracking |
+Following the newsc0rp pattern, each menu item gets a short subtitle:
 
----
+| Item | Subtitle |
+|------|----------|
+| Home | Back to main |
+| Arena | Head-to-head battles |
+| Leaderboard | Builder rankings |
+| Compare | Side-by-side tools |
+| Calculator | ROI estimator |
+| Pricing | Plans & billing |
+| Blog | News & insights |
+| Runs Now | Live experiments |
+| FAQ | Common questions |
+| Marketplace | Templates & remixes |
 
-## Edge Functions
+### 3. Refactor PageFrame menu rendering
 
-| Function | Purpose |
-|----------|---------|
-| `run-on-v0` | Send prompt to v0 API |
-| `poll-v0-status` | Poll v0 generation status |
-| `sync-builder-data` | Sync builder metadata via AI |
-| `generate-blog-post` | Generate blog content via AI |
-| `cron-blog-generator` | Scheduled blog generation |
-| `translate-content` | Translate content EN↔PL |
-| `create-checkout` | Stripe checkout session |
-| `stripe-webhook` | Stripe webhook handler |
+- Change `navLinks` to include `subtitle: string` and `emblem: string` (imported image) instead of `icon: LucideIcon`
+- Menu item layout: `img` (48x48 emblem) + stacked `label` (bold uppercase) + `subtitle` (muted small text)
+- Exactly matches newsc0rp pattern from lines 211-224
 
----
+### 4. Hamburger animation (CSS lines → animated X)
 
-## Key Components
+Replace the Lucide `<Menu>` / `<X>` toggle with the newsc0rp animated 3-line hamburger using CSS transforms (rotate on open).
 
-| Component | Role |
-|-----------|------|
-| `PageFrame` | App shell with nav, logo, mobile menu |
-| `HeroSection` | Prompt input + tool selection + templates |
-| `ComparisonCanvas` | Side-by-side builder results |
-| `BuilderComparisonTable` | Builder comparison cards |
-| `FeatureMatrix` | Feature support matrix |
-| `PlanComparisonTable` | Pricing plans comparison |
-| `InlineCalculator` | Cost calculator widget |
-| `FAQ` | FAQ accordion with JSON-LD |
-| `AmbientBackground` | Animated gradient background |
+### 5. Menu open/close animation
 
----
+Add `scaleY` transition from newsc0rp instead of abrupt show/hide:
+```css
+transform: menuOpen ? "scaleY(1)" : "scaleY(0)"
+opacity: menuOpen ? 1 : 0
+transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease
+```
 
-## Supported Builders
+### 6. Mobile menu — full-screen overlay
 
-Lovable, Replit, Vercel v0, Cursor, Base44, Antigravity, Build0, Orchids, Floot, Bolt.new
+On mobile (`sm:hidden`), use a full-screen overlay with larger icons (64px), single-column layout, and sticky CTA button at bottom — matching newsc0rp's `menu-overlay-mobile` pattern.
 
----
+## Files to create/edit
 
-## Implementation Status
+| File | Action |
+|------|--------|
+| `src/assets/nav-icons/*.png` | Create ~10 generated sketch icons |
+| `src/components/PageFrame.tsx` | Major refactor: emblem images, subtitles, hamburger animation, mobile overlay |
+| `src/index.css` | Add `menu-overlay-mobile` styles, refine `.nav-dropdown-glass` transition |
 
-- [x] Navigation & logo fixes
-- [x] Builder logos (Google favicon proxy)
-- [x] Mock experiment generator
-- [x] Seed example experiments
-- [x] Builder comparison table
-- [x] Feature matrix
-- [x] Pricing plans table
-- [x] Inline calculator
-- [x] Builder profiles & index
-- [x] Blog system (AI-generated)
-- [x] Social features (ratings, comments)
-- [x] RunsNow feed with filters
-- [x] Auth system
-- [x] i18n (EN/PL)
-- [x] Lazy loading all routes
-- [ ] Real v0 API integration (partial)
-- [ ] Cron jobs (sync + blog)
-- [ ] Stripe payments (partial)
+## What stays the same
+
+- Nav links list (routes, labels, translations)
+- Logo component
+- Auth section (account/sign-out/get started)
+- Overall page-frame structure
+- Backend — zero changes
+
