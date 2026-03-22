@@ -165,16 +165,16 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks: NavItem[] = [
-    { label: "Home", subtitle: "Back to main", href: "/", icon: Home },
-    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", icon: Swords },
-    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", icon: Trophy },
-    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", icon: GitCompareArrows },
-    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", icon: Calculator },
-    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", icon: CreditCard },
-    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", icon: BookOpen },
-    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", icon: Radio },
-    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", icon: Store }] : []),
-    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", icon: HelpCircle },
+    { label: "Home", subtitle: "Back to main", href: "/", iconSrc: navHome },
+    { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", iconSrc: navArena },
+    { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", iconSrc: navLeaderboard },
+    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", iconSrc: navCompare },
+    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", iconSrc: navCalculator },
+    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", iconSrc: navPricing },
+    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", iconSrc: navBlog },
+    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", iconSrc: navRunsNow },
+    ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", iconSrc: navMarketplace }] : []),
+    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", iconSrc: navFaq },
   ];
 
   const isActive = (href: string) =>
