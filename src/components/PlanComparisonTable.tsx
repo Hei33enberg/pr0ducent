@@ -81,12 +81,12 @@ export function PlanComparisonTable() {
         </div>
 
         {/* Tier selector */}
-        <div className="flex justify-center gap-1.5 mb-6">
+        <div className="flex flex-wrap justify-center gap-1.5 mb-6 px-2">
           {availableTiers.map((tier) => (
             <button
               key={tier}
               onClick={() => setActiveTier(tier)}
-              className={`px-4 py-1.5 rounded-full text-xs font-sans font-medium transition-all border capitalize ${
+              className={`px-3 sm:px-4 py-1.5 rounded-full text-xs font-sans font-medium transition-all border capitalize ${
                 activeTier === tier
                   ? "border-foreground bg-foreground text-background"
                   : "border-border bg-card text-muted-foreground hover:border-foreground/30"
