@@ -423,6 +423,46 @@
       radial-gradient(ellipse 55% 55% at 85% 75%, hsla(38, 80%, 78%, 0.40) 0%, transparent 70%),
       radial-gradient(ellipse 35% 40% at 55% 40%, hsla(50, 85%, 77%, 0.25) 0%, transparent 70%);
   }
+
+  .section-gradient-lavender {
+    position: relative;
+    background:
+      radial-gradient(ellipse 55% 50% at 20% 25%, hsla(260, 55%, 82%, 0.42) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 55% at 80% 70%, hsla(280, 45%, 85%, 0.32) 0%, transparent 70%);
+  }
+
+  .section-gradient-teal {
+    position: relative;
+    background:
+      radial-gradient(ellipse 55% 50% at 75% 20%, hsla(175, 55%, 78%, 0.45) 0%, transparent 70%),
+      radial-gradient(ellipse 45% 55% at 20% 75%, hsla(185, 50%, 82%, 0.35) 0%, transparent 70%);
+  }
+
+  /* Subtle washes for neutral/transition sections */
+  .section-wash-blush {
+    background:
+      radial-gradient(ellipse 50% 45% at 70% 30%, hsla(340, 50%, 88%, 0.30) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 20% 70%, hsla(24, 55%, 88%, 0.22) 0%, transparent 70%);
+  }
+  .section-wash-indigo {
+    background:
+      radial-gradient(ellipse 55% 50% at 25% 25%, hsla(230, 55%, 84%, 0.38) 0%, transparent 70%),
+      radial-gradient(ellipse 45% 50% at 80% 65%, hsla(260, 50%, 86%, 0.28) 0%, transparent 70%);
+  }
+  .section-wash-gold {
+    background:
+      radial-gradient(ellipse 50% 45% at 65% 35%, hsla(45, 80%, 82%, 0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 25% 65%, hsla(38, 70%, 85%, 0.25) 0%, transparent 70%);
+  }
+  .section-wash-teal {
+    background:
+      radial-gradient(ellipse 50% 45% at 30% 30%, hsla(175, 50%, 84%, 0.32) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 75% 65%, hsla(185, 45%, 86%, 0.24) 0%, transparent 70%);
+  }
+
+  .section-cv {
+    contain: layout style;
+  }
 }
 
 /* Mobile */
