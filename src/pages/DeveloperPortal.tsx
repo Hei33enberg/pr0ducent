@@ -3,6 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Terminal, Code2, Server, HelpCircle, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { PageFrame } from "@/components/PageFrame";
+import { Footer } from "@/components/Footer";
+import AmbientBackground from "@/components/AmbientBackground";
 
 function CodeBlock({ code, title }: { code: string; title?: string }) {
   const [copied, setCopied] = useState(false);
