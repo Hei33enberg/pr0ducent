@@ -3,7 +3,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ToolSelectionGrid } from "@/components/ToolSelectionGrid";
 import { PROMPT_TEMPLATES } from "@/config/prompt-templates";
 import type { AccountModel } from "@/types/experiment";
-import { Zap, BarChart3, Shield } from "lucide-react";
+import { Zap, BarChart3, Shield, ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import caricatureFounder from "@/assets/caricature-founder-nobg.png";
 
 interface HeroSectionProps {
@@ -16,6 +17,8 @@ interface HeroSectionProps {
 export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, heroRef }: HeroSectionProps) {
   const [prompt, setPrompt] = useState("");
   const [accountModel] = useState<AccountModel>("broker");
+  const [showBuilders, setShowBuilders] = useState(false);
+  const [showMoreTemplates, setShowMoreTemplates] = useState(false);
 
   const handleSubmit = () => {
     if (!prompt.trim() || selectedTools.length === 0) return;
@@ -24,7 +27,17 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
 
   const handleTemplateClick = (template: typeof PROMPT_TEMPLATES[0]) => {
     setPrompt(template.prompt);
+    setShowBuilders(true);
   };
+
+  const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setPrompt(e.target.value);
+    if (e.target.value.trim().length > 0 && !showBuilders) {
+      setShowBuilders(true);
+    }
+  };
+
+  const visibleTemplates = showMoreTemplates ? PROMPT_TEMPLATES : PROMPT_TEMPLATES.slice(0, 7);
 
   return (
     <section ref={heroRef} className="section-divider relative" style={{ minHeight: "calc(80svh - 4rem)" }}>
@@ -66,9 +79,9 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
         </div>
 
         <div className="max-w-4xl mx-auto">
-          {/* Prompt templates — 7 chips above input */}
+          {/* Prompt templates — chips above input */}
           <div className="flex flex-wrap justify-center gap-2 mb-5 fade-up stagger-1 visible-immediate">
-            {PROMPT_TEMPLATES.slice(0, 7).map((tpl) => {
+            {visibleTemplates.map((tpl) => {
               const Icon = tpl.icon;
               return (
                 <button
@@ -81,6 +94,15 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 </button>
               );
             })}
+            {!showMoreTemplates && (
+              <button
+                onClick={() => setShowMoreTemplates(true)}
+                className="glass-card inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground font-sans hover:text-foreground transition-colors"
+              >
+                <ChevronDown className="w-3.5 h-3.5" />
+                <span>+{PROMPT_TEMPLATES.length - 7} more</span>
+              </button>
+            )}
           </div>
 
           {/* Prompt input */}
@@ -88,35 +110,47 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             <div className="relative">
               <Textarea
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
+                onChange={handlePromptChange}
                 placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
                 className="min-h-[120px] text-base bg-card shadow-xl border-2 border-foreground/25 resize-none rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
               />
             </div>
 
-            {/* Builder selection — always visible below input */}
-            <div className="glass-card rounded-xl p-5">
-              <ToolSelectionGrid
-                selectedTools={selectedTools}
-                onSelectionChange={onSelectedToolsChange}
-              />
-            </div>
+            {/* Builder selection — shown only after interaction */}
+            <AnimatePresence>
+              {showBuilders && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="glass-card rounded-xl p-5">
+                    <ToolSelectionGrid
+                      selectedTools={selectedTools}
+                      onSelectionChange={onSelectedToolsChange}
+                    />
+                  </div>
 
-            <div className="flex items-center justify-center">
-              <button
-                onClick={handleSubmit}
-                disabled={!prompt.trim() || selectedTools.length === 0}
-                className="bg-foreground text-background px-8 py-3.5 text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
-              >
-                <Zap className="w-4 h-4" />
-                Run Multi-Builder Test
-                {selectedTools.length > 0 && (
-                  <span className="bg-background/20 px-2 py-0.5 rounded-md text-xs">
-                    {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
-                  </span>
-                )}
-              </button>
-            </div>
+                  <div className="flex items-center justify-center mt-4">
+                    <button
+                      onClick={handleSubmit}
+                      disabled={!prompt.trim() || selectedTools.length === 0}
+                      className="bg-foreground text-background px-8 py-3.5 text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
+                    >
+                      <Zap className="w-4 h-4" />
+                      Run Multi-Builder Test
+                      {selectedTools.length > 0 && (
+                        <span className="bg-background/20 px-2 py-0.5 rounded-md text-xs">
+                          {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
+                        </span>
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Trust bar */}
