@@ -39,6 +39,21 @@ Najnowsze commity to m.in. *Overhauled layout and navigation*, *Layout and UI po
 
 Pełniejsza lista: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md) (sekcja *Compliance*).
 
+## Weryfikacja Lovable Cloud (snapshot operatora)
+
+Poniżej: typowy wynik audytu, gdy Lovable sprawdza **stan faktyczny schematu** vs **44 pliki** w `supabase/migrations/`.  
+**Uwaga:** tabela `supabase_migrations.schema_migrations` może pokazywać **inne timestampy w nazwie** niż pliki z GitHuba, jeśli migracje były kiedyś wklejane ręcznie lub aplikowane innym narzędziem — **źródłem prawdy dla zespołu jest repo + zgodność obiektów** (tabele, RPC, MV), nie wyłącznie lista wierszy w `schema_migrations`.
+
+| Obszar | Oczekiwany stan (zgodny z `main`) |
+|--------|-----------------------------------|
+| **Migracje / schema** | Obiekty z 44 migracji obecne: `run_jobs`, `run_tasks`, `run_events`, broker pool / lease, BYOA + RPC, `builder_rate_limits`, `builder_try_dispatch_slot`, MV `builder_leaderboard`, arena / benchmark, itd. |
+| **Builder config** | v0: enabled, tier 1; replit: gotowy, wyłączony do realnego API; reszta benchmark / disabled wg seedów |
+| **Edge `config.toml`** | Np. `dispatch-builders` JWT, `process-task-queue` bez JWT (service role), `pbp-webhook` wg repo |
+| **Sekrety** | Min. `SUPABASE_SERVICE_ROLE_KEY`, `V0_API_KEY`, Stripe/Perplexity wg potrzeb, `EDGE_ALLOWED_ORIGINS` |
+| **Frontend** | Build OK → **Publish** w Lovable |
+
+Jeśli audyt potwierdza obiekty i sekrety, **Publish aplikacji** jest sensownym następnym krokiem; po publikacji warto krótki smoke (zalogowany user → run, kolejka nie wisi w `queued`).
+
 ## Prompt dla operatora Lovable (cloud Supabase + deploy)
 
 **Wklej w Lovable po Pull z GitHub i przed Publish**, jeśli ten release dotyka **backendu** albo nie jesteś pewien, czy cloud jest zsynchronizowany z `main`:
