@@ -117,92 +117,78 @@ const Index = () => {
         onBack={handleBack}
         onVisibilityChange={handleVisibilityChange}
       >
-        <AnimatePresence mode="wait">
-          {experiment ? (
-            <motion.div
-              key="canvas"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ComparisonCanvas
-                experiment={experiment}
-                onExperimentUpdate={handleExperimentUpdate}
-                onToolClick={(toolId) => setSelectedToolId(toolId)}
-                builderResults={builderResults}
+        {experiment ? (
+          <div>
+            <ComparisonCanvas
+              experiment={experiment}
+              onExperimentUpdate={handleExperimentUpdate}
+              onToolClick={(toolId) => setSelectedToolId(toolId)}
+              builderResults={builderResults}
+            />
+          </div>
+        ) : (
+          <div>
+            <HeroSection
+              onSubmit={handleSubmit}
+              selectedTools={selectedTools}
+              onSelectedToolsChange={setSelectedTools}
+              heroRef={heroRef}
+            />
+
+            {user ? (
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-2">
+                <Alert className="border-border/60 bg-muted/30">
+                  <AlertDescription className="text-sm text-muted-foreground">
+                    {t("help.orchestrationSignedIn")}
+                  </AlertDescription>
+                </Alert>
+              </div>
+            ) : null}
+            
+            
+
+            
+
+            <div className="section-gradient-peach">
+              <BuilderComparisonTable
+                onSelectTool={(toolId) => {
+                  setSelectedTools([toolId]);
+                  heroRef.current?.scrollIntoView({ behavior: "smooth" });
+                }}
               />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="hero"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <HeroSection
-                onSubmit={handleSubmit}
-                selectedTools={selectedTools}
-                onSelectedToolsChange={setSelectedTools}
-                heroRef={heroRef}
+            </div>
+
+            <div className="section-wash-blush">
+              <FeatureMatrix />
+            </div>
+
+            <div className="section-wash-indigo">
+              <PlanComparisonTable />
+            </div>
+
+            
+
+            <div className="section-wash-gold">
+              <InlineCalculator />
+            </div>
+
+            <FAQ />
+
+            <div className="section-wash-teal">
+              <HomepageBlogSection />
+            </div>
+
+            <div className="section-gradient-lavender">
+              <ExperimentHistory
+                experiments={pastExperiments}
+                onSelect={(exp) => setExperiment(exp)}
+                onDelete={handleDelete}
               />
+            </div>
 
-              {user ? (
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-2">
-                  <Alert className="border-border/60 bg-muted/30">
-                    <AlertDescription className="text-sm text-muted-foreground">
-                      {t("help.orchestrationSignedIn")}
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              ) : null}
-              
-              
-
-              
-
-              <div className="section-gradient-peach section-cv">
-                <BuilderComparisonTable
-                  onSelectTool={(toolId) => {
-                    setSelectedTools([toolId]);
-                    heroRef.current?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                />
-              </div>
-
-              <div className="section-wash-blush section-cv">
-                <FeatureMatrix />
-              </div>
-
-              <div className="section-wash-indigo section-cv">
-                <PlanComparisonTable />
-              </div>
-
-              
-
-              <div className="section-wash-gold">
-                <InlineCalculator />
-              </div>
-
-              <FAQ />
-
-              <div className="section-wash-teal">
-                <HomepageBlogSection />
-              </div>
-
-              <div className="section-gradient-lavender section-cv">
-                <ExperimentHistory
-                  experiments={pastExperiments}
-                  onSelect={(exp) => setExperiment(exp)}
-                  onDelete={handleDelete}
-                />
-              </div>
-
-              <Footer />
-            </motion.div>
-          )}
-        </AnimatePresence>
+            <Footer />
+          </div>
+        )}
       </PageFrame>
 
       <ToolDetailPanel
