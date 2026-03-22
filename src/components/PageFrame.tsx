@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback, forwardRef, type ReactNode } from "react";
-import { LogOut, User, Home, Swords, Trophy, GitCompareArrows, Calculator, CreditCard, BookOpen, Radio, HelpCircle, Store } from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -10,7 +10,18 @@ import { useTranslation } from "@/lib/i18n";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
-import type { LucideIcon } from "lucide-react";
+
+// Custom illustrated nav icons
+import navHome from "@/assets/nav-icons/home.png";
+import navArena from "@/assets/nav-icons/arena.png";
+import navLeaderboard from "@/assets/nav-icons/leaderboard.png";
+import navCompare from "@/assets/nav-icons/compare.png";
+import navCalculator from "@/assets/nav-icons/calculator.png";
+import navPricing from "@/assets/nav-icons/pricing.png";
+import navBlog from "@/assets/nav-icons/blog.png";
+import navRunsNow from "@/assets/nav-icons/runs-now.png";
+import navMarketplace from "@/assets/nav-icons/marketplace.png";
+import navFaq from "@/assets/nav-icons/faq.png";
 
 interface PageFrameProps {
   children: ReactNode;
