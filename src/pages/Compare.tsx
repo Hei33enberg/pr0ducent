@@ -46,7 +46,7 @@ export default function Compare() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="overflow-x-auto mb-12"
+            className="section-gradient-peach rounded-xl overflow-x-auto mb-12 p-4"
           >
             <table className="w-full text-sm border-collapse">
               <thead>
