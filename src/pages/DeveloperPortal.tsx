@@ -39,8 +39,10 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
 
 export default function DeveloperPortal() {
   return (
-    <div className="container mx-auto py-10 max-w-5xl space-y-8">
-      <div>
+    <div className="min-h-screen">
+      <AmbientBackground />
+      <PageFrame experiment={null} onBack={() => {}} onVisibilityChange={() => {}}>
+        <div className="page-inner max-w-5xl space-y-8">
         <h1 className="text-4xl font-bold tracking-tight mb-2">Platform Developer Portal</h1>
         <p className="text-xl text-muted-foreground">
           Vibe-coding Broker Protocol (VBP) and POP Ecosystem Integrations.
