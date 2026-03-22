@@ -247,33 +247,39 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
         </div>
       </div>
 
-      {/* Sticky CTA at bottom */}
-      <div className="shrink-0 p-4 border-t border-foreground/[0.06]">
-        {user ? (
-          <div className="grid grid-cols-2 gap-2">
+      {/* Language + CTA at bottom */}
+      <div className="shrink-0 border-t border-foreground/[0.06]">
+        <div className="px-4 py-3 flex items-center gap-2">
+          <LanguageToggle />
+          <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
+        </div>
+        <div className="px-4 pb-4">
+          {user ? (
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
+                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              >
+                <User className="w-4 h-4" />
+                {t("nav.myAccount")}
+              </button>
+              <button
+                onClick={() => { setMenuOpen(false); signOut(); }}
+                className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              >
+                <LogOut className="w-4 h-4" />
+                {t("nav.signOut")}
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={() => { setMenuOpen(false); navigate("/dashboard"); }}
-              className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
+              onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
+              className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
             >
-              <User className="w-4 h-4" />
-              {t("nav.myAccount")}
+              {t("nav.getStarted")}
             </button>
-            <button
-              onClick={() => { setMenuOpen(false); signOut(); }}
-              className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
-            >
-              <LogOut className="w-4 h-4" />
-              {t("nav.signOut")}
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
-            className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
-          >
-            {t("nav.getStarted")}
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
