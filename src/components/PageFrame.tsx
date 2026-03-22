@@ -353,6 +353,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               </div>
             </div>
 
+            {/* Language toggle row */}
+            <div className="border-t border-foreground/[0.06] px-5 md:px-8 lg:px-12 py-3 flex items-center gap-2">
+              <LanguageToggle />
+              <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
+            </div>
             {/* Auth actions */}
             <div className="border-t border-foreground/[0.06] p-5 md:px-8 lg:px-12">
               <div className="grid grid-cols-2 gap-1">
