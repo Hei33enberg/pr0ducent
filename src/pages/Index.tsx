@@ -159,8 +159,6 @@ const Index = () => {
               />
             </div>
 
-            <BigHeadline text="Compare. Build. Ship." wash="indigo" />
-
             <div className="section-wash-blush">
               <FeatureMatrix />
             </div>

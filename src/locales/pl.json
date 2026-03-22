@@ -99,6 +99,12 @@
   "compare.partner": "★ Partner",
   "compare.popLive": "POP live",
 
+  "featureMatrix.eyebrow": "Porównaj · Buduj · Wysyłaj",
+  "featureMatrix.title": "Macierz porównania funkcji",
+  "featureMatrix.subtitle": "Który builder co oferuje — w jednej tabeli.",
+  "featureMatrix.featureCol": "Funkcja",
+  "featureMatrix.totalRow": "Łącznie funkcji",
+
   "marketplace.title": "Dema Społeczności",
   "marketplace.subtitle": "Eksploruj otwarte dema wygenerowane przez społeczność. Znajdź inspirację i twórz własne wersje.",
   "marketplace.builders": "Buildery:",

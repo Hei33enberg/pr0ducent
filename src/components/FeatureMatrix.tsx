@@ -1,10 +1,12 @@
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
+import { useTranslation } from "@/lib/i18n";
 import { Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FeatureMatrix() {
   const { tools } = useBuilderCatalog();
+  const { t } = useTranslation();
 
   return (
     <section id="features" className="max-w-6xl mx-auto px-4 py-12">
@@ -14,24 +16,24 @@ export function FeatureMatrix() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-center mb-10">
-          <h2
-            className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
-            style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}
-          >
-            Feature Comparison Matrix
-          </h2>
-          <p className="text-base text-muted-foreground font-sans max-w-lg mx-auto">
-            See which features each builder supports at a glance.
+        <header className="text-center mb-10 max-w-3xl mx-auto">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+            {t("featureMatrix.eyebrow")}
           </p>
-        </div>
+          <h2 className="font-serif font-bold tracking-[-0.02em] text-foreground text-3xl sm:text-4xl md:text-5xl leading-tight">
+            {t("featureMatrix.title")}
+          </h2>
+          <p className="text-base text-muted-foreground font-sans mt-4">
+            {t("featureMatrix.subtitle")}
+          </p>
+        </header>
 
         <div className="overflow-x-auto rounded-lg border border-border">
           <table className="w-full text-xs font-sans">
             <thead>
               <tr className="bg-muted/50">
                 <th className="text-left p-3 font-semibold text-foreground sticky left-0 bg-muted/50 min-w-[160px]">
-                  Feature
+                  {t("featureMatrix.featureCol")}
                 </th>
                 {tools.map((tool) => (
                   <th
@@ -91,7 +93,7 @@ export function FeatureMatrix() {
             <tfoot>
               <tr className="bg-muted/50 border-t border-border">
                 <td className="p-3 font-bold text-foreground sticky left-0 bg-muted/50">
-                  Total features
+                  {t("featureMatrix.totalRow")}
                 </td>
                 {tools.map((tool) => {
                   const count = COMPARISON_FEATURES.filter((f) => f.tools.includes(tool.id)).length;
