@@ -1,113 +1,142 @@
 
 
-# Full Design & Brand Audit: pr0ducent vs newsc0rp Reference
+# Full Audit: pr0ducent vs newsc0rp — All Gaps
 
-## Current State Summary
-
-After comparing every major file in both projects, here are the gaps between pr0ducent and the newsc0rp reference implementation.
+After line-by-line comparison of both projects, here are all issues grouped by severity.
 
 ---
 
-## CRITICAL ISSUES
+## CRITICAL BUGS (Broken Right Now)
 
-### 1. Nav icon images are broken/empty placeholders
-The last diff shows all 10 `src/assets/nav-icons/*.png` files were created as binary but generated in a single batch with no visual QA. These are likely corrupted or empty 1x1px files. The menu currently shows blank squares where emblems should be.
+### 1. Nav icon PNGs are likely empty/broken
+The 10 files in `src/assets/nav-icons/` were batch-generated as binary blobs in a single AI pass. They are almost certainly 1x1px placeholders or corrupted. The menu shows blank squares where emblems should be.
 
-**Fix:** Regenerate all 10 icons one-by-one using AI image generation, QA each one, and replace the broken files.
+**Fix:** Delete all 10 PNGs. Replace with inline SVG icons (Lucide or custom) as a fallback, OR regenerate one-by-one with proper QA via AI image generation. SVG fallback is more reliable.
 
-### 2. Desktop dropdown is positioned inside `menuRef` (inside header flex)
-In newsc0rp, the menu dropdown is an `absolute top-full left-0 right-0` child of the `sticky-header` wrapper. In pr0ducent, `desktopDropdown` is rendered inside the right-side `<div ref={menuRef}>` flex container, which means it inherits wrong positioning and clips.
+### 2. Console warning: Badge component missing forwardRef
+`PlanComparisonTable` passes a ref to `Badge` but `Badge` is a function component without `forwardRef`. This triggers a React warning on every render.
 
-**Fix:** Move `desktopDropdown` render out of the right-side flex div, make it a direct child of the `sticky-header` wrapper (like newsc0rp lines 196-228).
+**Fix:** Wrap the `Badge` component in `forwardRef` or remove the ref from the motion wrapper in `PlanComparisonTable`.
 
-### 3. Missing `section-cv` containment wrapper
-newsc0rp wraps heavy sections in `<div className="section-cv">` (`contain: layout style`) for paint isolation. pr0ducent has the CSS class but never uses it on any section.
+### 3. Missing `.section-dark` heading color rule
+newsc0rp has this critical CSS rule (lines 163-167):
+```css
+.section-dark h1, .section-dark h2, .section-dark h3,
+.section-dark h4, .section-dark h5, .section-dark h6 {
+  color: hsl(0, 0%, 96%);
+}
+```
+pr0ducent is missing it entirely. Result: headings inside the dark footer render as **black on near-black background** — invisible.
 
-**Fix:** Wrap `FeatureMatrix`, `PlanComparisonTable`, `BuilderComparisonTable`, `ExperimentHistory` in `section-cv` divs.
-
----
-
-## DESIGN & LAYOUT GAPS
-
-### 4. No section background washes on homepage sections
-newsc0rp applies unique gradient washes to each section (`section-gradient-peach`, `section-wash-blush`, `section-wash-indigo`, etc.) creating a continuous color tapestry. pr0ducent only uses `section-gradient-gold` on HowItWorks and `section-gradient-rose` on FAQ. The other 5 sections (BuilderComparisonTable, FeatureMatrix, PlanComparisonTable, InlineCalculator, HomepageBlogSection) have no background wash -- they look flat and disconnected.
-
-**Fix:** Assign alternating washes to every homepage section:
-| Section | Wash class |
-|---------|-----------|
-| HowItWorks | `section-gradient-gold` (already) |
-| BuilderComparisonTable | `section-gradient-peach` |
-| FeatureMatrix | `section-wash-blush` |
-| PlanComparisonTable | `section-wash-indigo` |
-| InlineCalculator | `section-wash-gold` |
-| FAQ | `section-gradient-rose` (already) |
-| HomepageBlogSection | `section-wash-teal` |
-| ExperimentHistory | `section-gradient-lavender` |
-
-### 5. No BigHeadline / editorial section dividers
-newsc0rp uses `BigHeadline` components with massive serif text between major sections (e.g. "One engine. Infinite media." at `clamp(3.2rem, 9vw, 9rem)`). pr0ducent has no equivalent -- sections just stack with no dramatic pacing.
-
-**Fix:** Create a `BigHeadline` component (copy from newsc0rp) and insert 2-3 between key sections on the Index page:
-- Before BuilderComparisonTable: "One prompt. Every builder."
-- Before InlineCalculator: "Know your cost before you build."
-- Before FAQ: "Still have questions?"
-
-### 6. No IllustDivider between sections
-newsc0rp places large monochrome illustrations between sections with float/pulse animations. pr0ducent has no visual breaks between content blocks.
-
-**Fix:** Create `IllustDivider` component (copy from newsc0rp). Use 2-3 of the existing caricature assets or generate new editorial illustrations for section breaks.
-
-### 7. Missing `section-wash-*` CSS classes
-pr0ducent has `section-gradient-*` classes but is missing the subtler `section-wash-blush`, `section-wash-indigo`, `section-wash-gold`, `section-wash-teal` classes that newsc0rp uses for transition sections.
-
-**Fix:** Copy the 4 `section-wash-*` classes from newsc0rp's `index.css` (lines 432-451) plus `section-gradient-teal` and `section-gradient-lavender`.
-
-### 8. Footer is light-only, not dark section
-newsc0rp footer uses `section-dark dot-grid-bg` (dark background with dot grid pattern). pr0ducent footer is a plain light section with no visual weight.
-
-**Fix:** Refactor `Footer.tsx` to use `section-dark dot-grid-bg` pattern matching newsc0rp's `FooterSection.tsx`. Keep existing links/content but apply the dark treatment.
-
-### 9. Missing `section-cv` on FeatureMatrix, PlanComparisonTable
-These heavy DOM sections should use `contain: layout style` for rendering performance.
+**Fix:** Add the rule to `src/index.css` inside `@layer base`.
 
 ---
 
-## COMPONENT PARITY GAPS
+## LAYOUT / STRUCTURAL GAPS
 
-### 10. No `BrandText` utility component
-newsc0rp has a reusable `BrandText` component that auto-sizes digits to 2em. pr0ducent manually inlines the brand styling everywhere (Logo, Footer). This leads to inconsistency.
+### 4. No header hide-on-scroll-down behavior
+newsc0rp has a `header-hidden` class with `translateY(-100%)` and scroll direction detection (lines 120-155 of Index.tsx + CSS lines 308-312). pr0ducent header is always visible — takes up space when scrolling long pages.
 
-**Fix:** Create `src/components/BrandText.tsx` (copy from newsc0rp). Refactor Logo in PageFrame and Footer to use it.
+**Fix:** Add `header-hidden` CSS class and scroll direction detection logic to `PageFrame.tsx` (copy from newsc0rp).
 
-### 11. `useInView` hook missing
-newsc0rp's `BigHeadline` uses a `useInView` hook for scroll-triggered fade-up. pr0ducent doesn't have this hook.
+### 5. Desktop dropdown uses wrong CSS class name
+newsc0rp uses `.menu-dropdown` (line 563). pr0ducent uses `.nav-dropdown-glass` — similar styles but slightly different (missing `backdrop-filter`). The pr0ducent version also has `background: hsl(...)` (solid) instead of `hsla(...)` (semi-transparent with blur).
 
-**Fix:** Create `src/hooks/useInView.ts` with IntersectionObserver logic.
+**Fix:** Align the `.nav-dropdown-glass` styles with newsc0rp's `.menu-dropdown`:
+- Use `hsla(30, 18%, 95%, 0.98)` with `backdrop-filter: blur(16px) saturate(1.4)` 
+- Keep the `menu-open` solid override for when menu is active
+
+### 6. Mobile overlay missing `backdrop-filter`
+newsc0rp's `.menu-overlay-mobile` has `backdrop-filter: blur(12px) saturate(1.2)`. pr0ducent's version is a flat opaque `hsl(30, 18%, 95%)` with no blur.
+
+**Fix:** Add `backdrop-filter` to `.menu-overlay-mobile`.
+
+### 7. Hamburger animation uses different technique
+newsc0rp uses inline CSS classes (`rotate-45 translate-y-[5.5px]`) directly on `<span>` elements (lines 229-231). pr0ducent uses separate `.hamburger-line-*-open` CSS classes. Both work but pr0ducent's approach adds unnecessary CSS. Not critical but inconsistent.
+
+### 8. Missing `IllustDivider` usage on Index page
+The `IllustDivider` component exists but is never used on the homepage. newsc0rp uses 5-6 illustration dividers between sections. pr0ducent has the caricature founder image in the hero but no editorial illustrations between sections.
+
+**Fix:** Add 2-3 `IllustDivider` instances between key sections using the existing `caricature-founder-nobg.png` or generate new monochrome illustrations.
 
 ---
 
-## FILES TO CREATE/EDIT
+## CSS GAPS (Compared to newsc0rp)
 
-| File | Action |
-|------|--------|
-| `src/assets/nav-icons/*.png` | Regenerate all 10 sketch icons with QA |
-| `src/components/BrandText.tsx` | Create (copy from newsc0rp) |
-| `src/components/BigHeadline.tsx` | Create (copy from newsc0rp) |
-| `src/components/IllustDivider.tsx` | Create (copy from newsc0rp, no video support needed initially) |
-| `src/hooks/useInView.ts` | Create (IntersectionObserver hook) |
-| `src/index.css` | Add 6 missing wash/gradient classes |
-| `src/components/PageFrame.tsx` | Fix dropdown positioning (move outside flex) |
-| `src/pages/Index.tsx` | Add BigHeadline dividers, section washes, section-cv wrappers |
-| `src/components/Footer.tsx` | Dark section treatment |
-| `src/components/BuilderComparisonTable.tsx` | Add section wash class |
-| `src/components/FeatureMatrix.tsx` | Add section wash + section-cv |
-| `src/components/InlineCalculator.tsx` | Add section wash |
-| `src/components/HomepageBlogSection.tsx` | Add section wash |
+### 9. Missing `section-gradient-teal` and `section-gradient-lavender` — different values
+pr0ducent has these classes but with weaker gradients than newsc0rp. Compare:
+- **newsc0rp `section-gradient-teal`**: 3 blobs with 0.50/0.38/0.25 opacity
+- **pr0ducent `section-gradient-teal`**: 2 blobs with 0.45/0.35 opacity (weaker)
 
-## WHAT STAYS THE SAME
+**Fix:** Replace with newsc0rp's 3-blob versions for both classes.
 
-- All backend/edge functions -- zero changes
-- Route structure, auth flow, data fetching
-- Tailwind config, design tokens, CSS variables
-- Core component logic (forms, tables, experiments)
+### 10. `sticky-header` missing transition and will-change
+newsc0rp has:
+```css
+transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+will-change: transform;
+```
+pr0ducent has neither — no smooth show/hide animation possible.
+
+**Fix:** Add `transition` and `will-change` to `.sticky-header`.
+
+### 11. Marquee animation missing
+newsc0rp has `@keyframes marquee-scroll` and `.marquee-track` for logo wall scrolling. pr0ducent has a `BuilderLogosBar` component but no marquee CSS.
+
+**Fix:** Add marquee keyframes and `.marquee-track` class to `index.css` if `BuilderLogosBar` needs it, or leave if not used.
+
+---
+
+## COMPONENT GAPS
+
+### 12. `BrandText` not used in Logo
+The `BrandText` component exists but the `Logo` in `PageFrame.tsx` still uses manual inline styling (line 51). This defeats the purpose of having `BrandText`.
+
+**Fix:** Refactor `Logo` to use `<BrandText text="pr0ducent" showTm />`.
+
+### 13. No `CtaStrip` component
+newsc0rp has a reusable `CtaStrip` component for mid-page call-to-action banners with quotes and dual CTAs. pr0ducent has nothing equivalent — no visual break between content-heavy sections.
+
+**Fix:** Create a `CtaStrip` component and place 1-2 on the homepage.
+
+### 14. `BigHeadline` missing `wash` prop handling for all values
+Current `BigHeadline` supports "blush", "indigo", "gold", "teal" — that covers the needed washes. OK.
+
+---
+
+## WHAT IS ALREADY CORRECT
+
+- Section washes applied in `Index.tsx` (peach, blush, indigo, gold, teal, lavender)
+- `BigHeadline` dividers placed between key sections  
+- `section-cv` wrappers on heavy components
+- Dark footer with `section-dark dot-grid-bg`
+- `BrandText` component exists
+- `IllustDivider` component exists
+- `useInView` hook exists
+- All wash/gradient CSS classes exist
+- Font stack matches (Cormorant Garamond + Space Grotesk)
+- CSS variables and design tokens match
+- Backend/edge functions untouched
+
+---
+
+## IMPLEMENTATION PLAN
+
+### Files to edit:
+
+| File | Changes |
+|------|---------|
+| `src/index.css` | Add `.section-dark h1-h6` color rule; add `transition` + `will-change` to `.sticky-header`; add `.header-hidden` class; upgrade `.menu-overlay-mobile` with backdrop-filter; strengthen `section-gradient-teal` and `section-gradient-lavender` to 3-blob versions |
+| `src/components/PageFrame.tsx` | Add scroll-direction detection for header hide/show; refactor Logo to use `BrandText`; fix outside-click handler to account for header-hidden state |
+| `src/components/ui/badge.tsx` | Wrap in `forwardRef` to fix React warning |
+| `src/pages/Index.tsx` | Add 2-3 `IllustDivider` instances between sections |
+
+### Files that stay the same:
+- All edge functions, database, auth, routing
+- `BigHeadline`, `BrandText`, `IllustDivider`, `useInView` (already correct)
+- `Footer.tsx` (already dark, just needs the CSS heading color fix)
+- All other components
+
+### Nav icons decision:
+The 10 PNG files need to be regenerated individually with QA. Alternatively, fall back to Lucide SVG icons rendered at 48px with reduced opacity for the same editorial feel — this is more reliable than AI-generated PNGs which have failed twice.
 
