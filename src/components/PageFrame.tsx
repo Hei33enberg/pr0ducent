@@ -255,7 +255,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
       className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
       {frameRect && (
-        <div className="sticky-header" style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }} ref={menuRef}>
+        <div className={`sticky-header ${menuOpen ? 'menu-open' : ''}`} style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }} ref={menuRef}>
           <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 
