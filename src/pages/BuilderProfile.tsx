@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { Star, TrendingUp, ExternalLink, Zap, ArrowLeft, DollarSign, Cpu, BookOpen, Activity, BarChart2 } from "lucide-react";
+import { Footer } from "@/components/Footer";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, Tooltip as RTooltip, YAxis, Cell, CartesianGrid } from "recharts";
 import { usePublicExperiments } from "@/hooks/usePublicExperiments";
 
