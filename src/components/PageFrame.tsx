@@ -192,8 +192,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   /* ── Nav item renderer (shared between desktop & mobile) ── */
   const renderNavItem = (link: NavItem, size: "sm" | "lg" = "sm") => {
     const active = isActive(link.href);
-    const IconComp = link.icon;
-    const iconSize = size === "lg" ? 28 : 22;
+    const imgSize = size === "lg" ? 32 : 24;
 
     return (
       <button
@@ -205,10 +204,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
             : "text-foreground hover:bg-foreground/[0.05]"
         }`}
       >
-        <IconComp
-          size={iconSize}
-          strokeWidth={1.5}
-          className={`shrink-0 ${active ? "text-background" : "text-foreground/60 group-hover:text-foreground/80"} transition-all`}
+        <img
+          src={link.iconSrc}
+          alt=""
+          width={imgSize}
+          height={imgSize}
+          className={`shrink-0 object-contain ${active ? "invert" : "opacity-70 group-hover:opacity-90"} transition-all`}
         />
         <div className="flex flex-col min-w-0">
           <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.06em] leading-tight">
