@@ -186,6 +186,10 @@
     font-style: normal;
     color: hsl(0, 0%, 0%);
   }
+  .section-dark h1, .section-dark h2, .section-dark h3,
+  .section-dark h4, .section-dark h5, .section-dark h6 {
+    color: hsl(0, 0%, 96%);
+  }
 }
 
 /* ═══════════════════════════════════════════════════
