@@ -100,7 +100,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* Weight sliders */}
-          <div className="glass-card rounded-xl p-5 mb-6 space-y-4">
+          <div className="bg-card border border-border/50 rounded-xl p-5 mb-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-semibold font-sans text-foreground">Adjust Your Priorities</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {sliders.map(({ key, label, icon: Icon, value }) => (
