@@ -43,6 +43,10 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 - **Status i macierz:** [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md) — co weszło z Lovable, co domknięte w repo, prompt operatora dla migracji / Edge na cloud.
 - Tokeny i guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
 
+## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
+
+- **Pełny audyt (inventory, macierze ryzyk, drift kontraktów, slice’y A–D, checklist Lovable):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)
+
 ## Frontend stack
 
 - React + TypeScript + Vite + Tailwind + shadcn/ui

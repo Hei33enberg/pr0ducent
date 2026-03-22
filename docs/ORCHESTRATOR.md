@@ -1,6 +1,6 @@
 # Orchestrator (broker MVP)
 
-Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md). Wprowadzenie po polsku (gość vs zalogowany, v0 vs inni): [BUILDERS-101-PL.md](./BUILDERS-101-PL.md).
+Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md). Wprowadzenie po polsku (gość vs zalogowany, v0 vs inni): [BUILDERS-101-PL.md](./BUILDERS-101-PL.md). **Audyt hardeningowy pipeline (macierze ryzyk, drift VBP, slice’y):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).
 
 ## Flow
 
