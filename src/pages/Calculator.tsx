@@ -181,6 +181,7 @@ export default function CalculatorPage() {
             })}
           </div>
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );
