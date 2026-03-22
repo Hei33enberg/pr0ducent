@@ -87,7 +87,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 <button
                   key={tpl.id}
                   onClick={() => handleTemplateClick(tpl)}
-                  className="glass-card inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
+                  className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{tpl.label}</span>
