@@ -466,7 +466,7 @@
   }
 
   .section-cv {
-    contain: layout style;
+    contain: style;
   }
 }
 
