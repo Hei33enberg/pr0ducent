@@ -305,7 +305,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   onVisibilityChange={onVisibilityChange}
                 />
               )}
-              <LanguageToggle />
               <NotificationBell />
 
               {/* User avatar / sign-in CTA */}
@@ -319,11 +318,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 </button>
               ) : (
                 <a
-                  href="/auth"
-                  onClick={(e) => { e.preventDefault(); navigate("/auth"); }}
+                  href="/pricing"
+                  onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
                   className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
-                  {t("nav.getStarted")} →
+                  {t("nav.getStarted")}
                 </a>
               )}
 
