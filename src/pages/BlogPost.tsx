@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PageFrame } from "@/components/PageFrame";
 import { Footer } from "@/components/Footer";
+import AmbientBackground from "@/components/AmbientBackground";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft } from "lucide-react";
@@ -52,87 +53,84 @@ export default function BlogPost() {
   }, [post]);
 
   return (
-    <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-      <div className="px-4 sm:px-8 lg:px-12 py-12 sm:py-16 max-w-3xl mx-auto">
-        <button
-          onClick={() => navigate("/blog")}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 font-sans"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to blog
-        </button>
+    <div className="min-h-screen">
+      <AmbientBackground />
+      <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
+        <div className="page-inner-narrow py-12 sm:py-16">
+          <button
+            onClick={() => navigate("/blog")}
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 font-sans"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to blog
+          </button>
 
-        {loading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-10 w-3/4" />
-            <Skeleton className="h-4 w-1/4" />
-            <Skeleton className="h-[400px] w-full mt-8" />
-          </div>
-        ) : !post ? (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground font-sans text-lg">Post not found.</p>
-          </div>
-        ) : (
-          <article>
-            <div className="flex items-center gap-2 mb-4">
-              <Badge variant="secondary" className="text-xs font-sans">{post.category}</Badge>
-              {post.tags?.map((tag) => (
-                <span key={tag} className="text-xs text-muted-foreground font-sans">#{tag}</span>
-              ))}
+          {loading ? (
+            <div className="space-y-4">
+              <Skeleton className="h-10 w-3/4" />
+              <Skeleton className="h-4 w-1/4" />
+              <Skeleton className="h-[400px] w-full mt-8" />
             </div>
+          ) : !post ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground font-sans text-lg">Post not found.</p>
+            </div>
+          ) : (
+            <article>
+              <div className="flex items-center gap-2 mb-4">
+                <Badge variant="secondary" className="text-xs font-sans">{post.category}</Badge>
+                {post.tags?.map((tag) => (
+                  <span key={tag} className="text-xs text-muted-foreground font-sans">#{tag}</span>
+                ))}
+              </div>
 
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
-              {post.title}
-            </h1>
+              <h1
+                className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4 leading-tight"
+                style={{ fontSize: "clamp(2rem, 3.5vw + 0.8rem, 3.5rem)" }}
+              >
+                {post.title}
+              </h1>
 
-            <time className="text-sm text-muted-foreground font-sans block mb-10">
-              {new Date(post.published_at || post.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </time>
+              <time className="text-sm text-muted-foreground font-sans block mb-10">
+                {new Date(post.published_at || post.created_at).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </time>
 
-            <div
-              className="prose prose-lg max-w-none font-sans
-                prose-headings:font-serif prose-headings:text-foreground
-                prose-p:text-muted-foreground prose-a:text-primary
-                prose-strong:text-foreground prose-code:text-primary
-                prose-blockquote:border-primary/30 prose-blockquote:text-muted-foreground"
-              dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
-            />
+              <div
+                className="prose prose-lg max-w-none font-sans
+                  prose-headings:font-serif prose-headings:text-foreground
+                  prose-p:text-muted-foreground prose-a:text-primary
+                  prose-strong:text-foreground prose-code:text-primary
+                  prose-blockquote:border-primary/30 prose-blockquote:text-muted-foreground"
+                dangerouslySetInnerHTML={{ __html: markdownToHtml(post.content) }}
+              />
 
-            {/* JSON-LD Article schema */}
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify({
-                  "@context": "https://schema.org",
-                  "@type": "Article",
-                  headline: post.title,
-                  description: post.seo_description || post.excerpt,
-                  datePublished: post.published_at || post.created_at,
-                  author: {
-                    "@type": "Organization",
-                    name: "pr0ducent",
-                    url: "https://pr0ducent.lovable.app",
-                  },
-                  publisher: {
-                    "@type": "Organization",
-                    name: "pr0ducent",
-                  },
-                }),
-              }}
-            />
-          </article>
-        )}
-      </div>
-      <Footer />
-    </PageFrame>
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    headline: post.title,
+                    description: post.seo_description || post.excerpt,
+                    datePublished: post.published_at || post.created_at,
+                    author: { "@type": "Organization", name: "pr0ducent", url: "https://pr0ducent.lovable.app" },
+                    publisher: { "@type": "Organization", name: "pr0ducent" },
+                  }),
+                }}
+              />
+            </article>
+          )}
+        </div>
+        <Footer />
+      </PageFrame>
+    </div>
   );
 }
 
-// Simple markdown to HTML converter (basic)
 function markdownToHtml(md: string): string {
   if (!md) return "";
   return md

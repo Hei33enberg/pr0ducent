@@ -6,6 +6,7 @@ import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan, type PVIWeights } from "@/lib/pvi-calculator";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "@/components/Footer";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
@@ -86,7 +87,10 @@ export default function CalculatorPage() {
         <div className="page-inner-narrow">
           <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2 inline-flex items-center gap-2">
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] mb-2 inline-flex items-center gap-2"
+              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+            >
               <Calculator className="w-8 h-8" />
               Value Calculator
             </h1>
@@ -178,6 +182,7 @@ export default function CalculatorPage() {
             })}
           </div>
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );

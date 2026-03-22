@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { Star, TrendingUp, ExternalLink, Zap, ArrowLeft, DollarSign, Cpu, BookOpen, Activity, BarChart2 } from "lucide-react";
+import { Footer } from "@/components/Footer";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, BarChart, Bar, XAxis, Tooltip as RTooltip, YAxis, Cell, CartesianGrid } from "recharts";
 import { usePublicExperiments } from "@/hooks/usePublicExperiments";
 
@@ -42,6 +43,14 @@ export default function BuilderProfile() {
   const [syncData, setSyncData] = useState<SyncData | null>(null);
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [ratings, setRatings] = useState<{ avg: number; count: number } | null>(null);
+  const [radarData, setRadarData] = useState([
+    { metric: "Speed", value: 85 },
+    { metric: "UI Quality", value: 90 },
+    { metric: "Code Quality", value: 78 },
+    { metric: "Reliability", value: 88 },
+    { metric: "Cost Eff.", value: 75 },
+  ]);
+  const { experiments: demos, loading: demosLoading } = usePublicExperiments(4);
 
   useEffect(() => {
     if (!id) return;
@@ -108,14 +117,6 @@ export default function BuilderProfile() {
 
   const { label: pviLabel, color: pviColor } = getPVILabel(pvi);
 
-  const [radarData, setRadarData] = useState([
-    { metric: "Speed", value: 85 + (tool.name.length % 10) },
-    { metric: "UI Quality", value: 92 - (tool.name.length % 5) },
-    { metric: "Code Quality", value: 78 + (tool.name.length % 15) },
-    { metric: "Reliability", value: 88 },
-    { metric: "Cost Eff.", value: 65 + (tool.name.length % 20) },
-  ]);
-
   const distributionData = [
     { range: "0-20", count: 2 + tool.name.length },
     { range: "20-40", count: 5 },
@@ -124,14 +125,13 @@ export default function BuilderProfile() {
     { range: "80-100", count: 85 + tool.name.length * 10 },
   ];
 
-  const { experiments: demos, loading: demosLoading } = usePublicExperiments(4);
-  const toolDemos = demos; // In real app, filter by actual tool_id
+  const toolDemos = demos;
 
   return (
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+        <div className="page-inner">
           {/* Header */}
           <div className="flex items-start gap-4 mb-8">
             <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center overflow-hidden shrink-0">
@@ -395,6 +395,7 @@ export default function BuilderProfile() {
             </p>
           )}
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );

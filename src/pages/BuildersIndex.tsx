@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +15,12 @@ export default function BuildersIndex() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+        <div className="page-inner">
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2">
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] mb-2"
+              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+            >
               All AI Builders
             </h1>
             <p className="text-sm text-muted-foreground font-sans">
@@ -52,6 +56,7 @@ export default function BuildersIndex() {
             ))}
           </div>
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );

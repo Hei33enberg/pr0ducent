@@ -7,6 +7,14 @@ export function Footer() {
   const navigate = useNavigate();
   const year = new Date().getFullYear();
 
+  const handleAnchor = (id: string) => {
+    if (window.location.pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/#" + id);
+    }
+  };
+
   return (
     <footer className="section-dark dot-grid-bg mt-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
@@ -33,8 +41,8 @@ export function Footer() {
               <li><a href="/compare" onClick={(e) => { e.preventDefault(); navigate("/compare"); }} className="hover:text-white transition-colors">{t("footer.compare")}</a></li>
               <li><a href="/calculator" onClick={(e) => { e.preventDefault(); navigate("/calculator"); }} className="hover:text-white transition-colors">{t("footer.calculator")}</a></li>
               <li><a href="/pricing" onClick={(e) => { e.preventDefault(); navigate("/pricing"); }} className="hover:text-white transition-colors">{t("footer.pricing")}</a></li>
-              <li><a href="#how-it-works" className="hover:text-white transition-colors">{t("footer.howItWorks")}</a></li>
-              <li><a href="#faq" className="hover:text-white transition-colors">{t("footer.faq")}</a></li>
+              <li><a href="/#how-it-works" onClick={(e) => { e.preventDefault(); handleAnchor("how-it-works"); }} className="hover:text-white transition-colors">{t("footer.howItWorks")}</a></li>
+              <li><a href="/#faq" onClick={(e) => { e.preventDefault(); handleAnchor("faq"); }} className="hover:text-white transition-colors">{t("footer.faq")}</a></li>
             </ul>
           </div>
 
