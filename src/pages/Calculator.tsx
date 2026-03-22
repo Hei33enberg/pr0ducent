@@ -86,7 +86,10 @@ export default function CalculatorPage() {
         <div className="page-inner-narrow">
           <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
           <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-bold tracking-tight mb-2 inline-flex items-center gap-2">
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] mb-2 inline-flex items-center gap-2"
+              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+            >
               <Calculator className="w-8 h-8" />
               Value Calculator
             </h1>
