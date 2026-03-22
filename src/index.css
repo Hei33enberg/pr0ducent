@@ -466,7 +466,7 @@
   }
 
   .section-cv {
-    contain: style;
+    /* removed contain: layout style — caused 0-height sections */
   }
 }
 
