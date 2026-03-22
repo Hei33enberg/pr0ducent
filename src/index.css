@@ -575,7 +575,9 @@
    ═══════════════════════════════════════════════════ */
 
 .nav-dropdown-glass {
-  background: hsl(30, 18%, 95%);
+  background: hsla(30, 18%, 95%, 0.98);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border-top: 1px solid hsla(0, 0%, 0%, 0.06);
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
