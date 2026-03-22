@@ -39,7 +39,7 @@ export default function Marketplace() {
             {demos.map(demo => (
               <div 
                 key={demo.id} 
-                className="break-inside-avoid glass-card rounded-2xl overflow-hidden hover:scale-[1.01] transition-transform duration-300 border border-border/50 group cursor-pointer"
+                className="break-inside-avoid bg-card rounded-2xl overflow-hidden hover:scale-[1.01] transition-transform duration-300 border border-border/50 group cursor-pointer shadow-sm"
                 onClick={() => navigate(`/experiment/${demo.id}`)}
               >
                 <div className="aspect-video bg-muted/20 relative flex items-center justify-center p-6 border-b border-border/50 overflow-hidden" 

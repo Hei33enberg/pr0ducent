@@ -76,7 +76,7 @@ export default function Leaderboard() {
             </div>
           </div>
 
-          <div className="bg-card border border-border/50 rounded-2xl overflow-hidden shadow-sm">
+          <div className="section-gradient-lavender rounded-2xl p-1 bg-card border border-border/50 overflow-hidden shadow-sm">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse min-w-[700px]">
                 <thead>

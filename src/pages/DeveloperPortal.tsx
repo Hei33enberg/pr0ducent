@@ -178,6 +178,7 @@ export default function DeveloperPortal() {
               </Card>
             </TabsContent>
           </Tabs>
+          </div>
         </div>
 
         <Footer />

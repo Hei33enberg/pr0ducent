@@ -122,7 +122,7 @@ export default function Compare() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-center space-y-4"
+            className="section-wash-gold rounded-xl p-8 text-center space-y-4"
           >
             <h2 className="text-xl font-serif font-bold text-foreground">{t("compare.ctaTitle")}</h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto font-sans">
