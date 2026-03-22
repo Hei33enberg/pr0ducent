@@ -445,15 +445,17 @@
   .section-gradient-lavender {
     position: relative;
     background:
-      radial-gradient(ellipse 55% 50% at 20% 25%, hsla(260, 55%, 82%, 0.42) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 55% at 80% 70%, hsla(280, 45%, 85%, 0.32) 0%, transparent 70%);
+      radial-gradient(ellipse 55% 50% at 20% 25%, hsla(260, 55%, 82%, 0.50) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 55% at 80% 70%, hsla(280, 45%, 85%, 0.38) 0%, transparent 70%),
+      radial-gradient(ellipse 35% 40% at 55% 50%, hsla(270, 50%, 88%, 0.25) 0%, transparent 70%);
   }
 
   .section-gradient-teal {
     position: relative;
     background:
-      radial-gradient(ellipse 55% 50% at 75% 20%, hsla(175, 55%, 78%, 0.45) 0%, transparent 70%),
-      radial-gradient(ellipse 45% 55% at 20% 75%, hsla(185, 50%, 82%, 0.35) 0%, transparent 70%);
+      radial-gradient(ellipse 55% 50% at 75% 20%, hsla(175, 55%, 78%, 0.50) 0%, transparent 70%),
+      radial-gradient(ellipse 45% 55% at 20% 75%, hsla(185, 50%, 82%, 0.38) 0%, transparent 70%),
+      radial-gradient(ellipse 35% 40% at 50% 45%, hsla(180, 52%, 80%, 0.25) 0%, transparent 70%);
   }
 
   /* Subtle washes for neutral/transition sections */
