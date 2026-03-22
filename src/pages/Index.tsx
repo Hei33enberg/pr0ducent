@@ -158,7 +158,7 @@ const Index = () => {
                 </div>
               ) : null}
               
-              <HowItWorks />
+              
 
               <BigHeadline text="One prompt. Every builder." wash="blush" />
 
