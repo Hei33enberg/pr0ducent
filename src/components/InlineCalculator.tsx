@@ -62,7 +62,7 @@ export function InlineCalculator() {
       <div className="text-center mb-8">
         <h2
           className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3 inline-flex items-center gap-3"
-          style={{ fontSize: "clamp(2.4rem, 5vw + 0.5rem, 5rem)" }}
+          style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}
         >
           <Calculator className="w-8 h-8 md:w-10 md:h-10" />
           Quick Value Check

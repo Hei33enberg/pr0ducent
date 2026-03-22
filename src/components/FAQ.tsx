@@ -14,7 +14,7 @@ export function FAQ() {
   return (
     <section id="faq" className="section-gradient-rose py-16 md:py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
-        <h2 className="text-3xl md:text-4xl font-serif font-bold tracking-tight text-center mb-12">
+        <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground text-center mb-12" style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}>
           {t("faq.title")}
         </h2>
 
