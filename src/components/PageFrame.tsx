@@ -276,7 +276,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     >
       {frameRect && (
         <div
-          className={`sticky-header ${menuOpen ? 'menu-open' : ''} ${shouldHide ? 'header-hidden' : ''}`}
+          className={`sticky-header ${shouldHide ? 'header-hidden' : ''}`}
           style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}
           ref={menuRef}
         >

@@ -560,9 +560,7 @@
    ═══════════════════════════════════════════════════ */
 
 .nav-dropdown-glass {
-  background: hsla(30, 18%, 95%, 0.98);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  background: hsl(30, 18%, 95%);
   border-top: 1px solid hsla(0, 0%, 0%, 0.06);
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
@@ -580,9 +578,7 @@
    ═══════════════════════════════════════════════════ */
 
 .menu-overlay-mobile {
-  background: hsla(30, 18%, 95%, 0.97);
-  backdrop-filter: blur(12px) saturate(1.2);
-  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  background: hsl(30, 18%, 95%);
   animation: menu-overlay-in 0.25s ease-out both;
 }
 
