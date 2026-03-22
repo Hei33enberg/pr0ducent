@@ -179,7 +179,7 @@ const Index = () => {
                 <PlanComparisonTable />
               </div>
 
-              <BigHeadline text="Know your cost before you build." wash="gold" />
+              
 
               <div className="section-wash-gold">
                 <InlineCalculator />
