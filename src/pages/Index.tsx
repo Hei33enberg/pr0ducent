@@ -160,7 +160,7 @@ const Index = () => {
               
               
 
-              <BigHeadline text="One prompt. Every builder." wash="blush" />
+              
 
               <div className="section-gradient-peach section-cv">
                 <BuilderComparisonTable
