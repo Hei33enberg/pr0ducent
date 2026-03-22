@@ -87,7 +87,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 <button
                   key={tpl.id}
                   onClick={() => handleTemplateClick(tpl)}
-                  className="glass-card inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
+                  className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{tpl.label}</span>
@@ -97,7 +97,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             {!showMoreTemplates && (
               <button
                 onClick={() => setShowMoreTemplates(true)}
-                className="glass-card inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground font-sans hover:text-foreground transition-colors"
+                className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground font-sans hover:text-foreground transition-colors"
               >
                 <ChevronDown className="w-3.5 h-3.5" />
                 <span>+{PROMPT_TEMPLATES.length - 7} more</span>
@@ -126,7 +126,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   className="overflow-hidden"
                 >
-                  <div className="glass-card rounded-xl p-5">
+                  <div className="bg-card border border-border/50 rounded-xl p-5 shadow-sm">
                     <ToolSelectionGrid
                       selectedTools={selectedTools}
                       onSelectionChange={onSelectedToolsChange}

@@ -284,7 +284,7 @@
 
   .sticky-header {
     position: fixed;
-    top: calc(0.5rem + 4px);
+    top: calc(1.25rem + 4px);
     z-index: 450;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
@@ -300,13 +300,19 @@
 
   @media (min-width: 640px) {
     .sticky-header {
-      top: calc(0.75rem + 2px);
+      top: calc(1.5rem + 2px);
     }
   }
 
   @media (min-width: 768px) {
     .sticky-header {
-      top: calc(1rem + 2px);
+      top: calc(1.75rem + 2px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .sticky-header {
+      top: calc(2rem + 2px);
     }
   }
 

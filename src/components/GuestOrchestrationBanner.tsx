@@ -13,7 +13,7 @@ export function GuestOrchestrationBanner() {
   if (user) return null;
 
   return (
-    <div className="w-full rounded-xl border border-border/50 bg-muted/20 backdrop-blur-sm px-4 py-3 flex items-center justify-between gap-3 mb-4">
+    <div className="w-full rounded-xl border border-border/50 bg-muted/20 px-4 py-3 flex items-center justify-between gap-3 mb-4">
       <div className="flex items-center gap-2.5 min-w-0">
         <div className="shrink-0 w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
           <Zap className="w-3.5 h-3.5 text-primary" />

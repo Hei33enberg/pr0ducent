@@ -256,7 +256,7 @@ export default function UserDashboard() {
                 <button
                   key={exp.id}
                   onClick={() => navigate(`/experiment/${exp.id}`)}
-                  className="glass-card rounded-xl p-4 w-full text-left hover:scale-[1.005] transition-all flex items-start gap-3"
+                  className="bg-card border border-border/50 shadow-sm rounded-xl p-4 w-full text-left hover:scale-[1.005] transition-all flex items-start gap-3"
                 >
                   <Zap className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                   <div className="min-w-0 flex-1">
@@ -287,7 +287,7 @@ export default function UserDashboard() {
               {ratings.map((r) => {
                 const tool = getTool(r.tool_id);
                 return (
-                  <div key={r.id} className="glass-card rounded-xl p-4 flex items-center gap-3">
+                  <div key={r.id} className="bg-card border border-border/50 shadow-sm rounded-xl p-4 flex items-center gap-3">
                     {tool?.logoUrl ? (
                       <img src={tool.logoUrl} alt={tool.name} className="w-6 h-6 rounded object-contain" />
                     ) : (
@@ -316,7 +316,7 @@ export default function UserDashboard() {
           {/* Subscription */}
           {activeTab === "subscription" && (
             <div className="space-y-4">
-              <div className="glass-card rounded-xl p-6 space-y-4">
+              <div className="bg-card border border-border/50 shadow-sm rounded-xl p-6 space-y-4">
                 <div className="flex items-center gap-3">
                   <CreditCard className="w-5 h-5 text-accent" />
                   <h3 className="text-lg font-serif font-bold">
@@ -359,7 +359,7 @@ export default function UserDashboard() {
                   ].map((plan) => (
                     <div
                       key={plan.name}
-                      className={`glass-card rounded-xl p-4 text-center space-y-2 ${
+                      className={`bg-card border border-border/50 shadow-sm rounded-xl p-4 text-center space-y-2 ${
                         subscription?.plan === plan.name.toLowerCase() ? "ring-2 ring-accent" : ""
                       }`}
                     >
@@ -393,7 +393,7 @@ export default function UserDashboard() {
 
           {/* BYOA Builders — catalog-driven rows */}
           {activeTab === "builders" && (
-            <div className="glass-card rounded-2xl p-8 space-y-6 border border-border/50">
+            <div className="bg-card border border-border/50 shadow-sm rounded-2xl p-8 space-y-6 border border-border/50">
               <div className="text-center space-y-2">
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
                   <Key className="w-8 h-8 text-primary" />
@@ -410,7 +410,7 @@ export default function UserDashboard() {
                   {tools.map((tool) => {
                     const isConnected = byoaCredentials.some((c) => c.tool_id === tool.id);
                     return (
-                      <div key={tool.id} className="glass-card rounded-xl p-4 flex items-center justify-between border border-border/50">
+                      <div key={tool.id} className="bg-card border border-border/50 shadow-sm rounded-xl p-4 flex items-center justify-between border border-border/50">
                         <div className="flex items-center gap-3">
                           {tool.logoUrl ? (
                             <img src={tool.logoUrl} alt={tool.name} className="w-8 h-8 rounded object-contain" />

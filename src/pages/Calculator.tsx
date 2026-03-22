@@ -86,6 +86,7 @@ export default function CalculatorPage() {
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner-narrow">
           <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
+          <div className="section-wash-blush rounded-xl p-6 mb-6">
           <div className="text-center mb-8">
             <h1
               className="font-serif font-bold tracking-[-0.02em] mb-2 inline-flex items-center gap-2"
@@ -100,7 +101,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* Weight sliders */}
-          <div className="glass-card rounded-xl p-5 mb-6 space-y-4">
+          <div className="bg-card border border-border/50 rounded-xl p-5 mb-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-semibold font-sans text-foreground">Adjust Your Priorities</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {sliders.map(({ key, label, icon: Icon, value }) => (
@@ -148,7 +149,7 @@ export default function CalculatorPage() {
               return (
                 <div
                   key={tool.id}
-                  className={`glass-card rounded-xl p-4 flex items-center gap-4 ${i === 0 ? "ring-2 ring-accent" : ""}`}
+                  className={`bg-card border border-border/50 rounded-xl p-4 flex items-center gap-4 shadow-sm ${i === 0 ? "ring-2 ring-accent" : ""}`}
                 >
                   <div className="text-lg font-bold text-muted-foreground font-sans w-6 text-center">
                     {i + 1}
@@ -180,6 +181,7 @@ export default function CalculatorPage() {
                 </div>
               );
             })}
+          </div>
           </div>
         </div>
         <Footer />

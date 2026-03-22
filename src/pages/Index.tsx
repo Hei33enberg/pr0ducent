@@ -158,9 +158,13 @@ const Index = () => {
               />
             </div>
 
+            <BigHeadline text="Compare. Build. Ship." wash="indigo" />
+
             <div className="section-wash-blush">
               <FeatureMatrix />
             </div>
+
+            <BigHeadline text="Plans & Pricing" wash="gold" />
 
             <div className="section-wash-indigo">
               <PlanComparisonTable />

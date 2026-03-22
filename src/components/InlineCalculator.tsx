@@ -72,7 +72,7 @@ export function InlineCalculator() {
         </p>
       </div>
 
-      <div className="glass-card rounded-xl p-5 mb-4">
+      <div className="bg-card border border-border/50 rounded-xl p-5 mb-4 shadow-sm">
         <div className="flex justify-between text-sm font-sans items-center mb-2">
           <span>Monthly budget</span>
           <span className="font-bold text-foreground">${budget}/mo</span>
@@ -92,7 +92,7 @@ export function InlineCalculator() {
           return (
             <div
               key={tool.id}
-              className={`glass-card rounded-xl p-3 flex items-center gap-3 ${i === 0 ? "ring-1 ring-accent" : ""}`}
+              className={`bg-card border border-border/50 rounded-xl p-3 flex items-center gap-3 shadow-sm ${i === 0 ? "ring-1 ring-accent" : ""}`}
             >
               <span className="text-sm font-bold text-muted-foreground w-5 text-center font-sans">{i + 1}</span>
               <div className="w-7 h-7 rounded bg-muted flex items-center justify-center overflow-hidden shrink-0">

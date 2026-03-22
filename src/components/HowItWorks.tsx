@@ -21,7 +21,7 @@ export function HowItWorks() {
           {steps.map((step, i) => {
             const Icon = step.icon;
             return (
-              <div key={step.key} className="glass-card rounded-xl p-4 flex items-start gap-3">
+              <div key={step.key} className="bg-card border border-border/50 rounded-xl p-4 flex items-start gap-3 shadow-sm">
                 <div className="shrink-0 w-10 h-10 rounded-xl bg-foreground/5 flex items-center justify-center">
                   <span className="text-xs font-bold text-muted-foreground font-sans">{i + 1}</span>
                 </div>

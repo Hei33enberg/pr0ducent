@@ -295,7 +295,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   return (
     <div
       ref={frameRef}
-      className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
+      className="page-frame mx-5 sm:mx-6 md:mx-7 lg:mx-auto md:max-w-[1400px] my-5 sm:my-6 md:my-7 lg:my-8 pt-14 sm:pt-16"
     >
       {frameRect && (
         <div

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import { Footer } from "@/components/Footer";
+import AmbientBackground from "@/components/AmbientBackground";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -80,111 +82,118 @@ export default function IntegrationStatus() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
+      <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
           <PageBreadcrumb crumbs={[{ label: "Admin" }, { label: "Integration Status" }]} />
           <div className="mt-4">
-            <h1 className="text-3xl font-bold tracking-tight">Integration Status</h1>
-            <p className="text-muted-foreground mt-2">
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] mb-2"
+              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+            >
+              Integration Status
+            </h1>
+            <p className="text-muted-foreground mt-2 font-sans">
               Technical broker management and POP ecosystem health.
             </p>
           </div>
 
-      {fetchError ? (
-        <p className="text-sm text-destructive" role="alert">
-          {fetchError}
-        </p>
-      ) : null}
+          {fetchError ? (
+            <p className="text-sm text-destructive" role="alert">
+              {fetchError}
+            </p>
+          ) : null}
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="w-5 h-5" />
-            Active Integrations Overview
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Builder (Tool ID)</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Config Validation</TableHead>
-                <TableHead>Circuit Breaker</TableHead>
-                <TableHead className="text-right">Last Heartbeat</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    <Activity className="w-6 h-6 animate-spin mx-auto mb-2" />
-                    Loading ecosystem state...
-                  </TableCell>
-                </TableRow>
-              ) : integrations.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    No integrations configured.
-                  </TableCell>
-                </TableRow>
-              ) : (
-                integrations.map((integration) => (
-                  <TableRow key={integration.tool_id}>
-                    <TableCell className="font-medium">
-                      {integration.display_name?.trim() || integration.tool_id}
-                      <div className="text-xs text-muted-foreground font-mono">{integration.tool_id}</div>
-                    </TableCell>
-                    <TableCell>
-                      {integration.enabled ? (
-                        <Badge variant="default" className="bg-success text-success-foreground hover:bg-success/90">
-                          Enabled
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary">Disabled</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {integration.config_validation_errors && integration.config_validation_errors.length > 0 ? (
-                        <div className="flex items-center gap-1.5 cursor-help" title={integration.config_validation_errors.join(", ")}>
-                          <ShieldAlert className="w-4 h-4 text-destructive" />
-                          <span className="text-sm font-medium text-destructive">{integration.config_validation_errors.length} Error(s)</span>
-                        </div>
-                      ) : (
-                        <Badge variant="outline" className="text-success border-success/30 bg-success/5">Valid</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        {integration.circuit_state === "closed" ? (
-                          <ShieldCheck className="w-4 h-4 text-success" />
-                        ) : integration.circuit_state === "open" ? (
-                          <ShieldAlert className="w-4 h-4 text-destructive" />
-                        ) : (
-                          <ShieldAlert className="w-4 h-4 text-warning" />
-                        )}
-                        <span className="capitalize">{formatCircuitLabel(integration.circuit_state)}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {integration.last_heartbeat ? (
-                        <div className="flex items-center justify-end gap-1.5 text-sm">
-                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span>{new Date(integration.last_heartbeat).toLocaleTimeString()}</span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-sm">Never</span>
-                      )}
-                    </TableCell>
+          <Card className="mt-6">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="w-5 h-5" />
+                Active Integrations Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Builder (Tool ID)</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Config Validation</TableHead>
+                    <TableHead>Circuit Breaker</TableHead>
+                    <TableHead className="text-right">Last Heartbeat</TableHead>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {loading ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        <Activity className="w-6 h-6 animate-spin mx-auto mb-2" />
+                        Loading ecosystem state...
+                      </TableCell>
+                    </TableRow>
+                  ) : integrations.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                        No integrations configured.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    integrations.map((integration) => (
+                      <TableRow key={integration.tool_id}>
+                        <TableCell className="font-medium">
+                          {integration.display_name?.trim() || integration.tool_id}
+                          <div className="text-xs text-muted-foreground font-mono">{integration.tool_id}</div>
+                        </TableCell>
+                        <TableCell>
+                          {integration.enabled ? (
+                            <Badge variant="default" className="bg-success text-success-foreground hover:bg-success/90">
+                              Enabled
+                            </Badge>
+                          ) : (
+                            <Badge variant="secondary">Disabled</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {integration.config_validation_errors && integration.config_validation_errors.length > 0 ? (
+                            <div className="flex items-center gap-1.5 cursor-help" title={integration.config_validation_errors.join(", ")}>
+                              <ShieldAlert className="w-4 h-4 text-destructive" />
+                              <span className="text-sm font-medium text-destructive">{integration.config_validation_errors.length} Error(s)</span>
+                            </div>
+                          ) : (
+                            <Badge variant="outline" className="text-success border-success/30 bg-success/5">Valid</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            {integration.circuit_state === "closed" ? (
+                              <ShieldCheck className="w-4 h-4 text-success" />
+                            ) : integration.circuit_state === "open" ? (
+                              <ShieldAlert className="w-4 h-4 text-destructive" />
+                            ) : (
+                              <ShieldAlert className="w-4 h-4 text-warning" />
+                            )}
+                            <span className="capitalize">{formatCircuitLabel(integration.circuit_state)}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          {integration.last_heartbeat ? (
+                            <div className="flex items-center justify-end gap-1.5 text-sm">
+                              <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                              <span>{new Date(integration.last_heartbeat).toLocaleTimeString()}</span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">Never</span>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </div>
+        <Footer />
       </PageFrame>
     </div>
   );

@@ -59,7 +59,7 @@ export default function ArenaPage() {
               <div className="text-muted-foreground text-sm font-sans">Finding a match...</div>
             </div>
           ) : (
-            <div className="bg-card border border-border/60 rounded-2xl p-4 sm:p-6 shadow-sm">
+            <div className="section-gradient-rose rounded-2xl p-4 sm:p-6 bg-card border border-border/60 shadow-sm">
               <PairwiseArena 
                 experimentId={currentMatch.experimentId}
                 prompt={currentMatch.prompt}

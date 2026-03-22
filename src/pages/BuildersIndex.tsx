@@ -28,7 +28,7 @@ export default function BuildersIndex() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="section-wash-indigo rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
             {tools.map((tool) => (
               <Card
                 key={tool.id}

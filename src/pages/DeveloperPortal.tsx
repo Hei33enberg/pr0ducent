@@ -55,6 +55,7 @@ export default function DeveloperPortal() {
             </p>
           </div>
 
+          <div className="section-wash-teal rounded-xl p-4">
           <Tabs defaultValue="broker" className="w-full">
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8">
               <TabsTrigger value="broker" className="flex items-center gap-2 text-xs sm:text-sm">
@@ -178,6 +179,7 @@ export default function DeveloperPortal() {
               </Card>
             </TabsContent>
           </Tabs>
+          </div>
         </div>
 
         <Footer />
