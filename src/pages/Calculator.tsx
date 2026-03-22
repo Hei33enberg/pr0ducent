@@ -86,6 +86,7 @@ export default function CalculatorPage() {
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner-narrow">
           <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
+          <div className="section-wash-blush rounded-xl p-6 mb-6">
           <div className="text-center mb-8">
             <h1
               className="font-serif font-bold tracking-[-0.02em] mb-2 inline-flex items-center gap-2"
