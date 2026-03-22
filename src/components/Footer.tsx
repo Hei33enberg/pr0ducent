@@ -7,6 +7,14 @@ export function Footer() {
   const navigate = useNavigate();
   const year = new Date().getFullYear();
 
+  const handleAnchor = (id: string) => {
+    if (window.location.pathname === "/") {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/#" + id);
+    }
+  };
+
   return (
     <footer className="section-dark dot-grid-bg mt-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">

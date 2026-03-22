@@ -6,6 +6,7 @@ import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan, type PVIWeights } from "@/lib/pvi-calculator";
 import { useNavigate } from "react-router-dom";
+import { Footer } from "@/components/Footer";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp, Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";

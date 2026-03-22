@@ -131,7 +131,7 @@ export default function BuilderProfile() {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-10">
+        <div className="page-inner">
           {/* Header */}
           <div className="flex items-start gap-4 mb-8">
             <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center overflow-hidden shrink-0">

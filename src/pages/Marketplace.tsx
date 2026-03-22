@@ -3,6 +3,7 @@ import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { usePublicExperiments, PublicExperimentRecord as PublicDemo } from "@/hooks/usePublicExperiments";
+import { Footer } from "@/components/Footer";
 import { Clock, Scissors } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
