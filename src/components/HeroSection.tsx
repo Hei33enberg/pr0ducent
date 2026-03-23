@@ -157,7 +157,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       <img
         src={caricatureFounder}
         alt="pr0ducent founder caricature"
-        className="illust-float w-full max-w-[min(92vw,360px)] sm:max-w-[min(100%,400px)] md:max-w-[min(100%,460px)] lg:max-w-[min(100%,500px)] xl:max-w-[min(100%,540px)] h-auto max-h-[min(42vh,380px)] sm:max-h-[min(52vh,480px)] md:max-h-[min(58vh,540px)] lg:max-h-[min(62vh,600px)] object-contain object-bottom select-none pointer-events-none"
+        className="w-full max-w-[min(92vw,360px)] sm:max-w-[min(100%,400px)] md:max-w-[min(100%,460px)] lg:max-w-[min(100%,500px)] xl:max-w-[min(100%,540px)] h-auto max-h-[min(42vh,380px)] sm:max-h-[min(52vh,480px)] md:max-h-[min(58vh,540px)] lg:max-h-[min(62vh,600px)] object-contain object-bottom select-none pointer-events-none"
         loading="eager"
         decoding="async"
         fetchPriority="high"
