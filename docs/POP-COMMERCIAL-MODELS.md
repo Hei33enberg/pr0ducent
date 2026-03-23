@@ -1,41 +1,41 @@
-# VBP — modele komercyjne i rozliczenia (ramka)
+# VBP — commercial models and billing (framework)
 
-**Disclaimer:** nie jest poradą prawną ani podatkową — ustal z counsel przed podpisem.
+**Disclaimer:** not legal or tax advice — align with counsel before signing.
 
-## Cele dla buildera
+## Goals for the builder
 
-- Nowi użytkownicy z kanału brokerów (discovery).
-- Przewidywalny koszt wsparcia integracji (pilot → produkcja).
-- Jasna **atrybucja** (kto przyszedł z którego brokera).
+- New users from broker channels (discovery).
+- Predictable cost of integration support (pilot → production).
+- Clear **attribution** (which broker sent which user).
 
-## Cele dla brokera (pr0ducent)
+## Goals for the broker (pr0ducent)
 
-- Zrównoważenie kosztów orchestracji (Edge, kolejka, scoring).
-- Uczciwa prezentacja narzędzi (benchmark vs live).
-- Dane do rozliczeń z partnerami.
+- Balance orchestration costs (Edge, queue, scoring).
+- Fair presentation of tools (benchmark vs live).
+- Data for partner settlements.
 
-## Warianty rozliczeń
+## Settlement variants
 
-| Model | Kiedy | Uwagi |
-|-------|--------|--------|
-| **Rev-share** | Builder płaci % od przychodu od użytkowników przypisanych do POP | Wymaga definicji „qualified account” i okna atrybucji (np. 30–90 dni). |
-| **CPA** | Płatność za kwalifikowany signup lub pierwszą płatność | Prostsze w pomiarze; ryzyko fraudu — weryfikacja po stronie buildera. |
-| **Flat pilot** | Stała opłata za pilot techniczny + wsparcie | Dobre na start bez złożonego trackingu. |
-| **Hybrid** | Niski flat + niższy rev-share | Często akceptowalne dla obu stron. |
+| Model | When | Notes |
+|-------|------|--------|
+| **Rev-share** | Builder pays % of revenue from users attributed to POP | Requires “qualified account” definition and attribution window (e.g. 30–90 days). |
+| **CPA** | Payment per qualified signup or first payment | Easier to measure; fraud risk — verification on builder side. |
+| **Flat pilot** | Fixed fee for technical pilot + support | Good to start without heavy tracking. |
+| **Hybrid** | Low flat + lower rev-share | Often acceptable to both sides. |
 
-## Zdarzenia rozliczeniowe (do spięcia z produktem)
+## Billing events (wire to product)
 
-1. **Lead:** użytkownik kliknął CTA „Kontynuuj w {Builder}” — log `referral_clicks` (broker).
-2. **Handoff:** `logReferralHandoff` / `referral_conversions` z `conversion_type: builder_handoff` (implementacja w [experiment-service.ts](../src/lib/experiment-service.ts)).
-3. **Konwersja u buildera:** partner potwierdza (np. webhook do brokera, plik eksportu, dashboard partnerski) — **poza MVP** wymaga umowy.
+1. **Lead:** user clicked CTA “Continue in {Builder}” — log `referral_clicks` (broker).
+2. **Handoff:** `logReferralHandoff` / `referral_conversions` with `conversion_type: builder_handoff` (implementation in [experiment-service.ts](../src/lib/experiment-service.ts)).
+3. **Conversion at builder:** partner confirms (e.g. webhook to broker, export file, partner dashboard) — **beyond MVP** needs a contract.
 
-## Zasady atrybucji (negocjacyjne)
+## Attribution rules (negotiable)
 
-- **First-touch** vs **last-touch** — ustal jedno dla danego programu.
-- **Okno czasowe** — np. 30 dni od pierwszego kliknięcia z POP.
-- **Dedup** — jeden użytkownik = jedna konwersja na okno (np. po `user_id` lub email hash po stronie buildera).
+- **First-touch** vs **last-touch** — pick one per program.
+- **Time window** — e.g. 30 days from first POP click.
+- **Dedup** — one user = one conversion per window (e.g. by `user_id` or email hash on builder side).
 
-## Powiązane
+## Related
 
 - [POP-ROI-METRICS.md](./POP-ROI-METRICS.md)
 - [POP-BUSINESS-NEGOTIATION-CHECKLIST.md](./POP-BUSINESS-NEGOTIATION-CHECKLIST.md)

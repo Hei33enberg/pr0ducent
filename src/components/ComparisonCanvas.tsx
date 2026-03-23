@@ -448,7 +448,7 @@ function ToolTile({
           );
         })()}
 
-        {/* Pełnoekranowy Modal (Framer Motion) */}
+        {/* Fullscreen modal (Framer Motion) */}
         <AnimatePresence>
           {isFullscreen && builderResult?.previewUrl && (
             <motion.div

@@ -1,30 +1,30 @@
-# Antigravity — po Pull/Publish na produkcję
+# Antigravity — after Pull/Publish to production
 
-Wykonaj po tym, jak PM/Lovable opublikuje front zsynchronizowany z `main`.
+Run after PM/Lovable publishes frontend synced with `main`.
 
 ## Feature flags
 
-W panelu hostingu (Lovable / Vercel) sprawdź wartości:
+In the hosting panel (Lovable / Vercel) check values:
 
-- `VITE_FF_MARKETPLACE` — czy Marketplace ma być widoczny dla userów?
-- `VITE_FF_MULTI_BUILDER_STREAM` — stream wielu builderów w canvas.
-- `VITE_FF_BYOA` — zakładka BYOA w dashboardzie.
+- `VITE_FF_MARKETPLACE` — should Marketplace be visible to users?
+- `VITE_FF_MULTI_BUILDER_STREAM` — multi-builder stream in canvas.
+- `VITE_FF_BYOA` — BYOA tab in dashboard.
 
-Źródło prawdy w kodzie: [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts).
+Source of truth in code: [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts).
 
-## Funkcjonalność
+## Functionality
 
-1. **Home — zalogowany:** jeden run z v0; kafelki i Realtime bez błędów w konsoli.
-2. **GuestOrchestrationBanner:** copy i widoczność zgodnie z intencją PM.
-3. **Claim / handoff:** przycisk CTA nie „wisi” pusty — znika, dopóki backend nie zwróci `claim_token` / URL (VBP lub kolejny builder).
-4. **DevExperimentInspector:** tylko lokalnie (`import.meta.env.DEV`); na prod nie powinno być dostępne — szybki smoke w trybie incognito.
-5. **i18n:** klucze EN/PL dla nowych stringów.
+1. **Home — signed in:** one v0 run; tiles and Realtime without console errors.
+2. **GuestOrchestrationBanner:** copy and visibility per PM intent.
+3. **Claim / handoff:** CTA does not sit empty — hides until backend returns `claim_token` / URL (VBP or next builder).
+4. **DevExperimentInspector:** local only (`import.meta.env.DEV`); should not be available on prod — quick smoke in incognito.
+5. **i18n:** EN/PL keys for new strings.
 
-## Reguły merge (przypomnienie)
+## Merge rules (reminder)
 
-- Nie commituj `supabase/migrations/` ani `supabase/functions/` bez uzgodnienia z backend lane (Cursor).
-- Shared: `src/integrations/supabase/types.ts`, `src/config/tools.ts` — najpierw backend, potem rebase UI.
+- Do not commit `supabase/migrations/` or `supabase/functions/` without backend lane (Cursor) agreement.
+- Shared: `src/integrations/supabase/types.ts`, `src/config/tools.ts` — backend first, then rebase UI.
 
-## Powiązane
+## Related
 
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)

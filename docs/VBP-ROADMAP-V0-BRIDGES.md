@@ -1,18 +1,18 @@
-# VBP — roadmap v0 i mostów
+# VBP — v0 and bridges roadmap
 
-## v0 (adapter referencyjny)
+## v0 (reference adapter)
 
-- Ścieżka **API-first** dla v0 Platform API: adapter w kodzie (`v0-adapter`), `poll-v0-status` dla użytkowników anon — bez zmiany modelu domeny orchestratora.
-- Utrzymuj zgodność z [ORCHESTRATOR.md](./ORCHESTRATOR.md); przy zmianach API v0 aktualizuj adapter i smoke po deployu Edge.
+- **API-first** path for the v0 Platform API: adapter in code (`v0-adapter`), `poll-v0-status` for anonymous users — without changing the orchestrator domain model.
+- Stay aligned with [ORCHESTRATOR.md](./ORCHESTRATOR.md); when the v0 API changes, update the adapter and smoke after Edge deploy.
 
-## Mosty (bridge mode)
+## Bridges (bridge mode)
 
-- **Rejestr:** [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) — kolejność: preferuj `api_native` / `api_partial` przed `browser_only`.
-- **Flagi:** `VITE_FF_BRIDGE_MODE`, `VITE_FF_BRIDGE_AGGRESSIVE` w [src/lib/featureFlags.ts](../src/lib/featureFlags.ts); polityka: [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md).
-- **KPI:** [POP-ROI-METRICS.md](./POP-ROI-METRICS.md) — każdy most musi mieć mierzalny exit path do **natywnego VBP**.
+- **Registry:** [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) — order: prefer `api_native` / `api_partial` before `browser_only`.
+- **Flags:** `VITE_FF_BRIDGE_MODE`, `VITE_FF_BRIDGE_AGGRESSIVE` in [src/lib/featureFlags.ts](../src/lib/featureFlags.ts); policy: [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md).
+- **KPI:** [POP-ROI-METRICS.md](./POP-ROI-METRICS.md) — every bridge needs a measurable exit path to **native VBP**.
 
-## Docelowy stan
+## Target state
 
-- Partnerzy z pełnym API: **natywny VBP** (`/vbp/v1`, webhook, conformance).
-- v0 pozostaje osobną ścieżką produktową (nie „most” do zastąpienia VBP).
-- Mosty tylko tam, gdzie partner nie ma jeszcze publicznego API — z planem migracji do VBP.
+- Partners with full API: **native VBP** (`/vbp/v1`, webhook, conformance).
+- v0 stays a separate product path (not a “bridge” to replace VBP).
+- Bridges only where the partner has no public API yet — with a plan to migrate to VBP.

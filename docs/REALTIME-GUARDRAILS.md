@@ -1,26 +1,26 @@
-# Realtime — guardrails (plan AG)
+# Realtime — guardrails (AG plan)
 
-Zalecenia przy **wielu narzędziach na jednym promptcie** i przyszłym rankingu / głosowaniu.
+Recommendations for **many tools on one prompt** and future ranking / voting.
 
-## Kanały
+## Channels
 
-- **Jeden kanał (lub subskrypcja) na `experiment_id`**, nie osobno na każde `tool_id` — ogranicza liczbę połączeń i rerenderów przy 10+ builderach.
+- **One channel (or subscription) per `experiment_id`**, not per `tool_id` — limits connection count and rerenders with 10+ builders.
 
-## Źródło zdarzeń
+## Event source
 
-- Preferuj **broadcast** (`broadcast` / kanał aplikacyjny) tam, gdzie to ma sens, zamiast `postgres_changes` na każdą tabelę — mniej obciążenia przy dużej liczbie wierszy.
-- **Throttle** aktualizacji UI (np. score/progress) — nie każdą kratkę eventu mapuj na stan React; agreguj krótkimi oknami czasu.
+- Prefer **broadcast** (`broadcast` / app channel) where it makes sense instead of `postgres_changes` on every table — less load with many rows.
+- **Throttle** UI updates (e.g. score/progress) — do not map every event tick to React state; aggregate with short time windows.
 
-## Dane „ciężkie”
+## Heavy data
 
-- **Score / PVI / leaderboard:** licz **poza** krytyczną ścieżką renderu (worker, cron, MV), w UI tylko odświeżanie wyniku lub subskrypcja gotowego widoku.
-- **Materialized view** (np. `builder_leaderboard`) + odświeżanie **pg_cron** (np. co 15 min) — nie przy każdym evencie w realtime.
+- **Score / PVI / leaderboard:** compute **off** the critical render path (worker, cron, MV); in the UI only refresh result or subscribe to a ready view.
+- **Materialized view** (e.g. `builder_leaderboard`) + **pg_cron** refresh (e.g. every 15 min) — not on every realtime event.
 
-## Głosy komentarze
+## Votes and comments
 
-- **Paginacja** komentarzy / głosów; **vote throttle** (anti-abuse) — osobna polityka produktowa.
+- **Pagination** for comments / votes; **vote throttle** (anti-abuse) — separate product policy.
 
-## Powiązane
+## Related
 
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md)
 - [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md)

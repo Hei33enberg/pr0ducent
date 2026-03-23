@@ -1,6 +1,6 @@
-# GitHub Copilot — prompt: publiczne repo VBP
+# GitHub Copilot — prompt: public VBP repo
 
-Wklej w **GitHub Copilot Chat** (w repo/org z uprawnieniami). Jedna nazwa: **VBP**. Dostosuj `org/repo`.
+Paste into **GitHub Copilot Chat** (in the repo/org with permissions). Single name: **VBP**. Adjust `org/repo`.
 
 ```
 You are helping ship the public open-source protocol repo for the Vibecoding Broker Protocol (VBP).
@@ -22,4 +22,4 @@ Tasks (in order, report each step):
 Constraints: no secrets in repo. If a step needs org admin, say exactly what to click in GitHub UI.
 ```
 
-Powiązane: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md).
+Related: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md).

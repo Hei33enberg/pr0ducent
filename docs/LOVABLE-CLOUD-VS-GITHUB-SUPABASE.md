@@ -1,40 +1,40 @@
-# Lovable Cloud vs GitHub Actions vs Supabase — co da się, a czego nie
+# Lovable Cloud vs GitHub Actions vs Supabase — what works and what does not
 
-Krótki przewodnik, żeby nie kręcić się w kółko: **skąd się bierze `SUPABASE_ACCESS_TOKEN`**, czemu **nie ma go w Secrets Lovable**, i kiedy **w ogóle nie musisz nic wklejać w GitHub**.
+Short guide so you do not spin in circles: **where `SUPABASE_ACCESS_TOKEN` comes from**, why **it is not in Lovable Secrets**, and when **you do not need to paste anything into GitHub**.
 
-## Trzy osobne rzeczy
+## Three separate things
 
-1. **Sekrety w Lovable Cloud** (`V0_API_KEY`, `STRIPE_*`, itd.) — idą do **Edge Functions** hostowanych przy Twoim projekcie. To nie jest to samo co token do API Supabase Management.
-2. **`SUPABASE_SERVICE_ROLE_KEY`** — Supabase wstrzykuje go **automatycznie** do funkcji; nie powinien trafiać do frontu ani do publicznego repo.
-3. **`SUPABASE_ACCESS_TOKEN` (Personal Access Token)** — to token **konta użytkownika** na [supabase.com](https://supabase.com/dashboard/account/tokens). Służy m.in. CLI i automatyzacji **na projektach, do których to konto ma dostęp**.
+1. **Secrets in Lovable Cloud** (`V0_API_KEY`, `STRIPE_*`, etc.) — go to **Edge Functions** hosted with your project. That is not the same as the Supabase Management API token.
+2. **`SUPABASE_SERVICE_ROLE_KEY`** — Supabase **injects** it automatically into functions; it must not reach the frontend or a public repo.
+3. **`SUPABASE_ACCESS_TOKEN` (Personal Access Token)** — a **user account** token on [supabase.com](https://supabase.com/dashboard/account/tokens). Used for CLI and automation on **projects that account can access**.
 
-## Dlaczego nie „wyciągniesz” PAT z Lovable
+## Why you cannot “pull” a PAT out of Lovable
 
-W modelu **Lovable zarządza backendem Supabase za Ciebie** często **nie masz** klasycznego logowania do tego samego projektu w dashboardzie Supabase ani członkostwa pod swoim emailem. Wtedy:
+When **Lovable manages the Supabase backend for you**, you often **do not** have classic login to the same project in the Supabase dashboard or membership under your email. Then:
 
-- **Nie zalogujesz się** na supabase.com do „tego samego” projektu, żeby wygenerować PAT z dostępem do niego.
-- **Workflow** [.github/workflows/supabase-deploy.yml](../.github/workflows/supabase-deploy.yml) z dokumentu [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) **nie jest dla Ciebie obowiązkowy** — to alternatywa na moment, gdy **Ty** posiadasz projekt Supabase pod swoim kontem.
+- You **cannot** log in to supabase.com for “that” project to generate a PAT with access to it.
+- The workflow [.github/workflows/supabase-deploy.yml](../.github/workflows/supabase-deploy.yml) from [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) is **not mandatory for you** — it is an alternative when **you** own the Supabase project under your account.
 
-**Wniosek:** jeśli deploy migracji i Edge Functions robi **Lovable** po pullu z GitHub, **możesz pominąć** dodawanie sekretów `SUPABASE_*` w GitHubie. Nic nie jest „zepsute” przez ich brak.
+**Conclusion:** if **Lovable** deploys migrations and Edge Functions after pull from GitHub, you **can skip** adding `SUPABASE_*` secrets in GitHub. Nothing is “broken” because they are missing.
 
-## Hasło bazy (`SUPABASE_DB_PASSWORD`)
+## Database password (`SUPABASE_DB_PASSWORD`)
 
-Potrzebne tylko wtedy, gdy **CLI** przy `supabase db push` o to poprosi. Przy hostingu przez Lovable hasło często **nie jest pokazywane** w UI — wtedy znowu: **deploy bazy idzie przez Lovable**, nie przez Actions.
+Only needed when the **CLI** asks during `supabase db push`. With Lovable hosting the password is often **not shown** in the UI — again: **database deploy goes through Lovable**, not Actions.
 
-## Kolejka `run_tasks` bez Dashboardu Supabase
+## `run_tasks` queue without the Supabase Dashboard
 
-- **`dispatch-builders`** po wstawieniu zadań **i tak woła** `process-task-queue` (service role) i ma **inline fallback**, więc podstawowy flow działa bez Database Webhook.
-- **Database Webhook** lub trigger **pg_net** to dodatkowa niezawodność / szybsze zdejmowanie kolejki. Jeśli Lovable twierdzi, że dodał trigger w bazie, upewnij się, że **ta sama logika jest w repozytorium** (migracja SQL w `supabase/migrations/`) — inaczej masz **dryf** między chmurą a `main`.
+- **`dispatch-builders`** after inserting tasks **still calls** `process-task-queue` (service role) and has an **inline fallback**, so the basic flow works without a Database Webhook.
+- **Database Webhook** or **pg_net** trigger adds reliability / faster queue draining. If Lovable says it added a trigger in the database, ensure **the same logic lives in the repo** (SQL migration in `supabase/migrations/`) — otherwise you get **drift** between cloud and `main`.
 
-Instrukcja webhooka z panelu: [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md).
+Webhook setup from the dashboard: [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md).
 
-## Co dalej, jeśli chcesz pełną kontrolę (PAT + hasło + webhook w UI)
+## Next steps if you want full control (PAT + password + webhook in UI)
 
-1. **Nowy projekt Supabase** pod swoim kontem (lub transfer projektu — zależnie od polityki Lovable).
-2. Podłączenie frontu (Vercel itd.) i zmienne `VITE_SUPABASE_*` — szkic: [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
-3. Wtedy dopiero sens ma **PAT w GitHubie** + opcjonalnie workflow `supabase-deploy`.
+1. **New Supabase project** under your account (or project transfer — depends on Lovable policy).
+2. Wire the frontend (Vercel etc.) and `VITE_SUPABASE_*` — outline: [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
+3. Then a **PAT in GitHub** + optional `supabase-deploy` workflow makes sense.
 
-## Powiązane
+## Related
 
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
-- [BUILDERS-101-PL.md](./BUILDERS-101-PL.md)
+- [BUILDERS-101.md](./BUILDERS-101.md)

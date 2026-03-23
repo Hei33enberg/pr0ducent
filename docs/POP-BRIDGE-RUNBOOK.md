@@ -1,30 +1,30 @@
-# VBP Bridge — runbook operacyjny
+# VBP Bridge — operational runbook
 
-## Włączenie mostu (staging)
+## Enabling a bridge (staging)
 
-1. Zweryfikuj wpis w [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (`bridge_mode`, ryzyko).
-2. Ustaw `VITE_FF_BRIDGE_MODE=true` w środowisku frontu (staging).
-3. Skonfiguruj `builder_integration_config` (tier, `enabled`, limity) — nie włączaj produkcji bez [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md) dla natywnego VBP.
-4. Smoke: jeden run → oczekiwany terminal w `builder_results`.
+1. Verify the entry in [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (`bridge_mode`, risk).
+2. Set `VITE_FF_BRIDGE_MODE=true` in the frontend environment (staging).
+3. Configure `builder_integration_config` (tier, `enabled`, limits) — do not enable production without [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md) for native VBP.
+4. Smoke: one run → expected terminal state in `builder_results`.
 
-## Włączenie trybu aggressive (browser)
+## Enabling aggressive mode (browser)
 
-1. **Zgoda** zgodnie z [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md) (legal + partner).
-2. `VITE_FF_BRIDGE_MODE=true` **oraz** `VITE_FF_BRIDGE_AGGRESSIVE=true`.
-3. Monitoruj błędy i koszt; niski limit równoległych jobów.
+1. **Approval** per [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md) (legal + partner).
+2. `VITE_FF_BRIDGE_MODE=true` **and** `VITE_FF_BRIDGE_AGGRESSIVE=true`.
+3. Monitor errors and cost; low limit on concurrent jobs.
 
-## Kill-switch (natychmiastowy)
+## Kill-switch (immediate)
 
-1. Ustaw `VITE_FF_BRIDGE_AGGRESSIVE=false` lub `VITE_FF_BRIDGE_MODE=false`.
-2. Wyłącz `enabled` dla danego `tool_id` w `builder_integration_config` (jeśli dotyczy).
-3. Otwórz incydent wewnętrzny: notatka w rejestrze (kolumna „uwagi”) + komunikat do partnera jeśli wina po stronie API.
+1. Set `VITE_FF_BRIDGE_AGGRESSIVE=false` or `VITE_FF_BRIDGE_MODE=false`.
+2. Disable `enabled` for that `tool_id` in `builder_integration_config` if applicable.
+3. Open an internal incident: note in the registry (“notes” column) + message to partner if the fault is on the API side.
 
-## Po incydencie
+## After an incident
 
-- Zaktualizuj [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (tryb `no_go` lub nowe warunki).
-- Retrospektywa: czy most powinien zostać zastąpiony natywnym VBP.
+- Update [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (`no_go` mode or new conditions).
+- Retrospective: should the bridge be replaced by native VBP?
 
-## Kontakty
+## Contacts
 
-- Tech: zespół odpowiedzialny za Edge (`supabase/functions/*`).
-- Biz: partner owner z [POP-BUSINESS-NEGOTIATION-CHECKLIST.md](./POP-BUSINESS-NEGOTIATION-CHECKLIST.md).
+- Tech: team owning Edge (`supabase/functions/*`).
+- Biz: partner owner from [POP-BUSINESS-NEGOTIATION-CHECKLIST.md](./POP-BUSINESS-NEGOTIATION-CHECKLIST.md).

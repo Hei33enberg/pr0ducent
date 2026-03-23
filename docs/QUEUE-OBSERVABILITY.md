@@ -1,29 +1,29 @@
-# Kolejka — obserwowalność i alerty
+# Queue — observability and alerts
 
-## Kolejność migracji (ważne)
+## Migration order (important)
 
-Funkcja `builder_try_dispatch_slot` z **`20260325100000_builder_dispatch_slot_rpc.sql`** wymaga tabeli **`builder_rate_limits`** (standardowo z **`20260322120000_vbp_orchestration.sql`**). Jeśli ktoś wdrożył tylko `25100000`, migracja **`20260326120000_ensure_builder_rate_limits.sql`** tworzy tabelę idempotentnie.
+Function `builder_try_dispatch_slot` from **`20260325100000_builder_dispatch_slot_rpc.sql`** requires table **`builder_rate_limits`** (normally from **`20260322120000_vbp_orchestration.sql`**). If someone deployed only `25100000`, migration **`20260326120000_ensure_builder_rate_limits.sql`** creates the table idempotently.
 
-## Źródło prawdy: `max_per_minute` dla `v0`
+## Source of truth: `max_per_minute` for `v0`
 
-W repozytorium seed **`builder_rate_limits`** dla `tool_id = 'v0'` ustawia **`max_per_minute = 30`** (m.in. `20260322120000_vbp_orchestration.sql`, `20260326120000_ensure_builder_rate_limits.sql`). Jeśli w panelu widzisz inną wartość, ktoś nadpisał ręcznie — dostosuj zgodnie z produktem i zapisz w migracji lub dokumentacji operacyjnej.
+The repo seeds **`builder_rate_limits`** for `tool_id = 'v0'` with **`max_per_minute = 30`** (e.g. `20260322120000_vbp_orchestration.sql`, `20260326120000_ensure_builder_rate_limits.sql`). If the dashboard shows a different value, it was overridden manually — align with product and record in a migration or ops doc.
 
-## Symptom: zadania wiszą w `queued`
+## Symptom: tasks stuck in `queued`
 
-Worker [`process-task-queue`](../supabase/functions/process-task-queue/index.ts) powinien zdejmować `run_tasks` ze statusem `queued` lub `retrying` (gdy `next_retry_at` minął). [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts) dodatkowo robi **inline drain** — jeśli po wywołaniach workera nadal są `queued`, problemem jest brak deployu workera, brak triggera **`pg_net`**, brak sekretu Vault, zły **Database Webhook**, lub błąd w adapterze.
+Worker [`process-task-queue`](../supabase/functions/process-task-queue/index.ts) should drain `run_tasks` with status `queued` or `retrying` (when `next_retry_at` has passed). [`dispatch-builders`](../supabase/functions/dispatch-builders/index.ts) also does **inline drain** — if tasks stay `queued` after worker calls, the issue is missing worker deploy, missing **`pg_net`** trigger, missing Vault secret, wrong **Database Webhook**, or an adapter error.
 
-### Checklist automatyczny (trigger `pg_net` w repo)
+### Automatic checklist (`pg_net` trigger in repo)
 
-Migracja [`20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql`](../supabase/migrations/20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql) + sekret Vault — szczegóły: [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md), skrypt SQL: [`scripts/verify-queue-trigger.sql`](../scripts/verify-queue-trigger.sql).
+Migration [`20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql`](../supabase/migrations/20260320222441_ca9e4de6-a0d0-46ef-8df6-d68f1fc51696.sql) + Vault secret — details: [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md), SQL script: [`scripts/verify-queue-trigger.sql`](../scripts/verify-queue-trigger.sql).
 
-### Checklist webhook (Supabase Dashboard)
+### Webhook checklist (Supabase Dashboard)
 
-1. Database Webhooks → trigger na `INSERT` (lub `INSERT` + filtr) na `public.run_tasks`.
+1. Database Webhooks → trigger on `INSERT` (or `INSERT` + filter) on `public.run_tasks`.
 2. URL: `https://<PROJECT_REF>.supabase.co/functions/v1/process-task-queue`
-3. HTTP POST z nagłówkiem `Authorization: Bearer <SERVICE_ROLE_KEY>` (sekret nie w URL).
-4. Payload: domyślny JSON wystarczy; worker czyta opcjonalnie `run_job_id` z body.
+3. HTTP POST with header `Authorization: Bearer <SERVICE_ROLE_KEY>` (secret not in URL).
+4. Payload: default JSON is enough; worker optionally reads `run_job_id` from body.
 
-### SQL — ile zadań `queued` starszych niż N minut
+### SQL — how many `queued` tasks older than N minutes
 
 ```sql
 SELECT count(*) AS stuck_queued,
@@ -33,7 +33,7 @@ WHERE status = 'queued'
   AND created_at < now() - interval '5 minutes';
 ```
 
-### SQL — `retrying` z przeterminowanym `next_retry_at`
+### SQL — `retrying` with overdue `next_retry_at`
 
 ```sql
 SELECT id, tool_id, experiment_id, next_retry_at, error_message
@@ -44,14 +44,14 @@ ORDER BY updated_at DESC
 LIMIT 50;
 ```
 
-## Metryki (propozycja)
+## Metrics (proposal)
 
-- **Supabase Log Explorer** / Edge Logs: częstotliwość `process-task-queue` 403 (brak Bearer), 200 z `processed: 0`.
-- **Zewnętrzny monitor** (np. cron + SQL przez service role): alert gdy `stuck_queued > 0`.
-- **Rate limit:** RPC `builder_try_dispatch_slot(tool_id)` (migracja `20260325100000`) + `builder_rate_limits`. Przy odrzuceniu slotu zadanie dostaje `retrying` i `error_message` prefiks `rate_limit:`.
+- **Supabase Log Explorer** / Edge Logs: frequency of `process-task-queue` 403 (missing Bearer), 200 with `processed: 0`.
+- **External monitor** (e.g. cron + SQL via service role): alert when `stuck_queued > 0`.
+- **Rate limit:** RPC `builder_try_dispatch_slot(tool_id)` (migration `20260325100000`) + `builder_rate_limits`. On slot rejection the task gets `retrying` and `error_message` prefix `rate_limit:`.
 
-## Powiązane dokumenty
+## Related docs
 
-- [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) — deploy funkcji
-- [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — weryfikacja produktowa
-- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — kanały i throttle (plan AG)
+- [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) — function deploy
+- [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — product verification
+- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — channels and throttle (AG plan)

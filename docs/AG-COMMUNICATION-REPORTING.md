@@ -1,6 +1,6 @@
-# AG — jak raportować zakres pracy (repo + release)
+# AG — how to report scope of work (repo + release)
 
-- **Commit = dowód.** Podaj **konkretny hash** i **listę plików** (`git show --name-only <hash>`), zamiast „wszystko w jednym commicie”, jeśli faktycznie było kilka commitów lub równoległa praca Cursor/Lovable.
-- **Working tree.** Zanim napiszesz „done / clean”, uruchom `git status` — ma być **bez niezacommitowanych zmian**, jeśli twierdzisz, że stan jest domknięty na `main`.
-- **Main vs lokalnie.** Rozdziel jawnie: „wypchnięte na GitHub `main`” vs „tylko u mnie lokalnie / w Lovable preview”.
-- **Backend vs frontend.** Migracje SQL i deploy Edge Functions w chmurze Supabase to **osobny krok** od zielonego `vite build`; jeśli nie deployowałeś migracji, nie pisz, że „baza jest zsynchronizowana z repo”.
+- **Commit = proof.** Give a **concrete hash** and **file list** (`git show --name-only <hash>`), not “everything in one commit,” if there were actually several commits or parallel Cursor/Lovable work.
+- **Working tree.** Before you say “done / clean,” run `git status` — it should show **no uncommitted changes** if you claim the state is closed on `main`.
+- **Main vs local.** State explicitly: “pushed to GitHub `main`” vs “only on my machine / in Lovable preview.”
+- **Backend vs frontend.** SQL migrations and Edge Function deploy in Supabase cloud are a **separate step** from a green `vite build`; if you did not deploy migrations, do not say “the database is in sync with the repo.”

@@ -1,35 +1,35 @@
-# VBP — kryteria sukcesu pilota (2 tygodnie)
+# VBP — pilot success criteria (2 weeks)
 
-Szablon — dostosuj liczby do partnera. Techniczna checklista: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
+Template — adjust numbers to the partner. Technical checklist: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
 
-## Cele minimalne (must-have)
+## Minimum goals (must-have)
 
-| Kryterium | Jak zmierzyć |
-|-----------|----------------|
-| **Dispatch działa** | `POST /vbp/v1/dispatch` → `202` + `provider_run_id` na staging |
-| **Completion path** | Co najmniej jeden terminal: webhook **lub** poll status → `builder_results.status = completed` |
-| **Conformance** | `validator/cli.mjs` przechodzi na `api_base_url` partnera (poziom Partial minimum) |
-| **Bezpieczeństwo** | Webhook z podpisem HMAC na staging; sekret skonfigurowany po obu stronach |
+| Criterion | How to measure |
+|-----------|------------------|
+| **Dispatch works** | `POST /vbp/v1/dispatch` → `202` + `provider_run_id` on staging |
+| **Completion path** | At least one terminal: webhook **or** poll status → `builder_results.status = completed` |
+| **Conformance** | `validator/cli.mjs` passes against partner `api_base_url` (Partial minimum) |
+| **Security** | Webhook with HMAC signature on staging; secret configured on both sides |
 
-## Cele pożądane (should-have)
+## Desired goals (should-have)
 
-| Kryterium | Jak zmierzyć |
-|-----------|----------------|
-| Claim / handoff | Użytkownik może przejść z demo do konta u buildera (`claim_token` lub URL) |
-| Observability | Korelacja `trace_id` / `run_id` widoczna w logach po obu stronach |
-| Limity | Zadeklarowane rate limity; brak sustained 429 bez backoffu |
+| Criterion | How to measure |
+|-----------|------------------|
+| Claim / handoff | User can move from demo to builder account (`claim_token` or URL) |
+| Observability | `trace_id` / `run_id` correlation visible in logs on both sides |
+| Limits | Declared rate limits; no sustained 429 without backoff |
 
-## Cele rozwojowe (could-have)
+## Stretch goals (could-have)
 
-- SSE lub postęp przez webhooki pośrednie.
-- Export artefaktu (ZIP / repo URL) zgodnie z VBP.
+- SSE or progress via intermediate webhooks.
+- Artifact export (ZIP / repo URL) per VBP.
 
-## Wynik końcowy pilota
+## Pilot outcome
 
-| Wynik | Warunek |
-|-------|---------|
-| **Verified** | Must-have + should-have większość; brak krytycznych bugów przez 1 tydzień |
-| **Partial** | Must-have; dokumentowane luki (np. brak exportu) |
-| **Nie kontynuuj** | Nieosiągnięte must-have lub veto prawne |
+| Outcome | Condition |
+|---------|-----------|
+| **Verified** | Most must-have + should-have; no critical bugs for 1 week |
+| **Partial** | Must-have; documented gaps (e.g. no export) |
+| **Do not continue** | Must-have not met or legal veto |
 
-Powiązane: [protocol/vibecoding-broker-protocol/CONFORMANCE.md](../protocol/vibecoding-broker-protocol/CONFORMANCE.md).
+Related: [protocol/vibecoding-broker-protocol/CONFORMANCE.md](../protocol/vibecoding-broker-protocol/CONFORMANCE.md).

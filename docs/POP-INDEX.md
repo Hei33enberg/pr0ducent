@@ -1,23 +1,23 @@
-# VBP (Vibecoding Broker Protocol) — indeks dokumentacji
+# VBP (Vibecoding Broker Protocol) — documentation index
 
-**Kanon nazewnictwa:** wyłącznie **VBP** — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md). Pliki w repozytorium nadal używają prefiksu `POP-*` w ścieżkach (historia); treść odnosi się do VBP.
+**Naming canon:** use **VBP** only — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md). Files in the repo still use the `POP-*` path prefix (history); content refers to VBP.
 
-## Start tutaj (1 strona)
+## Start here (one-pagers)
 
-- [POP-START-HERE.md](./POP-START-HERE.md) — mapa dla partnera (30 min → pilot → conformance)
-- [POP-OSS-SCOPE.md](./POP-OSS-SCOPE.md) — co jest open source, czego nie
-- [POP-PUBLIC-MESSAGING.md](./POP-PUBLIC-MESSAGING.md) — komunikacja bridge mode i ToS (publiczne docs)
+- [POP-START-HERE.md](./POP-START-HERE.md) — partner map (30 min → pilot → conformance)
+- [POP-OSS-SCOPE.md](./POP-OSS-SCOPE.md) — what is open source and what is not
+- [POP-PUBLIC-MESSAGING.md](./POP-PUBLIC-MESSAGING.md) — bridge mode and ToS messaging (public docs)
 
-## Start tutaj
+## Start here
 
-| Dokument | Opis |
-|----------|------|
-| [VBP-SPEC.md](./VBP-SPEC.md) | Normatywna specyfikacja HTTP |
+| Document | Description |
+|----------|-------------|
+| [VBP-SPEC.md](./VBP-SPEC.md) | Normative HTTP specification |
 | [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) | Discovery 30 min + pilot |
-| [POP-PARTNER-PITCH.md](./POP-PARTNER-PITCH.md) | Pitch dla buildera |
-| [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md) | Profile Verified / Partial / Production gate |
+| [POP-PARTNER-PITCH.md](./POP-PARTNER-PITCH.md) | Builder pitch |
+| [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md) | Verified / Partial / Production gate profiles |
 
-## Biznes i negocjacje
+## Business and negotiation
 
 - [POP-PARTNER-OBJECTIONS.md](./POP-PARTNER-OBJECTIONS.md)
 - [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)
@@ -25,13 +25,13 @@
 - [POP-LEGAL-RISK-MATRIX.md](./POP-LEGAL-RISK-MATRIX.md)
 - [POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md)
 
-## Bezpieczeństwo i conformance
+## Security and conformance
 
 - [POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md)
 - [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md)
 - [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)
 
-## Bridge mode (przed natywnym VBP)
+## Bridge mode (before native VBP)
 
 - [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)
 - [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md) — feature flags: `VITE_FF_BRIDGE_MODE`, `VITE_FF_BRIDGE_AGGRESSIVE` ([featureFlags.ts](../src/lib/featureFlags.ts))
@@ -39,26 +39,26 @@
 - [POP-BRIDGE-RUNBOOK.md](./POP-BRIDGE-RUNBOOK.md)
 - [POP-ROI-METRICS.md](./POP-ROI-METRICS.md)
 
-## Publikacja OSS
+## OSS publication
 
 - [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)
 - [protocol/vibecoding-broker-protocol/README.md](../protocol/vibecoding-broker-protocol/README.md)
-- [protocol/vibecoding-broker-protocol/examples/POP-QUICKSTART.md](../protocol/vibecoding-broker-protocol/examples/POP-QUICKSTART.md) — ścieżka „90 min” dla partnera
+- [protocol/vibecoding-broker-protocol/examples/POP-QUICKSTART.md](../protocol/vibecoding-broker-protocol/examples/POP-QUICKSTART.md) — “90 minute” partner path
 
-## Orkiestracja w produkcie
+## Orchestration in the product
 
 - [ORCHESTRATOR.md](./ORCHESTRATOR.md)
 - [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md)
 
-## Dostarczenie (Vercel, Lovable, symulacja)
+## Delivery (Vercel, Lovable, simulation)
 
-- [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md) — front na Vercel + Supabase (główny tor)
-- [VERCEL-SUPABASE-KROK-PO-KROKU.md](./VERCEL-SUPABASE-KROK-PO-KROKU.md) — przewodnik wdrożeniowy (PL)
-- [LOVABLE-SECONDARY-LP.md](./LOVABLE-SECONDARY-LP.md) — rola poboczna Lovable (LP / murd0ch)
-- [VBP-INTEGRATION-SIMULATION.md](./VBP-INTEGRATION-SIMULATION.md) — dry-run integracji na staging
-- [VBP-ROADMAP-V0-BRIDGES.md](./VBP-ROADMAP-V0-BRIDGES.md) — v0, mosty, cel natywny VBP
-- [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md) — prompt do publikacji publicznego repo specu
-- [GITHUB-SETTINGS-SOLO-AND-TEAM.md](./GITHUB-SETTINGS-SOLO-AND-TEAM.md) — PR, Stripe w Sponsor, solo → zespół
-- [DISCUSSIONS-WELCOME-COPY.md](./DISCUSSIONS-WELCOME-COPY.md) — tekst powitalny Discussions
-- [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md) — prompt Copilot (pliki `.github`, nie Settings)
-- [GITHUB-KTO-CO-ROBI.md](./GITHUB-KTO-CO-ROBI.md) — Cursor vs Copilot vs Ty + prompt + checklista ręczna
+- [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md) — frontend on Vercel + Supabase (primary path)
+- [VERCEL-SUPABASE-STEP-BY-STEP.md](./VERCEL-SUPABASE-STEP-BY-STEP.md) — deployment walkthrough
+- [LOVABLE-SECONDARY-LP.md](./LOVABLE-SECONDARY-LP.md) — secondary Lovable role (LP / murd0ch)
+- [VBP-INTEGRATION-SIMULATION.md](./VBP-INTEGRATION-SIMULATION.md) — dry-run integration on staging
+- [VBP-ROADMAP-V0-BRIDGES.md](./VBP-ROADMAP-V0-BRIDGES.md) — v0, bridges, native VBP goal
+- [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md) — prompt for publishing the public spec repo
+- [GITHUB-SETTINGS-SOLO-AND-TEAM.md](./GITHUB-SETTINGS-SOLO-AND-TEAM.md) — PRs, Stripe in Sponsor, solo → team
+- [DISCUSSIONS-WELCOME-COPY.md](./DISCUSSIONS-WELCOME-COPY.md) — Discussions welcome post copy
+- [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md) — Copilot prompt (`.github` files, not Settings)
+- [GITHUB-WHO-DOES-WHAT.md](./GITHUB-WHO-DOES-WHAT.md) — Cursor vs Copilot vs you + prompt + manual checklist

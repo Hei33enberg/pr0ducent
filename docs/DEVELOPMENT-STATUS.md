@@ -12,7 +12,7 @@
 - **Realtime:** `builder_results`, `run_events`, `run_tasks` (after migrations) for Compare + Run Center.
 - **Other builders** in the UI remain **benchmark** paths (tier 4 / disabled in config) until new adapters are registered.
 - **VBP (draft):** [`VBP-SPEC.md`](./VBP-SPEC.md) + `vbp-adapter`; builders can implement VBP to plug in without custom code per vendor.
-- **Task queue:** `dispatch-builders` enqueues `run_tasks` (`queued`), calls `process-task-queue` (service role), then **inline fallback** if tasks remain queued (e.g. worker not deployed). Per-tool caps: `builder_rate_limits` — seed repo dla `v0` ma **`max_per_minute = 30`** (patrz migracje `20260322120000`, `20260326120000`).
+- **Task queue:** `dispatch-builders` enqueues `run_tasks` (`queued`), calls `process-task-queue` (service role), then **inline fallback** if tasks remain queued (e.g. worker not deployed). Per-tool caps: `builder_rate_limits` — seed repo for `v0` has **`max_per_minute = 30`** (see migrations `20260322120000`, `20260326120000`).
 - **UI (AG cockpit):** `useRunTaskStream`, `BuilderProgressStream`, `DemoPreviewFrame`, `/marketplace`, `UserDashboard` plans/BYOA stub — see [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for deploy order vs Lovable.
 - **UI primitives (legacy hook):** `useOrchestrationRealtime`, `VbpClaimButton` — still available where used.
 
@@ -22,8 +22,8 @@
 - [`20260321140000_run_jobs_tasks_workflow_pool.sql`](../supabase/migrations/20260321140000_run_jobs_tasks_workflow_pool.sql)
 - [`20260322120000_vbp_orchestration.sql`](../supabase/migrations/20260322120000_vbp_orchestration.sql) — VBP config columns, `builder_rate_limits`, `builder_crawl_sources`, `run_tasks.next_retry_at`.
 - [`20260325100000_builder_dispatch_slot_rpc.sql`](../supabase/migrations/20260325100000_builder_dispatch_slot_rpc.sql) — `builder_try_dispatch_slot()` RPC for atomic rate window + inflight cap (`process-task-queue`).
-- [`20260326120000_ensure_builder_rate_limits.sql`](../supabase/migrations/20260326120000_ensure_builder_rate_limits.sql) — idempotentne `CREATE TABLE` jeśli `22120000` było pominięte przed RPC.
-- [`20260425140000_slice_a_b_hardening.sql`](../supabase/migrations/20260425140000_slice_a_b_hardening.sql) — `run_tasks.status` + `dead_letter`; tabela `pbp_webhook_deliveries` (idempotencja webhooka).
+- [`20260326120000_ensure_builder_rate_limits.sql`](../supabase/migrations/20260326120000_ensure_builder_rate_limits.sql) — idempotent `CREATE TABLE` if `22120000` was skipped before RPC.
+- [`20260425140000_slice_a_b_hardening.sql`](../supabase/migrations/20260425140000_slice_a_b_hardening.sql) — `run_tasks.status` + `dead_letter`; table `pbp_webhook_deliveries` (webhook idempotency).
 
 ## Edge functions (orchestrator-related)
 
@@ -41,13 +41,13 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 
 ## UI / brand parity (Lovable + murd0ch alignment)
 
-- **Status i macierz:** [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md) — co weszło z Lovable, co domknięte w repo, prompt operatora dla migracji / Edge na cloud.
+- **Status and matrix:** [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md) — what landed from Lovable, what was closed in-repo, operator prompt for migrations / Edge on cloud.
 - **UI parity remediation (menu / LP rhythm):** [PR0DUCENT-PARITY-GAPS.md](./PR0DUCENT-PARITY-GAPS.md), deploy handoff [LOVABLE-DEPLOY-PARITY-REMEDIATION.md](./LOVABLE-DEPLOY-PARITY-REMEDIATION.md).
-- Tokeny i guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
+- Tokens and guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
 
-## Builder pipeline — audyt hardeningowy (v0 + VBP)
+## Builder pipeline — hardening audit (v0 + VBP)
 
-- **Pełny audyt:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A–D** w repo: kolejka/webhook (A/B), stream Compare + dispatch/retry (C), OpenAPI/VBP-SPEC/CI walidacja `$ref` (D).
+- **Full audit:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A–D** in repo: queue/webhook (A/B), Compare stream + dispatch/retry (C), OpenAPI/VBP-SPEC/CI `$ref` validation (D).
 
 ## Frontend stack
 
@@ -67,13 +67,13 @@ See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and 
 ## QA / protocol pointers
 
 - [POP-INDEX.md](./POP-INDEX.md) — VBP: partner pitch, bridge registry, ROI, legal, conformance. Quick map: [POP-START-HERE.md](./POP-START-HERE.md).
-- [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable Publish, webhook, smoke, AG, CI (jedna strona startowa).
-- [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) — opcjonalny workflow Actions: migracje + `supabase functions deploy` (sekrety: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`).
-- [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md) — kiedy nie masz PAT/hasła bazy (Lovable-managed Supabase) i co z tego wynika.
+- [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable Publish, webhook, smoke, AG, CI (single start page).
+- [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) — optional Actions workflow: migrations + `supabase functions deploy` (secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`).
+- [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md) — when you have no PAT/database password (Lovable-managed Supabase) and what that implies.
 - [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) — how to verify a real orchestrated run (not `/compare`).
 - [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md) — stuck `queued`, webhooks.
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md) — next integrations.
 - Staging E2E: `npm run test:e2e-staging` (requires env vars in script header).
 - VBP OSS bundle: [protocol/vibecoding-broker-protocol/README.md](../protocol/vibecoding-broker-protocol/README.md).
-- PVI vs orkiestracja (AG): [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), Realtime: [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md).
-- Kolejka / trigger: [scripts/README-queue-worker.md](../scripts/README-queue-worker.md).
+- PVI vs orchestration (AG): [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), Realtime: [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md).
+- Queue / trigger: [scripts/README-queue-worker.md](../scripts/README-queue-worker.md).

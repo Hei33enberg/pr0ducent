@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { LogIn, Zap } from "lucide-react";
 
 /**
- * Subtelny banner informujący gości, że widzą okrojoną ścieżkę (tylko v0).
- * Renderuje się TYLKO gdy !user.
+ * Subtle banner telling guests they see a reduced path (v0 only).
+ * Renders only when !user.
  */
 export function GuestOrchestrationBanner() {
   const { user } = useAuth();

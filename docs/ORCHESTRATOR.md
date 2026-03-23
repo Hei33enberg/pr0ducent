@@ -1,6 +1,6 @@
 # Orchestrator (broker MVP)
 
-Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md). Wprowadzenie po polsku (gość vs zalogowany, v0 vs inni): [BUILDERS-101-PL.md](./BUILDERS-101-PL.md). **Audyt hardeningowy pipeline (macierze ryzyk, drift VBP, slice’y):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).
+Product verification: [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md). Queue health: [QUEUE-OBSERVABILITY.md](./QUEUE-OBSERVABILITY.md). Short intro (guest vs signed-in, v0 vs others): [BUILDERS-101.md](./BUILDERS-101.md). **Pipeline hardening audit (risk matrices, VBP drift, slices):** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).
 
 ## Flow
 
@@ -61,5 +61,5 @@ Same `idempotencyKey` + same user returns stored `dispatched` snapshot without r
 
 - [WORKFLOW-ENGINE.md](./WORKFLOW-ENGINE.md) — Temporal bridge, retries.
 - [BYOA-MIGRATION.md](./BYOA-MIGRATION.md), [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
-- [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md) — mapowanie wymiarów PVI na pipeline (AG / benchmark produktu).
-- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — kanały Realtime, throttle, score off-path.
+- [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md) — mapping PVI dimensions to the pipeline (AG / product benchmark).
+- [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md) — Realtime channels, throttle, score off-path.

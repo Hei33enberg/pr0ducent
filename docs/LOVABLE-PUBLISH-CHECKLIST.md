@@ -1,35 +1,35 @@
 # Lovable Cloud — Pull, Publish, feature flags
 
-## Dla operatora (po każdym większym merge na `main`)
+## For operator (after each significant merge to `main`)
 
-1. Otwórz projekt w **Lovable** (lub powiązany hosting frontu).
-2. **Git → Pull / Sync** z brancha **`main`** repozytorium GitHub (to samo co `origin/main`).
-3. Poczekaj na zakończenie buildu; sprawdź logi, czy nie ma błędów TypeScript.
-4. **Publish** do produkcji dopiero po akceptacji PM.
+1. Open the project in **Lovable** (or the linked frontend host).
+2. **Git → Pull / Sync** from branch **`main`** of the GitHub repo (same as `origin/main`).
+3. Wait for the build to finish; check logs for TypeScript errors.
+4. **Publish** to production only after PM approval.
 
-Backend (**Supabase**) nie aktualizuje się przez Lovable Publish — migracje i Edge Functions robi się w Supabase / CLI osobno ([SPRINT-CLOSE.md](./SPRINT-CLOSE.md)).
+Backend (**Supabase**) does not update via Lovable Publish — run migrations and Edge Functions in Supabase / CLI separately ([SPRINT-CLOSE.md](./SPRINT-CLOSE.md)).
 
-## Zmienne `VITE_FF_*` (Lovable / Vercel / build)
+## `VITE_FF_*` variables (Lovable / Vercel / build)
 
-Sterują [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts). Wartość **`false`** wyłącza funkcję (string porównywany z `"false"`).
+These drive [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts). Value **`false`** disables a feature (string compared to `"false"`).
 
-| Zmienna | Domyślnie (gdy brak) | Efekt `=false` |
-|---------|----------------------|----------------|
-| `VITE_FF_MARKETPLACE` | włączone | Ukrywa routing / nav Marketplace. |
-| `VITE_FF_MULTI_BUILDER_STREAM` | włączone | Wyłącza nakładkę streamu wielu builderów w Compare canvas. |
-| `VITE_FF_BYOA` | włączone | Ukrywa zakładkę BYOA w User Dashboard. |
+| Variable | Default (when unset) | Effect of `=false` |
+|----------|----------------------|---------------------|
+| `VITE_FF_MARKETPLACE` | on | Hides Marketplace routing / nav. |
+| `VITE_FF_MULTI_BUILDER_STREAM` | on | Disables multi-builder stream overlay in Compare canvas. |
+| `VITE_FF_BYOA` | on | Hides BYOA tab in User Dashboard. |
 
-**Dev:** `DEV_INSPECTOR` jest włączony tylko w `import.meta.env.DEV` (lokalnie), nie na produkcji.
+**Dev:** `DEV_INSPECTOR` is enabled only in `import.meta.env.DEV` (local), not in production.
 
-## Link do specyfikacji VBP w UI
+## VBP spec link in UI
 
-Opcjonalnie ustaw **`VITE_VBP_PROTOCOL_URL`** (np. publiczne repo `vibecoding-broker-protocol` po utworzeniu). Jeśli puste, stopka używa domyślnego URL z kodu (zobacz Footer).
+Optionally set **`VITE_VBP_PROTOCOL_URL`** (e.g. public `vibecoding-broker-protocol` repo after creation). If empty, the footer uses the default URL from code (see Footer).
 
 ## Sprint 3 AG (benchmark + social)
 
-Po merge migracji i Edge na `main`: **[LOVABLE-SPRINT3-PROMPT.md](./LOVABLE-SPRINT3-PROMPT.md)** (krótki copy-paste dla operatora) oraz **[AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)** (pełny handoff).
+After migrations and Edge merge to `main`: **[LOVABLE-SPRINT3-PROMPT.md](./LOVABLE-SPRINT3-PROMPT.md)** (short copy-paste for operator) and **[AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)** (full handoff).
 
-## Powiązane
+## Related
 
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)
 - [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md)

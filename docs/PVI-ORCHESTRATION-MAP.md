@@ -1,26 +1,26 @@
-# PVI (10 wymiarów) — mapowanie na warstwę orkiestracji
+# PVI (10 dimensions) — mapping to the orchestration layer
 
-Cel: jedna strona łącząca plan AG (benchmark produktu) z istniejącym brokerem (`run_tasks`, `builder_results`, VBP).
+Goal: one page tying the AG product benchmark plan to the existing broker (`run_tasks`, `builder_results`, VBP).
 
-## Grupy kosztu (jak w planie AG)
+## Cost groups (as in the AG plan)
 
-| Grupa | Wymiary (przykładowe nazwy) | Skąd dane w architekturze brokera |
-|-------|-----------------------------|-----------------------------------|
-| **A — z pipeline** | Speed, Reliability, Cost efficiency | `run_tasks` (czasy statusów, `attempt_count`), `run_events` (`orchestrator.*`, `builder.*`), `run_jobs.metadata`, VBP `billing_cost_tokens` / `compute_units_used` gdy builder dostarczy ([VBP-SPEC.md](./VBP-SPEC.md)) |
-| **B — headless po buildzie** | Deploy readiness, Mobile score, a11y, Web Vitals | URL z `builder_results.preview_url` / `deploy_url` po `artifact_ready` / `completed`; job async (Edge cron, worker lub GHA) zapisuje wyniki do wiersza powiązanego z `experiment_id`, `tool_id`, `run_task_id` |
-| **C — AI batch** | UI quality, Completeness, Code quality | Kolejka batchy (co N min, budżet tokenów), wejście: artefakt + metadane; `score-builder-output` jako punkt startowy (baseline + reasoning), rozszerzenie o tabelę metryk per wymiar |
+| Group | Dimensions (example names) | Where data comes from in the broker |
+|-------|----------------------------|--------------------------------|
+| **A — from pipeline** | Speed, Reliability, Cost efficiency | `run_tasks` (status timing, `attempt_count`), `run_events` (`orchestrator.*`, `builder.*`), `run_jobs.metadata`, VBP `billing_cost_tokens` / `compute_units_used` when the builder supplies them ([VBP-SPEC.md](./VBP-SPEC.md)) |
+| **B — headless after build** | Deploy readiness, Mobile score, a11y, Web Vitals | URL from `builder_results.preview_url` / `deploy_url` after `artifact_ready` / `completed`; async job (Edge cron, worker, or GHA) writes results to a row keyed by `experiment_id`, `tool_id`, `run_task_id` |
+| **C — AI batch** | UI quality, Completeness, Code quality | Batch queue (every N min, token budget), input: artifact + metadata; `score-builder-output` as baseline + reasoning, extend with per-dimension metrics table |
 
-## Kontrakt VBP / POP
+## VBP / POP contract
 
-- Buildery zgodne z VBP raportują telemetrię i eksport w jednym modelu; broker nie duplikuje logiki v0 — ważne jest mapowanie pól na wymiary kosztów (Grupa A) i ewentualnie webhook zdarzeń ([VBP-SPEC.md](./VBP-SPEC.md), publiczny bundle: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)).
+- VBP-compliant builders report telemetry and export in one model; the broker does not duplicate v0 logic — map fields to cost dimensions (Group A) and optionally event webhooks ([VBP-SPEC.md](./VBP-SPEC.md), public bundle: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)).
 
-## Tabele i rozszerzenia (kierunek)
+## Tables and extensions (direction)
 
-- Dziś: `experiment_runs.scores` (JSON), `builder_results`, `run_events`.
-- **Sprint 3:** `builder_benchmark_scores`, `user_votes`, `user_comments`, MV `builder_leaderboard` — migracja `20260328120000_sprint3_benchmark_social.sql`; zapis Grupy A z `score-builder-output` (szczegóły: [AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)).
-- Dalsze iteracje: opcjonalna tabela `builder_metric_scores` (`experiment_id`, `tool_id`, `run_task_id`, `dimension`, `value`, `source`) jeśli rozbitie kolumn na wiele wierszy będzie wygodniejsze niż jeden wiersz per wynik.
+- Today: `experiment_runs.scores` (JSON), `builder_results`, `run_events`.
+- **Sprint 3:** `builder_benchmark_scores`, `user_votes`, `user_comments`, MV `builder_leaderboard` — migration `20260328120000_sprint3_benchmark_social.sql`; Group A writes from `score-builder-output` (details: [AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)).
+- Later: optional `builder_metric_scores` (`experiment_id`, `tool_id`, `run_task_id`, `dimension`, `value`, `source`) if splitting columns into many rows is easier than one row per result.
 
-## Powiązane
+## Related
 
 - [ORCHESTRATOR.md](./ORCHESTRATOR.md)
 - [AG-SPRINT3-HANDOFF.md](./AG-SPRINT3-HANDOFF.md)

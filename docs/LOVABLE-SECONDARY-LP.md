@@ -1,21 +1,21 @@
-# Lovable — rola poboczna (LP, murd0ch)
+# Lovable — secondary role (LP, murd0ch)
 
-**Lovable nie jest docelowym hostem ani jedynym operatorem** całego produktu pr0ducent (broker, orchestrator, Edge). Pełna kontrola nad CI, sekretami i schematem jest na **GitHub + Vercel + Supabase** — zob. [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
+**Lovable is not the target host or sole operator** for the full pr0ducent product (broker, orchestrator, Edge). Full control of CI, secrets, and schema is on **GitHub + Vercel + Supabase** — see [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md).
 
-## Kiedy używać Lovable
+## When to use Lovable
 
-- Szybkie iteracje nad **landingami** i stronami marketingowymi w ekosystemie (np. **murd0ch** w `newsc0rp-main`, inne LP).
-- Eksperymenty UI, które i tak kończą jako merge do `main` na GitHubie.
+- Fast iterations on **landing pages** and marketing surfaces in the ecosystem (e.g. **murd0ch** in `newsc0rp-main`, other LPs).
+- UI experiments that still end as a merge to `main` on GitHub.
 
-## Zasady
+## Rules
 
-1. **Merge do `main`** — każda zmiana, która ma wejść do produktu pr0ducent, musi trafić do repozytorium GitHub; Lovable jest edytorem, nie źródłem prawdy.
-2. **Deploy aplikacji pr0ducent** — oficjalny tor: **Vercel** po zielonym buildzie z `main`, nie wyłącznie „Publish” w Lovable.
-3. **Supabase** — unikaj rozjechania się między schematem w panelu Lovable a migracjami w repo; przy pracy backendowej używaj projektu pod kontem zespołu i [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
+1. **Merge to `main`** — every change that should ship in pr0ducent must land in the GitHub repo; Lovable is an editor, not the source of truth.
+2. **Deploy the pr0ducent app** — official path: **Vercel** after a green build from `main`, not only “Publish” in Lovable.
+3. **Supabase** — avoid drift between the schema in the Lovable panel and migrations in the repo; for backend work use a project under the team account and [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
 
-## Podsumowanie
+## Summary
 
-| Tor | Rola |
-|-----|------|
-| GitHub + Vercel + Supabase | Docelowy rozwój orchestratora i frontu pr0ducent |
-| Lovable | Okazjonalnie: LP / murd0ch / szybkie UI — zawsze z synchronizacją do `main` |
+| Path | Role |
+|------|------|
+| GitHub + Vercel + Supabase | Target development of orchestrator and pr0ducent frontend |
+| Lovable | Occasional: LP / murd0ch / fast UI — always synced to `main` |

@@ -1,6 +1,6 @@
 # Front: Vercel + direct Supabase (post-MVP)
 
-**Krok po kroku (PL):** [VERCEL-SUPABASE-KROK-PO-KROKU.md](./VERCEL-SUPABASE-KROK-PO-KROKU.md)
+**Step-by-step walkthrough:** [VERCEL-SUPABASE-STEP-BY-STEP.md](./VERCEL-SUPABASE-STEP-BY-STEP.md)
 
 ## Goal
 

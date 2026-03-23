@@ -1,39 +1,39 @@
-# GitHub: PR, sponsorzy, solo → zespół
+# GitHub: PRs, sponsors, solo → team
 
-## Pull Requests — co ustawić (solo teraz, zespół później)
+## Pull Requests — what to set (solo now, team later)
 
-**Cel:** prosta historia na `main`, mniej śmieci, gotowość na review gdy dojdą ludzie.
+**Goal:** simple history on `main`, less clutter, ready for review when more people join.
 
-| Ustawienie | Rekomendacja | Uzasadnienie |
-|------------|--------------|--------------|
-| **Allow merge commits** | Możesz **wyłączyć**, jeśli używasz tylko squash | Jedna linia historii; merge commitów dużo przy wielu PR. |
-| **Allow squash merging** | **Włączone** (jako główna metoda) | Jeden commit na PR — czytelne przy wielu contributorach. |
-| **Allow rebase merging** | **Opcjonalnie** włączone | Dla maintainerów lubiących liniową historię bez merge commita. |
-| **Always suggest updating PR branches** | **Włączone** | Mniej „zielonych” PRów przestarzałych względem `main`. |
-| **Allow auto-merge** | **Włączone** po dodaniu CI + branch protection | PR sam się merduje gdy checki OK (oszczędza kliknięcia). |
-| **Automatically delete head branches** | **Włączone** | Sprząta gałęzie po merge. |
+| Setting | Recommendation | Rationale |
+|---------|------------------|-----------|
+| **Allow merge commits** | You can **disable** if you only use squash | Single line of history; many merge commits with many PRs |
+| **Allow squash merging** | **Enabled** (primary method) | One commit per PR — readable with many contributors |
+| **Allow rebase merging** | **Optionally** enabled | For maintainers who want linear history without merge commits |
+| **Always suggest updating PR branches** | **Enabled** | Fewer “green” PRs stale vs `main` |
+| **Allow auto-merge** | **Enabled** after CI + branch protection | PR merges when checks pass (saves clicks) |
+| **Automatically delete head branches** | **Enabled** | Cleans up branches after merge |
 
-**Solo:** możesz nadal pushować na `main` — reguły PR dotyczą głównie **PR z gałęzi**. Gdy pojawi się zespół, dodaj **branch protection** na `main`: wymagaj PR + (opcjonalnie) 1 review.
+**Solo:** you can still push to `main` — PR rules mainly apply to **PRs from branches**. When a team appears, add **branch protection** on `main`: require PR + (optional) 1 review.
 
-**Commits → DCO (sign off):** zwykle **wyłączone**, chyba że prawnie wymagacie DCO.
+**Commits → DCO (sign off):** usually **off** unless you legally require DCO.
 
-**Issues → Auto-close:** **włączone** — sensowne (`Fixes #123` w PR zamyka issue).
-
----
-
-## Sponsorzy — Stripe (nie jest to „natywny” Stripe w GitHub)
-
-GitHub **nie** łączy się z API Stripe. Ty tworzysz **link płatności** w Stripe i wklejasz go do repo.
-
-1. [Stripe Dashboard](https://dashboard.stripe.com/) → **Product catalog** → **Payment links** → **New** (kwota / produkt / jednorazowo lub subskrypcja).
-2. Po zapisaniu skopiuj URL (postaci `https://buy.stripe.com/...` lub regionalny odpowiednik).
-3. W [`.github/FUNDING.yml`](../.github/FUNDING.yml) **odkomentuj** blok `custom:` i wklej ten URL pod spodem.
-4. Commit na `main` — przycisk **Sponsor** pokaże zarówno **GitHub Sponsors** (`github:`), jak i **Custom** (Stripe).
-
-Jeśli **nie** masz jeszcze [GitHub Sponsors](https://github.com/sponsors), usuń lub zakomentuj linię `github: [Hei33enberg]` w `FUNDING.yml`, żeby nie prowadziła do pustego profilu — zostaw na start sam `custom:` ze Stripe.
+**Issues → Auto-close:** **on** — sensible (`Fixes #123` in a PR closes the issue).
 
 ---
 
-## Copilot a ustawienia repo
+## Sponsors — Stripe (not “native” Stripe in GitHub)
 
-**GitHub Copilot nie ustawia** checkboxów w **Settings** (PR, Discussions, Sponsors). Może natomiast **wygenerować lub poprawić pliki**: `FUNDING.yml`, szablony Issues, treść Discussions — użyj [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md).
+GitHub does **not** connect to the Stripe API. You create a **payment link** in Stripe and paste it into the repo.
+
+1. [Stripe Dashboard](https://dashboard.stripe.com/) → **Product catalog** → **Payment links** → **New** (amount / product / one-time or subscription).
+2. After saving, copy the URL (`https://buy.stripe.com/...` or regional equivalent).
+3. In [`.github/FUNDING.yml`](../.github/FUNDING.yml) **uncomment** the `custom:` block and paste that URL under it.
+4. Commit to `main` — the **Sponsor** button shows both **GitHub Sponsors** (`github:`) and **Custom** (Stripe).
+
+If you do **not** yet have [GitHub Sponsors](https://github.com/sponsors), remove or comment out `github: [Hei33enberg]` in `FUNDING.yml` so it does not point to an empty profile — for a start you can use only `custom:` with Stripe.
+
+---
+
+## Copilot vs repo settings
+
+**GitHub Copilot does not toggle** checkboxes in **Settings** (PR, Discussions, Sponsors). It **can** generate or fix files: `FUNDING.yml`, issue templates, Discussions copy — use [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md).

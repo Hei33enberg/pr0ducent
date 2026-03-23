@@ -1,28 +1,28 @@
-# PM / QA — jak sprawdzić pełny run orkiestracji (5 min)
+# PM / QA — full orchestration run (5 min)
 
-Indeks operacyjny (Lovable, webhook, smoke): [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md).
+Operational index (Lovable, webhook, smoke): [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md).
 
-## Ważne: `/compare` to nie silnik runów
+## Important: `/compare` is not the run engine
 
-Strona **Compare** (`/compare`) to tabela marketingowa funkcji. **Nie uruchamia** builderów ani nie zapisuje `run_jobs`.
+The **Compare** page (`/compare`) is a marketing feature matrix. It **does not** launch builders or write `run_jobs`.
 
-Pełna orkiestracja działa na **stronie głównej** po zalogowaniu, gdy eksperyment ma **UUID z bazy** (`experiments.id`).
+Full orchestration runs on the **home page** after sign-in when the experiment has a **UUID from the database** (`experiments.id`).
 
 ## Checklist
 
-1. **Zaloguj się** (konto z aktywną subskrypcją / limitem promptów).
-2. Na **Home** wpisz prompt, wybierz narzędzia (np. v0), uruchom generację.
-3. Upewnij się, że powstał eksperyment **zsynchronizowany z DB** (po zapisie `createExperimentInDb` w UI widzisz ten sam eksperyment w historii — `id` powinien być prawdziwym UUID, nie tylko mock).
-4. **Oczekiwane w UI:** kafelki / wyniki dla wybranych narzędzi; dla v0 status przechodzi z generowania w completed lub error w rozsądnym czasie.
-5. **Supabase (Table Editor lub SQL):**
-   - `run_jobs` — ostatni wiersz dla Twojego `experiment_id`: status końcowy joba.
-   - `run_tasks` — po jednym wierszu na narzędzie; status **nie powinien wisieć wiecznie na `queued`** (po kilku minutach: `building`, `completed`, `failed`, `benchmark` itd.).
-   - `builder_results` — `status`, `preview_url` / `chat_url`, `provider_run_id` dla v0.
-   - `run_events` (opcjonalnie) — zdarzenia `orchestrator.*`, `builder.*`.
+1. **Sign in** (account with active subscription / prompt limit).
+2. On **Home**, enter a prompt, pick tools (e.g. v0), start generation.
+3. Confirm the experiment is **synced to DB** (after `createExperimentInDb` the same experiment appears in history — `id` should be a real UUID, not only a mock).
+4. **Expected in UI:** tiles / results for selected tools; for v0 status moves from generating to completed or error in reasonable time.
+5. **Supabase (Table Editor or SQL):**
+   - `run_jobs` — latest row for your `experiment_id`: final job status.
+   - `run_tasks` — one row per tool; status should **not** stay **`queued`** forever (after a few minutes: `building`, `completed`, `failed`, `benchmark`, etc.).
+   - `builder_results` — `status`, `preview_url` / `chat_url`, `provider_run_id` for v0.
+   - `run_events` (optional) — `orchestrator.*`, `builder.*` events.
 
-## SQL — szybki podgląd ostatniego runu
+## SQL — quick view of last run
 
-Zamień `EXPERIMENT_UUID`:
+Replace `EXPERIMENT_UUID`:
 
 ```sql
 SELECT id, status, created_at FROM run_jobs
@@ -37,15 +37,15 @@ SELECT tool_id, status, preview_url, chat_url, provider_run_id FROM builder_resu
 WHERE experiment_id = 'EXPERIMENT_UUID';
 ```
 
-## Gość (bez logowania)
+## Guest (not signed in)
 
-Gość **nie** przechodzi przez `dispatch-builders` / `run_jobs`. Dla v0 używana jest funkcja **`run-on-v0`** — to osobna ścieżka testowa.
+Guests **do not** go through `dispatch-builders` / `run_jobs`. For v0 the **`run-on-v0`** function is used — a separate test path.
 
-## Test curl (bez UI)
+## Test curl (no UI)
 
-Pełna procedura z JWT: [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md).
+Full procedure with JWT: [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md).
 
-## Automatyzacja
+## Automation
 
 - Deno unit: `npm run test:deno`
-- Staging E2E: `npm run test:e2e-staging` — wymaga zmiennych z nagłówka [scripts/staging-e2e-v0.mjs](../scripts/staging-e2e-v0.mjs); GitHub: workflow **staging-e2e-v0** (`workflow_dispatch` + sekrety).
+- Staging E2E: `npm run test:e2e-staging` — needs env vars from the header of [scripts/staging-e2e-v0.mjs](../scripts/staging-e2e-v0.mjs); GitHub: **staging-e2e-v0** workflow (`workflow_dispatch` + secrets).

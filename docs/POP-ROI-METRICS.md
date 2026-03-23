@@ -1,49 +1,49 @@
-# VBP — metryki ROI i atrybucja (broker + partner)
+# VBP — ROI metrics and attribution (broker + partner)
 
-## Cele pomiaru
+## Measurement goals
 
-- Udowodnić partnerowi **wartość kanału** (leady, handoff, konwersje).
-- Optymalizować **koszt** orchestracji i mostów (bridge vs natywny VBP).
+- Prove **channel value** to the partner (leads, handoff, conversions).
+- Optimize **cost** of orchestration and bridges (bridge vs native VBP).
 
-## Zdarzenia w produkcie (pr0ducent)
+## Events in the product (pr0ducent)
 
-| Zdarzenie | Źródło | Tabela / kod |
-|-----------|--------|----------------|
-| Klik CTA handoff | Frontend | `referral_clicks` — [experiment-service.ts](../src/lib/experiment-service.ts) `logReferralClick` |
-| Handoff zapisany | Frontend | `referral_conversions` z `conversion_type: builder_handoff` — `logReferralHandoff` |
-| Eksperyment / run | Orchestrator | `experiments`, `run_jobs`, `run_tasks`, `builder_results`, `run_events` — [ORCHESTRATOR.md](./ORCHESTRATOR.md) |
+| Event | Source | Table / code |
+|-------|--------|----------------|
+| CTA handoff click | Frontend | `referral_clicks` — [experiment-service.ts](../src/lib/experiment-service.ts) `logReferralClick` |
+| Handoff recorded | Frontend | `referral_conversions` with `conversion_type: builder_handoff` — `logReferralHandoff` |
+| Experiment / run | Orchestrator | `experiments`, `run_jobs`, `run_tasks`, `builder_results`, `run_events` — [ORCHESTRATOR.md](./ORCHESTRATOR.md) |
 
-## Metryki wewnętrzne (MVP)
+## Internal metrics (MVP)
 
-| Metryka | Definicja | Użycie |
-|---------|-----------|--------|
-| **Leads** | Liczba `referral_clicks` per `tool_id` w oknie czasu | Wolumen zainteresowania |
-| **Handoffs** | Liczba `referral_conversions` per `tool_id` | Głębsza intencja niż sam klik |
-| **CTA rate** | handoffs / unikalne eksperymenty z danym tool | Jakość dopasowania UX |
-| **Time-to-artifact** | `completed_at` − start runu (z `run_tasks` / `builder_results`) | SLA per builder |
+| Metric | Definition | Use |
+|--------|------------|-----|
+| **Leads** | Count of `referral_clicks` per `tool_id` in a time window | Interest volume |
+| **Handoffs** | Count of `referral_conversions` per `tool_id` | Deeper intent than a click alone |
+| **CTA rate** | handoffs / unique experiments with that tool | UX fit quality |
+| **Time-to-artifact** | `completed_at` − run start (from `run_tasks` / `builder_results`) | SLA per builder |
 
-Zapytania SQL: agregacja po `tool_id`, `created_at` — dashboard można zbudować w Supabase SQL / Metabase / wewnętrznym panelu.
+SQL queries: aggregate by `tool_id`, `created_at` — dashboard can be built in Supabase SQL / Metabase / internal panel.
 
-## Metryki dla partnera (do negocjacji)
+## Partner metrics (negotiable)
 
-| Metryka | Opis |
-|---------|------|
-| **Qualified leads** | Zdefiniowane wspólnie (np. handoff + minimalny czas sesji u partnera) |
-| **Attributed signups** | Wymaga eksportu lub API od buildera — poza samym MVP brokera |
-| **Rev-share basis** | Przychód × współczynnik × okno atrybucji — [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md) |
+| Metric | Description |
+|--------|-------------|
+| **Qualified leads** | Defined jointly (e.g. handoff + minimum session time at partner) |
+| **Attributed signups** | Requires export or API from builder — beyond broker MVP alone |
+| **Rev-share basis** | Revenue × rate × attribution window — [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md) |
 
 ## Dashboard (plan)
 
-1. **Faza 1:** Zapytania SQL + arkusz (CSV) dla partnera pilota.
-2. **Faza 2:** Widok w aplikacji admin/partner (read-only) na `referral_*` z agregacją.
-3. **Faza 3:** Webhook lub dzienny export do partnera (wymaga umowy).
+1. **Phase 1:** SQL queries + spreadsheet (CSV) for pilot partner.
+2. **Phase 2:** Admin/partner read-only view on `referral_*` with aggregation.
+3. **Phase 3:** Webhook or daily export to partner (requires contract).
 
 ## UTM / ref
 
-- Spójne parametry w URL buildera: `utm_source=pr0ducent`, `utm_medium=broker`, `ref=<experiment_or_intent>` — uzgodnić z partnerem.
-- [VBP] Zachowaj zgodność z polityką prywatności (nie przekazuj PII w URL bez potrzeby).
+- Consistent builder URL params: `utm_source=pr0ducent`, `utm_medium=broker`, `ref=<experiment_or_intent>` — align with partner.
+- [VBP] Stay consistent with privacy policy (do not put PII in URLs unnecessarily).
 
-## Powiązane
+## Related
 
 - [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)
 - [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)

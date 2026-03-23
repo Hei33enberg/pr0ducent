@@ -1,38 +1,38 @@
-# Drugi (i kolejne) builder — playbook
+# Second (and further) builders — playbook
 
-Szablon SQL (zakomentowany): [examples/second-builder-config.template.sql](./examples/second-builder-config.template.sql).
+SQL template (commented): [examples/second-builder-config.template.sql](./examples/second-builder-config.template.sql).
 
-## Replit — ścieżka w repozytorium (generic REST)
+## Replit — path in the repository (generic REST)
 
-Migracja [20260421120000_replit_second_builder_generic_rest_path.sql](../supabase/migrations/20260421120000_replit_second_builder_generic_rest_path.sql) ustawia `tool_id = 'replit'` na **tier 2**, `integration_type = rest_api`, pełne pola pod `generic-rest-adapter` + `poll-builder-status`, **`enabled = false`**. Przed włączeniem:
+Migration [20260421120000_replit_second_builder_generic_rest_path.sql](../supabase/migrations/20260421120000_replit_second_builder_generic_rest_path.sql) sets `tool_id = 'replit'` to **tier 2**, `integration_type = rest_api`, full fields for `generic-rest-adapter` + `poll-builder-status`, **`enabled = false`**. Before enabling:
 
-1. Podmień `api_base_url` i `poll_url_template` na **realne** endpointy (pełny URL POST dla dispatch).
-2. Dodaj sekret w Edge (`REPLIT_ORCHESTRATOR_API_KEY` lub zmień `api_secret_env`).
-3. `UPDATE ... SET enabled = true WHERE tool_id = 'replit'` (trigger waliduje wymagane pola).
-4. Smoke: [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md) z `selectedTools` zawierającym `replit`.
+1. Replace `api_base_url` and `poll_url_template` with **real** endpoints (full POST URL for dispatch).
+2. Add a secret in Edge (`REPLIT_ORCHESTRATOR_API_KEY` or change `api_secret_env`).
+3. `UPDATE ... SET enabled = true WHERE tool_id = 'replit'` (trigger validates required fields).
+4. Smoke: [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md) with `selectedTools` containing `replit`.
 
-Operacje cloud: [LOVABLE-OPERATIONS.md](./LOVABLE-OPERATIONS.md).
+Cloud operations: [LOVABLE-OPERATIONS.md](./LOVABLE-OPERATIONS.md).
 
-## Kolejność decyzji
+## Decision order
 
-1. **Czy partner ma publiczne API lub wdroży VBP?**  
-   - Tak, VBP → `builder_integration_config.integration_type = 'vbp'`, `api_base_url`, `api_secret_env`, tier 1–2, `enabled = true`.  
-   - Tak, REST ale nie VBP → `integration_type = 'rest_api'`, wypełnij `request_template`, `response_id_path`, `poll_*` zgodnie z [`generic-rest-adapter.ts`](../supabase/functions/_shared/adapters/generic-rest-adapter.ts).  
-   - Nie → zostaje **benchmark** do czasu partnerstwa ([WIRE-BUILDERS.md](./WIRE-BUILDERS.md)).
+1. **Does the partner have a public API or will they ship VBP?**  
+   - Yes, VBP → `builder_integration_config.integration_type = 'vbp'`, `api_base_url`, `api_secret_env`, tier 1–2, `enabled = true`.  
+   - Yes, REST but not VBP → `integration_type = 'rest_api'`, fill `request_template`, `response_id_path`, `poll_*` per [`generic-rest-adapter.ts`](../supabase/functions/_shared/adapters/generic-rest-adapter.ts).  
+   - No → stays **benchmark** until partnership ([WIRE-BUILDERS.md](./WIRE-BUILDERS.md)).
 
-2. **Sekrety** — w Supabase Edge Secrets dodaj klucz wskazany przez `api_secret_env` (np. `LOVABLE_PARTNER_KEY`).
+2. **Secrets** — in Supabase Edge Secrets add the key pointed to by `api_secret_env` (e.g. `LOVABLE_PARTNER_KEY`).
 
-3. **Rate limits** — wstaw lub zaktualizuj wiersz w `builder_rate_limits` dla `tool_id` (domyślnie tylko `v0` ma wiersz z migracji).
+3. **Rate limits** — insert or update a row in `builder_rate_limits` for `tool_id` (by default only `v0` has a row from migration).
 
-4. **Test** — [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) + [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md) z `selectedTools` zawierającym nowe `tool_id`.
+4. **Test** — [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md) + [SMOKE-TEST-ORCHESTRATOR.md](./SMOKE-TEST-ORCHESTRATOR.md) with `selectedTools` containing the new `tool_id`.
 
-5. **Frontend** — [`useBuilderApi`](../src/hooks/useBuilderApi.ts) dla narzędzi bez dedykowanego poll-u (nie-v0) odświeża `builder_results` z bazy w tle; VBP może później dodać SSE zamiast poll-u.
+5. **Frontend** — [`useBuilderApi`](../src/hooks/useBuilderApi.ts) for tools without a dedicated poll (non-v0) refreshes `builder_results` from the DB in the background; VBP may add SSE later instead of poll.
 
-## Rekomendowany następny kandydat (produkt)
+## Recommended next candidate (product)
 
-- **Replit** — publiczne API agentów (weryfikacja ToS).  
-- **Lovable / Bolt** — wymagają umowy partnera lub ich implementacji **VBP** po Twojej stronie standardu ([VBP-SPEC.md](./VBP-SPEC.md)).
+- **Replit** — public agents API (verify ToS).  
+- **Lovable / Bolt** — require a partner agreement or their **VBP** implementation on your standard ([VBP-SPEC.md](./VBP-SPEC.md)).
 
-## Powiązanie z Open Protocol
+## Link to Open Protocol
 
-Gdy builder wdroży VBP, **nie** potrzebujesz osobnego adaptera w kodzie — wystarczy konfiguracja + `vbp-adapter`.
+When a builder ships VBP, you **do not** need a separate adapter in code — configuration + `vbp-adapter` is enough.

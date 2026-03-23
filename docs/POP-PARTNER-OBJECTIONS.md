@@ -1,40 +1,40 @@
-# VBP — obiekcje partnerów i odpowiedzi
+# VBP — partner objections and responses
 
-Używaj w rozmowach z product/legal/engineering u buildera. Techniczna prawda: [VBP-SPEC.md](./VBP-SPEC.md).
+Use in conversations with the builder’s product / legal / engineering. Technical source of truth: [VBP-SPEC.md](./VBP-SPEC.md).
 
-## „Nie chcemy oddawać relacji z użytkownikiem brokerowi”
+## “We don’t want to give the user relationship to the broker”
 
-**Odpowiedź:** Broker nie zastępuje Waszego produktu — **kieruje porównanie i pierwszy run**. Handoff jest u Was: `claim_token`, strona claim, normalne konto użytkownika. Użytkownik i tak wybiera buildera po jakości wyniku; broker skraca drogę do discovery.
+**Response:** The broker does not replace your product — it **routes comparison and the first run**. Handoff stays with you: `claim_token`, claim page, normal user account. Users still pick a builder by output quality; the broker shortens the path to discovery.
 
-## „To kolejny standard — mamy już API / MCP”
+## “Another standard — we already have API / MCP”
 
-**Odpowiedź:** POP/VBP jest **wąskim kontraktem** (prompt → run → artefakt → claim), nie zastępuje MCP ani A2A. Możecie wewnętrznie używać dowolnych narzędzi; na granicy z brokerem potrzebujecie stabilnego HTTP + opcjonalnie webhook/SSE.
+**Response:** POP/VBP is a **narrow contract** (prompt → run → artifact → claim); it does not replace MCP or A2A. You can use any tools internally; at the broker boundary you need stable HTTP + optional webhook/SSE.
 
-## „Kanibalizacja brandu”
+## “Brand cannibalization”
 
-**Odpowiedź:** Conformance i marketing: **„POP Verified”** jako badge jakości; broker może wyświetlać logo partnera zgodnie z guidelines. Negocjujemy placement (np. „Otwórz w {Builder}”) zamiast anonimowego embeda.
+**Response:** Conformance and marketing: **“POP Verified”** as a quality badge; the broker can show the partner logo per guidelines. We negotiate placement (e.g. “Open in {Builder}”) instead of an anonymous embed.
 
-## „Rate limits i koszty inferencji”
+## “Rate limits and inference cost”
 
-**Odpowiedź:** Broker powinien wysyłać `run_id`, respektować **429** i **rate limits** per partnera (`builder_rate_limits` po stronie brokerów). Pilot zaczyna się od małej skali i limitów; umowa może zawierać SLA i cap.
+**Response:** The broker should send `run_id`, respect **429** and **per-partner rate limits** (`builder_rate_limits` on broker side). Pilots start small with caps; contracts can include SLA and caps.
 
-## „Bezpieczeństwo: webhook spoofing, replay”
+## “Security: webhook spoofing, replay”
 
-**Odpowiedź:** Wymagany **HMAC** nad surowym body (`X-VBP-Signature`), sekret out-of-band; broker po stronie odbioru deduplikuje payloady. Zob. [POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md).
+**Response:** **HMAC** over raw body (`X-VBP-Signature`), secret out of band; the receiving broker deduplicates payloads. See [POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md).
 
-## „Nie mamy zasobów na pełny SSE”
+## “We don’t have resources for full SSE”
 
-**Odpowiedź:** **Minimalny profil POP:** dispatch + **poll status** lub **webhook**; SSE jest opcjonalny w spec ([VBP-SPEC.md](./VBP-SPEC.md)).
+**Response:** **Minimal POP profile:** dispatch + **poll status** or **webhook**; SSE is optional in the spec ([VBP-SPEC.md](./VBP-SPEC.md)).
 
-## „Reverse engineering / browser automation”
+## “Reverse engineering / browser automation”
 
-**Odpowiedź:** Nie prosimy o to jako docelową integrację. Natywny VBP jest preferowany. Mosty przeglądarkowe są **tymczasowe** i pod polityką ryzyka ([POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md)).
+**Response:** We do not ask for that as the target integration. Native VBP is preferred. Browser bridges are **temporary** and under risk policy ([POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md)).
 
-## „Atrybucja konwersji — spór kto „wygrał””
+## “Conversion attribution — dispute over who ‘won’”
 
-**Odpowiedź:** Wspólne zdarzenia: **referral click** (CTA), **conversion** (handoff z `claim_token` lub potwierdzony signup z parametru `ref`). Ustalenie w kontrakcie: okno atrybucji, deduplikacja, logowanie po stronie obu systemów ([POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)).
+**Response:** Shared events: **referral click** (CTA), **conversion** (handoff with `claim_token` or confirmed signup with `ref`). Contract: attribution window, deduplication, logging on both sides ([POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)).
 
-## „Projekt na półkę”
+## “Shelf project”
 
-**Typowe przyczyny:** brak jasnego ROI, zbyt szeroki scope, brak ownera po stronie buildera.  
-**Mitigacja:** pilot z jasnym KPI ([POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md)), minimalny profil conformance, jeden broker jako referencja.
+**Typical causes:** unclear ROI, scope too wide, no owner on the builder side.  
+**Mitigation:** pilot with clear KPIs ([POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md)), minimal conformance profile, one broker as reference.

@@ -1,6 +1,6 @@
-# Prompt dla GitHub Copilot (pliki OSS — nie Settings)
+# GitHub Copilot prompt (OSS files — not Settings)
 
-Wklej w **Copilot Chat** w repo `pr0ducent` (na GitHubie). Copilot **nie może** kliknąć Settings → Pull requests; przygotuje/edytuje **pliki** w `.github/` i `docs/`.
+Paste into **Copilot Chat** in the `pr0ducent` repo (on GitHub). Copilot **cannot** click Settings → Pull requests; it will prepare/edit **files** in `.github/` and `docs/`.
 
 ```text
 Repository: Hei33enberg/pr0ducent — open source MIT.
@@ -14,9 +14,9 @@ Tasks:
 Output: list files changed and any follow-up the human must do in GitHub Settings (manual only).
 ```
 
-Po odpowiedzi Copilota **Ty ręcznie** w Settings → General:
+After Copilot responds, **you manually** in Settings → General:
 
-- Włącz **Squash** jako preferowany sposób merge (jeśli wyłączasz merge commits — zostań przy squash + ewentualnie rebase).
-- Włącz **Automatically delete head branches**.
-- Włącz **Always suggest updating pull request branches**.
-- **Sponsor button:** po commitowaniu `FUNDING.yml` ze Stripe URL sprawdź, czy przycisk Sponsor pokazuje link.
+- Enable **Squash** as the preferred merge method (if you disable merge commits — keep squash and optionally rebase).
+- Enable **Automatically delete head branches**.
+- Enable **Always suggest updating pull request branches**.
+- **Sponsor button:** after committing `FUNDING.yml` with a Stripe URL, verify the Sponsor button shows the link.

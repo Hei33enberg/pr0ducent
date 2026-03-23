@@ -1,28 +1,28 @@
-# VBP — zakres open source (cały monorepo)
+# VBP — open source scope (full monorepo)
 
-**Strategia:** repozytorium **pr0ducent** jest udostępnione na licencji **MIT** ([LICENSE](../LICENSE)) — włącznie z frontendem, Edge Functions, migracjami Supabase i bundlem protokołu VBP. Celem jest **szybkie skalowanie**, forkowanie i integracja z innymi aplikacjami vibe‑AI; model biznesowy może ewoluować niezależnie od kodu.
+**Strategy:** the **pr0ducent** repository is under the **MIT** license ([LICENSE](../LICENSE)) — including the frontend, Supabase Edge Functions, migrations, and the VBP protocol bundle. The goal is **fast scaling**, forking, and integration with other vibe-AI apps; the business model can evolve independently of the code.
 
-Nazewnictwo protokołu: wyłącznie **VBP** — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md).
+Protocol naming: **VBP** only — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md).
 
-## Co jest w repo (wszystko pod MIT)
+## What is in the repo (all under MIT)
 
-| Obszar | Zawartość |
-|--------|-----------|
-| `src/` | Aplikacja React (Vite) |
-| `supabase/` | Funkcje Edge (Deno), `config.toml`, migracje |
-| `protocol/vibecoding-broker-protocol/` | Spec, schematy, validator, przykłady, SDK |
-| `docs/` | Dokumentacja operacyjna i partnerska |
+| Area | Contents |
+|------|----------|
+| `src/` | React app (Vite) |
+| `supabase/` | Edge Functions (Deno), `config.toml`, migrations |
+| `protocol/vibecoding-broker-protocol/` | Spec, schemas, validator, examples, SDK |
+| `docs/` | Operational and partner documentation |
 
-## Co **nie** jest w repo (świadomie)
+## What is **not** in the repo (by design)
 
-- **Sekrety produkcyjne** — klucze API, `service_role`, webhook secrets; każdy operator ustawia je u siebie (Supabase Dashboard, Vercel env, itd.).
-- **Hostowany ruch produkcyjny** — deployment i SLA są po stronie użytkownika forka; ten projekt jest **kodem referencyjnym**, nie usługą SaaS.
+- **Production secrets** — API keys, `service_role`, webhook secrets; each operator sets these in their own Supabase Dashboard, Vercel env, etc.
+- **Hosted production traffic** — deployment and SLA are on the fork operator; this project is **reference code**, not a SaaS.
 
-## Uwagi prawne / marka
+## Legal / brand
 
-- Nazwa **pr0ducent** i logo mogą podlegać prawom osobno od licencji MIT na kod — sprawdź nagłówki plików i README przed użyciem marki w produkcie.
+- The **pr0ducent** name and logo may be governed separately from the MIT license on the code — check file headers and README before using the brand in production.
 
-## Dla contributorów
+## For contributors
 
 - [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [protocol/vibecoding-broker-protocol/CONTRIBUTING.md](../protocol/vibecoding-broker-protocol/CONTRIBUTING.md)

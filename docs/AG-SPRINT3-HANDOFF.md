@@ -1,23 +1,23 @@
 # Sprint 3 AG — handoff (Cursor ↔ AG ↔ Lovable)
 
-Źródło prawdy dla benchmarku społecznościowego i leaderboardu: migracja
-`supabase/migrations/20260328120000_sprint3_benchmark_social.sql` (tabele `builder_benchmark_scores`,
+Source of truth for community benchmark and leaderboard: migration
+`supabase/migrations/20260328120000_sprint3_benchmark_social.sql` (tables `builder_benchmark_scores`,
 `user_votes`, `user_comments`, MV `builder_leaderboard`).
 
-## Różnice względem draftu AG w Notion/Docs
+## Differences from the AG draft in Notion/Docs
 
-- **MV `builder_leaderboard`:** uproszczony agregat per `tool_id` (bez LATERAL po głosach w MV — głosy są w osobnych tabelach; UI może łączyć lub dodać drugą MV później). **UNIQUE (`tool_id`)** na MV umożliwia `REFRESH MATERIALIZED VIEW CONCURRENTLY`.
-- **`user_votes`:** kolumna `vote_kind` (`result` | `pairwise`) — insert RLS na razie tylko dla `vote_kind = 'result'`. **Pairwise Arena = parking lot** do stabilnego E2/E3; pełna Arena może wymagać osobnej tabeli par lub rozszerzenia schematu.
-- **PVI marketingowy** (`src/lib/pvi-calculator.ts`) vs **PVI benchmark** (`src/lib/pvi-engine.ts`, wymiary 1–10) — nie mieszać copy ani nazw w UI.
+- **MV `builder_leaderboard`:** simplified aggregate per `tool_id` (no LATERAL over votes in the MV — votes live in separate tables; the UI can join or add a second MV later). **UNIQUE (`tool_id`)** on the MV enables `REFRESH MATERIALIZED VIEW CONCURRENTLY`.
+- **`user_votes`:** column `vote_kind` (`result` | `pairwise`) — insert RLS for now only for `vote_kind = 'result'`. **Pairwise Arena = parking lot** for stable E2/E3; full Arena may need a separate pair table or schema extension.
+- **Marketing PVI** (`src/lib/pvi-calculator.ts`) vs **benchmark PVI** (`src/lib/pvi-engine.ts`, dimensions 1–10) — do not mix copy or labels in the UI.
 
-## Grupa A / B / C w `score-builder-output`
+## Group A / B / C in `score-builder-output`
 
-- **Grupa A (teraz):** Edge Function `supabase/functions/score-builder-output/index.ts` zapisuje częściowe wymiary + `pvi_score` do `builder_benchmark_scores` (pipeline + rubryka).
-- **Grupa B/C + Lighthouse:** poza długim invoke Edge — kolejka, cron lub worker (patrz `docs/PVI-ORCHESTRATION-MAP.md`).
+- **Group A (now):** Edge Function `supabase/functions/score-builder-output/index.ts` writes partial dimensions + `pvi_score` to `builder_benchmark_scores` (pipeline + rubric).
+- **Group B/C + Lighthouse:** outside a long Edge invoke — queue, cron, or worker (see `docs/PVI-ORCHESTRATION-MAP.md`).
 
-## Operator: `pg_cron` + odświeżanie MV
+## Operator: `pg_cron` + refreshing the MV
 
-Rozszerzenie `pg_cron` jest w migracji bazowej projektu. Po wdrożeniu migracji Sprint 3 osoba z dostępem do Supabase może zaplanować job (dostosuj interwał):
+The `pg_cron` extension is in the project’s base migration. After Sprint 3 migrations are deployed, someone with Supabase access can schedule a job (adjust interval):
 
 ```sql
 SELECT cron.schedule(
@@ -27,33 +27,33 @@ SELECT cron.schedule(
 );
 ```
 
-**Repo:** migracja `20260329100000_builder_arena_votes_leaderboard_cron.sql` próbuje zarejestrować ten job (co **10 min**). Jeśli `cron.schedule` z migracji SQL nie jest dozwolony w Waszym planie — ten sam SQL wykonać ręcznie w SQL Editor (jednorazowo).
+**Repo:** migration `20260329100000_builder_arena_votes_leaderboard_cron.sql` tries to register this job (every **10 min**). If `cron.schedule` from the SQL migration is not allowed on your plan — run the same SQL manually in the SQL Editor (one-time).
 
-Audyt kompletności schematu Sprint 3 + arena: [AG-PHASE-E-SCHEMA-AUDIT.md](./AG-PHASE-E-SCHEMA-AUDIT.md).
+Schema completeness audit (Sprint 3 + arena): [AG-PHASE-E-SCHEMA-AUDIT.md](./AG-PHASE-E-SCHEMA-AUDIT.md).
 
-## Prompt dla Lovable (po merge na `main`)
+## Prompt for Lovable (after merge to `main`)
 
-1. W projekcie Lovable: **Settings → GitHub → Pull** z `main` (commity: migracja + ewentualnie UI AG + Edge).
-2. **Build → Publish** po akceptacji PM.
-3. Supabase: `supabase db push` / migracje z CI + **deploy Edge Functions** jeśli zmieniono `score-builder-output`.
-4. Opcjonalnie: job `pg_cron` jak wyżej.
-5. Smoke: `docs/PM-RUN-CHECKLIST.md` — strona `/leaderboard` może być pusta do czasu pierwszych wierszy w `builder_benchmark_scores`; po `REFRESH` MV pokazuje dane.
+1. In the Lovable project: **Settings → GitHub → Pull** from `main` (commits: migration + optional AG UI + Edge).
+2. **Build → Publish** after PM sign-off.
+3. Supabase: `supabase db push` / CI migrations + **deploy Edge Functions** if `score-builder-output` changed.
+4. Optionally: `pg_cron` job as above.
+5. Smoke: `docs/PM-RUN-CHECKLIST.md` — `/leaderboard` may be empty until the first rows exist in `builder_benchmark_scores`; after `REFRESH`, the MV shows data.
 
-## Phase 1 AG (A + C) na `main`
+## Phase 1 AG (A + C) on `main`
 
-Po zamknięciu zadań bez zależności DB: merge UI → Lovable **Pull → Publish** (jak wyżej).
+After tasks with no DB dependency are closed: merge UI → Lovable **Pull → Publish** (as above).
 
-## Kolejność z planu Sprint 3 (skrót)
+## Sprint 3 plan order (summary)
 
-0. Migracja + RLS  
+0. Migration + RLS  
 1. Phase 1 AG (A + C)  
-2. Rozszerzenie scoringu / workerów (A pełniej, B stopniowo)  
-3. Phase 2 AG (E1–E2–E5) podłączone pod tabele  
+2. Extend scoring / workers (A fuller, B gradual)  
+3. Phase 2 AG (E1–E2–E5) wired to tables  
 4. `pg_cron` + Phase 3 (E3, E4)  
 5. Phase 4 Marketplace  
-6. Phase 5 (VBP + Arena pairwise — na końcu)
+6. Phase 5 (VBP + Arena pairwise — last)
 
-## Linki
+## Links
 
-- Zamknięcie sprintu / testy: [SPRINT-CLOSE.md](./SPRINT-CLOSE.md)  
-- Orkiestracja PVI: [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md)
+- Sprint close / tests: [SPRINT-CLOSE.md](./SPRINT-CLOSE.md)  
+- PVI orchestration: [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md)

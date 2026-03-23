@@ -1,39 +1,39 @@
-# VBP — profile conformance i brama produkcyjna
+# VBP — conformance profiles and production gate
 
-Bazuje na [protocol/vibecoding-broker-protocol/CONFORMANCE.md](../protocol/vibecoding-broker-protocol/CONFORMANCE.md). Poziomy **Verified / Partial / Experimental** opisują jakość integracji; **Production gate** to warunki włączenia routingu na produkcji u brokera.
+Based on [protocol/vibecoding-broker-protocol/CONFORMANCE.md](../protocol/vibecoding-broker-protocol/CONFORMANCE.md). Levels **Verified / Partial / Experimental** describe integration quality; **Production gate** is the set of conditions to enable routing in production on the broker.
 
-## Poziomy (zgodność z implementacją buildera)
+## Levels (builder implementation alignment)
 
-| Profil | Wymagania | Użycie |
-|--------|-----------|--------|
-| **Verified** | Validator (`npm run vbp-validate` / `validator/cli.mjs`) przechodzi na `api_base_url`; wymagane trasy i kształty odpowiedzi zgodne z [VBP-SPEC.md](./VBP-SPEC.md). | Lista rekomendowanych, badge w UI (polityka produktu). |
-| **Partial** | Dispatch + **jedna** ścieżka zakończenia (poll **lub** webhook); znane luki udokumentowane (np. brak exportu = 501). | Wczesny partner, jasny disclaimer. |
-| **Experimental** | W rozwoju; integracja może być wyłączona lub za flagą. | Staging / demo. |
+| Profile | Requirements | Use |
+|---------|--------------|-----|
+| **Verified** | Validator (`npm run vbp-validate` / `validator/cli.mjs`) passes against `api_base_url`; required routes and response shapes match [VBP-SPEC.md](./VBP-SPEC.md). | Recommended list, badge in UI (product policy). |
+| **Partial** | Dispatch + **one** completion path (poll **or** webhook); known gaps documented (e.g. no export = 501). | Early partner, clear disclaimer. |
+| **Experimental** | In development; integration may be off or behind a flag. | Staging / demo. |
 
-## Brama **Production** (broker — pr0ducent)
+## **Production** gate (broker — pr0ducent)
 
-Integracja nie powinna być włączona na produkcji (`builder_integration_config.enabled`, tier ≤2), dopóki nie są spełnione:
+Do not enable on production (`builder_integration_config.enabled`, tier ≤2) until:
 
-| # | Warunek | Uwagi |
-|---|---------|--------|
-| 1 | **Webhook security** | `VBP_WEBHOOK_SECRET` ustawiony; `VBP_WEBHOOK_SECRET_REQUIRED=true` na produkcji ([POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md)). |
-| 2 | **Terminal states** | `completed` / `failed` mapowane do `builder_results` + `run_tasks` bez hangów. |
-| 3 | **Idempotencja** | Duplikaty webhooków nie psują stanu (`pbp_webhook_deliveries`). |
-| 4 | **Rate limits** | Wpis w `builder_rate_limits` zgodny z umową z partnerem. |
-| 5 | **Observability** | `run_events` z `trace_id` / `run_task_id` dla ścieżki audytu. |
-| 6 | **Pilot** | Zakończony z wynikiem Verified lub Partial z [POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md). |
+| # | Condition | Notes |
+|---|-----------|--------|
+| 1 | **Webhook security** | `VBP_WEBHOOK_SECRET` set; `VBP_WEBHOOK_SECRET_REQUIRED=true` in production ([POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md)). |
+| 2 | **Terminal states** | `completed` / `failed` mapped to `builder_results` + `run_tasks` without hangs. |
+| 3 | **Idempotency** | Duplicate webhooks do not corrupt state (`pbp_webhook_deliveries`). |
+| 4 | **Rate limits** | Row in `builder_rate_limits` aligned with partner agreement. |
+| 5 | **Observability** | `run_events` with `trace_id` / `run_task_id` for audit path. |
+| 6 | **Pilot** | Completed as Verified or Partial per [POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md). |
 
-## Security gate (skrót)
+## Security gate (short)
 
-Pełny opis: [POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md).  
-**Reguła:** brak podpisu webhooków przy wymaganym sekrecie = **blokada** włączenia produkcyjnego routingu.
+Full detail: [POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md).  
+**Rule:** missing webhook signatures when secret is required = **block** production routing.
 
-## Zgodność ze spec a drift
+## Spec conformance vs drift
 
-Przy każdej zmianie [VBP-SPEC.md](./VBP-SPEC.md) lub schematów JSON:
+On every change to [VBP-SPEC.md](./VBP-SPEC.md) or JSON schemas:
 
-1. Aktualizacja `protocol/vibecoding-broker-protocol/schemas/`.
-2. Przejście CI `vbp-protocol` (workflow w repo).
-3. Aktualizacja adapterów Edge (`vbp-adapter`, `pbp-webhook`, `poll-builder-status`).
+1. Update `protocol/vibecoding-broker-protocol/schemas/`.
+2. Pass CI `vbp-protocol` (workflow in repo).
+3. Update Edge adapters (`vbp-adapter`, `pbp-webhook`, `poll-builder-status`).
 
-Zob. [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).
+See [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).

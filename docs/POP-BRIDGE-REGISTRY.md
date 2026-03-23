@@ -1,45 +1,45 @@
 # VBP Bridge Registry (TOP 10–15, vibe-coding category)
 
-Źródło priorytetyzacji: [Product Hunt — Vibe coding](https://www.producthunt.com/categories/vibe-coding) oraz narzędzia powtarzalnie wymieniane w launchach tej kategorii.  
-**Cel:** jedna tabela prawdy dla bizdevu, inżynierii i polityki ryzyka.
+Prioritization source: [Product Hunt — Vibe coding](https://www.producthunt.com/categories/vibe-coding) and tools repeatedly mentioned in that category’s launches.  
+**Goal:** one source of truth for bizdev, engineering, and risk policy.
 
-## Klasyfikacja `bridge_mode`
+## `bridge_mode` classification
 
-| Wartość | Znaczenie |
-|---------|-----------|
-| `api_native` | Publiczne API (REST/SDK) pod programatyczne uruchamianie buildów i statusu — preferowany tor do POP/VBP. |
-| `api_partial` | Ograniczona powierzchnia (np. URL-trigger, embed) — most wymaga normalizacji; pełny POP wymaga rozszerzenia po stronie partnera. |
-| `browser_only` | Brak stabilnego publicznego API — tylko UI; ewentualny most przez przeglądarkę (wysokie ryzyko ToS/utrzymania). |
-| `no_go` | Tymczasowo wyłączone z mostów (ToS, brak powierzchni, lub wyłącznie po umowie). |
+| Value | Meaning |
+|-------|---------|
+| `api_native` | Public API (REST/SDK) for programmatic builds and status — preferred path for POP/VBP. |
+| `api_partial` | Limited surface (e.g. URL trigger, embed) — bridge needs normalization; full POP needs partner-side extension. |
+| `browser_only` | No stable public API — UI only; possible browser bridge (high ToS / maintenance risk). |
+| `no_go` | Temporarily out of bridges (ToS, no surface, or contract-only). |
 
-## Rejestr (stan roboczy — weryfikuj przy każdym pilocie)
+## Registry (working — verify each pilot)
 
-| # | Builder | `bridge_mode` | Powierzchnia integracji (skrót) | Ryzyko / uwagi | Ścieżka do natywnego POP |
-|---|---------|---------------|----------------------------------|----------------|---------------------------|
-| 1 | **v0 (Vercel)** | `api_native` | Platform API (beta) + SDK (`v0-sdk`) | Rate limits, warunki beta | Już wzorcowy tor w repo (`run-on-v0`, klucz platformowy). |
-| 2 | **Cursor** | `api_native` | Cloud Agents API (programmatic agents) | Beta; model inny niż „prompt→hosted app” | Mapowanie semantyki na `run_tasks` / artefakty repo. |
-| 3 | **Lovable** | `api_partial` | [Build with URL](https://docs.lovable.dev/integrations/build-with-url) (autosubmit + prompt) | Brak publicznego dispatch/status jak VBP; URL length limits; user musi wybrać workspace | Partner wdraża `POST /vbp/v1/dispatch` + status/webhook. |
-| 4 | **Replit** | `browser_only` | Agent w workspace; brak publicznego „dispatch z zewnątrz” w dokumentacji | ToS: m.in. zakaz scrapingu, nadużyć automatyzacji — most RPA tylko za zgodą prawną | Enterprise / partner API lub dedykowany endpoint. |
-| 5 | **Bolt.new (StackBlitz)** | `browser_only` | WebContainers + UI; brak publicznego Bolt API jak VBP | Ewentualnie SDK StackBlitz do embedów, nie do pełnego agenta | Partner API lub formalny program partnerski. |
-| 6 | **Firebase Studio** | `browser_only` | Agent w Google/Firebase; preview w ekosystemie | Integracja poza publicznym VBP wymaga ścieżki Google Cloud | Partner program / Gemini App Prototyping API roadmap. |
-| 7 | **Webflow** | `api_partial` | Data/Designer API dla treści; AI site builder głównie w produkcie | Generacja stron może nie mieć jednego „dispatch prompt→app” API | MCP/LLM docs + ewentualne workflow partnerskie. |
-| 8 | **Builder.io** | `api_partial` | Visual builder + GitHub; API pod content/design | Semantyka „agent PR” vs „single-shot app” | Wspólny model artefaktów (repo URL, preview). |
-| 9 | **Framer** | `api_partial` | API/plugin ekosystem; AI w produkcie | Nie zawsze jeden run = jeden deploy | Handoff preview URL + claim. |
-| 10 | **Bubble** | `browser_only` | Głównie no-code w UI | Publiczne API pod pełny broker rzadkie | Partner workflow lub iframe handoff. |
-| 11 | **Glide** | `api_partial` | API pod dane / nie zawsze pod „AI build z promptu” | Dopasowanie do modelu runów | Partial POP (status z ich systemu). |
-| 12 | **Softr** | `api_partial` | REST pod Airtable/data | Podobnie jak Glide | Partial. |
-| 13 | **Windsurf** | `api_native` / `api_partial` | IDE + ewentualne API (weryfikuj aktualny changelog) | Model bliżej repo niż hosted app | Mapowanie na artefakty kodu. |
-| 14 | **Anything** (PH) | `browser_only` | Produkt launchowy — weryfikuj API | Wysoka zmienność | Po stabilizacji — klasyfikacja. |
-| 15 | **Alta / „AI app generator”** (PH) | `browser_only` | Różne launchy — weryfikuj | Często bez publicznego API | Pilot indywidualny. |
+| # | Builder | `bridge_mode` | Integration surface (short) | Risk / notes | Path to native POP |
+|---|---------|---------------|------------------------------|--------------|---------------------|
+| 1 | **v0 (Vercel)** | `api_native` | Platform API (beta) + SDK (`v0-sdk`) | Rate limits, beta terms | Reference path in repo (`run-on-v0`, platform key). |
+| 2 | **Cursor** | `api_native` | Cloud Agents API (programmatic agents) | Beta; model differs from “prompt→hosted app” | Map semantics to `run_tasks` / repo artifacts. |
+| 3 | **Lovable** | `api_partial` | [Build with URL](https://docs.lovable.dev/integrations/build-with-url) (autosubmit + prompt) | No public dispatch/status like VBP; URL length limits; user must pick workspace | Partner ships `POST /vbp/v1/dispatch` + status/webhook. |
+| 4 | **Replit** | `browser_only` | Agent in workspace; no public “dispatch from outside” in docs | ToS: e.g. no scraping abuse — RPA bridge only with legal sign-off | Enterprise / partner API or dedicated endpoint. |
+| 5 | **Bolt.new (StackBlitz)** | `browser_only` | WebContainers + UI; no public Bolt API like VBP | Maybe StackBlitz SDK for embeds, not full agent | Partner API or formal partner program. |
+| 6 | **Firebase Studio** | `browser_only` | Agent in Google/Firebase; preview in ecosystem | Integration beyond public VBP needs Google Cloud path | Partner program / Gemini App Prototyping API roadmap. |
+| 7 | **Webflow** | `api_partial` | Data/Designer API for content; AI site builder mostly in product | Site generation may lack one “dispatch prompt→app” API | MCP/LLM docs + optional partner workflows. |
+| 8 | **Builder.io** | `api_partial` | Visual builder + GitHub; API for content/design | Semantics “agent PR” vs “single-shot app” | Shared artifact model (repo URL, preview). |
+| 9 | **Framer** | `api_partial` | API/plugin ecosystem; AI in product | Not always one run = one deploy | Handoff preview URL + claim. |
+| 10 | **Bubble** | `browser_only` | Mostly no-code in UI | Rare public API for full broker | Partner workflow or iframe handoff. |
+| 11 | **Glide** | `api_partial` | API for data / not always “AI build from prompt” | Fit to run model | Partial POP (status from their system). |
+| 12 | **Softr** | `api_partial` | REST to Airtable/data | Similar to Glide | Partial. |
+| 13 | **Windsurf** | `api_native` / `api_partial` | IDE + possible API (verify current changelog) | Model closer to repo than hosted app | Map to code artifacts. |
+| 14 | **Anything** (PH) | `browser_only` | Launch product — verify API | High churn | Reclassify after stabilization. |
+| 15 | **Alta / “AI app generator”** (PH) | `browser_only` | Various launches — verify | Often no public API | Individual pilot. |
 
-## Priorytet wdrożenia mostów (aggressive mode — zgodnie z polityką)
+## Bridge rollout priority (aggressive mode — per policy)
 
-1. **`api_native` najpierw** — v0, Cursor (jeśli biznesowo pasuje), Windsurf gdy potwierdzone API.
-2. **`api_partial`** — Lovable (URL), Webflow/Builder.io/Framer/Glide/Softr — krótszy czas do demo, średnie ryzyko driftu.
-3. **`browser_only`** — tylko z [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md), feature-flagiem i kill-switch.
+1. **`api_native` first** — v0, Cursor (if it fits), Windsurf when API is confirmed.
+2. **`api_partial`** — Lovable (URL), Webflow/Builder.io/Framer/Glide/Softr — faster demo, medium drift risk.
+3. **`browser_only`** — only with [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md), feature flag, and kill-switch.
 
-## Powiązane
+## Related
 
-- [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md) — komponenty mostów.
-- [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md) — kiedy wolno aggressive bridge.
-- [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) — discovery techniczne pod natywny VBP.
+- [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md) — bridge components.
+- [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md) — when aggressive bridge is allowed.
+- [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) — technical discovery for native VBP.

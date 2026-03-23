@@ -1,31 +1,31 @@
-# VBP — checklista negocjacji biznesowych
+# VBP — business negotiation checklist
 
-Użyj przed i po spotkaniu z partnerem (builder). Techniczne: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
+Use before and after a partner (builder) meeting. Technical: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
 
-## Przed spotkaniem
+## Before the meeting
 
-- [ ] Zdefiniowany **owner** po stronie pr0ducent (PM + tech lead).
-- [ ] Przeczytany [POP-PARTNER-PITCH.md](./POP-PARTNER-PITCH.md) i [POP-PARTNER-OBJECTIONS.md](./POP-PARTNER-OBJECTIONS.md).
-- [ ] Sprawdzony wpis w [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (tryb mostu vs natywny POP).
-- [ ] Przygotowany **minimalny pilot** (scope, czas, KPI): [POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md).
+- [ ] **Owner** defined on pr0ducent side (PM + tech lead).
+- [ ] Read [POP-PARTNER-PITCH.md](./POP-PARTNER-PITCH.md) and [POP-PARTNER-OBJECTIONS.md](./POP-PARTNER-OBJECTIONS.md).
+- [ ] Checked entry in [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) (bridge mode vs native POP).
+- [ ] **Minimal pilot** prepared (scope, time, KPI): [POP-PILOT-SUCCESS-CRITERIA.md](./POP-PILOT-SUCCESS-CRITERIA.md).
 
-## Na spotkaniu (decyzje do zapisania)
+## During the meeting (decisions to record)
 
-- [ ] Kto jest **decision maker** po stronie buildera (product / partnerships / eng).
-- [ ] Czy cel to **lead gen**, **brand**, czy **techniczna interoperacyjność**.
-- [ ] Preferowany tor: **natywny VBP** vs **bridge** tymczasowy.
-- [ ] **Rate limits** i oczekiwany wolumen runów / miesiąc.
-- [ ] **Atrybucja** — model (rev-share, CPA, hybrid): [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md).
-- [ ] **SLA** na odpowiedź API (dispatch/status) — orientacyjnie.
-- [ ] **Logo / nazwa** w UI brokera i odwrotnie (co-branding).
+- [ ] Who is the **decision maker** on the builder side (product / partnerships / eng).
+- [ ] Whether the goal is **lead gen**, **brand**, or **technical interoperability**.
+- [ ] Preferred path: **native VBP** vs temporary **bridge**.
+- [ ] **Rate limits** and expected run volume / month.
+- [ ] **Attribution** — model (rev-share, CPA, hybrid): [POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md).
+- [ ] **SLA** for API response (dispatch/status) — ballpark.
+- [ ] **Logo / name** in broker UI and reverse (co-branding).
 
-## Po spotkaniu
+## After the meeting
 
-- [ ] Notatka wysłana w 24h (summary + next steps).
-- [ ] Zaktualizowany rejestr mostów lub compatibility matrix w [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
-- [ ] Jeśli pilot: ticket na staging secrets + `builder_integration_config`.
-- [ ] Legal: czy potrzebna NDA przed udostępnieniem spec wewnętrznych endpointów.
+- [ ] Notes sent within 24h (summary + next steps).
+- [ ] Updated bridge registry or compatibility matrix in [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
+- [ ] If pilot: ticket for staging secrets + `builder_integration_config`.
+- [ ] Legal: NDA needed before sharing spec of internal endpoints?
 
-## Ryzyka
+## Risks
 
-- [ ] Przejście przez [POP-LEGAL-RISK-MATRIX.md](./POP-LEGAL-RISK-MATRIX.md) dla trybu bridge.
+- [ ] Walk through [POP-LEGAL-RISK-MATRIX.md](./POP-LEGAL-RISK-MATRIX.md) for bridge mode.

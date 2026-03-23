@@ -1,6 +1,6 @@
 /**
- * Feature Flags — sterowane zmiennymi środowiskowymi VITE_FF_*.
- * Domyślne wartości pozwalają na działanie bez konfiguracji .env.
+ * Feature flags — driven by VITE_FF_* environment variables.
+ * Defaults allow the app to run without a .env file.
  */
 export const FF = {
   /** Marketplace page visible in nav + routing */

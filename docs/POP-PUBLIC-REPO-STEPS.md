@@ -1,26 +1,26 @@
-# VBP — publikacja publicznego repo (DevRel + Cursor)
+# VBP — publishing a public repo (DevRel + Cursor)
 
-**Całe monorepo jest MIT** ([LICENSE](../LICENSE)) — możesz **upublicznić jedno repo** `pr0ducent` i wtedy linki do `blob/main/docs/...` oraz `tree/main/protocol/...` działają dla wszystkich bez osobnego mirroru.
+The **full monorepo is MIT** ([LICENSE](../LICENSE)) — you can **publish a single** `pr0ducent` repo and then links to `blob/main/docs/...` and `tree/main/protocol/...` work for everyone without a separate mirror.
 
-**Opcjonalnie** — osobne lekkie repo **`…/vibecoding-broker-protocol`** tylko ze speciem (subtree / kopia), jeśli chcesz wyraźnie oddzielić „samego protokołu” od pełnej aplikacji i skrócić czas klonowania dla integratorów.
+**Optionally** — a separate lightweight **`…/vibecoding-broker-protocol`** repo with only the spec (subtree / copy), if you want a clear split between “protocol only” and the full app and shorter clone times for integrators.
 
-Cel osobnego repo: jedno miejsce dla buildera: spec, schematy, OpenAPI, validator, przykłady — bez pełnego frontu.
+Goal of the separate repo: one place for builders: spec, schemas, OpenAPI, validator, examples — without the full frontend.
 
-## Źródło w monorepo
+## Source in the monorepo
 
-Katalog: [`protocol/vibecoding-broker-protocol/`](../protocol/vibecoding-broker-protocol/README.md)
+Directory: [`protocol/vibecoding-broker-protocol/`](../protocol/vibecoding-broker-protocol/README.md)
 
-## Kroki (checklist)
+## Steps (checklist)
 
-1. Utwórz **puste** publiczne repo na GitHubie (org `pr0ducent` lub obecny właściciel produktu).
-2. Sklonuj je lokalnie i skopiuj zawartość `protocol/vibecoding-broker-protocol/` na root nowego repo (lub użyj `git subtree split` / ręcznego mirror).
-3. Dodaj **README** z linkiem z powrotem do aplikacji brokera i do [docs/VBP-SPEC.md](./VBP-SPEC.md) w monorepo (do czasu pełnej migracji spec na `spec/v1.md`).
-4. Włącz **GitHub Actions** — możesz skopiować job walidacji JSON z [`.github/workflows/vbp-protocol.yml`](../.github/workflows/vbp-protocol.yml).
-5. Ustaw w **Vercel** (docelowy host frontu — [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md)) zmienną **`VITE_VBP_PROTOCOL_URL`** na URL nowego repo (README lub strona GitHub Pages jeśli dodasz). Preview deployments też powinny mieć spójny URL lub fallback z `.env.example`.
-6. Ogłoszenie: **VBP** + pierwszy partner pilotowy ([VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md)).
-7. Opcjonalnie zautomatyzuj kroki 1–4 przez prompt w [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md).
+1. Create an **empty** public repo on GitHub (org `pr0ducent` or current product owner).
+2. Clone it locally and copy `protocol/vibecoding-broker-protocol/` to the root of the new repo (or use `git subtree split` / manual mirror).
+3. Add a **README** linking back to the broker app and to [docs/VBP-SPEC.md](./VBP-SPEC.md) in the monorepo (until the spec fully migrates to `spec/v1.md`).
+4. Enable **GitHub Actions** — you can copy the JSON validation job from [`.github/workflows/vbp-protocol.yml`](../.github/workflows/vbp-protocol.yml).
+5. In **Vercel** (target frontend host — [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md)) set **`VITE_VBP_PROTOCOL_URL`** to the new repo URL (README or GitHub Pages if you add it). Preview deployments should use a consistent URL or fallback from `.env.example`.
+6. Announce **VBP** + first pilot partner ([VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md)).
+7. Optionally automate steps 1–4 with the prompt in [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md).
 
-## Zawartość minimum
+## Minimum contents
 
 - `openapi/vbp-v1.openapi.yaml`
 - `schemas/*.json`
@@ -28,7 +28,7 @@ Katalog: [`protocol/vibecoding-broker-protocol/`](../protocol/vibecoding-broker-
 - `examples/minimal-node/`
 - `badge/vbp-certified.svg`
 
-## Powiązane
+## Related
 
-- [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) — discovery, pilot, macierz zgodności
+- [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md) — discovery, pilot, conformance matrix
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md)

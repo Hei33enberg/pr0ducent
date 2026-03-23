@@ -1,33 +1,33 @@
-# VBP — komunikacja publiczna (bridge, ToS, partner trust)
+# VBP — public messaging (bridge, ToS, partner trust)
 
-Ten dokument **uspójnia przekaz** na stronie [pr0ducent.com/docs](https://pr0ducent.com/docs), w socialach i w mailach do buildera. Techniczne źródła: [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md), [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md).
+This document **aligns messaging** on [pr0ducent.com/docs](https://pr0ducent.com/docs), in social posts, and in emails to builders. Technical sources: [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md), [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md).
 
-## Jak mówimy o VBP
+## How we talk about VBP
 
-- **VBP (Vibecoding Broker Protocol)** — jedyna nazwa protokołu w copy (spec, OpenAPI, partnerzy).
-- **PBP** tylko tam, gdzie odnosi się do historycznego endpointu `pbp-webhook`.
+- **VBP (Vibecoding Broker Protocol)** — the only protocol name in copy (spec, OpenAPI, partners).
+- **PBP** only where it refers to the historical `pbp-webhook` endpoint.
 
-## Bridge mode (tymczasowe obejścia)
+## Bridge mode (temporary workarounds)
 
-**Publiczna linia:**
+**Public line:**
 
-- „Zanim partner wdroży pełny VBP, możemy pokazać **ograniczony** most (np. URL handoff), żeby zmierzyć popyt i leady. To **nie zastępuje** partnerskiej integracji API.”
-- „Mosty wysokiego ryzyka (np. automatyzacja UI bez zgody) **nie są** domyślną strategią — wymagają polityki prawnej i kill-switch.”
+- “Before a partner ships full VBP, we can show a **limited** bridge (e.g. URL handoff) to measure demand and leads. It **does not replace** a partner API integration.”
+- “High-risk bridges (e.g. UI automation without consent) are **not** the default strategy — they require legal policy and a kill-switch.”
 
-**Czego nie obiecujemy:**
+**What we do not promise:**
 
-- Że obejdziemy ToS lub API buildera w sposób trwały bez ich zgody.
-- Że broker gwarantuje pełny „live stream” postępu u każdego buildera bez ich kontraktu (SSE/webhook/poll).
+- That we will permanently circumvent a builder’s ToS or API without their consent.
+- That the broker guarantees a full “live stream” of progress for every builder without their contract (SSE/webhook/poll).
 
-## ToS i compliance
+## ToS and compliance
 
-- Odsyłamy do regulaminu partnera; u nas: [POP-LEGAL-RISK-MATRIX.md](./POP-LEGAL-RISK-MATRIX.md).
-- Zachęcamy do **pilota VBP** zamiast długiego utrzymania mostów.
+- We refer to the partner’s terms; our matrix: [POP-LEGAL-RISK-MATRIX.md](./POP-LEGAL-RISK-MATRIX.md).
+- We encourage a **VBP pilot** instead of long-lived bridge maintenance.
 
-## Handoff i konta użytkowników
+## Handoff and user accounts
 
-- Jasno: **wiele builderów = wiele kont po stronie buildera**, chyba że ustalicie SSO — [POP-PARTNER-OBJECTIONS.md](./POP-PARTNER-OBJECTIONS.md).
+- Clear: **many builders = many accounts on the builder side**, unless you agree on SSO — [POP-PARTNER-OBJECTIONS.md](./POP-PARTNER-OBJECTIONS.md).
 
 ## Open source
 
-- „Spec i narzędzia walidacji są **publiczne**; pełny hosted broker i wrażliwe operacje — nie.” — [POP-OSS-SCOPE.md](./POP-OSS-SCOPE.md).
+- “Spec and validation tools are **public**; the full hosted broker and sensitive operations are not.” — [POP-OSS-SCOPE.md](./POP-OSS-SCOPE.md).

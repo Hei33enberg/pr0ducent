@@ -12,7 +12,7 @@
 
 ---
 
-## Kolejność: kto pushuje, kiedy Lovable publish
+## Order: who pushes, when Lovable publish
 
 1. **Cursor** merges backend first when touching `supabase/`, `docs/VBP-SPEC.md`, shared `src/config/tools.ts`, generated types.
 2. **AG** rebases on `main`, merges UI-only (`src/pages/`, `src/components/`, hooks, locales). Avoid same-day edits to the same file without a ping.
@@ -50,7 +50,7 @@
 | `npm run test:deno` | Run after backend edits; adapter + jsonpath tests in `supabase/functions/__tests__/` |
 | ESLint full repo | May fail legacy debt; scope new paths in CI if needed |
 
-**Hardening audit ([BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)):** dokument zawiera plan slice’ów A–D; **implementacja w kodzie to osobne PR-e** (kolejność sugerowana: B + A → C → D).
+**Hardening audit ([BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)):** the document describes slices A–D; **code implementation is separate PRs** (suggested order: B + A → C → D).
 
 ---
 
@@ -63,9 +63,9 @@ A) MIGRATIONS (order matters)
 Apply all pending files under supabase/migrations/, including:
 - 20260321120000_orchestrator_core.sql
 - 20260321140000_run_jobs_tasks_workflow_pool.sql
-- 20260322120000_vbp_orchestration.sql  (builder_rate_limits + VBP columns — wymagane przed RPC)
+- 20260322120000_vbp_orchestration.sql  (builder_rate_limits + VBP columns — required before RPC)
 - 20260325100000_builder_dispatch_slot_rpc.sql  (builder_try_dispatch_slot)
-- 20260326120000_ensure_builder_rate_limits.sql  (idempotent, gdy 22120000 było pominięte)
+- 20260326120000_ensure_builder_rate_limits.sql  (idempotent, when 22120000 was skipped)
 If ALTER PUBLICATION supabase_realtime complains about duplicate, skip duplicate adds (migrations use guards where noted).
 
 B) EDGE FUNCTIONS — deploy these (supabase functions deploy <name>):
@@ -101,22 +101,22 @@ Report back: migrations applied Y/N, functions list deployed, webhook Y/N, smoke
 ## Handoff prompt — Antigravity (copy-paste)
 
 ```
-Kontekst backend (Cursor) — już na main:
-- Kolejka: run_tasks.status = queued → process-task-queue (webhook/cron) → adapter (v0 / vbp / generic_rest / benchmark).
-- dispatch-builders kończy job po drain + ewentualnym inline fallback jeśli worker nie żyje.
-- Tabele: run_jobs, run_tasks, run_events, builder_results, builder_integration_config, builder_rate_limits, builder_crawl_sources.
-- VBP: docs/VBP-SPEC.md + vbp-adapter — claim_token / stream_url przychodzą gdy builder wdroży standard; do tego czas REST per builder.
+Backend context (Cursor) — already on main:
+- Queue: run_tasks.status = queued → process-task-queue (webhook/cron) → adapter (v0 / vbp / generic_rest / benchmark).
+- dispatch-builders finishes the job after drain + optional inline fallback if the worker is down.
+- Tables: run_jobs, run_tasks, run_events, builder_results, builder_integration_config, builder_rate_limits, builder_crawl_sources.
+- VBP: docs/VBP-SPEC.md + vbp-adapter — claim_token / stream_url arrive when the builder ships the standard; until then REST per builder.
 
-Wasze UI (już zmergowane w repo): useRunTaskStream, BuilderProgressStream, DemoPreviewFrame, Marketplace, UserDashboard — podłączcie „prawdziwy ogień” gdy w builder_results / run_events pojawią się preview_url, claim_url, telemetria z completed.
+Your UI (already merged in repo): useRunTaskStream, BuilderProgressStream, DemoPreviewFrame, Marketplace, UserDashboard — wire “real fire” when builder_results / run_events show preview_url, claim_url, telemetry from completed.
 
-Następne kroki Cursor/backend (nie duplikujcie):
-- Wpiąć drugiego buildera (Lovable/Bolt) przez builder_integration_config + test E2E z flagą środowiskową.
-- Twarde rate-limit + circuit w workerze (tabele już są).
-- Rozszerzyć BUILDER-CATALOG + crawl sources dla każdego dostawcy.
+Next steps Cursor/backend (do not duplicate):
+- Wire a second builder (Lovable/Bolt) via builder_integration_config + E2E test with env flag.
+- Hard rate-limit + circuit in worker (tables already exist).
+- Extend BUILDER-CATALOG + crawl sources per provider.
 
-Zasady merge: wy unikacie supabase/migrations i supabase/functions; Cursor unika src/pages bez sync. Shared: types/tools — Cursor pierwszy, wy rebase.
+Merge rules: you avoid supabase/migrations and supabase/functions; Cursor avoids src/pages without sync. Shared: types/tools — Cursor first, you rebase.
 
-Publikacja Lovable: dopiero po deploy funkcji + migracji jeśli UI korzysta z nowych kolumn/workerów; inaczej publish tylko front bez zmiany kontraktu API.
+Lovable publish: only after function deploy + migrations if the UI depends on new columns/workers; otherwise publish front-only without changing the API contract.
 ```
 
 ---

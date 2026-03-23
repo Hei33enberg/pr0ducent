@@ -1,29 +1,29 @@
-# VBP — macierz ryzyk prawnych i ToS (bridge vs natywny)
+# VBP — legal and ToS risk matrix (bridge vs native)
 
-**Cel:** świadome decyzje przed włączeniem mostów agresywnych lub zbieraniem danych u partnerów. **Nie zastępuje** konsultacji z prawnikiem.
+**Goal:** informed decisions before enabling aggressive bridges or collecting partner data. **Does not replace** legal counsel.
 
-## Oś: typ integracji
+## Axis: integration type
 
-| Typ | Opis | Typowy poziom ryzyka |
-|-----|------|----------------------|
-| **Natywny VBP** | Publiczne API buildera zgodne z [VBP-SPEC.md](./VBP-SPEC.md), umowa partnerska | Niski (kontraktowe warunki jasne) |
-| **api_partial** | URL-trigger, embed, ograniczone API | Średni (zmienność, brak statusu) |
-| **browser_only** | Automatyzacja UI bez publicznego API | Wysoki (ToS, zmiany UI, abuse) |
+| Type | Description | Typical risk level |
+|------|-------------|---------------------|
+| **Native VBP** | Builder’s public API per [VBP-SPEC.md](./VBP-SPEC.md), partner agreement | Low (contractual terms clear) |
+| **api_partial** | URL trigger, embed, limited API | Medium (volatility, missing status) |
+| **browser_only** | UI automation without public API | High (ToS, UI changes, abuse) |
 
-## Przykładowe kategorie ryzyka
+## Example risk categories
 
-| Ryzyko | Opis | Mitygacja |
-|--------|------|-----------|
-| **Naruszenie ToS** | Automatyzacja logowania, scraping, obejścia limitów | Tylko za pisemną zgodą lub programem partnerskim; inaczej `no_go`. |
-| **Odpowiedzialność za treść** | Prompty użytkowników generują nielegalne treści u partnera | Polityki trust & safety po obu stronach; reporting. |
-| **Dane osobowe** | Przekazywanie identyfikatorów w `user_context` | Minimalizacja; ROPA/DPA jeśli EU; zgody użytkownika. |
-| **IP / licencje kodu** | Kto posiada wygenerowany kod | Zgodnie z regulaminem buildera; ujawnienie w pitchu. |
-| **Atrybucja i spory** | Spór o prowizję | Pisemny model ([POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)), jedno źródło prawdy eventów. |
+| Risk | Description | Mitigation |
+|------|-------------|------------|
+| **ToS violation** | Login automation, scraping, limit bypass | Only with written consent or partner program; otherwise `no_go`. |
+| **Content liability** | User prompts generate illegal content at partner | Trust & safety policies on both sides; reporting. |
+| **Personal data** | Identifiers in `user_context` | Minimize; ROPA/DPA if EU; user consent. |
+| **IP / code licenses** | Who owns generated code | Per builder terms; disclose in pitch. |
+| **Attribution disputes** | Commission dispute | Written model ([POP-COMMERCIAL-MODELS.md](./POP-COMMERCIAL-MODELS.md)), single source of truth for events. |
 
 ## Kill-switch
 
-Jeśli partner zgłosi naruszenie lub zmieni ToS: **natychmiastowe wyłączenie** mostu w konfiguracji (`bridge_mode = no_go` w [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)) — procedura: [POP-BRIDGE-RUNBOOK.md](./POP-BRIDGE-RUNBOOK.md).
+If a partner reports a violation or changes ToS: **immediate disable** of the bridge in config (`bridge_mode = no_go` in [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)) — procedure: [POP-BRIDGE-RUNBOOK.md](./POP-BRIDGE-RUNBOOK.md).
 
-## Replit (przykład)
+## Replit (example)
 
-Publiczne [Terms of Service](https://replit.com/terms-of-service) zawierają m.in. zakazy wobec **scrapingu**, **reverse-engineeringu**, **nadużycia zasobów** i **tworzenia kont automatycznie**. Mosty RPA bez zgody wiążą się z wysokim ryzykiem — traktuj jako **wymagające umowy** lub `no_go`.
+Public [Terms of Service](https://replit.com/terms-of-service) include restrictions on **scraping**, **reverse engineering**, **resource abuse**, and **automated account creation**. RPA bridges without consent carry high risk — treat as **contract-required** or `no_go`.

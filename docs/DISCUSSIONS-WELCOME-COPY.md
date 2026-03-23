@@ -1,46 +1,46 @@
-# Discussions — tekst powitalny (skopiuj na GitHub)
+# Discussions — welcome copy (paste on GitHub)
 
-Po włączeniu **Discussions** GitHub zaproponuje pierwszy post w kategorii **Announcements**. Możesz zastąpić domyślny tekst poniższym.
+When you enable **Discussions**, GitHub suggests a first post in **Announcements**. You can replace the default text with the following.
 
 ---
 
-## Tytuł
+## Title
 
 `Welcome to pr0ducent — ask, integrate, ship`
 
 ---
 
-## Treść (Markdown)
+## Body (Markdown)
 
 ```markdown
-## Cześć / Hi
+## Welcome
 
-**pr0ducent** to otwarta platforma (MIT) do porównywania vibe‑AI builderów i orkiestracji runów. To miejsce na **pytania**, **pomysły pod integracje (VBP)** i luźniejszy chat — **bugi i konkretne zadania** prosimy w [Issues](https://github.com/Hei33enberg/pr0ducent/issues) (szablony pomogą).
+**pr0ducent** is an open (MIT) platform for comparing vibe-AI builders and orchestrating runs. Use this space for **questions**, **ideas for integrations (VBP)**, and casual chat — **bugs and concrete tasks** belong in [Issues](https://github.com/Hei33enberg/pr0ducent/issues) (templates help).
 
-### Jak możesz pomóc
+### How you can help
 
-- **Integratorzy:** pytania o VBP, webhook, staging — tutaj; gdy jest gotowy ticket, otwórz Issue „integration”.
-- **Dev:** fork, PR, propozycje — [CONTRIBUTING.md](https://github.com/Hei33enberg/pr0ducent/blob/main/CONTRIBUTING.md).
-- **Biz / partnerzy:** tu tylko ogólne wątki; szczegóły pod NDA poza wątkiem publicznym.
+- **Integrators:** VBP, webhook, staging questions — here; when you have a ready ticket, open an “integration” Issue.
+- **Dev:** fork, PR, suggestions — [CONTRIBUTING.md](https://github.com/Hei33enberg/pr0ducent/blob/main/CONTRIBUTING.md).
+- **Biz / partners:** general threads only here; NDA details outside public threads.
 
-### Zasady krótko
+### Short rules
 
-- Szanujemy ToS zewnętrznych builderów — bez instrukcji obchodzenia API.
-- Bez sekretów (klucze API, URL-e wewnętrznych stagingów) w publicznych postach.
+- Respect third-party builder ToS — no instructions for bypassing APIs.
+- No secrets (API keys, internal staging URLs) in public posts.
 
-Powodzenia — budujemy ekosystem razem.
+Good luck — we are building the ecosystem together.
 ```
 
 ---
 
-## Sugerowane kategorie Discussions
+## Suggested Discussion categories
 
-| Kategoria        | Po co                                      |
-|------------------|--------------------------------------------|
-| **Announcements** | Aktualizacje maintainerów (zostaw)        |
-| **General**      | Ogólne pytania                            |
-| **Integrations (VBP)** | Pytania partnerów / builderów         |
-| **Ideas**        | Propozycje funkcji przed Issue            |
-| **Show and tell** | Forki, dema, co zbudowałeś na pr0ducent |
+| Category | Purpose |
+|----------|---------|
+| **Announcements** | Maintainer updates (keep) |
+| **General** | General questions |
+| **Integrations (VBP)** | Partner / builder questions |
+| **Ideas** | Feature ideas before an Issue |
+| **Show and tell** | Forks, demos, what you built on pr0ducent |
 
-(Ustawiasz w **Discussions → Categories** albo przy pierwszym włączeniu.)
+(Set in **Discussions → Categories** or when you first enable Discussions.)

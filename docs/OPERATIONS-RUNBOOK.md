@@ -1,34 +1,34 @@
-# Runbook operacyjny — pipeline pr0ducent (PM / Lovable / Supabase)
+# Operations runbook — pr0ducent pipeline (PM / Lovable / Supabase)
 
-Jednostronicowy indeks: co zrobić, żeby **front**, **backend** i **kolejka** były zsynchronizowane.
+Single-page index: how to keep **frontend**, **backend**, and **queue** in sync.
 
-## 1. Po merge na `main` (front)
+## 1. After merge to `main` (frontend)
 
 → [LOVABLE-PUBLISH-CHECKLIST.md](./LOVABLE-PUBLISH-CHECKLIST.md)  
-Pull z GitHub `main` → build → Publish; ustaw `VITE_FF_*` i opcjonalnie `VITE_VBP_PROTOCOL_URL`.
+Pull from GitHub `main` → build → Publish; set `VITE_FF_*` and optionally `VITE_VBP_PROTOCOL_URL`.
 
-## 2. Backend Supabase (migracje + funkcje)
+## 2. Supabase backend (migrations + functions)
 
-→ [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) (sekcja deploy) oraz [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md) (lista migracji).  
-Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) (workflow `supabase-deploy`). Lovable bez własnego konta Supabase: [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
+→ [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) (deploy section) and [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md) (migration list).  
+Optional CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) (`supabase-deploy` workflow). Lovable without its own Supabase account: [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md).
 
-## 3. Webhook kolejki (krytyczne dla niezawodności)
+## 3. Queue webhook (critical for reliability)
 
 → [SUPABASE-WEBHOOK-RUN-TASKS.md](./SUPABASE-WEBHOOK-RUN-TASKS.md)
 
-## 4. Smoke test produktowy (5 min)
+## 4. Product smoke test (5 min)
 
 → [PM-RUN-CHECKLIST.md](./PM-RUN-CHECKLIST.md)
 
-## 5. Po publikacji frontu (Antigravity)
+## 5. After frontend publish (Antigravity)
 
 → [AG-POST-PUBLISH-CHECKLIST.md](./AG-POST-PUBLISH-CHECKLIST.md)
 
-## 6. CI / staging E2E (opcjonalnie)
+## 6. CI / staging E2E (optional)
 
 → [GITHUB-ACTIONS-STAGING-E2E.md](./GITHUB-ACTIONS-STAGING-E2E.md)
 
-## 7. Drugi builder / VBP
+## 7. Second builder / VBP
 
 → [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md), [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)
 
@@ -36,9 +36,9 @@ Opcjonalnie CI: [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DE
 
 → [PVI-ORCHESTRATION-MAP.md](./PVI-ORCHESTRATION-MAP.md), [REALTIME-GUARDRAILS.md](./REALTIME-GUARDRAILS.md)
 
-## Architektura (skrót)
+## Architecture (short)
 
-- **Gość:** `run-on-v0` — bez pełnej kolejki.
-- **Zalogowany:** `dispatch-builders` → `run_tasks` → `process-task-queue` → adaptery → `builder_results`.
+- **Guest:** `run-on-v0` — no full queue.
+- **Signed-in:** `dispatch-builders` → `run_tasks` → `process-task-queue` → adapters → `builder_results`.
 
-Szczegóły: [ORCHESTRATOR.md](./ORCHESTRATOR.md). Wprowadzenie PL: [BUILDERS-101-PL.md](./BUILDERS-101-PL.md).
+Details: [ORCHESTRATOR.md](./ORCHESTRATOR.md). Short intro (guest vs signed-in, v0 vs others): [BUILDERS-101.md](./BUILDERS-101.md).

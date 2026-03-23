@@ -13,7 +13,7 @@ interface BuilderProgressStreamProps {
 export function BuilderProgressStream({ toolName, task, events = [], elapsedSec }: BuilderProgressStreamProps) {
   const status = task?.status || "queued";
   
-  // Ostatni event to nasz aktualny krok
+  // Latest event is our current step
   const sortedEvents = [...events].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
   const latestEvent = sortedEvents.length > 0 ? sortedEvents[sortedEvents.length - 1] : null;
   
@@ -31,7 +31,7 @@ export function BuilderProgressStream({ toolName, task, events = [], elapsedSec 
 
   return (
     <div className="flex flex-col items-center justify-center p-6 w-full h-full bg-gradient-to-br from-background to-muted/20 relative overflow-hidden">
-      {/* Subtelne tło z nazwą buildera */}
+      {/* Subtle builder-name background */}
       <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none overflow-hidden text-clip flex-wrap">
         <span className="text-8xl font-black tracking-tighter text-foreground whitespace-nowrap overflow-hidden">
           {toolName.toUpperCase()}

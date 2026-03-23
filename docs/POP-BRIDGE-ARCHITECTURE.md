@@ -1,18 +1,18 @@
-# VBP Bridge Mode — architektura (plan implementacji)
+# VBP Bridge Mode — architecture (implementation plan)
 
-Cel: **normalizacja** różnych powierzchni buildera (URL, częściowe API, przyszły browser worker) do istniejących tabel orchestratora: `run_jobs`, `run_tasks`, `builder_results`, `run_events`.  
-Źródło prawdy orchestratora: [ORCHESTRATOR.md](./ORCHESTRATOR.md).
+Goal: **normalize** different builder surfaces (URL, partial API, future browser worker) into existing orchestrator tables: `run_jobs`, `run_tasks`, `builder_results`, `run_events`.  
+Orchestrator source of truth: [ORCHESTRATOR.md](./ORCHESTRATOR.md).
 
-## Komponenty logiczne
+## Logical components
 
-| Komponent | Rola |
+| Component | Role |
 |-----------|------|
-| **bridge-dispatch-gateway** | Mapuje żądanie użytkownika (prompt, toolId) na konkretną akcję: natywny adapter VBP, URL handoff, lub (opcjonalnie) job do workera przeglądarkowego. |
-| **bridge-status-normalizer** | Tłumaczy odpowiedzi partnela (JSON poll, event webhook, przyszły SSE proxy) na statusy `run_tasks` i wiersze `builder_results`. |
-| **bridge-risk-guard** | Sprawdza `allowed_bridge_mode` per `tool_id`, limity, circuit breaker (`builder_integration_config`), politykę [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md). |
-| **bridge-attribution** | UTM / `ref` / logowanie `referral_clicks` i `referral_conversions` ([POP-ROI-METRICS.md](./POP-ROI-METRICS.md)). |
+| **bridge-dispatch-gateway** | Maps user request (prompt, toolId) to an action: native VBP adapter, URL handoff, or (optional) job to a browser worker. |
+| **bridge-status-normalizer** | Translates partner responses (JSON poll, event webhook, future SSE proxy) into `run_tasks` statuses and `builder_results` rows. |
+| **bridge-risk-guard** | Checks `allowed_bridge_mode` per `tool_id`, limits, circuit breaker (`builder_integration_config`), [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md). |
+| **bridge-attribution** | UTM / `ref` / logging `referral_clicks` and `referral_conversions` ([POP-ROI-METRICS.md](./POP-ROI-METRICS.md)). |
 
-## Przepływ (wysoki poziom)
+## Flow (high level)
 
 ```mermaid
 flowchart TB
@@ -39,33 +39,33 @@ flowchart TB
   DB --> UI
 ```
 
-**Uwaga:** `bridge-dispatch-gateway` może początkowo być **logiką warunkową** w `dispatch-builders` / `adapter-registry` zamiast osobnego deployu — ważna jest separacja koncepcyjna i testy.
+**Note:** `bridge-dispatch-gateway` can initially be **conditional logic** in `dispatch-builders` / `adapter-registry` instead of a separate deploy — conceptual separation and tests matter.
 
 ## Feature flags (frontend)
 
-Sterowane w [featureFlags.ts](../src/lib/featureFlags.ts):
+Controlled in [featureFlags.ts](../src/lib/featureFlags.ts):
 
-| Zmienna | Domyślnie | Znaczenie |
-|---------|-----------|-----------|
-| `VITE_FF_BRIDGE_MODE` | `false` (off) | Włącza ścieżki mostów (URL / przyszłe adaptery) w UI i backendzie. |
-| `VITE_FF_BRIDGE_AGGRESSIVE` | `false` (off) | Włącza mosty wysokiego ryzyka (np. RPA); wymaga `BRIDGE_MODE` i zgody z [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md). |
+| Variable | Default | Meaning |
+|----------|---------|---------|
+| `VITE_FF_BRIDGE_MODE` | `false` (off) | Enables bridge paths (URL / future adapters) in UI and backend. |
+| `VITE_FF_BRIDGE_AGGRESSIVE` | `false` (off) | Enables high-risk bridges (e.g. RPA); requires `BRIDGE_MODE` and consent from [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md). |
 
-## Konfiguracja per builder
+## Per-builder configuration
 
-Rozszerzenie `builder_integration_config` (przyszłość) lub osobna tabela `bridge_config`:
+Extension of `builder_integration_config` (future) or separate `bridge_config` table:
 
 - `allowed_bridge_mode`: `api_native` | `api_partial` | `browser_only` | `off`
-- `url_template` — dla Lovable-style Build-with-URL
-- `max_concurrent_bridges` — limity równoległości
+- `url_template` — for Lovable-style “build with URL”
+- `max_concurrent_bridges` — concurrency caps
 
-Do czasu migracji: [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) jako dokumentacja + ręczne flagi.
+Until migration: [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md) as documentation + manual flags.
 
 ## Attribution
 
-- Przy CTA „Open in builder”: `logReferralClick` / `logReferralHandoff` w [experiment-service.ts](../src/lib/experiment-service.ts).
-- Parametry `ref` / UTM w URL partnera zgodnie z ustaleniami komercyjnymi.
+- On CTA “Open in builder”: `logReferralClick` / `logReferralHandoff` in [experiment-service.ts](../src/lib/experiment-service.ts).
+- `ref` / UTM parameters on partner URL per commercial agreement.
 
-## Powiązane
+## Related
 
 - [POP-BRIDGE-RUNBOOK.md](./POP-BRIDGE-RUNBOOK.md)
 - [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)
