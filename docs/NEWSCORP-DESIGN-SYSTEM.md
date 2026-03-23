@@ -32,5 +32,7 @@ Redeploy Supabase Edge Functions **only** if the change is not pure frontend.
 
 ## Related docs
 
+- [`CROSS-PRODUCT-SHELL.md`](./CROSS-PRODUCT-SHELL.md) — wspólne wytycznice shell (murd0ch / pr0ducent / p0xi) + metryki referencyjne pr0ducent
+- [`PR0DUCENT-PARITY-GAPS.md`](./PR0DUCENT-PARITY-GAPS.md) — checklista parity z murd0ch, hero, menu
 - [`DESIGN-TOKENS.md`](./DESIGN-TOKENS.md) — pr0ducent token reference
 - [`DEVELOPMENT-STATUS.md`](./DEVELOPMENT-STATUS.md) — stack and status

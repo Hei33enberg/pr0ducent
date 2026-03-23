@@ -17,7 +17,7 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
   ({ text, className = "", as: Tag = "span", showTm = false, style, variant = "default" }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
-    const digitEm = variant === "header" ? 1.55 : 2;
+    const digitEm = variant === "header" ? 1.62 : 2;
     const tmEm = variant === "header" ? 0.35 : 0.4;
 
     return (

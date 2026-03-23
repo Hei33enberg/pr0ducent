@@ -42,7 +42,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       variant="header"
       className="font-serif font-bold tracking-tight leading-none text-foreground"
       as="span"
-      style={{ fontSize: "clamp(1.35rem, 2.1vw + 0.45rem, 1.95rem)" }}
+      style={{ fontSize: "clamp(1.45rem, 2.35vw + 0.5rem, 2.25rem)" }}
     />
   );
   return (
@@ -382,7 +382,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 <a
                   href="/pricing"
                   onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
-                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
+                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2.5 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
                   {t("nav.getStarted")}
                 </a>

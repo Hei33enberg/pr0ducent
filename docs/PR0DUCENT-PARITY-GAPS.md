@@ -6,6 +6,8 @@
 
 **Checklista LP po polsku:** [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md) (smoke, treści, deploy przed backendem).
 
+**Wspólna stajnia (shell + produkty):** [`CROSS-PRODUCT-SHELL.md`](./CROSS-PRODUCT-SHELL.md).
+
 ---
 
 ## Produkt vs parity wizualna
@@ -29,8 +31,9 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 
 | Element | murd0ch (`newsc0rp-main/src/pages/Index.tsx`) | pr0ducent (`src/components/PageFrame.tsx`) | Notes |
 |---------|-----------------------------------------------|--------------------------------------------|--------|
-| Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | `px-6 sm:px-6 md:px-8 lg:px-12` | Większy inset od zaokrąglenia ramki |
-| Header row height | `h-12 sm:h-14 md:h-16` | `min-h-12 sm:min-h-14 md:min-h-16` + `pt-2.5 pb-2` (asym.) | Optyczny oddech logo od góry |
+| Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | **`px-4 sm:px-6 md:px-8 lg:px-12`** | Zgodne z murd0ch |
+| Header row height | `h-12 sm:h-14 md:h-16` | **`h-12 sm:h-14 md:h-16`** | Stała wysokość rzędu (bez dodatkowego `pt` na całym headerze) |
+| Logo size | — | **`clamp(1.45rem, 2.35vw + 0.5rem, 2.25rem)`** (`BrandText` + `header` variant) | Większe niż wcześniejszy MVP; bez `h-full` na linku |
 | Logo link | Plain `<a>`, flex, no `h-full` stretch | `py-1`, `self-center`, no `h-full` | Avoids logo “stuck” to top border |
 | CTA + hamburger gap | `gap-2.5` | `gap-2.5` | Aligned |
 | Dropdown emblem size | `w-12 h-12 sm:w-14 sm:h-14` (48–56px) | **48px** (desktop grid), **56px** (mobile overlay) | IA differs (more items); sizes match emblem scale |
@@ -45,7 +48,8 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 | Topic | Status | Follow-up |
 |-------|--------|-----------|
 | Gradient washes (`hero-wash--*`) | Done | — |
-| Caricature scale / max-height | Tuned (`max-h` tiers: mobile `60vh`, sm `70vh`, md+ `78vh`) | Regressions: check very short viewports |
+| H1 scale | **`clamp(2.35rem, 4vw + 1rem, 5.75rem)`**, `leading-[0.9]` | Regressions: narrow mobile + długie tłumaczenia |
+| Caricature scale | **`max-w`** po breakpointach (`sm`…`xl`); **`max-h`** m.in. `max-h-[min(42vh,380px)]` → `lg:max-h-[min(62vh,600px)]`; `object-bottom` | **Bez** `min-h` na kolumnie ilustracji — nie wypychać chipów/inputu |
 | IllustDivider + MP4 loops between sections | **Next** | Port `IllustDivider` + storage URLs pattern from newsc0rp LP |
 | Section spacing / `parity-section-sep` | Done (CSS separator after hero on `Index`) | Optional: more separators between major blocks |
 
@@ -107,6 +111,7 @@ Sticky, overlay, `.menu-dropdown` solid fallback, `.parity-section-sep` breathe,
 
 ## References
 
+- Wspólna stajnia (shell): [`CROSS-PRODUCT-SHELL.md`](./CROSS-PRODUCT-SHELL.md)
 - murd0ch: `newsc0rp-main/src/pages/Index.tsx`, `newsc0rp-main/src/index.css`
 - pr0ducent: `src/components/PageFrame.tsx`, `src/components/HeroSection.tsx`, `src/index.css`, `src/pages/Index.tsx`
 - Shared design system: `newsc0rp-main/src/styles/design-tokens.md`

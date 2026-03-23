@@ -11,7 +11,7 @@ Prosty przewodnik po polsku: co domknąć na landing page, zanim wracacie do **s
 | Cel na LP | **Szybka akcja:** prompt + wybór builderów to serce strony | **Opowieść:** zaufanie, narracja, długi scroll |
 | Co jest „focal” | Pole promptu, szablony, uruchomienie testu — **jak najwyżej** w pierwszym ekranie | Sekcje, ilustracje, klipy, CTA po zbudowaniu kontekstu |
 
-**Wspólna stajnia** = ten sam język wizualny (typografia, ramka `page-frame`, szkło, wash-e). **Nie** kopiujemy 1:1 **układu treści** murd0ch na pr0ducent — inny jest cel biznesowy.
+**Wspólna stajnia** = ten sam język wizualny (typografia, ramka `page-frame`, szkło, wash-e). **Nie** kopiujemy 1:1 **układu treści** murd0ch na pr0ducent — inny jest cel biznesowy. Szczegóły shell + metryki: [`CROSS-PRODUCT-SHELL.md`](./CROSS-PRODUCT-SHELL.md).
 
 **Pytanie kontrolne:** *Czy w pierwszym ekranie widać od razu, że użytkownik ma wpisać pomysł i odpalić buildery?*
 
@@ -19,8 +19,8 @@ Prosty przewodnik po polsku: co domknąć na landing page, zanim wracacie do **s
 
 ## Smoke przed publikacją
 
-- [ ] **Logo** — nie „klei się” do górnej/lewej krawędzi ramki; po otwarciu menu mobilnego to samo co w pasku.
-- [ ] **Hero** — na telefonie kolejność: nagłówek → **prompt (chipy + pole)** → karykatura (akcja przed ilustracją).
+- [ ] **Logo** — nie „klei się” do górnej/lewej krawędzi ramki; po otwarciu menu mobilnego to samo co w pasku; rozmiar czytelny (clamp w `PageFrame`), bez rozjeżdżania paska.
+- [ ] **Hero** — na telefonie kolejność (**`HeroSection`**): nagłówek → **karykatura** → chipy → pole + buildery; H1 i rysunek wypełniają przestrzeń, ale **chipy + input** zostają w jednym przewidywalnym bloku (bez sztucznego `min-h` na kolumnie z ilustracją).
 - [ ] **Sticky header** — nie zasłania nagłówka hero przy scrollu / anchorach (`scroll-margin` na hero).
 - [ ] **Menu** — desktop: dropdown przewija się przy wielu pozycjach; mobile: pełny ekran, zamknięcie, język na dole.
 - [ ] **CTA** — „Get Started” prowadzi tam, gdzie ustaliliście (np. pricing / auth).
@@ -53,5 +53,6 @@ Krótka notatka na później: **stream wyników builderów**, kolejka (`process-
 
 ## Powiązane dokumenty
 
+- Wspólna stajnia (shell): [`CROSS-PRODUCT-SHELL.md`](./CROSS-PRODUCT-SHELL.md)
 - Szczegóły parity wizualnej i braków graficznych: [`PR0DUCENT-PARITY-GAPS.md`](./PR0DUCENT-PARITY-GAPS.md)
 - Wspólny design system (master w newsc0rp): [`NEWSCORP-DESIGN-SYSTEM.md`](./NEWSCORP-DESIGN-SYSTEM.md)
