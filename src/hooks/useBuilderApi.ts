@@ -434,7 +434,7 @@ export function useBuilderApi() {
       const data = dispatchData;
 
       if (data?.code === "limit_exceeded") {
-        toast.error(data.error || copy["guest.limitReached"]);
+        toast.error(String(data.error || copy["guest.limitReached"]));
         setLoading(false);
         return;
       }
