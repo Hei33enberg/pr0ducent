@@ -15,6 +15,8 @@
 3. Terminal states align with [status-response.json](./schemas/status-response.json) (`completed` / `failed` / …).
 4. Optional: `GET /artifacts/…`, `GET /export/…` (501 acceptable for export).
 
+**Production gate (pr0ducent broker):** see [docs/POP-CONFORMANCE-PROFILES.md](../../docs/POP-CONFORMANCE-PROFILES.md) — webhook secret, rate limits, pilot sign-off before production routing.
+
 ## Running the validator
 
 ```bash

@@ -33,6 +33,7 @@ Use this for **technical discovery** with builder teams and for **pilot** tracki
 
 ## References
 
+- [POP-INDEX.md](./POP-INDEX.md) — pełny indeks POP (pitch, bridge, legal, ROI)
 - [VBP-SPEC.md](./VBP-SPEC.md)
 - [SECOND-BUILDER-PLAYBOOK.md](./SECOND-BUILDER-PLAYBOOK.md)
 - [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md)

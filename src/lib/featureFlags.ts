@@ -14,4 +14,16 @@ export const FF = {
 
   /** Dev-only experiment inspector (Ctrl+Shift+D) */
   DEV_INSPECTOR: import.meta.env.DEV,
+
+  /**
+   * Bridge Mode: non-native builder surfaces (URL handoff, future bridge adapters).
+   * Default off; enable per env when deploying bridge flows.
+   */
+  BRIDGE_MODE: import.meta.env.VITE_FF_BRIDGE_MODE === "true",
+
+  /**
+   * Aggressive bridges (e.g. browser automation). Requires BRIDGE_MODE.
+   * Policy: docs/POP-BRIDGE-RISK-POLICY.md
+   */
+  BRIDGE_AGGRESSIVE: import.meta.env.VITE_FF_BRIDGE_AGGRESSIVE === "true",
 } as const;

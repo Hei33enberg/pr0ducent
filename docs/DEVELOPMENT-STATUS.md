@@ -66,6 +66,7 @@ See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and 
 
 ## QA / protocol pointers
 
+- [POP-INDEX.md](./POP-INDEX.md) — pr0ducent Open Protocol (POP/VBP): partner pitch, bridge registry, ROI, legal, conformance.
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable Publish, webhook, smoke, AG, CI (jedna strona startowa).
 - [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) — opcjonalny workflow Actions: migracje + `supabase functions deploy` (sekrety: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`).
 - [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md) — kiedy nie masz PAT/hasła bazy (Lovable-managed Supabase) i co z tego wynika.
