@@ -20,14 +20,6 @@
   "hero.trustObjective": "Obiektywne porównanie obok siebie",
   "hero.trustReferrals": "Zarabiamy z poleceń — Ty masz kontrolę",
 
-  "howItWorks.title": "Jak to działa",
-  "howItWorks.step1.title": "Opisz swoją aplikację",
-  "howItWorks.step1.desc": "Wpisz prompt opisujący aplikację webową, którą chcesz zbudować.",
-  "howItWorks.step2.title": "Uruchom buildery równolegle",
-  "howItWorks.step2.desc": "Uruchamiamy Twój prompt na żywo w v0 i benchmarkujemy ten sam prompt na profilach innych builderów.",
-  "howItWorks.step3.title": "Porównaj i wybierz",
-  "howItWorks.step3.desc": "Zobacz wynik live oraz benchmarkowe porównania obok siebie z oceną AI: jakość UI, kod, szybkość i więcej.",
-
   "faq.title": "Najczęściej zadawane pytania",
   "faq.q1": "Czy pr0ducent jest darmowy?",
   "faq.a1": "Tak! Możesz uruchomić do 3 porównań za darmo bez konta. Zarejestruj się, aby odblokować nielimitowane eksperymenty.",

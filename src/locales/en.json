@@ -20,14 +20,6 @@
   "hero.trustObjective": "Objective side-by-side comparison",
   "hero.trustReferrals": "We earn via referrals — you keep control",
 
-  "howItWorks.title": "How It Works",
-  "howItWorks.step1.title": "Describe Your App",
-  "howItWorks.step1.desc": "Enter a natural-language prompt describing the web app you want to build.",
-  "howItWorks.step2.title": "Run Builders in Parallel",
-  "howItWorks.step2.desc": "We run your prompt live on v0 and benchmark the same prompt against curated builder profiles.",
-  "howItWorks.step3.title": "Compare & Choose",
-  "howItWorks.step3.desc": "See one live output and benchmarked comparisons side by side with scoring on UI quality, code, speed, and more.",
-
   "faq.title": "Frequently Asked Questions",
   "faq.q1": "Is pr0ducent free to use?",
   "faq.a1": "Yes! You can run up to 3 comparison experiments for free without an account. Sign up to unlock unlimited experiments.",

@@ -5,7 +5,6 @@ import { BuilderComparisonTable } from "@/components/BuilderComparisonTable";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
-import { HowItWorks } from "@/components/HowItWorks";
 import { FeatureMatrix } from "@/components/FeatureMatrix";
 import { PlanComparisonTable } from "@/components/PlanComparisonTable";
 
@@ -145,8 +144,6 @@ const Index = () => {
                 </Alert>
               </div>
             ) : null}
-
-            <HowItWorks />
 
             <div className="section-gradient-peach">
               <BuilderComparisonTable
