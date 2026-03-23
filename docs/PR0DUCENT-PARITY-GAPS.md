@@ -4,14 +4,29 @@
 
 **Canonical brand / tokens (stajnia):** master reference in newsc0rp — [`newsc0rp-main/src/styles/design-tokens.md`](../../newsc0rp-main/src/styles/design-tokens.md) (relative link works when `newsc0rp-main` is a sibling folder of `pr0ducent-main` in the workspace).
 
+**Checklista LP po polsku:** [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md) (smoke, treści, deploy przed backendem).
+
+---
+
+## Produkt vs parity wizualna
+
+Parity z murd0ch / p0xi dotyczy **systemu** (typografia, ramka, glass, menu, tokeny), **nie** kopiowania tej samej hierarchii LP.
+
+| | pr0ducent | murd0ch (orientacyjnie) |
+|--|-----------|-------------------------|
+| Główny cel na LP | **Prompt-first:** pole promptu + buildery = rdzeń pierwszego ekranu | **Story-first:** długa narracja, dividery, klipy, CTA po kontekście |
+| Co oznacza „brak” vs murd0ch | Często **świadomy wybór** (krótsza opowieść, szybsza akcja), nie błąd wdrożenia | — |
+
+Szczegóły operacyjne: [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md). Master multi-product UX: rozbudowa § w [`newsc0rp-main/src/styles/design-tokens.md`](../../newsc0rp-main/src/styles/design-tokens.md) (gdy dodacie sekcję w repo newsc0rp).
+
 ---
 
 ## Menu: murd0ch vs pr0ducent (metryki)
 
 | Element | murd0ch (`newsc0rp-main/src/pages/Index.tsx`) | pr0ducent (`src/components/PageFrame.tsx`) | Notes |
 |---------|-----------------------------------------------|--------------------------------------------|--------|
-| Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | `px-5 sm:px-6 md:px-8 lg:px-12` | Slightly more inset on small screens so logo clears `page-frame` corner radius |
-| Header row height | `h-12 sm:h-14 md:h-16` | Same | — |
+| Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | `px-6 sm:px-6 md:px-8 lg:px-12` | Większy inset od zaokrąglenia ramki |
+| Header row height | `h-12 sm:h-14 md:h-16` | `min-h-12 sm:min-h-14 md:min-h-16` + `pt-2.5 pb-2` (asym.) | Optyczny oddech logo od góry |
 | Logo link | Plain `<a>`, flex, no `h-full` stretch | `py-1`, `self-center`, no `h-full` | Avoids logo “stuck” to top border |
 | CTA + hamburger gap | `gap-2.5` | `gap-2.5` | Aligned |
 | Dropdown emblem size | `w-12 h-12 sm:w-14 sm:h-14` (48–56px) | **48px** (desktop grid), **56px** (mobile overlay) | IA differs (more items); sizes match emblem scale |
@@ -59,7 +74,7 @@
 | Mobile overlay | Fixed, `z-index`, blur budget on small screens |
 | Scroll hide | Threshold `8`, show when `y < 100` |
 | Nav emblem scale | 48 / 56px aligned to murd0ch dropdown |
-| Hero geometry | Tighter grid gap, `items-start md:items-center`, smaller margin to prompt block |
+| Hero geometry | **Prompt-first:** mobile kolejność headline → chipy/textarea → karykatura; md: kolumna z copy+prompt \| karykatura; `scroll-mt` pod sticky |
 | Perf | Nav PNGs `lazy`; hero `eager` + `fetchPriority="high"` |
 
 ## Next (higher effort / content)

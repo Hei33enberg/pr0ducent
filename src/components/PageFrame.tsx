@@ -331,7 +331,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           style={{ left: frameRect.left, width: frameRect.width }}
           ref={menuRef}
         >
-          <header className={`header-glass relative flex items-center justify-between px-5 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
+          <header className={`header-glass relative flex items-center justify-between px-6 sm:px-6 md:px-8 lg:px-12 min-h-12 sm:min-h-14 md:min-h-16 pt-2.5 pb-2 sm:pt-2.5 sm:pb-2.5 md:pt-3 md:pb-2.5 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
