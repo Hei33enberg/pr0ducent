@@ -293,7 +293,8 @@
   .sticky-header {
     position: fixed;
     top: calc(0.5rem + 4px);
-    z-index: 450;
+    /* Above page content + desktop menu backdrop (.menu-open-backdrop); below mobile full-screen overlay */
+    z-index: 500;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
     background: hsla(30, 18%, 95%, 0.82);

@@ -6,7 +6,6 @@ import BrandText from "@/components/BrandText";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "@/lib/i18n";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
 
@@ -51,7 +50,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center py-1 min-h-0 self-center"
+      className="shrink-0 no-underline flex items-center h-full min-h-0 self-center"
     >
       {isHomepage ? (
         brand
@@ -123,7 +122,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useIsMobile();
   const frameRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   /** Full-screen mobile menu lives outside `menuRef` (sticky header); outside-click must include this or nav taps close the menu before navigation. */
@@ -167,13 +165,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   // Close menu on route change
   useEffect(() => { setMenuOpen(false); }, [location.pathname]);
 
-  // Lock body scroll when mobile menu open
+  // Lock body scroll while menu is open (desktop backdrop + dropdown or mobile overlay)
   useEffect(() => {
-    if (isMobile && menuOpen) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
-  }, [isMobile, menuOpen]);
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [menuOpen]);
 
   const isHomepage = location.pathname === "/";
 
@@ -327,13 +325,27 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
       ref={frameRef}
       className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-6 xl:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
+      {/* Desktop: dim page behind nav so builder grid / hero doesn’t show through the glass bar (murd0ch-style shell). */}
+      {menuOpen ? (
+        <button
+          type="button"
+          aria-label="Close menu"
+          className="menu-open-backdrop fixed inset-0 z-[440] hidden sm:block bg-black/25 dark:bg-black/35"
+          onClick={() => setMenuOpen(false)}
+        />
+      ) : null}
+
       {frameRect && (
         <div
           className={`sticky-header ${shouldHide ? 'header-hidden' : ''}`}
           style={{ left: frameRect.left, width: frameRect.width }}
           ref={menuRef}
         >
-          <header className={`header-glass relative flex items-center justify-between px-6 sm:px-6 md:px-8 lg:px-12 min-h-12 sm:min-h-14 md:min-h-16 pt-2.5 pb-2 sm:pt-2.5 sm:pb-2.5 md:pt-3 md:pb-2.5 ${!menuOpen ? 'section-divider' : ''}`}>
+          <header
+            className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''} ${
+              menuOpen ? 'bg-[hsla(30,22%,97%,0.98)] shadow-[0_1px_0_hsla(0,0%,0%,0.06)]' : ''
+            }`}
+          >
             <Logo isHomepage={isHomepage} onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
@@ -394,8 +406,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               pointerEvents: menuOpen ? "auto" : "none",
             }}
           >
-            <div className="p-4 sm:p-5 md:px-8 lg:px-12">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
+            <div className="px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-5">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
                 {navLinks.map((link) => renderNavItem(link, "sm"))}
               </div>
             </div>
