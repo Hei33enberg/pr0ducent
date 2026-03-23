@@ -46,7 +46,10 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   };
 
   const chipRow = (
-    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 fade-up visible-immediate">
+    <div
+      className="hero-prompt-chip-row flex flex-nowrap items-center gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 fade-up visible-immediate touch-pan-x"
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
       {HERO_PROMPT_CHIPS.map((tpl) => {
         const Icon = tpl.icon;
         return (
@@ -54,10 +57,10 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             key={tpl.id}
             type="button"
             onClick={() => handleTemplateClick(tpl)}
-            className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] sm:text-xs font-medium text-foreground font-sans hover:border-foreground/25 transition-colors"
+            className="shrink-0 bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] md:text-xs font-medium text-foreground font-sans hover:border-foreground/25 transition-colors"
           >
-            <Icon className="w-3 h-3 shrink-0" />
-            <span>{tpl.label}</span>
+            <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
+            <span className="whitespace-nowrap">{tpl.label}</span>
           </button>
         );
       })}
@@ -68,7 +71,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               type="button"
               variant="outline"
               size="sm"
-              className="h-auto rounded-full border-border/50 px-2.5 py-1 text-[11px] sm:text-xs font-medium font-sans gap-1 shadow-sm shrink-0"
+              className="h-auto shrink-0 rounded-full border-border/50 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] md:text-xs font-medium font-sans gap-1 shadow-sm"
             >
               <List className="w-3 h-3 shrink-0" />
               {t("hero.morePrompts")}
@@ -153,11 +156,11 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   );
 
   const caricature = (
-    <div className="flex items-end justify-center sm:justify-end w-full max-sm:max-w-[min(92vw,360px)] mx-auto sm:mx-0 fade-up stagger-1 visible-immediate">
+    <div className="flex items-end justify-center sm:justify-end w-full max-sm:max-w-[min(96vw,420px)] mx-auto sm:mx-0 fade-up stagger-1 visible-immediate">
       <img
         src={caricatureFounder}
         alt="pr0ducent founder caricature"
-        className="w-full max-w-[min(92vw,360px)] sm:max-w-[min(100%,400px)] md:max-w-[min(100%,460px)] lg:max-w-[min(100%,500px)] xl:max-w-[min(100%,540px)] h-auto max-h-[min(42vh,380px)] sm:max-h-[min(52vh,480px)] md:max-h-[min(58vh,540px)] lg:max-h-[min(62vh,600px)] object-contain object-bottom select-none pointer-events-none"
+        className="w-full max-w-[min(96vw,420px)] sm:max-w-[min(100%,400px)] md:max-w-[min(100%,460px)] lg:max-w-[min(100%,500px)] xl:max-w-[min(100%,540px)] h-auto max-h-[min(48vh,420px)] sm:max-h-[min(52vh,480px)] md:max-h-[min(58vh,540px)] lg:max-h-[min(62vh,600px)] object-contain object-bottom select-none pointer-events-none"
         loading="eager"
         decoding="async"
         fetchPriority="high"
@@ -186,7 +189,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           <div className="order-1 sm:col-start-1 sm:row-start-1 space-y-3 sm:space-y-5 text-left min-w-0 self-start">
             <h1
               className="font-serif leading-[0.9] tracking-[-0.02em] text-foreground fade-up visible-immediate"
-              style={{ fontSize: "clamp(2.35rem, 4vw + 1rem, 5.75rem)" }}
+              style={{ fontSize: "clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)" }}
             >
               {t("hero.title1")}
               <br />

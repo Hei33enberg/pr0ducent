@@ -29,11 +29,11 @@ Jeden język wizualny (typografia, tokeny, ramka `page-frame`, szkło, wash-e, n
 | **murd0ch** | Story-first: narracja, duża ilustracja, CTA po kontekście |
 | **pr0ducent** | Prompt-first: nagłówek + szybki opis, potem **chipy + pole + buildery** — ilustracja wspiera, nie blokuje akcji |
 
-Na mobile **pr0ducent** zachowuje kolejność: **nagłówek → karykatura → chipy → pole** (grid `order-*` w `HeroSection.tsx`).
+Na mobile **pr0ducent** zachowuje kolejność: **nagłówek → karykatura → chipy → pole** (grid `order-*` w `HeroSection.tsx`). **Chipy promptów:** na wąskich ekranach **jeden rząd** (`flex-nowrap` + poziomy scroll, klasa `.hero-prompt-chip-row`), żeby nie zabierać wysokości viewportu wielowierszowym zawijaniem.
 
 ## pr0ducent — metryki referencyjne (kod)
 
-- **H1:** `font-size: clamp(2.35rem, 4vw + 1rem, 5.75rem)`, `leading-[0.9]`.
+- **H1:** `font-size: clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)`, `leading-[0.9]`.
 - **Karykatura:** `object-contain object-bottom`, limity `max-w` / `max-h` po breakpointach (m.in. `sm`…`xl`), bez sztucznego `min-h` na kolumnie z rysunkiem — żeby nie wypychać pastylek w dół na niskich viewportach.
 
 Zmiana tych wartości: zsynchronizuj wpis w [`PR0DUCENT-PARITY-GAPS.md`](./PR0DUCENT-PARITY-GAPS.md) i smoke z [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md).

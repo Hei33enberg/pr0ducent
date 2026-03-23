@@ -34,7 +34,7 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 | Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | **`px-4 sm:px-6 md:px-8 lg:px-12`** | Zgodne z murd0ch |
 | Header row height | `h-12 sm:h-14 md:h-16` | **`h-12 sm:h-14 md:h-16`** | Stała wysokość rzędu (bez dodatkowego `pt` na całym headerze) |
 | Logo size | `clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem)` (inline Index) | **Same clamp** + `BrandText` header: digit **1.8em**, ™ **0.4em** | 1:1 z murd0ch Index |
-| Header CTA | `px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs` | **Same** | — |
+| Header CTA | `px-2.5 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs` | **Same** (mniejszy na mobile) | — |
 | Hamburger | `w-8 h-8`, lines `w-5` × `1.5px` | **`w-8 h-8`** + CSS `.hamburger-lines` 20×12px, **1.5px** bars | Animated X (pr0ducent), geometry aligned |
 | Logo link | Plain `<a>`, `flex items-center h-full` | **`flex items-center h-full`** (shrink-0, no `justify-center`) | Wyrównanie jak Index |
 | CTA + hamburger gap | `gap-2.5` | `gap-2.5` | Aligned |
@@ -50,8 +50,9 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 | Topic | Status | Follow-up |
 |-------|--------|-----------|
 | Gradient washes (`hero-wash--*`) | Done | — |
-| H1 scale | **`clamp(2.35rem, 4vw + 1rem, 5.75rem)`**, `leading-[0.9]` | Regressions: narrow mobile + długie tłumaczenia |
-| Caricature scale | **`max-w`** po breakpointach (`sm`…`xl`); **`max-h`** m.in. `max-h-[min(42vh,380px)]` → `lg:max-h-[min(62vh,600px)]`; `object-bottom` | **Bez** `min-h` na kolumnie ilustracji — nie wypychać chipów/inputu |
+| H1 scale | **`clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)`**, `leading-[0.9]` | Regressions: narrow mobile + długie tłumaczenia |
+| Caricature scale | **`max-w`** po breakpointach (`sm`…`xl`); mobile m.in. `max-w-[min(96vw,420px)]`; **`max-h`** m.in. `max-h-[min(48vh,420px)]` → `lg:max-h-[min(62vh,600px)]`; `object-bottom` | **Bez** `min-h` na kolumnie ilustracji — nie wypychać chipów/inputu |
+| Prompt chips row | **`flex-nowrap` + `overflow-x-auto`** (`.hero-prompt-chip-row`), cienki pasek scrollu | Jedna „linia” na mobile zamiast `flex-wrap` |
 | IllustDivider + MP4 loops between sections | **Next** | Port `IllustDivider` + storage URLs pattern from newsc0rp LP |
 | Section spacing / `parity-section-sep` | Done (CSS separator after hero on `Index`) | Optional: more separators between major blocks |
 
