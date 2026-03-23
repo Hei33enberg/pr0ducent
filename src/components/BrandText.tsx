@@ -30,7 +30,8 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
               style={{
                 fontSize: `${digitEm}em`,
                 fontWeight: 800,
-                lineHeight: variant === "header" ? 0.8 : 1,
+                /* Line-height 1: keeps flex vertical centering stable in PageFrame header (0.8 looked top-heavy vs CTA). */
+                lineHeight: 1,
                 verticalAlign: "baseline",
                 letterSpacing: "-0.02em",
               }}
