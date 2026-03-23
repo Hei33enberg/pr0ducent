@@ -53,6 +53,7 @@
 ## Dostarczenie (Vercel, Lovable, symulacja)
 
 - [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md) — front na Vercel + Supabase (główny tor)
+- [VERCEL-SUPABASE-KROK-PO-KROKU.md](./VERCEL-SUPABASE-KROK-PO-KROKU.md) — przewodnik wdrożeniowy (PL)
 - [LOVABLE-SECONDARY-LP.md](./LOVABLE-SECONDARY-LP.md) — rola poboczna Lovable (LP / murd0ch)
 - [VBP-INTEGRATION-SIMULATION.md](./VBP-INTEGRATION-SIMULATION.md) — dry-run integracji na staging
 - [VBP-ROADMAP-V0-BRIDGES.md](./VBP-ROADMAP-V0-BRIDGES.md) — v0, mosty, cel natywny VBP

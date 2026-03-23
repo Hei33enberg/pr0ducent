@@ -1,5 +1,7 @@
 # Front: Vercel + direct Supabase (post-MVP)
 
+**Krok po kroku (PL):** [VERCEL-SUPABASE-KROK-PO-KROKU.md](./VERCEL-SUPABASE-KROK-PO-KROKU.md)
+
 ## Goal
 
 Move the web app off the Lovable-hosted bundle to **Vercel** (or any static/edge host) while keeping **Supabase** as the system of record for auth, Postgres, Realtime, Storage, and Edge Functions.
@@ -12,7 +14,7 @@ Move the web app off the Lovable-hosted bundle to **Vercel** (or any static/edge
 ## Checklist
 
 1. **Environment**
-   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (or your framework’s `NEXT_PUBLIC_*` equivalents).
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY` (Supabase anon/public key — see `src/integrations/supabase/client.ts`).
    - No secrets for provider APIs in the browser—those stay in Edge Function env (e.g. `V0_API_KEY`).
 
 2. **Auth**
