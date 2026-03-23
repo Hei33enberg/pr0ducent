@@ -174,7 +174,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                   type="button"
                   onClick={handleSubmit}
                   disabled={!prompt.trim() || selectedTools.length === 0}
-                  className="bg-foreground text-background px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
+                  className="bg-foreground text-background px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg disabled:hover:scale-100 hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
                 >
                   <Zap className="w-4 h-4" />
                   {copy["hero.runTest"]}
