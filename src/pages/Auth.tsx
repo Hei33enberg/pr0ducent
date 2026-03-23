@@ -15,7 +15,7 @@ import AmbientBackground from "@/components/AmbientBackground";
 export default function Auth() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const nextPath = searchParams.gecopy["next"] ?? "/dashboard";
+  const nextPath = searchParams.get("next") ?? "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);

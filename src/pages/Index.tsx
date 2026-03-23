@@ -74,7 +74,7 @@ const Index = () => {
       }
       runBuilders(prompt, dbId, selectedTools);
     },
-    [user, t]
+    [user, runBuilders]
   );
 
   const handleExperimentUpdate = useCallback((updated: Experiment) => {
