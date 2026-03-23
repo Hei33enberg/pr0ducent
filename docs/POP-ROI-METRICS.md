@@ -1,4 +1,4 @@
-# POP — metryki ROI i atrybucja (broker + partner)
+# VBP — metryki ROI i atrybucja (broker + partner)
 
 ## Cele pomiaru
 
@@ -41,7 +41,7 @@ Zapytania SQL: agregacja po `tool_id`, `created_at` — dashboard można zbudowa
 ## UTM / ref
 
 - Spójne parametry w URL buildera: `utm_source=pr0ducent`, `utm_medium=broker`, `ref=<experiment_or_intent>` — uzgodnić z partnerem.
-- [P0P] Zachowaj zgodność z polityką prywatności (nie przekazuj PII w URL bez potrzeby).
+- [VBP] Zachowaj zgodność z polityką prywatności (nie przekazuj PII w URL bez potrzeby).
 
 ## Powiązane
 

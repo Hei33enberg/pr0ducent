@@ -1,6 +1,6 @@
 ---
 name: New builder
-description: Track onboarding a platform that will implement VBP / POP
+description: Track onboarding a platform that will implement VBP
 title: "[builder] "
 labels: ["integration"]
 ---

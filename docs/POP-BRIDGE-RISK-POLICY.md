@@ -1,4 +1,4 @@
-# POP Bridge — polityka ryzyka (aggressive mode)
+# VBP Bridge — polityka ryzyka (aggressive mode)
 
 **Cel:** umożliwić szybkie demo wartości bez narażania firmy na naruszenie ToS partnerów lub reputacji.
 

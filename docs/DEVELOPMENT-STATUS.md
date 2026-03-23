@@ -45,7 +45,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 - **UI parity remediation (menu / LP rhythm):** [PR0DUCENT-PARITY-GAPS.md](./PR0DUCENT-PARITY-GAPS.md), deploy handoff [LOVABLE-DEPLOY-PARITY-REMEDIATION.md](./LOVABLE-DEPLOY-PARITY-REMEDIATION.md).
 - Tokeny i guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
 
-## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
+## Builder pipeline — audyt hardeningowy (v0 + VBP)
 
 - **Pełny audyt:** [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md) — **Slice A–D** w repo: kolejka/webhook (A/B), stream Compare + dispatch/retry (C), OpenAPI/VBP-SPEC/CI walidacja `$ref` (D).
 
@@ -66,7 +66,7 @@ See [SPRINT-CLOSE.md](./SPRINT-CLOSE.md) for audit summary, deploy prompts, and 
 
 ## QA / protocol pointers
 
-- [POP-INDEX.md](./POP-INDEX.md) — pr0ducent Open Protocol (POP/VBP): partner pitch, bridge registry, ROI, legal, conformance. Quick map: [POP-START-HERE.md](./POP-START-HERE.md).
+- [POP-INDEX.md](./POP-INDEX.md) — VBP: partner pitch, bridge registry, ROI, legal, conformance. Quick map: [POP-START-HERE.md](./POP-START-HERE.md).
 - [OPERATIONS-RUNBOOK.md](./OPERATIONS-RUNBOOK.md) — Lovable Publish, webhook, smoke, AG, CI (jedna strona startowa).
 - [GITHUB-ACTIONS-SUPABASE-DEPLOY.md](./GITHUB-ACTIONS-SUPABASE-DEPLOY.md) — opcjonalny workflow Actions: migracje + `supabase functions deploy` (sekrety: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_PROJECT_REF`).
 - [LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md](./LOVABLE-CLOUD-VS-GITHUB-SUPABASE.md) — kiedy nie masz PAT/hasła bazy (Lovable-managed Supabase) i co z tego wynika.

@@ -12,7 +12,7 @@ Szczegóły techniczne: [ORCHESTRATOR.md](./ORCHESTRATOR.md).
 ## Czym jest „v0”, a czym są „inne buildery”
 
 - **v0 (na żywo):** dedykowany adapter w kodzie (`v0-adapter`) — bezpośrednie wywołanie API v0, klucz brokera w sekretach Edge (`V0_API_KEY`). W konfiguracji musi być **`tool_id = 'v0'`**, włączone i odpowiedni tier (patrz `adapter-registry.ts`).
-- **Inny builder z umową / API:** może wdrożyć **[VBP (POP)](./VBP-SPEC.md)** — wtedy broker używa **`vbp-adapter`** i ustawień w **`builder_integration_config`** (URL API, sekrety), **bez** kopiowania logiki v0.
+- **Inny builder z umową / API:** może wdrożyć **[VBP](./VBP-SPEC.md)** — wtedy broker używa **`vbp-adapter`** i ustawień w **`builder_integration_config`** (URL API, sekrety), **bez** kopiowania logiki v0.
 - **Builder tylko z ogólnym REST:** szablon żądania/odpowiedzi w konfiguracji → **`generic-rest-adapter`**.
 - **Brak integracji:** narzędzie idzie w ścieżkę **benchmark** (placeholder / symulacja), dopóki nie dodacie live konfiguracji.
 
@@ -25,9 +25,9 @@ Szczegóły techniczne: [ORCHESTRATOR.md](./ORCHESTRATOR.md).
 
 Funkcja **`process-task-queue`** zakłada schemat z migracji **`20260322120000_vbp_orchestration.sql`**: m.in. **`builder_integration_config.circuit_state`** oraz **`run_tasks.next_retry_at`**. Jeśli panel Supabase zgłasza błędy kolumn, **wdroż brakujące migracje** — nie usuwaj tych pól z kodu „żeby przestało krzyczeć” na starej bazie.
 
-## POP / VBP
+## VBP (publiczny bundle)
 
-**POP** to publiczny opis protokołu (spec, przykłady), żeby partnerzy mogli podłączyć własny builder pod brokera. Kroki publikacji bundle: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md). **VBP** to ten sam kontrakt opisany dla implementacji: [VBP-SPEC.md](./VBP-SPEC.md).
+Spec, przykłady i validator publikujemy jako **VBP**, żeby partnerzy mogli podłączyć własny builder pod brokera. Kroki publikacji bundle: [POP-PUBLIC-REPO-STEPS.md](./POP-PUBLIC-REPO-STEPS.md). Normatywny kontrakt: [VBP-SPEC.md](./VBP-SPEC.md).
 
 ## Co dalej operacyjnie
 

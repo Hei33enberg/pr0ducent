@@ -1,6 +1,6 @@
-# POP / VBP — zakres open source (co otwieramy, czego nie)
+# VBP — zakres open source (co otwieramy, czego nie)
 
-Cel: **zaufanie i wkład społeczności** w integracje buildera bez odsłaniania całego produktu brokera ani utrudniania operacji.
+Cel: **zaufanie i wkład społeczności** w integracje buildera bez odsłaniania całego produktu brokera ani utrudniania operacji. Nazewnictwo: wyłącznie **VBP** — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md).
 
 ## Otwarte teraz (zalecane repo publiczne)
 

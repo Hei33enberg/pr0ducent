@@ -1,4 +1,4 @@
-# POP — obiekcje partnerów i odpowiedzi
+# VBP — obiekcje partnerów i odpowiedzi
 
 Używaj w rozmowach z product/legal/engineering u buildera. Techniczna prawda: [VBP-SPEC.md](./VBP-SPEC.md).
 

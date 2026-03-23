@@ -69,9 +69,9 @@ export default function DeveloperPortal() {
               Builder &amp; partner docs
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground font-sans max-w-2xl">
-              <strong className="text-foreground">pr0ducent Open Protocol (POP)</strong> is the product name for our broker integration.
-              Technically it is the <strong className="text-foreground">Vibecoding Broker Protocol (VBP)</strong>: a small HTTP surface
-              (dispatch, status or webhooks, optional SSE) so your users can compare runs and hand off to your product.
+              Integrations use the <strong className="text-foreground">Vibecoding Broker Protocol (VBP)</strong>: a small HTTP surface
+              (dispatch, status or webhooks, optional SSE) so your users can compare runs and hand off to your product. The hosted pr0ducent
+              app is the broker that orchestrates runs against your VBP base URL.
             </p>
             <p className="text-sm text-muted-foreground font-sans max-w-2xl mt-3">
               Full documentation index (Markdown):{" "}
@@ -81,7 +81,7 @@ export default function DeveloperPortal() {
                 rel="noopener noreferrer"
                 className="text-primary underline underline-offset-2 inline-flex items-center gap-1"
               >
-                docs/POP-INDEX.md on GitHub <ExternalLink className="h-3 w-3" />
+                docs/POP-INDEX.md (VBP index) on GitHub <ExternalLink className="h-3 w-3" />
               </a>
             </p>
           </div>
@@ -209,7 +209,7 @@ export default function DeveloperPortal() {
                       <h4 className="font-semibold text-foreground mb-1">Self-hosting the broker</h4>
                       <p>
                         The reference app is open on GitHub; enterprises can run their own stack. Most partners integrate against the hosted
-                        POP broker and the public protocol bundle — no need to deploy the full product to try a pilot.
+                        pr0ducent broker and the public VBP bundle — no need to deploy the full product to try a pilot.
                       </p>
                     </div>
                   </CardContent>
@@ -235,7 +235,7 @@ export default function DeveloperPortal() {
                         rel="noopener noreferrer"
                         className="text-primary underline underline-offset-2 inline-flex items-center gap-1"
                       >
-                        POP-OSS-SCOPE.md <ExternalLink className="h-3 w-3" />
+                        OSS scope (POP-OSS-SCOPE.md) <ExternalLink className="h-3 w-3" />
                       </a>
                       <span className="text-muted-foreground hidden sm:inline">·</span>
                       <a
@@ -255,7 +255,7 @@ export default function DeveloperPortal() {
                       </Button>
                       <Button variant="outline" asChild>
                         <a href={POP_INDEX_DOC_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
-                          POP documentation index <ExternalLink className="h-4 w-4" />
+                          VBP documentation index <ExternalLink className="h-4 w-4" />
                         </a>
                       </Button>
                     </div>

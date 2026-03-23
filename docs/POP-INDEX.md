@@ -1,6 +1,6 @@
-# pr0ducent Open Protocol (POP) — indeks dokumentacji
+# VBP (Vibecoding Broker Protocol) — indeks dokumentacji
 
-**Marketing:** POP. **Technicznie:** VBP — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md).
+**Kanon nazewnictwa:** wyłącznie **VBP** — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md). Pliki w repozytorium nadal używają prefiksu `POP-*` w ścieżkach (historia); treść odnosi się do VBP.
 
 ## Start tutaj (1 strona)
 
@@ -31,7 +31,7 @@
 - [POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md)
 - [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md)
 
-## Bridge mode (przed natywnym POP)
+## Bridge mode (przed natywnym VBP)
 
 - [POP-BRIDGE-REGISTRY.md](./POP-BRIDGE-REGISTRY.md)
 - [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md) — feature flags: `VITE_FF_BRIDGE_MODE`, `VITE_FF_BRIDGE_AGGRESSIVE` ([featureFlags.ts](../src/lib/featureFlags.ts))
@@ -49,3 +49,11 @@
 
 - [ORCHESTRATOR.md](./ORCHESTRATOR.md)
 - [DEVELOPMENT-STATUS.md](./DEVELOPMENT-STATUS.md)
+
+## Dostarczenie (Vercel, Lovable, symulacja)
+
+- [VERCEL-SUPABASE-MIGRATION.md](./VERCEL-SUPABASE-MIGRATION.md) — front na Vercel + Supabase (główny tor)
+- [LOVABLE-SECONDARY-LP.md](./LOVABLE-SECONDARY-LP.md) — rola poboczna Lovable (LP / murd0ch)
+- [VBP-INTEGRATION-SIMULATION.md](./VBP-INTEGRATION-SIMULATION.md) — dry-run integracji na staging
+- [VBP-ROADMAP-V0-BRIDGES.md](./VBP-ROADMAP-V0-BRIDGES.md) — v0, mosty, cel natywny VBP
+- [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md) — prompt do publikacji publicznego repo specu

@@ -1,4 +1,4 @@
-# POP / VBP — Quickstart (90 minutes)
+# VBP — Quickstart (90 minutes)
 
 Cel: lokalny builder minimalny, który przechodzi walidator i może posłużyć jako szablon dla partnerów.
 

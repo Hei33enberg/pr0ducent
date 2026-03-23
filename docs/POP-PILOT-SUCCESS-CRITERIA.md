@@ -1,4 +1,4 @@
-# POP — kryteria sukcesu pilota (2 tygodnie)
+# VBP — kryteria sukcesu pilota (2 tygodnie)
 
 Szablon — dostosuj liczby do partnera. Techniczna checklista: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
 

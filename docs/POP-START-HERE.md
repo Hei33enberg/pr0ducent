@@ -1,10 +1,10 @@
-# POP / VBP — start here (partnerzy)
+# VBP — start here (partnerzy)
 
 Jednostronicowa mapa przed głębszą lekturą. Pełny indeks: [POP-INDEX.md](./POP-INDEX.md).
 
 ## W 2 minuty
 
-- **POP** (marketing) = **VBP** (technicznie): mały HTTP API u buildera — dispatch, status lub webhook, opcjonalnie SSE — zob. [VBP-SPEC.md](./VBP-SPEC.md).
+- **VBP** (Vibecoding Broker Protocol): mały HTTP API u buildera — dispatch, status lub webhook, opcjonalnie SSE — zob. [VBP-SPEC.md](./VBP-SPEC.md).
 - **Broker (pr0ducent)** wysyła prompt, zbiera wyniki i pokazuje porównanie; **konto użytkownika** zakładasz Ty (`claim_token` / claim URL).
 
 ## 30 minut discovery

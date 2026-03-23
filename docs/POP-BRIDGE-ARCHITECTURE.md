@@ -1,4 +1,4 @@
-# POP Bridge Mode — architektura (plan implementacji)
+# VBP Bridge Mode — architektura (plan implementacji)
 
 Cel: **normalizacja** różnych powierzchni buildera (URL, częściowe API, przyszły browser worker) do istniejących tabel orchestratora: `run_jobs`, `run_tasks`, `builder_results`, `run_events`.  
 Źródło prawdy orchestratora: [ORCHESTRATOR.md](./ORCHESTRATOR.md).

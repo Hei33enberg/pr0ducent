@@ -11,7 +11,7 @@ export interface BuilderTool {
   pricing: string;
   category: string;
   referralUrl?: string;
-  /** Overlay from `builder_integration_config` when catalog is merged (POP onboarding). */
+  /** Overlay from `builder_integration_config` when catalog is merged (VBP onboarding). */
   integrationEnabled?: boolean;
   integrationTier?: number;
   circuitState?: string;

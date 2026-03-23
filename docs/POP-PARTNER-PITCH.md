@@ -1,7 +1,6 @@
-# POP — pitch dla partnerów (builderów)
+# VBP — pitch dla partnerów (builderów)
 
-**Produkt:** pr0ducent Open Protocol (POP) — nazwa rynkowa.  
-**Technicznie:** Vibecoding Broker Protocol (VBP) — [VBP-SPEC.md](./VBP-SPEC.md).
+**Protokół:** Vibecoding Broker Protocol (VBP) — [VBP-SPEC.md](./VBP-SPEC.md).
 
 ## Problem
 
@@ -9,7 +8,7 @@ Brokery porównujące buildery (prompt → aplikacja) potrzebują **jednego kont
 
 ## Propozycja wartości dla buildera
 
-1. **Jedna integracja → wielu brokerów** — implementujesz VBP (`/vbp/v1/dispatch`, status lub webhook, opcjonalnie SSE), dostęp do ekosystemu brokerów zgodnych z POP.
+1. **Jedna integracja → wielu brokerów** — implementujesz VBP (`/vbp/v1/dispatch`, status lub webhook, opcjonalnie SSE), dostęp do ekosystemu brokerów zgodnych z VBP.
 2. **Atrybucja leadów** — `user_context`, `claim_token`, referencje w handoff; broker może mierzyć konwersje do konta u Ciebie ([POP-ROI-METRICS.md](./POP-ROI-METRICS.md)).
 3. **Poziom zaufania** — conformance „Verified / Partial” ([POP-CONFORMANCE-PROFILES.md](./POP-CONFORMANCE-PROFILES.md)), otwarty validator i schematy w repo OSS.
 4. **Bezpieczeństwo** — klucz partnera, podpis webhooków HMAC, idempotencja ([POP-SECURITY-MODEL.md](./POP-SECURITY-MODEL.md)).

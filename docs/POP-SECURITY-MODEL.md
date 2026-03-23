@@ -1,4 +1,4 @@
-# POP / VBP — model bezpieczeństwa (brokera i buildera)
+# VBP — model bezpieczeństwa (brokera i buildera)
 
 Normatywne szczegóły API: [VBP-SPEC.md](./VBP-SPEC.md). Implementacja brokera: [ORCHESTRATOR.md](./ORCHESTRATOR.md), [BUILDER-PIPELINE-HARDENING-AUDIT.md](./BUILDER-PIPELINE-HARDENING-AUDIT.md).
 

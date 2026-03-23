@@ -1,6 +1,6 @@
-# Contributing to VBP / POP
+# Contributing to VBP
 
-Thanks for helping make the **Vibecoding Broker Protocol (VBP)** — marketed as **pr0ducent Open Protocol (POP)** — clearer and easier to adopt.
+Thanks for helping make the **Vibecoding Broker Protocol (VBP)** clearer and easier to adopt.
 
 ## What belongs in this repo
 

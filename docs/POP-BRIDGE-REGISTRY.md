@@ -1,4 +1,4 @@
-# POP Bridge Registry (TOP 10–15, vibe-coding category)
+# VBP Bridge Registry (TOP 10–15, vibe-coding category)
 
 Źródło priorytetyzacji: [Product Hunt — Vibe coding](https://www.producthunt.com/categories/vibe-coding) oraz narzędzia powtarzalnie wymieniane w launchach tej kategorii.  
 **Cel:** jedna tabela prawdy dla bizdevu, inżynierii i polityki ryzyka.

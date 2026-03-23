@@ -1,4 +1,4 @@
-# POP — modele komercyjne i rozliczenia (ramka)
+# VBP — modele komercyjne i rozliczenia (ramka)
 
 **Disclaimer:** nie jest poradą prawną ani podatkową — ustal z counsel przed podpisem.
 

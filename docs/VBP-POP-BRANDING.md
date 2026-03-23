@@ -1,7 +1,6 @@
-# VBP i „pr0ducent Open Protocol” (nazewnictwo)
+# VBP — nazewnictwo (jeden kanon)
 
-- **VBP (Vibecoding Broker Protocol)** — techniczna nazwa standardu (endpointy, SSE, claim). Używaj w repo, OpenAPI, validatorze.
-- **pr0ducent Open Protocol** — nazwa marketingowa / pozycjonowanie: „otwarty standard brokera prompt→app”.
-- **Zasada:** jeden standard w specyfikacji (`VBP`), jeden komunikat dla rynku („Open Protocol od pr0ducent” = VBP). Unikaj trzeciej nazwy bez potrzeby.
+- **VBP (Vibecoding Broker Protocol)** — jedyna nazwa używana w komunikacji wewnętrznej i zewnętrznej (UI, partnerzy, maile, specyfikacja HTTP, OpenAPI, validator).
+- **Ścieżki plików `docs/POP-*` w repozytorium** — nazwy historyczne; treść dokumentów mówi o **VBP**. Nie wprowadzaj równoległej marki „POP” ani „pr0ducent Open Protocol” jako osobnej nazwy protokołu.
 
-Publikacja: repo `vibecoding-broker-protocol` (OSS) + ten monorepo jako implementacja brokera.
+Publikacja: repo `vibecoding-broker-protocol` (OSS) + ten monorepo jako implementacja brokera pr0ducent.

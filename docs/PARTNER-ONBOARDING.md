@@ -1,4 +1,4 @@
-# Partner onboarding (POP / VBP)
+# Partner onboarding (VBP)
 
 Use this for **technical discovery** with builder teams and for **pilot** tracking. Product/legal terms stay outside this doc.
 

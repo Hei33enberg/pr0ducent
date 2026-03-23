@@ -22,9 +22,9 @@ Mirror of what can be published as **`pr0ducent/vibecoding-broker-protocol`** on
 ## Normative spec (app monorepo)
 
 - [docs/VBP-SPEC.md](../../docs/VBP-SPEC.md)
-- [docs/VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) — VBP vs „pr0ducent Open Protocol”
+- [docs/VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) — jeden kanon nazwy (**VBP**)
 - [docs/POP-PUBLIC-REPO-STEPS.md](../../docs/POP-PUBLIC-REPO-STEPS.md) — wydzielenie tego folderu do publicznego repo GitHub
-- [docs/POP-INDEX.md](../../docs/POP-INDEX.md) — pełny indeks POP (partner, bridge, ROI, conformance)
+- [docs/POP-INDEX.md](../../docs/POP-INDEX.md) — pełny indeks dokumentacji VBP (partner, bridge, ROI, conformance)
 
 ## Broker implementation
 

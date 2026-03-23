@@ -1,4 +1,4 @@
-# VBP / POP governance
+# VBP governance
 
 ## Versioning
 
@@ -19,4 +19,4 @@
 
 ## Trademark
 
-Marketing name **pr0ducent Open Protocol (POP)**; technical identifier **VBP** — see [VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) in the application repo.
+Public name for the protocol: **VBP (Vibecoding Broker Protocol)** — see [VBP-POP-BRANDING.md](../../docs/VBP-POP-BRANDING.md) in the application repo.

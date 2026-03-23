@@ -95,7 +95,7 @@ export default function IntegrationStatus() {
               Integration Status
             </h1>
             <p className="text-muted-foreground mt-2 font-sans">
-              Technical broker management and POP ecosystem health.
+              Technical broker management and VBP ecosystem health.
             </p>
           </div>
 

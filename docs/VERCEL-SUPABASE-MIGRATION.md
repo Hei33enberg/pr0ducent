@@ -37,3 +37,18 @@ Move the web app off the Lovable-hosted bundle to **Vercel** (or any static/edge
 
 - Rewriting the orchestrator domain model.
 - Changing RLS policies unless you introduce new clients (e.g. mobile).
+
+## Primary development stream (operating model)
+
+Use this stack as the **default** place to evolve the product: feature work lands on `main`, ships from **GitHub → Vercel** for the web app, and talks to **your** Supabase project (dashboard access, secrets, migrations from this repo).
+
+| Area | Rule |
+|------|------|
+| Source of truth | GitHub `main` in `Hei33enberg/pr0ducent` (or successor org) |
+| Frontend host | Vercel project connected to the repo; production + preview deployments |
+| Backend | Supabase project under the team account; Edge Functions deployed from `supabase/functions` |
+| Environment | Set `VITE_*` in Vercel (including `VITE_VBP_PROTOCOL_URL` when the public protocol repo exists) |
+| Auth | Supabase redirect URLs must list the Vercel production URL and `*.vercel.app` previews you use for QA |
+| Cutover | When ready, point the product domain at Vercel; keep Lovable only as an optional editor for marketing sites — see [LOVABLE-SECONDARY-LP.md](./LOVABLE-SECONDARY-LP.md) |
+
+**Staging:** Prefer a dedicated Supabase project or branch for pre-prod; mirror migrations from `supabase/migrations` before promoting Edge bundles.

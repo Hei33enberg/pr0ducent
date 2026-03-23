@@ -1,4 +1,4 @@
-# POP Bridge — runbook operacyjny
+# VBP Bridge — runbook operacyjny
 
 ## Włączenie mostu (staging)
 

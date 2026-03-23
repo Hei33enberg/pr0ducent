@@ -1,4 +1,4 @@
-# POP / VBP — profile conformance i brama produkcyjna
+# VBP — profile conformance i brama produkcyjna
 
 Bazuje na [protocol/vibecoding-broker-protocol/CONFORMANCE.md](../protocol/vibecoding-broker-protocol/CONFORMANCE.md). Poziomy **Verified / Partial / Experimental** opisują jakość integracji; **Production gate** to warunki włączenia routingu na produkcji u brokera.
 

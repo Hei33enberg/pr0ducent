@@ -1,4 +1,4 @@
-# POP — checklista negocjacji biznesowych
+# VBP — checklista negocjacji biznesowych
 
 Użyj przed i po spotkaniu z partnerem (builder). Techniczne: [PARTNER-ONBOARDING.md](./PARTNER-ONBOARDING.md).
 

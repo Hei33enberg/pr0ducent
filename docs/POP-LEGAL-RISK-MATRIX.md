@@ -1,4 +1,4 @@
-# POP — macierz ryzyk prawnych i ToS (bridge vs natywny)
+# VBP — macierz ryzyk prawnych i ToS (bridge vs natywny)
 
 **Cel:** świadome decyzje przed włączeniem mostów agresywnych lub zbieraniem danych u partnerów. **Nie zastępuje** konsultacji z prawnikiem.
 

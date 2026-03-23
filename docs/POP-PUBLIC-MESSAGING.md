@@ -1,12 +1,11 @@
-# POP — komunikacja publiczna (bridge, ToS, partner trust)
+# VBP — komunikacja publiczna (bridge, ToS, partner trust)
 
 Ten dokument **uspójnia przekaz** na stronie [pr0ducent.com/docs](https://pr0ducent.com/docs), w socialach i w mailach do buildera. Techniczne źródła: [POP-BRIDGE-RISK-POLICY.md](./POP-BRIDGE-RISK-POLICY.md), [POP-BRIDGE-ARCHITECTURE.md](./POP-BRIDGE-ARCHITECTURE.md).
 
-## Jak mówimy o POP / VBP
+## Jak mówimy o VBP
 
-- **POP (pr0ducent Open Protocol)** — nazwa dla buildera i rynku.
-- **VBP (Vibecoding Broker Protocol)** — identyfikator techniczny w spec, OpenAPI, repozytorium.
-- Unikaj trzeciej nazwy; **PBP** tylko tam, gdzie odnosi się do historycznego endpointu `pbp-webhook`.
+- **VBP (Vibecoding Broker Protocol)** — jedyna nazwa protokołu w copy (spec, OpenAPI, partnerzy).
+- **PBP** tylko tam, gdzie odnosi się do historycznego endpointu `pbp-webhook`.
 
 ## Bridge mode (tymczasowe obejścia)
 
