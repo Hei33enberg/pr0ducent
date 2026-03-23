@@ -678,19 +678,6 @@
   border-radius: 999px;
 }
 
-/* Hero prompt chips — single row on narrow viewports; horizontal scroll */
-.hero-prompt-chip-row {
-  scrollbar-width: thin;
-  scrollbar-color: hsla(0, 0%, 45%, 0.3) transparent;
-}
-.hero-prompt-chip-row::-webkit-scrollbar {
-  height: 4px;
-}
-.hero-prompt-chip-row::-webkit-scrollbar-thumb {
-  background: hsla(0, 0%, 45%, 0.25);
-  border-radius: 999px;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .menu-dropdown {
     backdrop-filter: none;

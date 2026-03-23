@@ -52,7 +52,7 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 | Gradient washes (`hero-wash--*`) | Done | — |
 | H1 scale | **`clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)`**, `leading-[0.9]` | Regressions: narrow mobile + długie tłumaczenia |
 | Caricature scale | **`max-w`** po breakpointach (`sm`…`xl`); mobile m.in. `max-w-[min(96vw,420px)]`; **`max-h`** m.in. `max-h-[min(48vh,420px)]` → `lg:max-h-[min(62vh,600px)]`; `object-bottom` | **Bez** `min-h` na kolumnie ilustracji — nie wypychać chipów/inputu |
-| Prompt chips row | **`flex-nowrap` + `overflow-x-auto`** (`.hero-prompt-chip-row`), cienki pasek scrollu | Jedna „linia” na mobile zamiast `flex-wrap` |
+| Prompt chips row | **`flex flex-wrap`**, bez `overflow-x` / swipe | Wąskie ekrany: kilka wierszy chipów zamiast poziomego przewijania |
 | IllustDivider + MP4 loops between sections | **Next** | Port `IllustDivider` + storage URLs pattern from newsc0rp LP |
 | Section spacing / `parity-section-sep` | Done (CSS separator after hero on `Index`) | Optional: more separators between major blocks |
 

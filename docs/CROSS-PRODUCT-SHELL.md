@@ -29,7 +29,7 @@ Jeden język wizualny (typografia, tokeny, ramka `page-frame`, szkło, wash-e, n
 | **murd0ch** | Story-first: narracja, duża ilustracja, CTA po kontekście |
 | **pr0ducent** | Prompt-first: nagłówek + szybki opis, potem **chipy + pole + buildery** — ilustracja wspiera, nie blokuje akcji |
 
-Na mobile **pr0ducent** zachowuje kolejność: **nagłówek → karykatura → chipy → pole** (grid `order-*` w `HeroSection.tsx`). **Chipy promptów:** na wąskich ekranach **jeden rząd** (`flex-nowrap` + poziomy scroll, klasa `.hero-prompt-chip-row`), żeby nie zabierać wysokości viewportu wielowierszowym zawijaniem.
+Na mobile **pr0ducent** zachowuje kolejność: **nagłówek → karykatura → chipy → pole** (grid `order-*` w `HeroSection.tsx`). **Chipy promptów:** `flex flex-wrap` — **bez** poziomego scrollu/swipe; na wąsku zawijają się do kolejnego wiersza (żadnego `overflow-x-auto`).
 
 ## pr0ducent — metryki referencyjne (kod)
 

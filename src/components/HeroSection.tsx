@@ -46,10 +46,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   };
 
   const chipRow = (
-    <div
-      className="hero-prompt-chip-row flex flex-nowrap items-center gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 fade-up visible-immediate touch-pan-x"
-      style={{ WebkitOverflowScrolling: "touch" }}
-    >
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-2 fade-up visible-immediate">
       {HERO_PROMPT_CHIPS.map((tpl) => {
         const Icon = tpl.icon;
         return (
@@ -57,7 +54,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             key={tpl.id}
             type="button"
             onClick={() => handleTemplateClick(tpl)}
-            className="shrink-0 bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] md:text-xs font-medium text-foreground font-sans hover:border-foreground/25 transition-colors"
+            className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-[11px] md:text-xs font-medium text-foreground font-sans hover:border-foreground/25 transition-colors"
           >
             <Icon className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
             <span className="whitespace-nowrap">{tpl.label}</span>
@@ -71,7 +68,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               type="button"
               variant="outline"
               size="sm"
-              className="h-auto shrink-0 rounded-full border-border/50 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] md:text-xs font-medium font-sans gap-1 shadow-sm"
+              className="h-auto rounded-full border-border/50 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] md:text-xs font-medium font-sans gap-1 shadow-sm shrink-0"
             >
               <List className="w-3 h-3 shrink-0" />
               {t("hero.morePrompts")}
