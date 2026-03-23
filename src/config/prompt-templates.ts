@@ -9,6 +9,9 @@ export interface PromptTemplate {
   tags: string[];
 }
 
+/** Hero shows this many prompt chips; the rest are in the “More prompts” menu */
+export const HERO_PROMPT_CHIP_COUNT = 7;
+
 export const PROMPT_TEMPLATES: PromptTemplate[] = [
   {
     id: "ecommerce",
@@ -144,3 +147,6 @@ export const PROMPT_TEMPLATES: PromptTemplate[] = [
     tags: ["social"],
   },
 ];
+
+export const HERO_PROMPT_CHIPS = PROMPT_TEMPLATES.slice(0, HERO_PROMPT_CHIP_COUNT);
+export const HERO_PROMPT_EXTRAS = PROMPT_TEMPLATES.slice(HERO_PROMPT_CHIP_COUNT);

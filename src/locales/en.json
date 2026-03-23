@@ -13,6 +13,7 @@
   "help.orchestrationSignedIn": "Signed in: your runs use full orchestration (database experiment ID). The Compare page is a feature matrix only — it does not start builders.",
   "help.comparePageNote": "The /compare page compares product features; live multi-builder runs start from the home prompt above.",
   "hero.runTest": "Run Multi-Builder Test",
+  "hero.morePrompts": "More prompts",
   "hero.demoPrompt": "Try Demo Prompt",
   "hero.promptPlaceholder": "Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'",
   "hero.useCase": "Use Case (optional)",

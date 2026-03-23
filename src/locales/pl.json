@@ -13,6 +13,7 @@
   "help.orchestrationSignedIn": "Po zalogowaniu pełna orkiestracja działa z eksperymentem w bazie (UUID). Strona Compare to tylko tabela funkcji — nie uruchamia builderów.",
   "help.comparePageNote": "Strona /compare porównuje funkcje produktów; żywe uruchomienia wielu builderów zaczynasz od promptu na stronie głównej.",
   "hero.runTest": "Uruchom Multi-Builder Test",
+  "hero.morePrompts": "Więcej promptów",
   "hero.demoPrompt": "Wypróbuj demo prompt",
   "hero.promptPlaceholder": "Opisz swoją aplikację… np. 'Zbuduj narzędzie do zarządzania projektami z tablicami Kanban, czatem i płatnościami Stripe'",
   "hero.useCase": "Kategoria (opcjonalnie)",
