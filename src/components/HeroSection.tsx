@@ -164,14 +164,15 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   return (
     <section
       ref={heroRef}
-      className="section-divider relative scroll-mt-[calc(5rem+env(safe-area-inset-top))] md:scroll-mt-[calc(5.5rem+env(safe-area-inset-top))]"
+      className="section-divider relative scroll-mt-[calc(5.5rem+env(safe-area-inset-top))] md:scroll-mt-[calc(6rem+env(safe-area-inset-top))]"
       style={{ minHeight: "auto" }}
     >
       <div className="absolute pointer-events-none hero-wash hero-wash--peach" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
-      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 md:py-6 lg:py-8">
+      {/* Extra top padding so the hero H1 clears the sticky header visually (page-frame pt-* only reserves space). */}
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 pt-8 sm:pt-10 md:pt-12 pb-4 sm:pb-6 md:pb-8 lg:pb-10">
         {/*
           Layout:
           - md+: row1 = headline+subtitle | illustration; row2 = chips+dropdown (full); row3 = input+builders (full)
