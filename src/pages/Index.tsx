@@ -1,18 +1,9 @@
 import { copy } from "@/lib/copy";
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, lazy, Suspense } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
-import { BuilderComparisonTable } from "@/components/BuilderComparisonTable";
 import { ToolDetailPanel } from "@/components/ToolDetailPanel";
-import { ExperimentHistory } from "@/components/ExperimentHistory";
 import { GuestLimitModal, isGuestLimitReached, incrementGuestCount } from "@/components/GuestLimitModal";
-import { FeatureMatrix } from "@/components/FeatureMatrix";
-import { PlanComparisonTable } from "@/components/PlanComparisonTable";
-
-import { HomepageBlogSection } from "@/components/HomepageBlogSection";
-import { InlineCalculator } from "@/components/InlineCalculator";
-import { FAQ } from "@/components/FAQ";
-import { Footer } from "@/components/Footer";
 
 import { createMockExperiment, saveExperiment, loadExperiments, deleteLocalExperiment } from "@/lib/mock-experiment";
 import { createExperimentInDb, loadExperimentsFromDb, deleteExperimentFromDb } from "@/lib/experiment-service";
@@ -24,6 +15,38 @@ import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext";
 import type { Experiment, AccountModel } from "@/types/experiment";
 import { toast } from "sonner";
+
+const BuilderComparisonTable = lazy(() =>
+  import("@/components/BuilderComparisonTable").then((m) => ({ default: m.BuilderComparisonTable }))
+);
+const FeatureMatrix = lazy(() =>
+  import("@/components/FeatureMatrix").then((m) => ({ default: m.FeatureMatrix }))
+);
+const PlanComparisonTable = lazy(() =>
+  import("@/components/PlanComparisonTable").then((m) => ({ default: m.PlanComparisonTable }))
+);
+const HomepageBlogSection = lazy(() =>
+  import("@/components/HomepageBlogSection").then((m) => ({ default: m.HomepageBlogSection }))
+);
+const InlineCalculator = lazy(() =>
+  import("@/components/InlineCalculator").then((m) => ({ default: m.InlineCalculator }))
+);
+const FAQ = lazy(() => import("@/components/FAQ").then((m) => ({ default: m.FAQ })));
+const ExperimentHistory = lazy(() =>
+  import("@/components/ExperimentHistory").then((m) => ({ default: m.ExperimentHistory }))
+);
+const Footer = lazy(() => import("@/components/Footer").then((m) => ({ default: m.Footer })));
+
+function SectionFallback() {
+  return (
+    <div className="min-h-[120px] w-full flex items-center justify-center px-4" aria-busy="true">
+      <div
+        className="h-8 w-8 rounded-full border-2 border-muted-foreground/25 border-t-muted-foreground/60 animate-spin"
+        aria-hidden
+      />
+    </div>
+  );
+}
 
 const Index = () => {
   const { user } = useAuth();
@@ -146,44 +169,60 @@ const Index = () => {
               </div>
             ) : null}
 
-            <div className="section-gradient-peach">
-              <BuilderComparisonTable
-                onSelectTool={(toolId) => {
-                  setSelectedTools([toolId]);
-                  heroRef.current?.scrollIntoView({ behavior: "smooth" });
-                }}
-              />
+            <div className="section-gradient-peach min-w-0">
+              <Suspense fallback={<SectionFallback />}>
+                <BuilderComparisonTable
+                  onSelectTool={(toolId) => {
+                    setSelectedTools([toolId]);
+                    heroRef.current?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                />
+              </Suspense>
             </div>
 
-            <div className="section-wash-blush">
-              <FeatureMatrix />
+            <div className="section-wash-blush min-w-0">
+              <Suspense fallback={<SectionFallback />}>
+                <FeatureMatrix />
+              </Suspense>
             </div>
 
-            <div className="section-wash-indigo">
-              <PlanComparisonTable />
+            <div className="section-wash-indigo min-w-0">
+              <Suspense fallback={<SectionFallback />}>
+                <PlanComparisonTable />
+              </Suspense>
             </div>
 
-            <div className="section-wash-gold">
-              <InlineCalculator />
+            <div className="section-wash-gold min-w-0">
+              <Suspense fallback={<SectionFallback />}>
+                <InlineCalculator />
+              </Suspense>
             </div>
 
-            <FAQ />
+            <Suspense fallback={<SectionFallback />}>
+              <FAQ />
+            </Suspense>
 
-            <div className="section-wash-teal">
-              <HomepageBlogSection />
+            <div className="section-wash-teal min-w-0">
+              <Suspense fallback={<SectionFallback />}>
+                <HomepageBlogSection />
+              </Suspense>
             </div>
 
             {pastExperiments.length > 0 ? (
-              <div className="section-gradient-lavender">
-                <ExperimentHistory
-                  experiments={pastExperiments}
-                  onSelect={(exp) => setExperiment(exp)}
-                  onDelete={handleDelete}
-                />
+              <div className="section-gradient-lavender min-w-0">
+                <Suspense fallback={<SectionFallback />}>
+                  <ExperimentHistory
+                    experiments={pastExperiments}
+                    onSelect={(exp) => setExperiment(exp)}
+                    onDelete={handleDelete}
+                  />
+                </Suspense>
               </div>
             ) : null}
 
-            <Footer />
+            <Suspense fallback={<SectionFallback />}>
+              <Footer />
+            </Suspense>
           </div>
         )}
       </PageFrame>

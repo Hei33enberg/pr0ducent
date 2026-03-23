@@ -23,6 +23,10 @@ npm install
 npm run dev
 ```
 
+## Performance
+
+Front-end bundle, image, and motion conventions are documented in [`docs/PERFORMANCE.md`](./docs/PERFORMANCE.md).
+
 ## Project Structure
 
 ```

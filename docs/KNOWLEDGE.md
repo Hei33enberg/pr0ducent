@@ -114,6 +114,15 @@
 - NEVER edit `.env`
 - Edge functions in `supabase/functions/`
 
+### Performance
+
+- Below-the-fold homepage sections load with `React.lazy` + `Suspense` (see `src/pages/Index.tsx`); keep hero and comparison canvas eager.
+- Hero images use `vite-imagetools` WebP imports; builder profile charts load in a lazy chunk (`BuilderProfileCharts`).
+- Vite `manualChunks` splits `react` / `recharts` / `framer-motion` vendors for cache stability (see `vite.config.ts`).
+- Respect `prefers-reduced-motion` in hero Framer usage; avoid heavy libs above the fold on `/`.
+- After dependency or routing changes, run `npm run build` and spot-check chunk sizes.
+- Full checklist and cross-product parity notes: **`docs/PERFORMANCE.md`**.
+
 ### Builder Config
 
 All builder tools defined in `src/config/tools.ts` with:

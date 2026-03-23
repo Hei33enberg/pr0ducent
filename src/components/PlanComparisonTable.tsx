@@ -62,7 +62,7 @@ export function PlanComparisonTable() {
   if (plans.length === 0) return null;
 
   return (
-    <section id="plans" className="max-w-6xl mx-auto px-4 py-12">
+    <section id="plans" className="max-w-6xl mx-auto px-4 py-12 min-w-0 overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
