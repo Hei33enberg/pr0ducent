@@ -48,7 +48,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }
       <BrandText
         text="pr0ducent"
         showTm
-        className="font-serif font-bold tracking-tight leading-none text-foreground"
+        className="font-serif font-bold tracking-[0.03em] leading-none text-foreground"
         as="span"
         style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
       />

@@ -17,8 +17,8 @@ interface HeroSectionProps {
 export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, heroRef }: HeroSectionProps) {
   const [prompt, setPrompt] = useState("");
   const [accountModel] = useState<AccountModel>("broker");
-  const [showBuilders, setShowBuilders] = useState(false);
-  const [showMoreTemplates, setShowMoreTemplates] = useState(false);
+  const [showBuilders, setShowBuilders] = useState(true);
+  const [showMoreTemplates, setShowMoreTemplates] = useState(true);
 
   const handleSubmit = () => {
     if (!prompt.trim() || selectedTools.length === 0) return;
@@ -40,7 +40,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   const visibleTemplates = showMoreTemplates ? PROMPT_TEMPLATES : PROMPT_TEMPLATES.slice(0, 7);
 
   const chipRow = (
-    <div className="flex flex-wrap gap-2 fade-up visible-immediate">
+    <div className="flex flex-wrap gap-2 gap-y-2.5 fade-up visible-immediate">
       {visibleTemplates.map((tpl) => {
         const Icon = tpl.icon;
         return (
@@ -67,20 +67,20 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   );
 
   const promptBlock = (
-    <div className="space-y-3 fade-up stagger-2 visible-immediate">
+    <div className="space-y-4 fade-up stagger-2 visible-immediate">
       <div className="relative">
         <Textarea
           value={prompt}
           onChange={handlePromptChange}
           placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
-          className="min-h-[120px] text-base bg-card shadow-xl border-2 border-foreground/25 resize-none rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
+            className="min-h-[120px] text-base bg-card shadow-xl border-2 border-foreground/25 resize-y rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans max-h-[min(40vh,240px)] sm:max-h-none"
         />
       </div>
 
       <AnimatePresence>
         {showBuilders && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
+            initial={false}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
@@ -138,10 +138,10 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
-      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-4 sm:py-6 md:py-10 lg:py-12">
-        {/* Prompt-first: mobile order = headline → prompt → caricature; md = copy+prompt | caricature */}
-        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-8 lg:gap-x-10 gap-y-3 md:gap-y-6 md:items-start">
-          <div className="order-1 md:col-start-1 md:row-start-1 space-y-3 md:space-y-4 text-left min-w-0">
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-5 sm:py-6 md:py-10 lg:py-12">
+        {/* Mobile: headline → caricature → prompt (pills + input); md: copy+prompt | caricature */}
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-8 lg:gap-x-10 gap-y-6 md:gap-y-6 md:items-start">
+          <div className="order-1 md:col-start-1 md:row-start-1 space-y-4 md:space-y-4 text-left min-w-0">
             <h1
               className="font-serif leading-[0.92] tracking-[-0.02em] text-foreground fade-up visible-immediate"
               style={{ fontSize: "clamp(2.2rem, 5vw + 0.8rem, 7rem)" }}
@@ -157,11 +157,11 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             </p>
           </div>
 
-          <div className="order-3 md:order-none md:col-start-2 md:row-start-1 md:row-span-2 md:self-stretch min-w-0 flex flex-col justify-end">
+          <div className="order-2 md:order-none md:col-start-2 md:row-start-1 md:row-span-2 md:self-stretch min-w-0 flex flex-col justify-end pt-2 md:pt-0">
             {caricature}
           </div>
 
-          <div className="order-2 md:order-none md:col-start-1 md:row-start-2 space-y-3 max-w-4xl w-full min-w-0 md:max-w-none">
+          <div className="order-3 md:order-none md:col-start-1 md:row-start-2 space-y-4 max-w-4xl w-full min-w-0 md:max-w-none">
             {chipRow}
             {promptBlock}
           </div>
