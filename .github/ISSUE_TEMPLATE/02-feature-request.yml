@@ -1,0 +1,27 @@
+name: Feature request
+description: Suggest an improvement or new capability
+labels: ["enhancement", "triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What pain does this solve? Who benefits?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should happen instead? Links to prior art welcome.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Area (optional)
+      options:
+        - label: Frontend (Vite/React)
+        - label: Supabase / Edge Functions
+        - label: VBP / builder integrations
+        - label: Docs only

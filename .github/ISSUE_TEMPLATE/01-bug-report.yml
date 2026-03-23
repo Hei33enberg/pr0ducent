@@ -1,0 +1,42 @@
+name: Bug report
+description: Something is broken in the app, API, or docs
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before you submit:** search [existing issues](https://github.com/Hei33enberg/pr0ducent/issues) so we don’t duplicate.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Short summary of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, URLs, or a minimal repro repo.
+      placeholder: |
+        1. Go to …
+        2. Click …
+        3. See error …
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment (optional)
+      description: Browser, OS, deploy (e.g. Vercel preview), Supabase region if relevant.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots (optional)
+      description: Redact secrets and tokens.

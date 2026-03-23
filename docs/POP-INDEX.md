@@ -58,3 +58,6 @@
 - [VBP-INTEGRATION-SIMULATION.md](./VBP-INTEGRATION-SIMULATION.md) — dry-run integracji na staging
 - [VBP-ROADMAP-V0-BRIDGES.md](./VBP-ROADMAP-V0-BRIDGES.md) — v0, mosty, cel natywny VBP
 - [GITHUB-COPILOT-VBP-REPO-PROMPT.md](./GITHUB-COPILOT-VBP-REPO-PROMPT.md) — prompt do publikacji publicznego repo specu
+- [GITHUB-SETTINGS-SOLO-AND-TEAM.md](./GITHUB-SETTINGS-SOLO-AND-TEAM.md) — PR, Stripe w Sponsor, solo → zespół
+- [DISCUSSIONS-WELCOME-COPY.md](./DISCUSSIONS-WELCOME-COPY.md) — tekst powitalny Discussions
+- [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md) — prompt Copilot (pliki `.github`, nie Settings)
