@@ -48,7 +48,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
 
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-10 md:py-14 lg:py-16">
         {/* Hero grid — copy + caricature */}
-        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-14 items-end mb-10 md:mb-14">
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 items-start md:items-center mb-6 md:mb-10">
           {/* Left — copy */}
           <div className="space-y-4 md:space-y-6 text-left">
             <h1
@@ -71,7 +71,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             <img
               src={caricatureFounder}
               alt="pr0ducent founder caricature"
-              className="illust-float w-[min(92vw,380px)] sm:w-[min(90vw,440px)] md:w-full md:max-w-[min(100%,520px)] lg:max-w-[min(100%,600px)] xl:max-w-[min(100%,680px)] h-auto max-h-[min(78vh,720px)] object-contain object-bottom select-none pointer-events-none"
+              className="illust-float w-[min(92vw,380px)] sm:w-[min(90vw,440px)] md:w-full md:max-w-[min(100%,520px)] lg:max-w-[min(100%,600px)] xl:max-w-[min(100%,680px)] h-auto max-h-[min(60vh,520px)] sm:max-h-[min(70vh,620px)] md:max-h-[min(78vh,720px)] object-contain object-bottom select-none pointer-events-none"
               loading="eager"
               decoding="async"
               fetchPriority="high"

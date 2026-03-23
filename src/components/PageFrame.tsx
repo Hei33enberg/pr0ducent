@@ -43,7 +43,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center h-full"
+      className="shrink-0 no-underline flex items-center py-1 min-h-0 self-center"
     >
       <BrandText
         text="pr0ducent"
@@ -217,13 +217,14 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   /* ── Nav item renderer (shared between desktop & mobile) ── */
   const renderNavItem = (link: NavItem, size: "sm" | "lg" = "sm") => {
     const active = isActive(link.href);
-    const imgSize = size === "lg" ? 44 : 36;
+    /* murd0ch Index: emblems w-12 h-12 sm:w-14 sm:h-14 (48–56px) */
+    const imgSize = size === "lg" ? 56 : 48;
 
     return (
       <button
         key={link.href}
         onClick={() => handleNavClick(link.href)}
-        className={`w-full flex items-center gap-3.5 p-3 sm:p-4 rounded-xl transition-all duration-200 text-left group ${
+        className={`w-full flex items-center gap-3 sm:gap-3.5 p-2.5 sm:p-3.5 rounded-xl transition-all duration-200 text-left group ${
           active
             ? "bg-foreground text-background"
             : "text-foreground hover:bg-foreground/[0.05]"
@@ -261,7 +262,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const mobileOverlay = menuOpen && (
     <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden">
       {/* Header bar with logo + close */}
-      <div className="flex items-center justify-between px-4 h-14 shrink-0 border-b border-foreground/[0.06]">
+      <div className="flex items-center justify-between px-5 sm:px-6 h-14 shrink-0 border-b border-foreground/[0.06]">
         <Logo onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
         <button
           onClick={() => setMenuOpen(false)}
@@ -274,7 +275,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
       {/* Scrollable nav items */}
       <div className="flex-1 overflow-y-auto px-4 py-4">
-        <div className="grid grid-cols-1 gap-1">
+        <div className="grid grid-cols-1 gap-2">
           {navLinks.map((link) => renderNavItem(link, "lg"))}
         </div>
       </div>
@@ -330,11 +331,11 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           style={{ left: frameRect.left, width: frameRect.width }}
           ref={menuRef}
         >
-          <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
+          <header className={`header-glass relative flex items-center justify-between px-5 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
             <Logo onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2.5">
               {experiment && user && (
                 <ShareButton
                   experimentId={experiment.id}
@@ -391,8 +392,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               pointerEvents: menuOpen ? "auto" : "none",
             }}
           >
-            <div className="p-5 md:px-8 lg:px-12">
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-1">
+            <div className="p-4 sm:p-5 md:px-8 lg:px-12">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-2">
                 {navLinks.map((link) => renderNavItem(link, "sm"))}
               </div>
             </div>
