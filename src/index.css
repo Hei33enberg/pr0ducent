@@ -612,9 +612,10 @@
    HAMBURGER LINES (animated 3-bar → X)
    ═══════════════════════════════════════════════════ */
 
+/* murd0ch Index: w-5 × 1.5px bars, w-8 h-8 hit target */
 .hamburger-lines {
-  width: 18px;
-  height: 14px;
+  width: 20px;
+  height: 12px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -623,7 +624,7 @@
 .hamburger-line {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 1.5px;
   background: hsl(var(--foreground));
   border-radius: 1px;
   transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
@@ -631,7 +632,7 @@
 }
 
 .hamburger-line-1-open {
-  transform: translateY(6px) rotate(45deg);
+  transform: translateY(5.5px) rotate(45deg);
 }
 
 .hamburger-line-2-open {
@@ -639,7 +640,7 @@
 }
 
 .hamburger-line-3-open {
-  transform: translateY(-6px) rotate(-45deg);
+  transform: translateY(-5.5px) rotate(-45deg);
 }
 
 /* ═══════════════════════════════════════════════════

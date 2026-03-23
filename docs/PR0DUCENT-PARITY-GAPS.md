@@ -33,8 +33,10 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 |---------|-----------------------------------------------|--------------------------------------------|--------|
 | Header horizontal padding | `px-4 sm:px-6 md:px-8 lg:px-12` | **`px-4 sm:px-6 md:px-8 lg:px-12`** | Zgodne z murd0ch |
 | Header row height | `h-12 sm:h-14 md:h-16` | **`h-12 sm:h-14 md:h-16`** | Stała wysokość rzędu (bez dodatkowego `pt` na całym headerze) |
-| Logo size | — | **`clamp(1.45rem, 2.35vw + 0.5rem, 2.25rem)`** (`BrandText` + `header` variant) | Większe niż wcześniejszy MVP; bez `h-full` na linku |
-| Logo link | Plain `<a>`, flex, no `h-full` stretch | `py-1`, `self-center`, no `h-full` | Avoids logo “stuck” to top border |
+| Logo size | `clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem)` (inline Index) | **Same clamp** + `BrandText` header: digit **1.8em**, ™ **0.4em** | 1:1 z murd0ch Index |
+| Header CTA | `px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs` | **Same** | — |
+| Hamburger | `w-8 h-8`, lines `w-5` × `1.5px` | **`w-8 h-8`** + CSS `.hamburger-lines` 20×12px, **1.5px** bars | Animated X (pr0ducent), geometry aligned |
+| Logo link | Plain `<a>`, `flex items-center h-full` | **`flex items-center h-full`** (shrink-0, no `justify-center`) | Wyrównanie jak Index |
 | CTA + hamburger gap | `gap-2.5` | `gap-2.5` | Aligned |
 | Dropdown emblem size | `w-12 h-12 sm:w-14 sm:h-14` (48–56px) | **48px** (desktop grid), **56px** (mobile overlay) | IA differs (more items); sizes match emblem scale |
 | Dropdown grid gap | `gap-1` | `gap-1` (aligned) | — |

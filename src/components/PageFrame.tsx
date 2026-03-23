@@ -35,6 +35,7 @@ interface NavItem {
 }
 
 const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: boolean }>(({ onClick, isHomepage }, ref) => {
+  // Logo size: murd0ch Index.tsx wordmark clamp (pixel parity)
   const brand = (
     <BrandText
       text="pr0ducent"
@@ -42,7 +43,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       variant="header"
       className="font-serif font-bold tracking-tight leading-none text-foreground"
       as="span"
-      style={{ fontSize: "clamp(1.45rem, 2.35vw + 0.5rem, 2.25rem)" }}
+      style={{ fontSize: "clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem)" }}
     />
   );
   return (
@@ -50,7 +51,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center justify-center h-full min-h-0 min-w-0 overflow-visible"
+      className="shrink-0 no-underline flex items-center h-full min-h-0 min-w-0 overflow-visible"
     >
       {isHomepage ? (
         brand
@@ -382,7 +383,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 <a
                   href="/pricing"
                   onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
-                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-5 py-2.5 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
+                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
                   {t("nav.getStarted")}
                 </a>
@@ -393,7 +394,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={menuOpen}
-                className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
               >
                 <Hamburger open={menuOpen} />
               </button>

@@ -17,8 +17,9 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
   ({ text, className = "", as: Tag = "span", showTm = false, style, variant = "default" }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
-    const digitEm = variant === "header" ? 1.62 : 2;
-    const tmEm = variant === "header" ? 0.35 : 0.4;
+    /* header: murd0ch Index “0” = 1.8em; ™ = 0.4em (both variants) */
+    const digitEm = variant === "header" ? 1.8 : 2;
+    const tmEm = 0.4;
 
     return (
       <Component ref={ref as never} className={className} style={style}>
@@ -29,7 +30,7 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
               style={{
                 fontSize: `${digitEm}em`,
                 fontWeight: 800,
-                lineHeight: variant === "header" ? 0.85 : 1,
+                lineHeight: variant === "header" ? 0.8 : 1,
                 verticalAlign: "baseline",
                 letterSpacing: "-0.02em",
               }}

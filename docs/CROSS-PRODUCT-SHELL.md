@@ -15,8 +15,9 @@ Jeden język wizualny (typografia, tokeny, ramka `page-frame`, szkło, wash-e, n
 
 - **Ramka strony:** `page-frame` — marginesy zewnętrzne, zaokrąglenie, ciepłe tło; nie rozjeżdżać pastylek ani inputu przez losowe `min-h` na siatce hero.
 - **Header:** ta sama skala wysokości co murd0ch LP — `h-12 sm:h-14 md:h-16`, padding poziomy `px-4 sm:px-6 md:px-8 lg:px-12`, subtelny `border-b` / `section-divider` gdy menu zamknięte.
-- **Logo (pr0ducent):** `BrandText` w headerze — rozmiar przez `clamp(1.45rem, 2.35vw + 0.5rem, 2.25rem)`; wariant `header` podkreśla cyfrę „0” (~`1.62em` względem reszty).
-- **CTA „Get Started”:** pill, sans, `rounded-full`; nie większy niż czytelny obok hamburgera (np. `py-2.5`, `text-xs` → `sm:text-sm`).
+- **Logo (pr0ducent):** `BrandText` w headerze — **ten sam clamp co murd0ch Index:** `clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem)`; wariant `header`: cyfra **1.8em**, ™ **0.4em**, `line-height` cyfry **0.8**.
+- **CTA „Get Started”:** jak murd0ch header: `px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs`, `rounded-full`, sans semibold.
+- **Hamburger:** hit area **`w-8 h-8`**; ikona **20×12px** (linie **1.5px**), animacja X z przesunięciem **±5.5px** — patrz `.hamburger-*` w `src/index.css`.
 - **Menu:** `gap-2.5` między CTA a hamburgerem; emblematy w siatce ~48px (desktop) / ~56px (mobile overlay) — patrz parity doc.
 - **Hero — wspólne:** wash-e (`.hero-wash--*`), serif na H1, akcent gradientowy na kluczowym fragmencie tytułu, oddech pod sticky (`scroll-mt` na sekcji).
 
