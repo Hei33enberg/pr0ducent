@@ -17,29 +17,45 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
   ({ text, className = "", as: Tag = "span", showTm = false, style, variant = "default" }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
-    /* header: murd0ch Index “0” = 1.8em; ™ = 0.4em (both variants) */
+    /* header: murd0ch Index.tsx — same middle glyph: 1.8em, lh 0.8, baseline (not “floating” zero) */
     const digitEm = variant === "header" ? 1.8 : 2;
     const tmEm = 0.4;
 
+    const mergedClass =
+      variant === "header"
+        ? `${className} inline-flex flex-nowrap items-baseline`.trim()
+        : className;
+
     return (
-      <Component ref={ref as never} className={className} style={style}>
+      <Component ref={ref as never} className={mergedClass} style={style}>
         {parts.map((part, i) =>
           /\d/.test(part) ? (
             <span
               key={i}
-              style={{
-                fontSize: `${digitEm}em`,
-                fontWeight: 800,
-                /* Line-height 1: keeps flex vertical centering stable in PageFrame header (0.8 looked top-heavy vs CTA). */
-                lineHeight: 1,
-                verticalAlign: "baseline",
-                letterSpacing: "-0.02em",
-              }}
+              style={
+                variant === "header"
+                  ? {
+                      fontSize: `${digitEm}em`,
+                      fontWeight: 800,
+                      lineHeight: 0.8,
+                      verticalAlign: "baseline",
+                      letterSpacing: "-0.02em",
+                    }
+                  : {
+                      fontSize: `${digitEm}em`,
+                      fontWeight: 800,
+                      lineHeight: 1,
+                      verticalAlign: "baseline",
+                      letterSpacing: "-0.02em",
+                    }
+              }
             >
               {part}
             </span>
           ) : (
-            <React.Fragment key={i}>{part}</React.Fragment>
+            <span key={i} className={variant === "header" ? "leading-none" : undefined}>
+              {part}
+            </span>
           )
         )}
         {showTm && (

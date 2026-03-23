@@ -41,7 +41,7 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       text="pr0ducent"
       showTm
       variant="header"
-      className="font-serif font-bold tracking-tight text-foreground inline-flex items-center leading-none"
+      className="font-serif font-bold tracking-tight text-foreground leading-none"
       as="span"
       style={{ fontSize: "clamp(1.6rem, 2.5vw + 0.8rem, 2.4rem)" }}
     />
@@ -51,12 +51,12 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center justify-center h-full min-h-0 min-w-0 overflow-visible"
+      className="shrink-0 no-underline flex items-center h-full min-h-0 min-w-0 overflow-visible"
     >
       {isHomepage ? (
         brand
       ) : (
-        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none flex items-center">{brand}</h1>
+        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none inline-flex items-baseline">{brand}</h1>
       )}
     </a>
   );
