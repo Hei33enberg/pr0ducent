@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,6 @@ import type { AccountModel } from "@/types/experiment";
 import { Zap, BarChart3, Shield, ChevronDown, List } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import caricatureFounder from "@/assets/caricature-founder-nobg.png";
-import { useTranslation } from "@/lib/i18n";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +23,6 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, heroRef }: HeroSectionProps) {
-  const { t } = useTranslation();
   const [prompt, setPrompt] = useState("");
   const [accountModel] = useState<AccountModel>("broker");
   const [showBuilders, setShowBuilders] = useState(true);
@@ -71,7 +70,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               className="h-auto rounded-full border-border/50 px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-[11px] md:text-xs font-medium font-sans gap-1 shadow-sm shrink-0"
             >
               <List className="w-3 h-3 shrink-0" />
-              {t("hero.morePrompts")}
+              {copy["hero.morePrompts"]}
               <ChevronDown className="w-3 h-3 opacity-60" />
             </Button>
           </DropdownMenuTrigger>
@@ -108,7 +107,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
         <Textarea
           value={prompt}
           onChange={handlePromptChange}
-          placeholder={t("hero.promptPlaceholder")}
+          placeholder={copy["hero.promptPlaceholder"]}
           className="min-h-[88px] sm:min-h-[100px] md:min-h-[110px] w-full text-sm sm:text-base bg-card shadow-lg border-2 border-foreground/25 resize-y rounded-lg sm:rounded-xl p-3 sm:p-4 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
         />
       </div>
@@ -138,7 +137,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
                 className="bg-foreground text-background px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
               >
                 <Zap className="w-4 h-4" />
-                {t("hero.runTest")}
+                {copy["hero.runTest"]}
                 {selectedTools.length > 0 && (
                   <span className="bg-background/20 px-2 py-0.5 rounded-md text-xs">
                     {selectedTools.length} tool{selectedTools.length !== 1 && "s"}
@@ -188,14 +187,14 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               className="font-serif leading-[0.9] tracking-[-0.02em] text-foreground fade-up visible-immediate"
               style={{ fontSize: "clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)" }}
             >
-              {t("hero.title1")}
+              {copy["hero.title1"]}
               <br />
-              {t("hero.title2")}
+              {copy["hero.title2"]}
               <br />
-              <span className="text-accent-gradient">{t("hero.title3")}</span>
+              <span className="text-accent-gradient">{copy["hero.title3"]}</span>
             </h1>
             <p className="font-sans text-sm sm:text-base md:text-xl text-muted-foreground max-w-[44ch] leading-relaxed fade-up stagger-1 visible-immediate">
-              {t("hero.subtitle")}
+              {copy["hero.subtitle"]}
             </p>
           </div>
 
@@ -216,15 +215,15 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-sans fade-up stagger-3 visible-immediate">
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5" />
-              <span>{t("hero.trustReal")}</span>
+              <span>{copy["hero.trustReal"]}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <BarChart3 className="w-3.5 h-3.5" />
-              <span>{t("hero.trustObjective")}</span>
+              <span>{copy["hero.trustObjective"]}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5" />
-              <span>{t("hero.trustReferrals")}</span>
+              <span>{copy["hero.trustReferrals"]}</span>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
+import { copy } from "@/lib/copy";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
@@ -10,8 +10,6 @@ import { NotificationSettings } from "@/components/NotificationSettings";
 export default function Notifications() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useTranslation();
-
   if (!user) {
     return (
       <div className="min-h-screen">
@@ -20,22 +18,22 @@ export default function Notifications() {
           <div className="px-4 sm:px-8 lg:px-12 py-20 text-center max-w-2xl mx-auto">
             <PageBreadcrumb
               className="justify-center mb-8"
-              crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("nav.notifications") }]}
+              crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: copy["nav.notifications"] }]}
             />
             <h1
               className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
               style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
             >
-              {t("notifications.signInRequired")}
+              {copy["notifications.signInRequired"]}
             </h1>
             <p className="text-muted-foreground font-sans mb-6">
-              {t("notifications.signInDesc")}
+              {copy["notifications.signInDesc"]}
             </p>
             <button
               onClick={() => navigate("/auth")}
               className="bg-foreground text-background px-6 py-2.5 text-sm font-semibold rounded-full font-sans"
             >
-              {t("nav.getStarted")}
+              {copy["nav.getStarted"]}
             </button>
           </div>
           <Footer />
@@ -50,16 +48,16 @@ export default function Notifications() {
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner-narrow py-12 sm:py-16">
           <PageBreadcrumb
-            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("nav.notifications") }]}
+            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: copy["nav.notifications"] }]}
           />
           <h1
             className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
             style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
           >
-            {t("notifications.title")}
+            {copy["notifications.title"]}
           </h1>
           <p className="text-muted-foreground font-sans text-lg mb-10">
-            {t("notifications.subtitle")}
+            {copy["notifications.subtitle"]}
           </p>
           <NotificationSettings />
         </div>

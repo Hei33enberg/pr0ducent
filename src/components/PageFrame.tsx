@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useRef, useState, useEffect, useCallback, forwardRef, type ReactNode } from "react";
 import { LogOut, User } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
@@ -5,7 +6,6 @@ import { NotificationBell } from "@/components/NotificationBell";
 import BrandText from "@/components/BrandText";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useTranslation } from "@/lib/i18n";
 import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
 
@@ -125,7 +125,6 @@ function useScrollDirection(menuOpen: boolean) {
 
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const frameRef = useRef<HTMLDivElement>(null);
@@ -202,13 +201,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const navLinks: NavItem[] = [
     { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", iconSrc: navArena },
     { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", iconSrc: navLeaderboard },
-    { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", iconSrc: navCompare },
-    { label: t("nav.calculator"), subtitle: "ROI estimator", href: "/calculator", iconSrc: navCalculator },
-    { label: t("nav.pricing"), subtitle: "Plans & billing", href: "/pricing", iconSrc: navPricing },
-    { label: t("nav.blog"), subtitle: "News & insights", href: "/blog", iconSrc: navBlog },
-    { label: t("nav.runsNow"), subtitle: "Live experiments", href: "/runs-now", iconSrc: navRunsNow },
+    { label: copy["nav.compare"], subtitle: "Side-by-side tools", href: "/compare", iconSrc: navCompare },
+    { label: copy["nav.calculator"], subtitle: "ROI estimator", href: "/calculator", iconSrc: navCalculator },
+    { label: copy["nav.pricing"], subtitle: "Plans & billing", href: "/pricing", iconSrc: navPricing },
+    { label: copy["nav.blog"], subtitle: "News & insights", href: "/blog", iconSrc: navBlog },
+    { label: copy["nav.runsNow"], subtitle: "Live experiments", href: "/runs-now", iconSrc: navRunsNow },
     ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", subtitle: "Templates & remixes", href: "/marketplace", iconSrc: navMarketplace }] : []),
-    { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", iconSrc: navFaq },
+    { label: copy["nav.faq"], subtitle: "Common questions", href: "#faq", iconSrc: navFaq },
   ];
 
   const isActive = (href: string) => {
@@ -304,14 +303,14 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
               >
                 <User className="w-4 h-4" />
-                {t("nav.myAccount")}
+                {copy["nav.myAccount"]}
               </button>
               <button
                 onClick={() => { setMenuOpen(false); signOut(); }}
                 className="flex items-center justify-center gap-2 p-3 rounded-xl bg-foreground/[0.05] text-foreground font-sans font-semibold text-sm"
               >
                 <LogOut className="w-4 h-4" />
-                {t("nav.signOut")}
+                {copy["nav.signOut"]}
               </button>
             </div>
           ) : (
@@ -319,7 +318,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
               className="w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors text-base"
             >
-              {t("nav.getStarted")}
+              {copy["nav.getStarted"]}
             </button>
           )}
         </div>
@@ -374,7 +373,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               {user ? (
                 <button
                   onClick={() => navigate("/dashboard")}
-                  title={t("nav.myAccount")}
+                  title={copy["nav.myAccount"]}
                   className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-foreground/5 transition-colors"
                 >
                   <User className="w-4 h-4" />
@@ -385,7 +384,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                   onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
                   className="inline-flex bg-foreground text-background px-2.5 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 text-[10px] sm:text-[11px] md:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
-                  {t("nav.getStarted")}
+                  {copy["nav.getStarted"]}
                 </a>
               )}
 
@@ -432,9 +431,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
                     >
                       <User className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
-                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.myAccount")}</span>
+                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{copy["nav.myAccount"]}</span>
                       <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
-                        {user.email?.split("@")[0]}
+                        {user.email?.splicopy["@"][0]}
                       </span>
                     </button>
                     <button
@@ -442,7 +441,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       className="w-full flex items-center gap-3 p-3.5 rounded-xl text-foreground hover:bg-foreground/[0.05] transition-colors text-left group"
                     >
                       <LogOut className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
-                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{t("nav.signOut")}</span>
+                      <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{copy["nav.signOut"]}</span>
                     </button>
                   </>
                 ) : (
@@ -450,7 +449,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                     onClick={() => { setMenuOpen(false); navigate("/pricing"); }}
                     className="col-span-2 w-full flex items-center justify-center gap-2 p-3.5 font-sans font-semibold rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-colors"
                   >
-                    {t("nav.getStarted")}
+                    {copy["nav.getStarted"]}
                   </button>
                 )}
               </div>

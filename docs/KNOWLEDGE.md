@@ -11,7 +11,7 @@
 **Name:** pr0ducent™ (lowercase, zero instead of "o", trademark symbol)
 **Tagline:** Compare AI builders. Choose the best tool for your project.
 **Domain:** pr0ducent.lovable.app
-**Language:** Bilingual — English (default) + Polish
+**Language:** English only (UI copy in `src/locales/en.json`)
 
 ---
 
@@ -105,7 +105,7 @@
 - Server state: `@tanstack/react-query`
 - Local UI state: `useState`
 - Auth context: `useAuth()` hook
-- i18n context: `useTranslation()` hook
+- UI copy: import `{ copy }` from `src/lib/copy.ts` (keys in `src/locales/en.json`)
 
 ### Data Flow
 
@@ -125,8 +125,7 @@ All builder tools defined in `src/config/tools.ts` with:
 
 ## Content & Copy Rules
 
-- Bilingual: all user-facing text via `t("key")` from `src/lib/i18n.tsx`
-- Translation files: `src/locales/en.json` + `src/locales/pl.json`
+- English only: user-facing strings via `copy["key"]` from `src/lib/copy.ts` (source: `src/locales/en.json`)
 - Professional tone — not casual, not corporate
 - No buzzwords ("revolutionize", "seamless", "unleash")
 - Data should look organic (not round numbers like "10x" or "99.9%")

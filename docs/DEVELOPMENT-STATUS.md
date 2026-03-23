@@ -53,7 +53,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 
 - React + TypeScript + Vite + Tailwind + shadcn/ui
 - Supabase client + `invoke` for Edge Functions
-- i18n: EN/PL dictionaries
+- UI copy: English only (`src/lib/copy.ts` + `src/locales/en.json`)
 - **Nav (hamburger):** `PageFrame` uses `.sticky-header` + `.menu-dropdown` in `src/index.css` (glass via `@supports(backdrop-filter)`, `maxHeight`/`overflowY` for tall grids, mobile `.menu-overlay-mobile` with blur budget) — see [PR0DUCENT-PARITY-GAPS.md](./PR0DUCENT-PARITY-GAPS.md).
 
 ## Architecture reference

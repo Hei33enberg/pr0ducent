@@ -13,7 +13,7 @@ pr0ducent lets you enter a prompt and run it through multiple AI builders simult
 - **Frontend:** React 18 · TypeScript · Vite 8 · Tailwind CSS
 - **Backend:** Supabase (Postgres, Auth, Edge Functions)
 - **Auth:** Email/password via Supabase Auth
-- **i18n:** English & Polish
+- **Copy:** English only (`src/locales/en.json` via `src/lib/copy.ts`)
 - **Fonts:** Cormorant Garamond (headings) · Space Grotesk (body) · JetBrains Mono (code)
 
 ## Getting Started
@@ -31,8 +31,8 @@ src/
 │   └── ui/         # shadcn/ui primitives
 ├── config/         # Builder tools, prompt templates, features
 ├── hooks/          # Auth, API, mobile detection
-├── lib/            # Utilities, i18n, experiment services
-├── locales/        # EN/PL translation files
+├── lib/            # Utilities, copy loader, experiment services
+├── locales/        # English UI strings (`en.json`)
 ├── pages/          # Route pages
 ├── types/          # TypeScript types
 └── integrations/   # Supabase client & types

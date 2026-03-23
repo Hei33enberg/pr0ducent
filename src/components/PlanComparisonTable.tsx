@@ -1,10 +1,10 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { DollarSign, CreditCard, Cpu, Layers } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -23,7 +23,6 @@ interface PricingPlan {
 const PLAN_TIERS = ["free", "pro", "team", "enterprise"];
 
 export function PlanComparisonTable() {
-  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [activeTier, setActiveTier] = useState("pro");
@@ -72,16 +71,16 @@ export function PlanComparisonTable() {
       >
         <header className="text-center mb-10 max-w-3xl mx-auto">
           <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-            {t("planComparison.eyebrow")}
+            {copy["planComparison.eyebrow"]}
           </p>
           <h2
             className="font-serif font-bold tracking-[-0.02em] text-foreground leading-tight"
             style={{ fontSize: "clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem)" }}
           >
-            {t("planComparison.title")}
+            {copy["planComparison.title"]}
           </h2>
           <p className="text-base text-muted-foreground font-sans mt-4">
-            {t("planComparison.subtitle")}
+            {copy["planComparison.subtitle"]}
           </p>
         </header>
 
@@ -104,7 +103,7 @@ export function PlanComparisonTable() {
 
         {toolsWithPlans.length === 0 ? (
           <p className="text-center text-sm text-muted-foreground">
-            {t("planComparison.noTierData").replace("{tier}", activeTier)}
+            {copy["planComparison.noTierData"].replace("{tier}", activeTier)}
           </p>
         ) : (
           <div className="overflow-x-auto rounded-lg border border-border">
@@ -112,31 +111,31 @@ export function PlanComparisonTable() {
               <thead>
                 <tr className="bg-muted/50">
                   <th className="text-left p-3 font-semibold text-foreground sticky left-0 bg-muted/50 min-w-[120px]">
-                    {t("planComparison.builderCol")}
+                    {copy["planComparison.builderCol"]}
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[90px]">
                     <div className="flex items-center justify-center gap-1">
-                      <DollarSign className="w-3 h-3" /> {t("planComparison.monthly")}
+                      <DollarSign className="w-3 h-3" /> {copy["planComparison.monthly"]}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[90px]">
                     <div className="flex items-center justify-center gap-1">
-                      <DollarSign className="w-3 h-3" /> {t("planComparison.annual")}
+                      <DollarSign className="w-3 h-3" /> {copy["planComparison.annual"]}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[100px]">
                     <div className="flex items-center justify-center gap-1">
-                      <CreditCard className="w-3 h-3" /> {t("planComparison.credits")}
+                      <CreditCard className="w-3 h-3" /> {copy["planComparison.credits"]}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[120px]">
                     <div className="flex items-center justify-center gap-1">
-                      <Cpu className="w-3 h-3" /> {t("planComparison.aiModels")}
+                      <Cpu className="w-3 h-3" /> {copy["planComparison.aiModels"]}
                     </div>
                   </th>
                   <th className="p-3 text-center font-semibold text-foreground min-w-[100px]">
                     <div className="flex items-center justify-center gap-1">
-                      <Layers className="w-3 h-3" /> {t("planComparison.environment")}
+                      <Layers className="w-3 h-3" /> {copy["planComparison.environment"]}
                     </div>
                   </th>
                 </tr>
@@ -178,14 +177,14 @@ export function PlanComparisonTable() {
                       <td className="p-3 text-center font-semibold text-foreground">
                         {plan.monthly_price != null
                           ? plan.monthly_price === 0
-                            ? t("planComparison.free")
+                            ? copy["planComparison.free"]
                             : `$${plan.monthly_price}`
                           : "—"}
                       </td>
                       <td className="p-3 text-center text-muted-foreground">
                         {plan.annual_price != null
                           ? plan.annual_price === 0
-                            ? t("planComparison.free")
+                            ? copy["planComparison.free"]
                             : `$${plan.annual_price}/yr`
                           : "—"}
                       </td>

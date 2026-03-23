@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -6,17 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Mail, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { useTranslation } from "@/lib/i18n";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 
 export default function Auth() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const nextPath = searchParams.get("next") ?? "/dashboard";
+  const nextPath = searchParams.gecopy["next"] ?? "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
@@ -32,7 +31,7 @@ export default function Auth() {
       });
       if (error) throw error;
     } catch (err: any) {
-      toast.error(err.message || t("auth.error"));
+      toast.error(err.message || copy["auth.error"]);
     } finally {
       setGoogleLoading(false);
     }
@@ -46,7 +45,7 @@ export default function Auth() {
       });
       if (error) throw error;
     } catch (err: any) {
-      toast.error(err.message || t("auth.error"));
+      toast.error(err.message || copy["auth.error"]);
     } finally {
       setAppleLoading(false);
     }
@@ -61,7 +60,7 @@ export default function Auth() {
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success(t("auth.loginSuccess"));
+        toast.success(copy["auth.loginSuccess"]);
         navigate(nextPath, { replace: true });
       } else {
         const { error } = await supabase.auth.signUp({
@@ -70,10 +69,10 @@ export default function Auth() {
           options: { emailRedirectTo: window.location.origin },
         });
         if (error) throw error;
-        toast.success(t("auth.registerSuccess"));
+        toast.success(copy["auth.registerSuccess"]);
       }
     } catch (err: any) {
-      toast.error(err.message || t("auth.error"));
+      toast.error(err.message || copy["auth.error"]);
     } finally {
       setLoading(false);
     }
@@ -91,10 +90,10 @@ export default function Auth() {
           >
             <div className="text-center space-y-2">
               <h1 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                {t("auth.pageTitle")}
+                {copy["auth.pageTitle"]}
               </h1>
               <p className="text-sm text-muted-foreground font-sans">
-                {isLogin ? t("auth.signIn") : t("auth.createAccount")}
+                {isLogin ? copy["auth.signIn"] : copy["auth.createAccount"]}
               </p>
             </div>
 
@@ -149,14 +148,14 @@ export default function Auth() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <Input
                 type="email"
-                placeholder={t("auth.email")}
+                placeholder={copy["auth.email"]}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <Input
                 type="password"
-                placeholder={t("auth.password")}
+                placeholder={copy["auth.password"]}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -168,19 +167,19 @@ export default function Auth() {
                 ) : (
                   <>
                     <Mail className="w-4 h-4 mr-2" />
-                    {isLogin ? t("auth.loginBtn") : t("auth.registerBtn")}
+                    {isLogin ? copy["auth.loginBtn"] : copy["auth.registerBtn"]}
                   </>
                 )}
               </Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground font-sans">
-              {isLogin ? t("auth.noAccount") : t("auth.hasAccount")}{" "}
+              {isLogin ? copy["auth.noAccount"] : copy["auth.hasAccount"]}{" "}
               <button
                 onClick={() => setIsLogin(!isLogin)}
                 className="text-primary hover:underline font-medium"
               >
-                {isLogin ? t("auth.registerBtn") : t("auth.loginBtn")}
+                {isLogin ? copy["auth.registerBtn"] : copy["auth.loginBtn"]}
               </button>
             </p>
           </motion.div>

@@ -1,7 +1,7 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useTranslation } from "@/lib/i18n";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
@@ -17,7 +17,6 @@ interface Subscription {
 export function NotificationSettings() {
   const { tools } = useBuilderCatalog();
   const { user } = useAuth();
-  const { t } = useTranslation();
   const [sub, setSub] = useState<Subscription>({
     tool_ids: [],
     notify_changelog: true,
@@ -76,25 +75,25 @@ export function NotificationSettings() {
     <div className="space-y-6">
       <div>
         <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
-          {t("notifications.alertTypes")}
+          {copy["notifications.alertTypes"]}
         </h3>
         <div className="space-y-3 mt-3">
           <label className="flex items-center justify-between">
-            <span className="text-sm font-sans text-foreground">{t("notifications.changelog")}</span>
+            <span className="text-sm font-sans text-foreground">{copy["notifications.changelog"]}</span>
             <Switch
               checked={sub.notify_changelog}
               onCheckedChange={(v) => save({ notify_changelog: v })}
             />
           </label>
           <label className="flex items-center justify-between">
-            <span className="text-sm font-sans text-foreground">{t("notifications.pricing")}</span>
+            <span className="text-sm font-sans text-foreground">{copy["notifications.pricing"]}</span>
             <Switch
               checked={sub.notify_pricing}
               onCheckedChange={(v) => save({ notify_pricing: v })}
             />
           </label>
           <label className="flex items-center justify-between">
-            <span className="text-sm font-sans text-foreground">{t("notifications.blogPosts")}</span>
+            <span className="text-sm font-sans text-foreground">{copy["notifications.blogPosts"]}</span>
             <Switch
               checked={sub.notify_blog}
               onCheckedChange={(v) => save({ notify_blog: v })}
@@ -105,10 +104,10 @@ export function NotificationSettings() {
 
       <div>
         <h3 className="font-serif text-lg font-semibold text-foreground mb-1">
-          {t("notifications.watchBuilders")}
+          {copy["notifications.watchBuilders"]}
         </h3>
         <p className="text-xs text-muted-foreground font-sans mb-3">
-          {t("notifications.watchHint")}
+          {copy["notifications.watchHint"]}
         </p>
         <div className="flex flex-wrap gap-2">
           {tools.map((tool) => (

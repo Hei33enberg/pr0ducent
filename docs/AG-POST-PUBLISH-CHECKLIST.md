@@ -18,7 +18,7 @@ Source of truth in code: [`src/lib/featureFlags.ts`](../src/lib/featureFlags.ts)
 2. **GuestOrchestrationBanner:** copy and visibility per PM intent.
 3. **Claim / handoff:** CTA does not sit empty — hides until backend returns `claim_token` / URL (VBP or next builder).
 4. **DevExperimentInspector:** local only (`import.meta.env.DEV`); should not be available on prod — quick smoke in incognito.
-5. **i18n:** EN/PL keys for new strings.
+5. **Copy:** new user-facing strings added to `src/locales/en.json` and used via `copy` from `src/lib/copy.ts`.
 
 ## Merge rules (reminder)
 

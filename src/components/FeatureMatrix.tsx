@@ -1,13 +1,11 @@
+import { copy } from "@/lib/copy";
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
-import { useTranslation } from "@/lib/i18n";
 import { Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function FeatureMatrix() {
   const { tools } = useBuilderCatalog();
-  const { t } = useTranslation();
-
   return (
     <section id="features" className="max-w-6xl mx-auto px-4 py-12">
       <motion.div
@@ -18,16 +16,16 @@ export function FeatureMatrix() {
       >
         <header className="text-center mb-10 max-w-3xl mx-auto">
           <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-            {t("featureMatrix.eyebrow")}
+            {copy["featureMatrix.eyebrow"]}
           </p>
           <h2
             className="font-serif font-bold tracking-[-0.02em] text-foreground leading-tight"
             style={{ fontSize: "clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem)" }}
           >
-            {t("featureMatrix.title")}
+            {copy["featureMatrix.title"]}
           </h2>
           <p className="text-base text-muted-foreground font-sans mt-4">
-            {t("featureMatrix.subtitle")}
+            {copy["featureMatrix.subtitle"]}
           </p>
         </header>
 
@@ -36,7 +34,7 @@ export function FeatureMatrix() {
             <thead>
               <tr className="bg-muted/50">
                 <th className="text-left p-3 font-semibold text-foreground sticky left-0 bg-muted/50 min-w-[160px]">
-                  {t("featureMatrix.featureCol")}
+                  {copy["featureMatrix.featureCol"]}
                 </th>
                 {tools.map((tool) => (
                   <th
@@ -96,7 +94,7 @@ export function FeatureMatrix() {
             <tfoot>
               <tr className="bg-muted/50 border-t border-border">
                 <td className="p-3 font-bold text-foreground sticky left-0 bg-muted/50">
-                  {t("featureMatrix.totalRow")}
+                  {copy["featureMatrix.totalRow"]}
                 </td>
                 {tools.map((tool) => {
                   const count = COMPARISON_FEATURES.filter((f) => f.tools.includes(tool.id)).length;

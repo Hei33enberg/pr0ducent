@@ -1,8 +1,8 @@
+import { copy } from "@/lib/copy";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Filter, ArrowUpDown, X } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
 
 export type SortOption = "default" | "score" | "speed" | "name";
 
@@ -21,7 +21,6 @@ export function CanvasFilters({
   onSortChange,
   availableToolIds,
 }: CanvasFiltersProps) {
-  const { t } = useTranslation();
   const { tools: allTools } = useBuilderCatalog();
   const tools = allTools.filter((tool) => availableToolIds.includes(tool.id));
 
@@ -29,7 +28,7 @@ export function CanvasFilters({
     <div className="flex flex-wrap items-center gap-3">
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-sans">
         <Filter className="w-3.5 h-3.5" />
-        <span>{t("canvas.filter")}</span>
+        <span>{copy["canvas.filter"]}</span>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {tools.map((tool) => {
@@ -55,10 +54,10 @@ export function CanvasFilters({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="default">{t("canvas.sortDefault")}</SelectItem>
-            <SelectItem value="score">{t("canvas.sortScore")}</SelectItem>
-            <SelectItem value="speed">{t("canvas.sortSpeed")}</SelectItem>
-            <SelectItem value="name">{t("canvas.sortName")}</SelectItem>
+            <SelectItem value="default">{copy["canvas.sortDefault"]}</SelectItem>
+            <SelectItem value="score">{copy["canvas.sortScore"]}</SelectItem>
+            <SelectItem value="speed">{copy["canvas.sortSpeed"]}</SelectItem>
+            <SelectItem value="name">{copy["canvas.sortName"]}</SelectItem>
           </SelectContent>
         </Select>
       </div>

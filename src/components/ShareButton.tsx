@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Share2, Link, Check, Globe, Lock } from "lucide-react";
@@ -5,7 +6,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useTranslation } from "@/lib/i18n";
 
 interface ShareButtonProps {
   experimentId: string;
@@ -17,14 +17,12 @@ interface ShareButtonProps {
 export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChange }: ShareButtonProps) {
   const [copied, setCopied] = useState(false);
   const [toggling, setToggling] = useState(false);
-  const { t } = useTranslation();
-
   const shareUrl = `${window.location.origin}/experiment/${experimentId}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
-    toast.success(t("share.linkCopied"));
+    toast.success(copy["share.linkCopied"]);
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -36,10 +34,10 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
       .eq("id", experimentId);
 
     if (error) {
-      toast.error(t("share.visibilityError"));
+      toast.error(copy["share.visibilityError"]);
     } else {
       onVisibilityChange?.(!isPublic);
-      toast.success(!isPublic ? t("share.nowPublic") : t("share.nowPrivate"));
+      toast.success(!isPublic ? copy["share.nowPublic"] : copy["share.nowPrivate"]);
     }
     setToggling(false);
   };
@@ -61,7 +59,7 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
               ) : (
                 <Lock className="w-4 h-4 text-muted-foreground" />
               )}
-              <span className="text-foreground">{isPublic ? t("share.public") : t("share.private")}</span>
+              <span className="text-foreground">{isPublic ? copy["share.public"] : copy["share.private"]}</span>
             </div>
             <Switch checked={isPublic} onCheckedChange={handleTogglePublic} disabled={toggling} />
           </div>
@@ -78,7 +76,7 @@ export function ShareButton({ experimentId, isPublic, isOwner, onVisibilityChang
         </div>
         {!isPublic && isOwner && (
           <p className="text-[11px] text-muted-foreground font-sans">
-            {t("share.enablePublic")}
+            {copy["share.enablePublic"]}
           </p>
         )}
       </PopoverContent>

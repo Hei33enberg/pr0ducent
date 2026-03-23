@@ -1,7 +1,7 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
@@ -22,7 +22,7 @@ interface BlogPost {
 }
 
 export default function Blog() {
-  const { t, locale: language } = useTranslation();
+  const language = "en";
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -55,10 +55,10 @@ export default function Blog() {
             className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
             style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
           >
-            {t("blog.title")}
+            {copy["blog.title"]}
           </h1>
           <p className="text-muted-foreground font-sans text-lg mb-8">
-            {t("blog.subtitle")}
+            {copy["blog.subtitle"]}
           </p>
 
           <div className="flex flex-wrap gap-2 mb-10">
@@ -72,7 +72,7 @@ export default function Blog() {
                     : "bg-muted text-muted-foreground hover:bg-muted/80"
                 }`}
               >
-                {cat === "all" ? t("blog.all") : cat.replace("_", " ")}
+                {cat === "all" ? copy["blog.all"] : cat.replace("_", " ")}
               </button>
             ))}
           </div>
@@ -89,7 +89,7 @@ export default function Blog() {
             </div>
           ) : filtered.length === 0 ? (
             <p className="text-muted-foreground font-sans text-center py-20">
-              {t("blog.empty")}
+              {copy["blog.empty"]}
             </p>
           ) : (
             <div className="space-y-8">

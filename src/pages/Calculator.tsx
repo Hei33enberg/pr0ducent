@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -10,7 +11,6 @@ import { Footer } from "@/components/Footer";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -24,7 +24,6 @@ interface PricingPlan {
 }
 
 export default function CalculatorPage() {
-  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
@@ -91,16 +90,16 @@ export default function CalculatorPage() {
           <div className="section-wash-blush rounded-xl p-6 mb-6">
           <header className="text-center mb-8 max-w-3xl mx-auto">
             <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-              {t("calculatorPage.eyebrow")}
+              {copy["calculatorPage.eyebrow"]}
             </p>
             <h1
               className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
               style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
             >
-              {t("calculatorPage.title")}
+              {copy["calculatorPage.title"]}
             </h1>
             <p className="text-sm md:text-base text-muted-foreground font-sans">
-              {t("calculatorPage.subtitle")}
+              {copy["calculatorPage.subtitle"]}
             </p>
           </header>
 

@@ -5,6 +5,7 @@
  * and v0 poll/timeout reducers (shared by guest + experiment polling).
  */
 import { describe, it, expect } from "vitest";
+import { copy } from "@/lib/copy";
 import {
   isUuid,
   mapBuilderRow,
@@ -12,8 +13,6 @@ import {
   reduceV0TimeoutError,
   type BuilderResult,
 } from "./useBuilderApi";
-
-const t = (key: string) => (key === "api.v0Failed" ? "V0 failed" : key === "api.timeoutGenerating" ? "Timeout" : key);
 
 // ── isUuid — controls guest vs authenticated dispatch path ────────────────────
 
@@ -141,7 +140,6 @@ describe("mapV0PollToTerminalResult", () => {
     fallbackChatUrl: "https://v0.dev/chat/chat-1",
     startTime: 1000,
     nowMs: 5000,
-    t,
   };
 
   it("returns null for non-terminal status", () => {
@@ -167,9 +165,9 @@ describe("mapV0PollToTerminalResult", () => {
     expect(r?.error).toBe("boom");
   });
 
-  it("uses t(api.v0Failed) when error field missing", () => {
+  it("uses copy api.v0Failed when error field missing", () => {
     const r = mapV0PollToTerminalResult({ status: "error" }, ctxBase);
-    expect(r?.error).toBe("V0 failed");
+    expect(r?.error).toBe(copy["api.v0Failed"]);
   });
 });
 
@@ -187,15 +185,15 @@ describe("reduceV0TimeoutError", () => {
     expect(
       reduceV0TimeoutError(
         { v0: { ...gen, status: "completed" } },
-        { chatId: "chat-1", chatUrl: "https://u", nowMs: 99, t }
+        { chatId: "chat-1", chatUrl: "https://u", nowMs: 99 }
       )
     ).toBeNull();
   });
 
   it("sets error state when still generating", () => {
-    const next = reduceV0TimeoutError({ v0: gen }, { chatId: "chat-1", chatUrl: "https://u", nowMs: 99, t });
+    const next = reduceV0TimeoutError({ v0: gen }, { chatId: "chat-1", chatUrl: "https://u", nowMs: 99 });
     expect(next?.v0.status).toBe("error");
-    expect(next?.v0.error).toBe("Timeout");
+    expect(next?.v0.error).toBe(copy["api.timeoutGenerating"]);
     expect(next?.v0.id).toBe("v0-99");
   });
 });

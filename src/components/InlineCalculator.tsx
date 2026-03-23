@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
@@ -8,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Trophy, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -22,7 +22,6 @@ interface PricingPlan {
 }
 
 export function InlineCalculator() {
-  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
@@ -70,22 +69,22 @@ export function InlineCalculator() {
       >
       <header className="text-center mb-10 max-w-3xl mx-auto">
         <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-          {t("inlineCalc.eyebrow")}
+          {copy["inlineCalc.eyebrow"]}
         </p>
         <h2
           className="font-serif font-bold tracking-[-0.02em] leading-[1.05] text-foreground"
           style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
         >
-          {t("inlineCalc.title")}
+          {copy["inlineCalc.title"]}
         </h2>
         <p className="text-base text-muted-foreground font-sans mt-4">
-          {t("inlineCalc.subtitle")}
+          {copy["inlineCalc.subtitle"]}
         </p>
       </header>
 
       <div className="bg-card border border-border/50 rounded-xl p-5 mb-4 shadow-sm">
         <div className="flex justify-between text-sm font-sans items-center mb-2">
-          <span>{t("inlineCalc.monthlyBudget")}</span>
+          <span>{copy["inlineCalc.monthlyBudget"]}</span>
           <span className="font-bold text-foreground">${budget}/mo</span>
         </div>
         <Slider
@@ -125,13 +124,13 @@ export function InlineCalculator() {
           );
         })}
         {results.length === 0 && (
-          <p className="text-center text-sm text-muted-foreground py-4">{t("inlineCalc.noMatch")}</p>
+          <p className="text-center text-sm text-muted-foreground py-4">{copy["inlineCalc.noMatch"]}</p>
         )}
       </div>
 
       <div className="text-center">
         <Button variant="outline" size="sm" onClick={() => navigate("/calculator")}>
-          {t("inlineCalc.fullCalculatorCta")}
+          {copy["inlineCalc.fullCalculatorCta"]}
           <ArrowRight className="w-3.5 h-3.5 ml-1" />
         </Button>
       </div>

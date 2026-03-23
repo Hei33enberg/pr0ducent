@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useCallback, useEffect, useRef } from "react";
 import { HeroSection } from "@/components/HeroSection";
 import { ComparisonCanvas } from "@/components/ComparisonCanvas";
@@ -19,7 +20,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useBuilderApi } from "@/hooks/useBuilderApi";
 import { PageFrame } from "@/components/PageFrame";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useTranslation } from "@/lib/i18n";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext";
 import type { Experiment, AccountModel } from "@/types/experiment";
@@ -27,7 +27,6 @@ import { toast } from "sonner";
 
 const Index = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const { results: builderResults, runBuilders } = useBuilderApi();
   const { tools } = useBuilderCatalog();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
@@ -63,7 +62,7 @@ const Index = () => {
       if (user) {
         dbId = await createExperimentInDb(user.id, prompt, selectedTools, accountModel, exp.runs, useCaseTags) || undefined;
         if (!dbId) {
-          toast.error(t("experiment.createFailed"));
+          toast.error(copy["experiment.createFailed"]);
           return;
         }
         const synced = { ...exp, id: dbId };
@@ -141,7 +140,7 @@ const Index = () => {
               <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-2">
                 <Alert className="border-border/60 bg-muted/30">
                   <AlertDescription className="text-sm text-muted-foreground">
-                    {t("help.orchestrationSignedIn")}
+                    {copy["help.orchestrationSignedIn"]}
                   </AlertDescription>
                 </Alert>
               </div>

@@ -1,8 +1,8 @@
+import { copy } from "@/lib/copy";
 import { motion } from "framer-motion";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import type { ExperimentRun } from "@/types/experiment";
 import { Trophy } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
 import { calculatePVI } from "@/lib/pvi-calculator";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,7 +27,6 @@ function getOverallScore(run: ExperimentRun, tool: any) {
 }
 
 export function WinnerBanner({ runs }: WinnerBannerProps) {
-  const { t } = useTranslation();
   const { getToolById } = useBuilderCatalog();
   const [realScores, setRealScores] = useState<Record<string, number>>({});
 
@@ -71,10 +70,10 @@ export function WinnerBanner({ runs }: WinnerBannerProps) {
       </div>
       <div className="flex-1">
         <div className="text-sm font-semibold text-foreground font-sans">
-          {t("winner.bestResult")} <span className="text-featured">{tool.name}</span>
+          {copy["winner.bestResult"]} <span className="text-featured">{tool.name}</span>
         </div>
         <div className="text-xs text-muted-foreground font-sans">
-          {t("winner.avgScore")} {avgScore}/100 · {t("winner.time")} {winner.timeToFirstPrototype?.toFixed(1)}s
+          {copy["winner.avgScore"]} {avgScore}/100 · {copy["winner.time"]} {winner.timeToFirstPrototype?.toFixed(1)}s
         </div>
       </div>
     </motion.div>

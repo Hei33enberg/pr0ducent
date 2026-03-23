@@ -1,7 +1,7 @@
+import { copy } from "@/lib/copy";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { useTranslation } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { Activity, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ function formatEventLabel(eventType: string): string {
 }
 
 export function RunCenter({ experimentId }: { experimentId: string }) {
-  const { t } = useTranslation();
   const [events, setEvents] = useState<RunEventRow[]>([]);
   const [expanded, setExpanded] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -72,7 +71,7 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
       <div className="flex items-center justify-between px-4 py-2 border-b border-border/60">
         <div className="flex items-center gap-2 text-xs font-semibold text-foreground font-sans uppercase tracking-wider">
           <Activity className="w-3.5 h-3.5 text-accent" />
-          {t("runCenter.title")}
+          {copy["runCenter.title"]}
         </div>
         <Button
           type="button"
@@ -87,7 +86,7 @@ export function RunCenter({ experimentId }: { experimentId: string }) {
       {expanded && (
         <ul className="max-h-48 overflow-y-auto text-xs font-mono divide-y divide-border/40">
           {events.length === 0 ? (
-            <li className="px-4 py-3 text-muted-foreground font-sans">{t("runCenter.empty")}</li>
+            <li className="px-4 py-3 text-muted-foreground font-sans">{copy["runCenter.empty"]}</li>
           ) : (
             events.map((ev) => (
               <li key={ev.id} className="px-4 py-2 flex flex-col gap-0.5">

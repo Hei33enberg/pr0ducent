@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { Badge } from "@/components/ui/badge";
@@ -8,7 +9,6 @@ import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/lib/i18n";
 
 interface BuilderComparisonTableProps {
   onSelectTool: (toolId: string) => void;
@@ -36,7 +36,6 @@ interface BuilderRating {
 }
 
 export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableProps) {
-  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const CATEGORIES = ["All", ...new Set(tools.map((t) => t.category))];
   const navigate = useNavigate();
@@ -119,16 +118,16 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
       >
         <header className="text-center mb-10 max-w-3xl mx-auto">
           <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-            {t("builderComparison.eyebrow")}
+            {copy["builderComparison.eyebrow"]}
           </p>
           <h2
             className="font-serif font-bold tracking-[-0.02em] text-foreground leading-tight"
             style={{ fontSize: "clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem)" }}
           >
-            {t("builderComparison.title")}
+            {copy["builderComparison.title"]}
           </h2>
           <p className="text-base text-muted-foreground font-sans mt-4 max-w-lg mx-auto">
-            {t("builderComparison.subtitle").replace("{count}", String(tools.length))}
+            {copy["builderComparison.subtitle"].replace("{count}", String(tools.length))}
           </p>
         </header>
 
@@ -145,7 +144,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                   : "border-border bg-card text-muted-foreground hover:border-foreground/30"
               }`}
             >
-              {cat === "All" ? t("builderComparison.categoryAll") : cat}
+              {cat === "All" ? copy["builderComparison.categoryAll"] : cat}
             </button>
           ))}
         </div>
@@ -153,7 +152,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
         {/* Compare bar */}
         {compareList.length > 0 && (
           <div className="mb-4 flex items-center justify-center gap-2 flex-wrap">
-            <span className="text-xs text-muted-foreground font-sans">{t("builderComparison.comparing")}</span>
+            <span className="text-xs text-muted-foreground font-sans">{copy["builderComparison.comparing"]}</span>
             {compareList.map((id) => {
               const tool = tools.find((t) => t.id === id);
               return (
@@ -163,7 +162,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
               );
             })}
             <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => setCompareList([])}>
-              {t("builderComparison.clear")}
+              {copy["builderComparison.clear"]}
             </Button>
           </div>
         )}
@@ -243,7 +242,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5">
                         <TrendingUp className="w-3.5 h-3.5 text-accent" />
-                        <span className="text-[10px] text-muted-foreground font-sans">{t("builderComparison.valueIndex")}</span>
+                        <span className="text-[10px] text-muted-foreground font-sans">{copy["builderComparison.valueIndex"]}</span>
                       </div>
                       <div className="flex items-center gap-1.5">
                         <span className={`text-lg font-bold font-sans ${pviColor}`}>{pvi || "—"}</span>
@@ -274,11 +273,11 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                             <span className="text-muted-foreground">({rating.count})</span>
                           </>
                         ) : (
-                          <span className="text-muted-foreground">{t("builderComparison.noRatings")}</span>
+                          <span className="text-muted-foreground">{copy["builderComparison.noRatings"]}</span>
                         )}
                       </div>
                       <span className="font-semibold font-sans text-foreground">
-                        {proPlan ? (proPlan.monthly_price === 0 ? t("builderComparison.free") : `$${proPlan.monthly_price}/mo`) : tool.pricing}
+                        {proPlan ? (proPlan.monthly_price === 0 ? copy["builderComparison.free"] : `$${proPlan.monthly_price}/mo`) : tool.pricing}
                       </span>
                     </div>
 
@@ -303,7 +302,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                         onClick={() => onSelectTool(tool.id)}
                       >
                         <Zap className="w-3 h-3 mr-1" />
-                        {t("builderComparison.testIt")}
+                        {copy["builderComparison.testIt"]}
                       </Button>
                       <Button
                         size="sm"
@@ -318,7 +317,7 @@ export function BuilderComparisonTable({ onSelectTool }: BuilderComparisonTableP
                         variant={isComparing ? "secondary" : "ghost"}
                         className="text-xs h-8 px-2"
                         onClick={() => toggleCompare(tool.id)}
-                        title={t("builderComparison.addToCompare")}
+                        title={copy["builderComparison.addToCompare"]}
                       >
                         <ExternalLink className="w-3 h-3" />
                       </Button>

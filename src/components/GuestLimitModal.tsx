@@ -1,8 +1,8 @@
+import { copy } from "@/lib/copy";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Lock, Sparkles } from "lucide-react";
-import { useTranslation } from "@/lib/i18n";
 
 interface GuestLimitModalProps {
   open: boolean;
@@ -31,27 +31,25 @@ export function isGuestLimitReached(): boolean {
 
 export function GuestLimitModal({ open, onClose }: GuestLimitModalProps) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 font-sans">
             <Lock className="w-5 h-5 text-primary" />
-            {t("guest.limitReached")}
+            {copy["guest.limitReached"]}
           </DialogTitle>
           <DialogDescription className="font-sans">
-            {t("guest.limitDesc").replace("{limit}", String(GUEST_LIMIT))}
+            {copy["guest.limitDesc"].replace("{limit}", String(GUEST_LIMIT))}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-2">
           <Button className="w-full" onClick={() => navigate("/auth")}>
             <Sparkles className="w-4 h-4 mr-2" />
-            {t("guest.createAccount")}
+            {copy["guest.createAccount"]}
           </Button>
           <Button variant="ghost" className="w-full text-muted-foreground" onClick={onClose}>
-            {t("guest.continueBrowsing")}
+            {copy["guest.continueBrowsing"]}
           </Button>
         </div>
       </DialogContent>

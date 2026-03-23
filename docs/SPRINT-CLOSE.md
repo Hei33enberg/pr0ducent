@@ -5,7 +5,7 @@
 | Lane | Owner | Status |
 |------|--------|--------|
 | **Backend / orchestration** | Cursor | Shipped on `main` (commit `6a667e0`+): queue worker, VBP/generic adapters, crawl + webhook stubs, docs/schemas. |
-| **Cockpit UI** | Antigravity | Shipped in this commit: `useRunTaskStream`, `BuilderProgressStream`, Compare wiring, `/marketplace`, dashboard polish, nav + i18n. |
+| **Cockpit UI** | Antigravity | Shipped in this commit: `useRunTaskStream`, `BuilderProgressStream`, Compare wiring, `/marketplace`, dashboard polish, nav + English copy. |
 | **Infra** | You / Lovable Cloud | **Not automatic:** apply migrations (including `20260322120000`, trigger `20260320222441`), deploy Edge Functions, set Vault `service_role_key` for `pg_net` trigger **or** wire DB Webhook → `process-task-queue`, set secrets. |
 
 **Core business order:** stabilize **v0 end-to-end** on prod → enable **second builder** (config + adapter) → load tests → only then lean on Lovable for cosmetic polish. UI can ship first; **live multi-builder stream** needs backend deploy + `builder_integration_config` rows.
@@ -38,7 +38,7 @@
 - **`DemoPreviewFrame`** — preview container (mobile/tablet/desktop) + fullscreen path as implemented.
 - **`/marketplace`** — community demos grid + remix CTA (stub/data wiring when backend tables exist).
 - **`UserDashboard`** — plans, usage counters, BYOA placeholder overlay (phase 2).
-- **Nav + i18n** — EN/PL keys for Marketplace and related strings.
+- **Nav + copy** — Marketplace and related strings in `src/locales/en.json`.
 
 ---
 

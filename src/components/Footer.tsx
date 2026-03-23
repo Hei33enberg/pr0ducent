@@ -1,10 +1,9 @@
-import { useTranslation } from "@/lib/i18n";
+import { copy } from "@/lib/copy";
 import { useNavigate, useLocation } from "react-router-dom";
 import BrandText from "@/components/BrandText";
 import { FF } from "@/lib/featureFlags";
 
 export function Footer() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const year = new Date().getFullYear();
@@ -21,13 +20,13 @@ export function Footer() {
     { label: "Home", href: "/" },
     { label: "Arena", href: "/arena" },
     { label: "Leaderboard", href: "/leaderboard" },
-    { label: t("nav.compare"), href: "/compare" },
-    { label: t("nav.calculator"), href: "/calculator" },
-    { label: t("nav.pricing"), href: "/pricing" },
-    { label: t("nav.blog"), href: "/blog" },
-    { label: t("nav.runsNow"), href: "/runs-now" },
+    { label: copy["nav.compare"], href: "/compare" },
+    { label: copy["nav.calculator"], href: "/calculator" },
+    { label: copy["nav.pricing"], href: "/pricing" },
+    { label: copy["nav.blog"], href: "/blog" },
+    { label: copy["nav.runsNow"], href: "/runs-now" },
     ...(FF.MARKETPLACE_ENABLED ? [{ label: "Marketplace", href: "/marketplace" }] : []),
-    { label: t("nav.faq"), href: "#faq" },
+    { label: copy["nav.faq"], href: "#faq" },
     { label: "Docs", href: "/docs" },
     { label: "All Builders", href: "/builders" },
   ];
@@ -54,7 +53,7 @@ export function Footer() {
               as="span"
             />
             <p className="text-sm font-sans leading-relaxed" style={{ color: "hsla(0, 0%, 100%, 0.55)" }}>
-              {t("footer.tagline")}
+              {copy["footer.tagline"]}
             </p>
           </div>
 
@@ -81,17 +80,17 @@ export function Footer() {
           {/* Legal */}
           <div>
             <h4 className="text-xs font-semibold uppercase tracking-wider mb-3 font-sans" style={{ color: "hsla(0, 0%, 100%, 0.7)" }}>
-              {t("footer.legal")}
+              {copy["footer.legal"]}
             </h4>
             <ul className="space-y-2 text-sm font-sans" style={{ color: "hsla(0, 0%, 100%, 0.25)" }}>
-              <li><span>{t("footer.privacy")}</span></li>
-              <li><span>{t("footer.terms")}</span></li>
+              <li><span>{copy["footer.privacy"]}</span></li>
+              <li><span>{copy["footer.terms"]}</span></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 text-xs font-sans" style={{ borderColor: "hsla(0, 0%, 100%, 0.1)", color: "hsla(0, 0%, 100%, 0.4)" }}>
-          <span>&copy; {year} pr0ducent. {t("footer.rights")}</span>
+          <span>&copy; {year} pr0ducent. {copy["footer.rights"]}</span>
         </div>
       </div>
     </footer>

@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +7,6 @@ import { ToolDetailPanel } from "@/components/ToolDetailPanel";
 import { RunComments } from "@/components/RunComments";
 import { BuilderRatingStars } from "@/components/BuilderRatingStars";
 import { ShareButton } from "@/components/ShareButton";
-import { useTranslation } from "@/lib/i18n";
 import type { Experiment, ExperimentRun, EditorialScores, AccountModel } from "@/types/experiment";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,6 @@ export default function PublicExperiment() {
   const { tools } = useBuilderCatalog();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const [experiment, setExperiment] = useState<Experiment | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +37,7 @@ export default function PublicExperiment() {
         .maybeSingle();
 
       if (expErr || !exp) {
-        setError(t("public.notFound"));
+        setError(copy["public.notFound"]);
         setLoading(false);
         return;
       }
@@ -89,7 +88,7 @@ export default function PublicExperiment() {
         ) : error ? (
           <div className="flex flex-col items-center justify-center py-32 gap-4">
             <p className="text-muted-foreground font-sans">{error}</p>
-            <Button variant="outline" onClick={() => navigate("/")}>{t("public.backHome")}</Button>
+            <Button variant="outline" onClick={() => navigate("/")}>{copy["public.backHome"]}</Button>
           </div>
         ) : experiment ? (
           <>
@@ -99,11 +98,11 @@ export default function PublicExperiment() {
                 crumbs={[{ label: "Runs Now", href: "/runs-now" }, { label: "Experiment" }]}
               />
               <h1 className="font-serif text-xl md:text-2xl font-bold text-foreground leading-tight">
-                {t("public.experimentDocumentTitle")}
+                {copy["public.experimentDocumentTitle"]}
               </h1>
               <p className="text-sm text-muted-foreground font-sans mt-2 line-clamp-3">{experiment.prompt}</p>
               <div className="flex items-center justify-end gap-2 mt-3">
-                <span className="text-xs text-muted-foreground font-sans mr-auto">{t("public.sharedExperiment")}</span>
+                <span className="text-xs text-muted-foreground font-sans mr-auto">{copy["public.sharedExperiment"]}</span>
                 <ShareButton experimentId={experiment.id} isPublic={true} isOwner={false} />
               </div>
             </div>

@@ -50,7 +50,7 @@ Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automati
 | Topic | Status | Follow-up |
 |-------|--------|-----------|
 | Gradient washes (`hero-wash--*`) | Done | — |
-| H1 scale | **`clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)`**, `leading-[0.9]` | Regressions: narrow mobile + long translations |
+| H1 scale | **`clamp(2.65rem, 5.5vw + 0.95rem, 5.85rem)`**, `leading-[0.9]` | Regressions: narrow mobile + long English copy |
 | Caricature scale | **`max-w`** per breakpoint (`sm`…`xl`); mobile e.g. `max-w-[min(96vw,420px)]`; **`max-h`** e.g. `max-h-[min(48vh,420px)]` → `lg:max-h-[min(62vh,600px)]`; `object-bottom` | **No** `min-h` on illustration column — do not push chips/input down |
 | Prompt chips row | **`flex flex-wrap`**, no `overflow-x` / swipe | Narrow screens: several rows of chips instead of horizontal scroll |
 | IllustDivider + MP4 loops between sections | **Next** | Port `IllustDivider` + storage URLs pattern from newsc0rp LP |

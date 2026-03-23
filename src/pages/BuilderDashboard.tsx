@@ -1,7 +1,7 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
@@ -25,7 +25,6 @@ interface BuilderSyncData {
 }
 
 export default function BuilderDashboard() {
-  const { t } = useTranslation();
   const { getToolById } = useBuilderCatalog();
   const navigate = useNavigate();
   const [builders, setBuilders] = useState<BuilderSyncData[]>([]);
@@ -58,7 +57,7 @@ export default function BuilderDashboard() {
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
           <PageBreadcrumb
-            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("dashboard.title") }]}
+            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: copy["dashboard.title"] }]}
           />
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -66,15 +65,15 @@ export default function BuilderDashboard() {
                 className="font-serif font-bold tracking-[-0.02em] text-foreground mb-2"
                 style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
               >
-                {t("dashboard.title")}
+                {copy["dashboard.title"]}
               </h1>
               <p className="text-muted-foreground font-sans text-lg">
-                {t("dashboard.subtitle")}
+                {copy["dashboard.subtitle"]}
               </p>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground font-sans">
               <RefreshCw className="w-3.5 h-3.5" />
-              {t("dashboard.autoSync")}
+              {copy["dashboard.autoSync"]}
             </div>
           </div>
 
@@ -86,8 +85,8 @@ export default function BuilderDashboard() {
             </div>
           ) : builders.length === 0 ? (
             <div className="text-center py-20 text-muted-foreground font-sans">
-              <p className="text-lg mb-2">{t("dashboard.empty")}</p>
-              <p className="text-sm">{t("dashboard.emptyHint")}</p>
+              <p className="text-lg mb-2">{copy["dashboard.empty"]}</p>
+              <p className="text-sm">{copy["dashboard.emptyHint"]}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

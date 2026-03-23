@@ -1,6 +1,6 @@
+import { copy } from "@/lib/copy";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/lib/i18n";
 import { CalendarDays, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -16,7 +16,6 @@ interface BlogPost {
 }
 
 export function HomepageBlogSection() {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
@@ -47,23 +46,23 @@ export function HomepageBlogSection() {
       >
       <header className="text-center mb-10 max-w-3xl mx-auto">
         <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-          {t("blog.eyebrow")}
+          {copy["blog.eyebrow"]}
         </p>
         <h2
           className="font-serif font-bold tracking-[-0.02em] leading-[1.05] text-foreground"
           style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
         >
-          {t("blog.title")}
+          {copy["blog.title"]}
         </h2>
         <p className="text-base text-muted-foreground font-sans mt-4">
-          {t("blog.subtitle")}
+          {copy["blog.subtitle"]}
         </p>
         <button
           type="button"
           onClick={() => navigate("/blog")}
           className="mt-6 text-xs font-sans font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 mx-auto"
         >
-          {t("blog.viewAll")} <ArrowRight className="w-3 h-3" />
+          {copy["blog.viewAll"]} <ArrowRight className="w-3 h-3" />
         </button>
       </header>
 

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useTranslation } from "@/lib/i18n";
+import { copy } from "@/lib/copy";
 import { toast } from "sonner";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -80,7 +80,6 @@ export function mapV0PollToTerminalResult(
     fallbackChatUrl?: string;
     startTime: number;
     nowMs: number;
-    t: (key: string) => string;
   }
 ): BuilderResult | null {
   if (pollData.status === "completed") {
@@ -101,7 +100,7 @@ export function mapV0PollToTerminalResult(
       id: `v0-${ctx.nowMs}`,
       toolId: "v0",
       status: "error",
-      error: pollData.error || ctx.t("api.v0Failed"),
+      error: pollData.error || copy["api.v0Failed"],
       chatUrl: pollData.chatUrl || ctx.fallbackChatUrl,
       provenance: "live_api",
       executionMode: "live",
@@ -114,7 +113,7 @@ export function mapV0PollToTerminalResult(
 /** After MAX_POLL_TIME while v0 is still generating — error state or null if unchanged. */
 export function reduceV0TimeoutError(
   prev: Record<string, BuilderResult>,
-  ctx: { chatId: string; chatUrl: string | undefined; nowMs: number; t: (key: string) => string }
+  ctx: { chatId: string; chatUrl: string | undefined; nowMs: number }
 ): Record<string, BuilderResult> | null {
   const cur = prev.v0;
   if (cur?.status !== "generating") return null;
@@ -125,7 +124,7 @@ export function reduceV0TimeoutError(
       id: `v0-${ctx.nowMs}`,
       toolId: "v0",
       status: "error",
-      error: ctx.t("api.timeoutGenerating"),
+      error: copy["api.timeoutGenerating"],
       chatUrl: ctx.chatUrl,
       providerRunId: ctx.chatId,
     },
@@ -133,7 +132,6 @@ export function reduceV0TimeoutError(
 }
 
 export function useBuilderApi() {
-  const { t } = useTranslation();
   const [results, setResults] = useState<Record<string, BuilderResult>>({});
   const [loading, setLoading] = useState(false);
   const pollTimers = useRef<Record<string, number>>({});
@@ -233,7 +231,6 @@ export function useBuilderApi() {
               fallbackChatUrl: chatUrl,
               startTime,
               nowMs,
-              t,
             });
             if (terminal) {
               stopPolling("v0");
@@ -255,7 +252,6 @@ export function useBuilderApi() {
                   chatId,
                   chatUrl,
                   nowMs: Date.now(),
-                  t,
                 });
                 return next ?? prev;
               });
@@ -263,14 +259,14 @@ export function useBuilderApi() {
           }, MAX_POLL_TIME)
         );
       } catch (err: unknown) {
-        const message = err instanceof Error ? err.message : t("api.failedWithV0");
+        const message = err instanceof Error ? err.message : copy["api.failedWithV0"];
         setResults((prev) => ({
           ...prev,
           v0: { id: `v0-${Date.now()}`, toolId: "v0", status: "error", error: message, provenance: "live_api", executionMode: "live" },
         }));
       }
     },
-    [stopPolling, t]
+    [stopPolling]
   );
 
   const startDbResultsPolling = useCallback(
@@ -360,7 +356,6 @@ export function useBuilderApi() {
             fallbackChatUrl: chatUrl,
             startTime,
             nowMs,
-            t,
           });
           if (terminal) {
             stopPolling("v0");
@@ -382,7 +377,6 @@ export function useBuilderApi() {
                 chatId,
                 chatUrl,
                 nowMs: Date.now(),
-                t,
               });
               return next ?? prev;
             });
@@ -390,7 +384,7 @@ export function useBuilderApi() {
         }, MAX_POLL_TIME)
       );
     },
-    [stopPolling, t]
+    [stopPolling]
   );
 
   const runBuilders = useCallback(
@@ -440,7 +434,7 @@ export function useBuilderApi() {
       const data = dispatchData;
 
       if (data?.code === "limit_exceeded") {
-        toast.error(data.error || t("guest.limitReached"));
+        toast.error(data.error || copy["guest.limitReached"]);
         setLoading(false);
         return;
       }
@@ -500,7 +494,6 @@ export function useBuilderApi() {
       startV0PollingForExperiment,
       stopDbResultsPolling,
       stopPolling,
-      t,
       unsubscribeRealtime,
     ]
   );

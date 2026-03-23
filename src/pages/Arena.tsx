@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect } from "react";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -8,11 +9,9 @@ import { usePublicExperiments } from "@/hooks/usePublicExperiments";
 import { Loader2, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/lib/i18n";
 
 export default function ArenaPage() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { experiments, loading } = usePublicExperiments(20);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
   
@@ -46,16 +45,16 @@ export default function ArenaPage() {
           
           <header className="text-center max-w-3xl mx-auto mb-10">
             <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-              {t("arena.eyebrow")}
+              {copy["arena.eyebrow"]}
             </p>
             <h1
               className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
               style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
             >
-              {t("arena.title")}
+              {copy["arena.title"]}
             </h1>
             <p className="text-muted-foreground font-sans text-sm md:text-base">
-              {t("arena.subtitle")}
+              {copy["arena.subtitle"]}
             </p>
           </header>
 

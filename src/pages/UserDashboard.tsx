@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +17,6 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FF } from "@/lib/featureFlags";
-import { useTranslation } from "@/lib/i18n";
 import type { Tables } from "@/integrations/supabase/types";
 import { throwIfByoaRpcFailed } from "@/lib/byoa-rpc";
 import {
@@ -70,7 +70,6 @@ export default function UserDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { tools } = useBuilderCatalog();
-  const { t } = useTranslation();
   const [experiments, setExperiments] = useState<UserExperiment[]>([]);
   const [subscription, setSubscription] = useState<UserSubscription | null>(null);
   const [ratings, setRatings] = useState<UserRating[]>([]);
@@ -126,14 +125,14 @@ export default function UserDashboard() {
       if (error) throw error;
       throwIfByoaRpcFailed(data);
 
-      toast.success(t("byoa.connected"));
+      toast.success(copy["byoa.connected"]);
       emitByoaUiTelemetry(keyDialog.mode === "rotate" ? "rotate_ok" : "connect_ok", keyDialog.toolId);
       await loadByoaCredentials();
       setKeyDialog(null);
       setApiKeyInput("");
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(msg || t("byoa.errorSave"));
+      toast.error(msg || copy["byoa.errorSave"]);
     } finally {
       setIsConnecting(false);
     }
@@ -149,13 +148,13 @@ export default function UserDashboard() {
       });
       if (error) throw error;
       throwIfByoaRpcFailed(data);
-      toast.success(t("byoa.disconnected"));
+      toast.success(copy["byoa.disconnected"]);
       emitByoaUiTelemetry("disconnect_ok", disconnectToolId);
       await loadByoaCredentials();
       setDisconnectToolId(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      toast.error(msg || t("byoa.errorDisconnect"));
+      toast.error(msg || copy["byoa.errorDisconnect"]);
     } finally {
       setDisconnectLoading(false);
     }
@@ -400,13 +399,13 @@ export default function UserDashboard() {
                 <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2 shadow-inner">
                   <Key className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-serif font-bold">{t("byoa.title")}</h3>
+                <h3 className="text-2xl font-serif font-bold">{copy["byoa.title"]}</h3>
                 <p className="text-muted-foreground font-sans max-w-md mx-auto text-base leading-relaxed">
-                  {t("byoa.subtitle")}
+                  {copy["byoa.subtitle"]}
                 </p>
               </div>
               {!FF.BYOA_TAB ? (
-                <p className="text-center text-sm text-muted-foreground font-sans">{t("byoa.disabledFlag")}</p>
+                <p className="text-center text-sm text-muted-foreground font-sans">{copy["byoa.disabledFlag"]}</p>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
                   {tools.map((tool) => {
@@ -425,7 +424,7 @@ export default function UserDashboard() {
                             <div className="font-semibold font-sans flex items-center gap-2">
                               {tool.name}
                               {tool.featured && (
-                                <Badge className="text-[9px] bg-featured text-featured-foreground border-0 h-4 px-1.5">{t("compare.partner")}</Badge>
+                                <Badge className="text-[9px] bg-featured text-featured-foreground border-0 h-4 px-1.5">{copy["compare.partner"]}</Badge>
                               )}
                             </div>
                             <div className="text-[10px] text-muted-foreground">{tool.stack}</div>
@@ -436,7 +435,7 @@ export default function UserDashboard() {
                           {isConnected ? (
                             <div className="flex flex-wrap items-center justify-end gap-1.5">
                               <Badge variant="outline" className="border-success/50 text-success shrink-0">
-                                {t("byoa.connected")}
+                                {copy["byoa.connected"]}
                               </Badge>
                               {tool.integrationEnabled && (
                                 <>
@@ -446,7 +445,7 @@ export default function UserDashboard() {
                                     className="h-7 text-xs rounded-full"
                                     onClick={() => setKeyDialog({ toolId: tool.id, mode: "rotate" })}
                                   >
-                                    {t("byoa.rotateKey")}
+                                    {copy["byoa.rotateKey"]}
                                   </Button>
                                   <Button
                                     size="sm"
@@ -455,7 +454,7 @@ export default function UserDashboard() {
                                     disabled={disconnectToolId === tool.id}
                                     onClick={() => setDisconnectToolId(tool.id)}
                                   >
-                                    {t("byoa.disconnectKey")}
+                                    {copy["byoa.disconnectKey"]}
                                   </Button>
                                 </>
                               )}
@@ -467,11 +466,11 @@ export default function UserDashboard() {
                               className="h-7 text-xs rounded-full"
                               onClick={() => setKeyDialog({ toolId: tool.id, mode: "connect" })}
                             >
-                              {t("byoa.connectKey")}
+                              {copy["byoa.connectKey"]}
                             </Button>
                           ) : (
                             <Badge variant="secondary" className="opacity-60">
-                              {t("byoa.comingSoon")}
+                              {copy["byoa.comingSoon"]}
                             </Badge>
                           )}
                         </div>
@@ -500,10 +499,10 @@ export default function UserDashboard() {
           <DialogHeader>
             <DialogTitle>
               {keyDialog?.mode === "rotate"
-                ? t("byoa.rotateTitle").replace("{name}", getToolName(keyDialog.toolId))
-                : t("byoa.connectTitle").replace("{name}", getToolName(keyDialog?.toolId ?? ""))}
+                ? copy["byoa.rotateTitle"].replace("{name}", getToolName(keyDialog.toolId))
+                : copy["byoa.connectTitle"].replace("{name}", getToolName(keyDialog?.toolId ?? ""))}
             </DialogTitle>
-            <DialogDescription>{t("byoa.vaultNotice")}</DialogDescription>
+            <DialogDescription>{copy["byoa.vaultNotice"]}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -526,11 +525,11 @@ export default function UserDashboard() {
                 setApiKeyInput("");
               }}
             >
-              {t("byoa.cancel")}
+              {copy["byoa.cancel"]}
             </Button>
             <Button onClick={handleSaveApiKey} disabled={!apiKeyInput.trim() || isConnecting}>
               {isConnecting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-              {keyDialog?.mode === "rotate" ? t("byoa.saveRotatedKey") : t("byoa.saveKey")}
+              {keyDialog?.mode === "rotate" ? copy["byoa.saveRotatedKey"] : copy["byoa.saveKey"]}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -539,17 +538,17 @@ export default function UserDashboard() {
       <AlertDialog open={!!disconnectToolId} onOpenChange={(open) => !open && setDisconnectToolId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("byoa.disconnectConfirmTitle")}</AlertDialogTitle>
-            <AlertDialogDescription>{t("byoa.disconnectConfirmDesc")}</AlertDialogDescription>
+            <AlertDialogTitle>{copy["byoa.disconnectConfirmTitle"]}</AlertDialogTitle>
+            <AlertDialogDescription>{copy["byoa.disconnectConfirmDesc"]}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={disconnectLoading}>{t("byoa.cancel")}</AlertDialogCancel>
+            <AlertDialogCancel disabled={disconnectLoading}>{copy["byoa.cancel"]}</AlertDialogCancel>
             <Button
               variant="destructive"
               disabled={disconnectLoading}
               onClick={() => void handleConfirmDisconnect()}
             >
-              {disconnectLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t("byoa.disconnectConfirm")}
+              {disconnectLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : copy["byoa.disconnectConfirm"]}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

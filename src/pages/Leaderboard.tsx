@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useState } from "react";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -6,7 +7,6 @@ import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { useLeaderboard, Timeframe, SortDim, LeaderboardEntry } from "@/hooks/useLeaderboard";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "@/lib/i18n";
 import { TrendingUp, TrendingDown, Minus, Code2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Leaderboard() {
-  const { t } = useTranslation();
   const { getToolById } = useBuilderCatalog();
   const navigate = useNavigate();
   const [timeframe, setTimeframe] = useState<Timeframe>("all");
@@ -37,16 +36,16 @@ export default function Leaderboard() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
             <div className="max-w-2xl">
               <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-                {t("leaderboard.eyebrow")}
+                {copy["leaderboard.eyebrow"]}
               </p>
               <h1
                 className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-3"
                 style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
               >
-                {t("leaderboard.title")}
+                {copy["leaderboard.title"]}
               </h1>
               <p className="text-muted-foreground text-sm md:text-base font-sans">
-                {t("leaderboard.subtitle")}
+                {copy["leaderboard.subtitle"]}
               </p>
             </div>
 

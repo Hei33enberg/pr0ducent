@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { COMPARISON_FEATURES } from "@/config/comparison-features";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { Zap, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
@@ -15,7 +15,6 @@ const TOP_IDS = ["lovable", "replit", "v0", "cursor", "bolt"];
 
 export default function Compare() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const TOP_TOOLS = tools.filter((tool) => TOP_IDS.includes(tool.id));
 
@@ -32,16 +31,16 @@ export default function Compare() {
             className="text-center mb-12 max-w-3xl mx-auto"
           >
             <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
-              {t("compare.eyebrow")}
+              {copy["compare.eyebrow"]}
             </p>
             <h1
               className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
               style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
             >
-              {t("compare.title")}
+              {copy["compare.title"]}
             </h1>
             <p className="text-base text-muted-foreground font-sans">
-              {t("compare.subtitle")}
+              {copy["compare.subtitle"]}
             </p>
           </motion.div>
 
@@ -61,12 +60,12 @@ export default function Compare() {
                         <span className="font-semibold text-foreground font-sans">{tool.name}</span>
                         {tool.featured && (
                           <Badge className="text-[9px] bg-featured text-featured-foreground border-0">
-                            {t("compare.partner")}
+                            {copy["compare.partner"]}
                           </Badge>
                         )}
                         {tool.integrationEnabled && (
                           <Badge variant="outline" className="text-[9px] border-success/50 text-success">
-                            {t("compare.popLive")}
+                            {copy["compare.popLive"]}
                           </Badge>
                         )}
                       </div>
@@ -118,7 +117,7 @@ export default function Compare() {
           </motion.div>
 
           <p className="text-center text-xs text-muted-foreground max-w-xl mx-auto mb-8 font-sans">
-            {t("help.comparePageNote")}
+            {copy["help.comparePageNote"]}
           </p>
 
           <motion.div
@@ -127,13 +126,13 @@ export default function Compare() {
             transition={{ delay: 0.2 }}
             className="section-wash-gold rounded-xl p-8 text-center space-y-4"
           >
-            <h2 className="text-xl font-serif font-bold text-foreground">{t("compare.ctaTitle")}</h2>
+            <h2 className="text-xl font-serif font-bold text-foreground">{copy["compare.ctaTitle"]}</h2>
             <p className="text-sm text-muted-foreground max-w-lg mx-auto font-sans">
-              {t("compare.ctaSubtitle")}
+              {copy["compare.ctaSubtitle"]}
             </p>
             <Button size="lg" onClick={() => navigate("/")} className="rounded-xl shadow-lg shadow-primary/20">
               <Zap className="w-5 h-5 mr-2" />
-              {t("compare.runComparison")}
+              {copy["compare.runComparison"]}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </motion.div>

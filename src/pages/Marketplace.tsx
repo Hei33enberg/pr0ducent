@@ -1,3 +1,4 @@
+import { copy } from "@/lib/copy";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -7,11 +8,9 @@ import { Footer } from "@/components/Footer";
 import { Clock, Scissors } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useTranslation } from "@/lib/i18n";
 
 export default function Marketplace() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { experiments: demos, loading, hasMore, loadMore } = usePublicExperiments(12);
 
   const handleRemix = (demo: PublicDemo, e: React.MouseEvent) => {
@@ -29,9 +28,9 @@ export default function Marketplace() {
         <div className="page-inner">
           <PageBreadcrumb crumbs={[{ label: "Marketplace" }]} />
           <div className="mb-10 text-center">
-            <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight mb-4">{t("marketplace.title")}</h1>
+            <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight mb-4">{copy["marketplace.title"]}</h1>
             <p className="text-muted-foreground font-sans max-w-xl mx-auto text-base sm:text-lg">
-              {t("marketplace.subtitle")}
+              {copy["marketplace.subtitle"]}
             </p>
           </div>
 
@@ -55,7 +54,7 @@ export default function Marketplace() {
                 <div className="p-5">
                   <div
                     className="flex flex-wrap gap-1.5 mb-4"
-                    title={`${t("marketplace.builders")} ${demo.selected_tools.join(", ")}`}
+                    title={`${copy["marketplace.builders"]} ${demo.selected_tools.join(", ")}`}
                   >
                     {demo.selected_tools.slice(0, 3).map(tool => (
                       <Badge key={tool} variant="secondary" className="text-[9px] font-sans">
