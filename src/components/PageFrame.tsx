@@ -101,6 +101,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const isMobile = useIsMobile();
   const frameRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  /** Full-screen mobile menu lives outside `menuRef` (sticky header); outside-click must include this or nav taps close the menu before navigation. */
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const [frameRect, setFrameRect] = useState<{ left: number; width: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const headerHidden = useScrollDirection();
@@ -121,16 +123,20 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     return () => window.removeEventListener("resize", update);
   }, []);
 
-  // Close menu on outside click
+  // Close menu on outside click (desktop dropdown is inside menuRef; mobile overlay is in mobileMenuRef)
   useEffect(() => {
     if (!menuOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
+    const handler = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as Node;
+      if (menuRef.current?.contains(target) || mobileMenuRef.current?.contains(target)) return;
+      setMenuOpen(false);
     };
     document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler, { passive: true });
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
   }, [menuOpen]);
 
   // Close menu on route change
@@ -232,7 +238,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
   /* ── Mobile full-screen overlay ── */
   const mobileOverlay = menuOpen && (
-    <div className="menu-overlay-mobile sm:hidden fixed inset-0 z-[200] flex flex-col">
+    <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden fixed inset-0 z-[200] flex flex-col">
       {/* Header bar with logo + close */}
       <div className="flex items-center justify-between px-4 h-14 shrink-0 border-b border-foreground/[0.06]">
         <Logo onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
