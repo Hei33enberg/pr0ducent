@@ -10,7 +10,6 @@ import { FF } from "@/lib/featureFlags";
 import type { Experiment } from "@/types/experiment";
 
 // Custom illustrated nav icons
-import navHome from "@/assets/nav-icons/home.png";
 import navArena from "@/assets/nav-icons/arena.png";
 import navLeaderboard from "@/assets/nav-icons/leaderboard.png";
 import navCompare from "@/assets/nav-icons/compare.png";
@@ -40,9 +39,10 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
     <BrandText
       text="pr0ducent"
       showTm
-      className="font-serif font-bold tracking-[0.03em] leading-none text-foreground"
+      variant="header"
+      className="font-serif font-bold tracking-tight leading-none text-foreground"
       as="span"
-      style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
+      style={{ fontSize: "clamp(1.35rem, 2.1vw + 0.45rem, 1.95rem)" }}
     />
   );
   return (
@@ -50,12 +50,12 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center h-full min-h-0 self-center"
+      className="shrink-0 no-underline flex items-center justify-center h-full min-h-0 min-w-0 overflow-visible"
     >
       {isHomepage ? (
         brand
       ) : (
-        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none inline-block">{brand}</h1>
+        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none flex items-center">{brand}</h1>
       )}
     </a>
   );
@@ -74,16 +74,21 @@ function Hamburger({ open }: { open: boolean }) {
 }
 
 /* ── Scroll-direction detection (murd0ch Index parity: threshold + direction) ── */
-function useScrollDirection() {
+function useScrollDirection(menuOpen: boolean) {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const scrollDir = useRef<"up" | "down">("up");
+
+  useEffect(() => {
+    if (menuOpen) setHidden(false);
+  }, [menuOpen]);
 
   useEffect(() => {
     let ticking = false;
     const THRESHOLD = 8;
 
     const onScroll = () => {
+      if (menuOpen) return;
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
@@ -112,7 +117,7 @@ function useScrollDirection() {
 
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [menuOpen]);
 
   return hidden;
 }
@@ -128,7 +133,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const [frameRect, setFrameRect] = useState<{ left: number; width: number } | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const headerHidden = useScrollDirection();
+  const headerHidden = useScrollDirection(menuOpen);
 
   useEffect(() => {
     const update = () => {
@@ -194,7 +199,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   };
 
   const navLinks: NavItem[] = [
-    { label: "Home", subtitle: "Back to main", href: "/", iconSrc: navHome },
     { label: "Arena", subtitle: "Head-to-head battles", href: "/arena", iconSrc: navArena },
     { label: "Leaderboard", subtitle: "Builder rankings", href: "/leaderboard", iconSrc: navLeaderboard },
     { label: t("nav.compare"), subtitle: "Side-by-side tools", href: "/compare", iconSrc: navCompare },
@@ -206,8 +210,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     { label: t("nav.faq"), subtitle: "Common questions", href: "#faq", iconSrc: navFaq },
   ];
 
-  const isActive = (href: string) =>
-    href === "/" ? location.pathname === "/" : location.pathname.startsWith(href);
+  const isActive = (href: string) => {
+    if (href.startsWith("#")) {
+      return location.pathname === "/" && location.hash === href;
+    }
+    if (href === "/") return location.pathname === "/";
+    return location.pathname === href || location.pathname.startsWith(`${href}/`);
+  };
 
   const handleNavClick = (href: string) => {
     setMenuOpen(false);
@@ -228,7 +237,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
       <button
         key={link.href}
         onClick={() => handleNavClick(link.href)}
-        className={`w-full flex items-center gap-3 sm:gap-3.5 p-2.5 sm:p-3.5 rounded-xl transition-all duration-200 text-left group ${
+        className={`w-full flex items-center gap-3 sm:gap-3.5 p-3 sm:p-3.5 rounded-xl transition-all duration-200 text-left group ${
           active
             ? "bg-foreground text-background"
             : "text-foreground hover:bg-foreground/[0.05]"
@@ -249,10 +258,10 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           style={{ imageRendering: "auto" }}
         />
         <div className="flex flex-col min-w-0">
-          <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.06em] leading-tight">
+          <span className="font-sans text-xs sm:text-sm font-extrabold uppercase tracking-[0.08em] leading-tight">
             {link.label}
           </span>
-          <span className={`font-sans text-[10px] sm:text-xs leading-tight mt-0.5 ${
+          <span className={`font-sans text-[10px] sm:text-xs font-medium leading-tight mt-0.5 ${
             active ? "text-background/60" : "text-muted-foreground"
           }`}>
             {link.subtitle}
@@ -266,7 +275,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const mobileOverlay = menuOpen && (
     <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden">
       {/* Header bar with logo + close */}
-      <div className="flex items-center justify-between px-6 sm:px-6 h-14 shrink-0 border-b border-foreground/[0.06]">
+      <div className="flex items-center justify-between px-4 h-12 shrink-0 border-b border-foreground/[0.06] bg-[hsla(30,22%,97%,0.98)]">
         <Logo isHomepage={isHomepage} onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
         <button
           onClick={() => setMenuOpen(false)}
@@ -337,13 +346,13 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
       {frameRect && (
         <div
-          className={`sticky-header ${shouldHide ? 'header-hidden' : ''}`}
+          className={`sticky-header ${shouldHide ? "header-hidden" : ""} ${menuOpen ? "nav-menu-open" : ""}`}
           style={{ left: frameRect.left, width: frameRect.width }}
           ref={menuRef}
         >
           <header
-            className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''} ${
-              menuOpen ? 'bg-[hsla(30,22%,97%,0.98)] shadow-[0_1px_0_hsla(0,0%,0%,0.06)]' : ''
+            className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 overflow-visible ${!menuOpen ? "section-divider" : ""} ${
+              menuOpen ? "bg-[hsla(30,22%,97%,0.98)] shadow-[0_1px_0_hsla(0,0%,0%,0.06)]" : ""
             }`}
           >
             <Logo isHomepage={isHomepage} onClick={handleLogoClick} />

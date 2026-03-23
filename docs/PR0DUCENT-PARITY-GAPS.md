@@ -30,7 +30,8 @@ Szczegóły operacyjne: [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md). Master mul
 | Logo link | Plain `<a>`, flex, no `h-full` stretch | `py-1`, `self-center`, no `h-full` | Avoids logo “stuck” to top border |
 | CTA + hamburger gap | `gap-2.5` | `gap-2.5` | Aligned |
 | Dropdown emblem size | `w-12 h-12 sm:w-14 sm:h-14` (48–56px) | **48px** (desktop grid), **56px** (mobile overlay) | IA differs (more items); sizes match emblem scale |
-| Dropdown grid gap | `gap-1` in murd0ch | `gap-2` | Room for larger icons |
+| Dropdown grid gap | `gap-1` | `gap-1` (aligned) | — |
+| “Home” in hamburger grid | No | No | Logo = home; footer may still link `/` |
 | Blur policy | Sticky / dropdown / overlay | Same classes in `src/index.css` | Avoid stacking `backdrop-filter` on every card — shell only |
 
 ---

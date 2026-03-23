@@ -6,12 +6,19 @@ interface BrandTextProps {
   as?: keyof JSX.IntrinsicElements;
   showTm?: boolean;
   style?: React.CSSProperties;
+  /**
+   * Tighter digit + ™ scale for the sticky nav bar (murd0ch parity: avoids clipping / overlap with row height).
+   * Default uses larger “0” for marketing blocks.
+   */
+  variant?: "default" | "header";
 }
 
 const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
-  ({ text, className = "", as: Tag = "span", showTm = false, style }, ref) => {
+  ({ text, className = "", as: Tag = "span", showTm = false, style, variant = "default" }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
+    const digitEm = variant === "header" ? 1.55 : 2;
+    const tmEm = variant === "header" ? 0.35 : 0.4;
 
     return (
       <Component ref={ref as never} className={className} style={style}>
@@ -20,9 +27,9 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
             <span
               key={i}
               style={{
-                fontSize: "2em",
+                fontSize: `${digitEm}em`,
                 fontWeight: 800,
-                lineHeight: 1,
+                lineHeight: variant === "header" ? 0.85 : 1,
                 verticalAlign: "baseline",
                 letterSpacing: "-0.02em",
               }}
@@ -34,7 +41,17 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
           )
         )}
         {showTm && (
-          <span style={{ fontSize: "0.4em", fontWeight: 600, verticalAlign: "super", marginLeft: "0.05em", fontFamily: "'Space Grotesk', sans-serif" }}>™</span>
+          <span
+            style={{
+              fontSize: `${tmEm}em`,
+              fontWeight: 600,
+              verticalAlign: "super",
+              marginLeft: "0.05em",
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+          >
+            ™
+          </span>
         )}
       </Component>
     );

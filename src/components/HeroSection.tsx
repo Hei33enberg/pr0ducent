@@ -149,11 +149,11 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   );
 
   const caricature = (
-    <div className="flex items-end justify-center sm:justify-end fade-up stagger-1 visible-immediate">
+    <div className="flex items-center justify-center sm:justify-end w-full fade-up stagger-1 visible-immediate">
       <img
         src={caricatureFounder}
         alt="pr0ducent founder caricature"
-        className="illust-float w-[min(88vw,320px)] sm:w-full sm:max-w-[min(100%,380px)] md:max-w-[min(100%,420px)] lg:max-w-[min(100%,480px)] xl:max-w-[min(100%,520px)] h-auto max-h-[min(42vh,400px)] sm:max-h-[min(46vh,440px)] md:max-h-[min(58vh,560px)] lg:max-h-[min(62vh,620px)] object-contain object-bottom select-none pointer-events-none"
+        className="illust-float w-[min(88vw,300px)] sm:w-full sm:max-w-[min(100%,340px)] md:max-w-[min(100%,380px)] lg:max-w-[min(100%,420px)] xl:max-w-[min(100%,460px)] h-auto max-h-[min(36vh,340px)] sm:max-h-[min(40vh,380px)] md:max-h-[min(48vh,460px)] lg:max-h-[min(52vh,500px)] object-contain object-center sm:object-bottom select-none pointer-events-none"
         loading="eager"
         decoding="async"
         fetchPriority="high"
@@ -178,11 +178,11 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           - md+: row1 = headline+subtitle | illustration; row2 = chips+dropdown (full); row3 = input+builders (full)
           - mobile: headline → illustration → chips → input+builders (order-1..4)
         */}
-        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 gap-x-5 sm:gap-x-8 lg:gap-x-10 gap-y-3 sm:gap-y-4 sm:items-start">
-          <div className="order-1 sm:col-start-1 sm:row-start-1 space-y-2 sm:space-y-3 text-left min-w-0">
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 gap-x-5 sm:gap-x-8 lg:gap-x-10 gap-y-4 sm:gap-y-5 sm:items-center">
+          <div className="order-1 sm:col-start-1 sm:row-start-1 space-y-3 sm:space-y-4 text-left min-w-0 self-center">
             <h1
-              className="font-serif leading-[0.95] tracking-[-0.02em] text-foreground fade-up visible-immediate"
-              style={{ fontSize: "clamp(1.65rem, 3.2vw + 0.6rem, 4.25rem)" }}
+              className="font-serif leading-[0.92] tracking-[-0.02em] text-foreground fade-up visible-immediate"
+              style={{ fontSize: "clamp(2rem, 3.5vw + 0.85rem, 5rem)" }}
             >
               {t("hero.title1")}
               <br />
@@ -190,12 +190,12 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               <br />
               <span className="text-accent-gradient">{t("hero.title3")}</span>
             </h1>
-            <p className="font-sans text-xs sm:text-sm md:text-base text-muted-foreground max-w-xl leading-snug sm:leading-relaxed fade-up stagger-1 visible-immediate">
+            <p className="font-sans text-sm sm:text-base md:text-lg text-muted-foreground max-w-[40ch] leading-relaxed fade-up stagger-1 visible-immediate">
               {t("hero.subtitle")}
             </p>
           </div>
 
-          <div className="order-2 sm:col-start-2 sm:row-start-1 min-w-0 flex flex-col justify-end pt-1 sm:pt-0">
+          <div className="order-2 sm:col-start-2 sm:row-start-1 min-w-0 flex flex-col justify-center sm:justify-center items-center sm:items-end pt-2 sm:pt-0 self-center">
             {caricature}
           </div>
 

@@ -308,6 +308,14 @@
     pointer-events: none;
   }
 
+  /* While the nav menu is open, keep the shell pinned like murd0ch (ignore scroll-hide). */
+  .sticky-header.nav-menu-open {
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 520;
+  }
+
   @supports (backdrop-filter: blur(1px)) {
     .sticky-header {
       background: hsla(30, 18%, 95%, 0.46);
