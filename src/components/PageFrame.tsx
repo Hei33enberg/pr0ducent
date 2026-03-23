@@ -383,7 +383,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                 <a
                   href="/pricing"
                   onClick={(e) => { e.preventDefault(); navigate("/pricing"); }}
-                  className="hidden sm:inline-flex bg-foreground text-background px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
+                  className="inline-flex bg-foreground text-background px-4 md:px-6 py-2 md:py-2.5 text-[11px] sm:text-xs font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 shrink-0 font-sans"
                 >
                   {t("nav.getStarted")}
                 </a>
