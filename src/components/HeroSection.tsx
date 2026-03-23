@@ -40,16 +40,16 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   const visibleTemplates = showMoreTemplates ? PROMPT_TEMPLATES : PROMPT_TEMPLATES.slice(0, 7);
 
   const chipRow = (
-    <div className="flex flex-wrap gap-2 gap-y-2.5 fade-up visible-immediate">
+    <div className="flex flex-wrap gap-1.5 gap-y-1.5 fade-up visible-immediate">
       {visibleTemplates.map((tpl) => {
         const Icon = tpl.icon;
         return (
           <button
             key={tpl.id}
             onClick={() => handleTemplateClick(tpl)}
-            className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-foreground font-sans"
+            className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] sm:text-xs font-medium text-foreground font-sans"
           >
-            <Icon className="w-3.5 h-3.5" />
+            <Icon className="w-3 h-3 shrink-0" />
             <span>{tpl.label}</span>
           </button>
         );
@@ -57,9 +57,9 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       {!showMoreTemplates && (
         <button
           onClick={() => setShowMoreTemplates(true)}
-          className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-muted-foreground font-sans hover:text-foreground transition-colors"
+          className="bg-card border border-border/50 shadow-sm inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium text-muted-foreground font-sans hover:text-foreground transition-colors"
         >
-          <ChevronDown className="w-3.5 h-3.5" />
+          <ChevronDown className="w-3 h-3" />
           <span>+{PROMPT_TEMPLATES.length - 7} more</span>
         </button>
       )}
@@ -67,13 +67,13 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
   );
 
   const promptBlock = (
-    <div className="space-y-4 fade-up stagger-2 visible-immediate">
-      <div className="relative">
+    <div className="space-y-2.5 sm:space-y-3 fade-up stagger-2 visible-immediate">
+      <div className="relative w-full">
         <Textarea
           value={prompt}
           onChange={handlePromptChange}
           placeholder="Describe your app idea… e.g. 'Build a project management tool with Kanban boards, team chat, and Stripe billing'"
-            className="min-h-[120px] text-base bg-card shadow-xl border-2 border-foreground/25 resize-y rounded-xl p-5 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans max-h-[min(40vh,240px)] sm:max-h-none"
+          className="min-h-[88px] sm:min-h-[100px] md:min-h-[110px] w-full text-sm sm:text-base bg-card shadow-lg border-2 border-foreground/25 resize-y rounded-lg sm:rounded-xl p-3 sm:p-4 focus-visible:ring-2 focus-visible:ring-foreground/40 focus-visible:border-foreground/40 font-sans"
         />
       </div>
 
@@ -86,18 +86,19 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <div className="bg-card border border-border/50 rounded-xl p-5 shadow-sm">
+            <div className="bg-card border border-border/50 rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm">
               <ToolSelectionGrid
+                compact
                 selectedTools={selectedTools}
                 onSelectionChange={onSelectedToolsChange}
               />
             </div>
 
-            <div className="flex items-center justify-center mt-4">
+            <div className="flex items-center justify-center mt-3 sm:mt-4">
               <button
                 onClick={handleSubmit}
                 disabled={!prompt.trim() || selectedTools.length === 0}
-                className="bg-foreground text-background px-8 py-3.5 text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
+                className="bg-foreground text-background px-6 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed inline-flex items-center gap-2 font-sans"
               >
                 <Zap className="w-4 h-4" />
                 Run Multi-Builder Test
@@ -119,7 +120,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       <img
         src={caricatureFounder}
         alt="pr0ducent founder caricature"
-        className="illust-float w-[min(92vw,380px)] sm:w-[min(90vw,440px)] md:w-full md:max-w-[min(100%,520px)] lg:max-w-[min(100%,600px)] xl:max-w-[min(100%,680px)] h-auto max-h-[min(60vh,520px)] sm:max-h-[min(70vh,620px)] md:max-h-[min(78vh,720px)] object-contain object-bottom select-none pointer-events-none"
+        className="illust-float w-[min(88vw,320px)] sm:w-[min(85vw,380px)] md:w-full md:max-w-[min(100%,420px)] lg:max-w-[min(100%,480px)] xl:max-w-[min(100%,520px)] h-auto max-h-[min(42vh,400px)] sm:max-h-[min(48vh,480px)] md:max-h-[min(58vh,560px)] lg:max-h-[min(62vh,620px)] object-contain object-bottom select-none pointer-events-none"
         loading="eager"
         decoding="async"
         fetchPriority="high"
@@ -138,13 +139,13 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
-      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-5 sm:py-6 md:py-10 lg:py-12">
-        {/* Mobile: headline → caricature → prompt (pills + input); md: copy+prompt | caricature */}
-        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-8 lg:gap-x-10 gap-y-6 md:gap-y-6 md:items-start">
-          <div className="order-1 md:col-start-1 md:row-start-1 space-y-4 md:space-y-4 text-left min-w-0">
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-3 sm:py-4 md:py-6 lg:py-8">
+        {/* Mobile: headline → caricature → prompt; md: compact copy + prompt | smaller illustration */}
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-x-5 md:gap-x-8 lg:gap-x-10 gap-y-4 md:gap-y-5 md:items-start">
+          <div className="order-1 md:col-start-1 md:row-start-1 space-y-2 md:space-y-3 text-left min-w-0">
             <h1
-              className="font-serif leading-[0.92] tracking-[-0.02em] text-foreground fade-up visible-immediate"
-              style={{ fontSize: "clamp(2.2rem, 5vw + 0.8rem, 7rem)" }}
+              className="font-serif leading-[0.95] tracking-[-0.02em] text-foreground fade-up visible-immediate"
+              style={{ fontSize: "clamp(1.65rem, 3.2vw + 0.6rem, 4.25rem)" }}
             >
               One prompt.
               <br />
@@ -152,22 +153,22 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               <br />
               <span className="text-accent-gradient">builders.</span>
             </h1>
-            <p className="font-sans text-sm sm:text-base md:text-xl text-muted-foreground max-w-lg leading-relaxed fade-up stagger-1 visible-immediate">
+            <p className="font-sans text-xs sm:text-sm md:text-base text-muted-foreground max-w-xl leading-snug sm:leading-relaxed fade-up stagger-1 visible-immediate">
               Run your idea through multiple AI app builders in parallel and see real prototypes side by side.
             </p>
           </div>
 
-          <div className="order-2 md:order-none md:col-start-2 md:row-start-1 md:row-span-2 md:self-stretch min-w-0 flex flex-col justify-end pt-2 md:pt-0">
+          <div className="order-2 md:order-none md:col-start-2 md:row-start-1 md:row-span-2 md:self-stretch min-w-0 flex flex-col justify-end pt-1 md:pt-0">
             {caricature}
           </div>
 
-          <div className="order-3 md:order-none md:col-start-1 md:row-start-2 space-y-4 max-w-4xl w-full min-w-0 md:max-w-none">
+          <div className="order-3 md:order-none md:col-start-1 md:row-start-2 space-y-2.5 max-w-4xl w-full min-w-0 md:max-w-none">
             {chipRow}
             {promptBlock}
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto mt-8 md:mt-10">
+        <div className="max-w-4xl mx-auto mt-5 sm:mt-6 md:mt-8">
           <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground font-sans fade-up stagger-3 visible-immediate">
             <div className="flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5" />
