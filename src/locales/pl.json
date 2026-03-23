@@ -21,7 +21,9 @@
   "hero.trustObjective": "Obiektywne porównanie obok siebie",
   "hero.trustReferrals": "Zarabiamy z poleceń — Ty masz kontrolę",
 
+  "faq.eyebrow": "Wsparcie",
   "faq.title": "Najczęściej zadawane pytania",
+  "faq.subtitle": "Krótko o cenach, builderach, scoringu i bezstronności.",
   "faq.q1": "Czy pr0ducent jest darmowy?",
   "faq.a1": "Tak! Możesz uruchomić do 3 porównań za darmo bez konta. Zarejestruj się, aby odblokować nielimitowane eksperymenty.",
   "faq.q2": "Jakich AI builderów wspieracie?",
@@ -87,6 +89,7 @@
   "tile.buildingOnV0": "Budowanie na v0…",
   "tile.waiting": "Oczekiwanie…",
 
+  "compare.eyebrow": "Materiały",
   "compare.title": "Porównanie AI App Builderów 2025",
   "compare.subtitle": "Porównaj live runy v0 z benchmarkowymi profilami Lovable, Replit, Cursor, Bolt i innych, aby wybrać najlepszy fit.",
   "compare.ctaTitle": "Nie ufaj tabelkom — przetestuj sam!",
@@ -125,6 +128,7 @@
   "builderComparison.addToCompare": "Dodaj do porównania",
   "builderComparison.categoryAll": "Wszystkie",
 
+  "inlineCalc.eyebrow": "Dopasowanie ceny",
   "inlineCalc.title": "Szybki check wartości",
   "inlineCalc.subtitle": "Ustaw budżet, żeby znaleźć najlepszego buildera.",
   "inlineCalc.monthlyBudget": "Budżet miesięczny",
@@ -193,9 +197,11 @@
   "nav.dashboard": "Aktualizacje",
   "nav.notifications": "Powiadomienia",
 
+  "blog.eyebrow": "Aktualności",
   "blog.title": "Blog",
   "blog.subtitle": "Wglądy, porównania i aktualności ze świata AI builderów.",
   "blog.all": "Wszystkie",
+  "blog.viewAll": "Zobacz wszystkie",
   "blog.empty": "Brak opublikowanych postów. Wróć wkrótce!",
 
   "dashboard.title": "Aktualizacje builderów",
@@ -219,5 +225,17 @@
   "api.failedWithV0": "Nie udało się wygenerować przez v0",
 
   "runCenter.title": "Aktywność orkiestratora",
-  "runCenter.empty": "Brak zdarzeń pipeline."
+  "runCenter.empty": "Brak zdarzeń pipeline.",
+
+  "arena.eyebrow": "Społeczność",
+  "arena.title": "Arena builderów",
+  "arena.subtitle": "Ślepe testy dwóch AI builderów. Głosuj na lepszy wynik, żeby budować otwarty ranking w stylu ELO.",
+
+  "leaderboard.eyebrow": "Ranking",
+  "leaderboard.title": "Leaderboard builderów",
+  "leaderboard.subtitle": "Producer Viability Index (PVI) łączy jakość, szybkość, koszt i sygnały społeczności.",
+
+  "calculatorPage.eyebrow": "Dogłębnie",
+  "calculatorPage.title": "Kalkulator wartości",
+  "calculatorPage.subtitle": "Znajdź najlepszego AI buildera dla siebie dzięki pr0ducent Value Index (PVI)."
 }

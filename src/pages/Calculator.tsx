@@ -9,7 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { Calculator, DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
+import { DollarSign, CheckSquare, Cpu, Wrench, BarChart3, Trophy } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
 
 interface PricingPlan {
   tool_id: string;
@@ -23,6 +24,7 @@ interface PricingPlan {
 }
 
 export default function CalculatorPage() {
+  const { t } = useTranslation();
   const { tools } = useBuilderCatalog();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
@@ -87,18 +89,20 @@ export default function CalculatorPage() {
         <div className="page-inner-narrow">
           <PageBreadcrumb crumbs={[{ label: "Calculator" }]} />
           <div className="section-wash-blush rounded-xl p-6 mb-6">
-          <div className="text-center mb-8">
-            <h1
-              className="font-serif font-bold tracking-[-0.02em] mb-2 inline-flex items-center gap-2"
-              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
-            >
-              <Calculator className="w-8 h-8" />
-              Value Calculator
-            </h1>
-            <p className="text-sm text-muted-foreground font-sans">
-              Find the best AI builder for YOUR needs with our pr0ducent Value Index (PVI).
+          <header className="text-center mb-8 max-w-3xl mx-auto">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+              {t("calculatorPage.eyebrow")}
             </p>
-          </div>
+            <h1
+              className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
+              style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
+            >
+              {t("calculatorPage.title")}
+            </h1>
+            <p className="text-sm md:text-base text-muted-foreground font-sans">
+              {t("calculatorPage.subtitle")}
+            </p>
+          </header>
 
           {/* Weight sliders */}
           <div className="bg-card border border-border/50 rounded-xl p-5 mb-6 space-y-4 shadow-sm">

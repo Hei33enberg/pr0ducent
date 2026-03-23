@@ -6,7 +6,7 @@ import { calculatePVI, getPVILabel, type PVIPlan } from "@/lib/pvi-calculator";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calculator, Trophy, ArrowRight } from "lucide-react";
+import { Trophy, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/lib/i18n";
 
@@ -61,25 +61,27 @@ export function InlineCalculator() {
     .slice(0, 5);
 
   return (
-    <section id="calculator" className="max-w-4xl mx-auto px-4 py-12">
+    <section id="calculator" className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-12 md:py-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-      <div className="text-center mb-8">
+      <header className="text-center mb-10 max-w-3xl mx-auto">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+          {t("inlineCalc.eyebrow")}
+        </p>
         <h2
-          className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
-          style={{ fontSize: "clamp(2rem, 4vw + 0.5rem, 5rem)" }}
+          className="font-serif font-bold tracking-[-0.02em] leading-[1.05] text-foreground"
+          style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
         >
-          <Calculator className="w-6 h-6 md:w-8 md:h-8 inline-block mr-2 align-middle" aria-hidden />
           {t("inlineCalc.title")}
         </h2>
-        <p className="text-base text-muted-foreground font-sans">
+        <p className="text-base text-muted-foreground font-sans mt-4">
           {t("inlineCalc.subtitle")}
         </p>
-      </div>
+      </header>
 
       <div className="bg-card border border-border/50 rounded-xl p-5 mb-4 shadow-sm">
         <div className="flex justify-between text-sm font-sans items-center mb-2">

@@ -5,12 +5,14 @@ import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { PairwiseArena } from "@/components/PairwiseArena";
 import { usePublicExperiments } from "@/hooks/usePublicExperiments";
-import { Loader2, Swords, Trophy } from "lucide-react";
+import { Loader2, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "@/lib/i18n";
 
 export default function ArenaPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { experiments, loading } = usePublicExperiments(20);
   const [currentMatch, setCurrentMatch] = useState<any>(null);
   
@@ -42,18 +44,20 @@ export default function ArenaPage() {
         <div className="page-inner">
           <PageBreadcrumb crumbs={[{ label: "Arena" }]} />
           
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <header className="text-center max-w-3xl mx-auto mb-10">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+              {t("arena.eyebrow")}
+            </p>
             <h1
-              className="font-serif font-bold tracking-[-0.02em] mb-4 flex justify-center items-center gap-3"
-              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+              className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
+              style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
             >
-              <Swords className="w-8 h-8 md:w-12 md:h-12 text-primary" />
-              Builder Arena
+              {t("arena.title")}
             </h1>
             <p className="text-muted-foreground font-sans text-sm md:text-base">
-              Blind tests between two AI Builders. Vote for the best output to help establish the open benchmark ranking, ELO style.
+              {t("arena.subtitle")}
             </p>
-          </div>
+          </header>
 
           {!currentMatch ? (
             <div className="flex flex-col items-center justify-center min-h-[400px] bg-card border border-border/50 rounded-2xl">

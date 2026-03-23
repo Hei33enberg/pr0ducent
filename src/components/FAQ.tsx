@@ -21,9 +21,20 @@ export function FAQ() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground text-center mb-12" style={{ fontSize: "clamp(3rem, 6vw + 1rem, 7rem)" }}>
-          {t("faq.title")}
-        </h2>
+        <header className="text-center mb-12 max-w-3xl mx-auto">
+          <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+            {t("faq.eyebrow")}
+          </p>
+          <h2
+            className="font-serif font-bold tracking-[-0.02em] leading-[1.05] text-foreground"
+            style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5.5rem)" }}
+          >
+            {t("faq.title")}
+          </h2>
+          <p className="text-base text-muted-foreground font-sans mt-4">
+            {t("faq.subtitle")}
+          </p>
+        </header>
 
         <Accordion type="single" collapsible className="space-y-3">
           {faqItems.map((item, i) => (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/i18n";
-import { CalendarDays, ArrowRight, Newspaper } from "lucide-react";
+import { CalendarDays, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -38,25 +38,34 @@ export function HomepageBlogSection() {
   const rest = posts.slice(1, 6);
 
   return (
-    <section className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-16">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-12 md:py-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground inline-flex items-center gap-2" style={{ fontSize: "clamp(1.8rem, 3vw + 0.5rem, 4rem)" }}>
-          <Newspaper className="w-6 h-6" />
+      <header className="text-center mb-10 max-w-3xl mx-auto">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+          {t("blog.eyebrow")}
+        </p>
+        <h2
+          className="font-serif font-bold tracking-[-0.02em] leading-[1.05] text-foreground"
+          style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
+        >
           {t("blog.title")}
         </h2>
+        <p className="text-base text-muted-foreground font-sans mt-4">
+          {t("blog.subtitle")}
+        </p>
         <button
+          type="button"
           onClick={() => navigate("/blog")}
-          className="text-xs font-sans font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+          className="mt-6 text-xs font-sans font-medium text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1 mx-auto"
         >
-          View all <ArrowRight className="w-3 h-3" />
+          {t("blog.viewAll")} <ArrowRight className="w-3 h-3" />
         </button>
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
         {/* Featured post */}

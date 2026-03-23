@@ -74,7 +74,10 @@ export function PlanComparisonTable() {
           <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
             {t("planComparison.eyebrow")}
           </p>
-          <h2 className="font-serif font-bold tracking-[-0.02em] text-foreground text-3xl sm:text-4xl md:text-5xl leading-tight">
+          <h2
+            className="font-serif font-bold tracking-[-0.02em] text-foreground leading-tight"
+            style={{ fontSize: "clamp(2.5rem, 4.5vw + 0.5rem, 4.5rem)" }}
+          >
             {t("planComparison.title")}
           </h2>
           <p className="text-base text-muted-foreground font-sans mt-4">

@@ -3,7 +3,7 @@ import type { Experiment } from "@/types/experiment";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, ArrowRight, Trash2, FlaskConical, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { Clock, ArrowRight, Trash2, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { useTranslation } from "@/lib/i18n";
 
@@ -20,19 +20,17 @@ export function ExperimentHistory({ experiments, onSelect, onDelete }: Experimen
 
   return (
     <section className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-12 md:py-16">
-      <header className="mb-6 max-w-2xl">
-        <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-2">
+      <header className="mb-8 max-w-2xl">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
           {t("history.eyebrow")}
         </p>
-        <div className="flex items-start gap-2">
-          <FlaskConical className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
-          <div>
-            <h2 className="font-serif font-bold tracking-[-0.02em] text-foreground text-2xl sm:text-3xl md:text-4xl leading-tight">
-              {t("history.title")}
-            </h2>
-            <p className="text-sm text-muted-foreground font-sans mt-2">{t("history.subtitle")}</p>
-          </div>
-        </div>
+        <h2
+          className="font-serif font-bold tracking-[-0.02em] text-foreground leading-tight"
+          style={{ fontSize: "clamp(2.25rem, 4vw + 0.5rem, 3.25rem)" }}
+        >
+          {t("history.title")}
+        </h2>
+        <p className="text-sm sm:text-base text-muted-foreground font-sans mt-3">{t("history.subtitle")}</p>
       </header>
 
       <div className="space-y-3">

@@ -20,6 +20,7 @@ Jeden język wizualny (typografia, tokeny, ramka `page-frame`, szkło, wash-e, n
 - **Hamburger:** hit area **`w-8 h-8`**; ikona **20×12px** (linie **1.5px**), animacja X z przesunięciem **±5.5px** — patrz `.hamburger-*` w `src/index.css`.
 - **Menu:** `gap-2.5` między CTA a hamburgerem; emblematy w siatce ~48px (desktop) / ~56px (mobile overlay) — patrz parity doc.
 - **Hero — wspólne:** wash-e (`.hero-wash--*`), serif na H1, akcent gradientowy na kluczowym fragmencie tytułu, oddech pod sticky (`scroll-mt` na sekcji).
+- **Sekcje poniżej hero (murd0ch-style):** bez ikon przy `h1`/`h2`; kolejność **eyebrow** (uppercase, `tracking-[0.18em]`, `text-muted-foreground`) → **duży tytuł serif** (`clamp` ~2.5–5rem) → **podtytuł** sans w szarości.
 
 ## Rozdzielenie produktów (LP)
 

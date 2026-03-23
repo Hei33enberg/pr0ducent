@@ -29,15 +29,18 @@ export default function Compare() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-12 max-w-3xl mx-auto"
           >
+            <p className="text-xs sm:text-sm uppercase tracking-[0.18em] text-muted-foreground font-sans mb-3">
+              {t("compare.eyebrow")}
+            </p>
             <h1
-              className="font-serif font-bold tracking-[-0.02em] mb-3"
-              style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
+              className="font-serif font-bold tracking-[-0.02em] leading-[1.05] mb-4"
+              style={{ fontSize: "clamp(2.75rem, 5vw + 0.75rem, 5rem)" }}
             >
               {t("compare.title")}
             </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto font-sans">
+            <p className="text-base text-muted-foreground font-sans">
               {t("compare.subtitle")}
             </p>
           </motion.div>
