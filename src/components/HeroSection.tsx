@@ -48,7 +48,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
 
       <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
         {/* Hero grid — copy + caricature */}
-        <div className="mx-auto max-w-5xl grid grid-cols-[1fr_auto] md:grid-cols-[1fr_1fr] gap-4 md:gap-8 items-center mb-10">
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-14 items-end mb-10 md:mb-14">
           {/* Left — copy */}
           <div className="space-y-4 md:space-y-6 text-left">
             <h1
@@ -66,12 +66,12 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
             </p>
           </div>
 
-          {/* Right — caricature */}
-          <div className="flex items-center justify-end fade-up stagger-1 visible-immediate">
+          {/* Right — caricature (transparent PNG, large, no frame — murd0ch-style hero) */}
+          <div className="flex items-end justify-center md:justify-end fade-up stagger-1 visible-immediate">
             <img
               src={caricatureFounder}
               alt="pr0ducent founder caricature"
-              className="illust-float w-[100px] sm:w-[140px] md:w-[220px] lg:w-[280px] object-contain select-none mix-blend-multiply opacity-95"
+              className="illust-float w-[min(92vw,380px)] sm:w-[min(90vw,440px)] md:w-full md:max-w-[min(100%,520px)] lg:max-w-[min(100%,600px)] xl:max-w-[min(100%,680px)] h-auto max-h-[min(78vh,720px)] object-contain object-bottom select-none pointer-events-none"
               loading="eager"
               decoding="async"
             />
