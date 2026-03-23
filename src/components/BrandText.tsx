@@ -17,17 +17,12 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
   ({ text, className = "", as: Tag = "span", showTm = false, style, variant = "default" }, ref) => {
     const parts = text.split(/(\d)/g);
     const Component = Tag as React.ElementType;
-    /* header: murd0ch Index.tsx — same middle glyph: 1.8em, lh 0.8, baseline (not “floating” zero) */
+    /* Header digit: newsc0rp Index.tsx — 1.8em, lh 0.8, baseline; inherit serif on “0” */
     const digitEm = variant === "header" ? 1.8 : 2;
     const tmEm = 0.4;
 
-    const mergedClass =
-      variant === "header"
-        ? `${className} inline-flex flex-nowrap items-baseline`.trim()
-        : className;
-
     return (
-      <Component ref={ref as never} className={mergedClass} style={style}>
+      <Component ref={ref as never} className={className} style={style}>
         {parts.map((part, i) =>
           /\d/.test(part) ? (
             <span
@@ -40,6 +35,7 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
                       lineHeight: 0.8,
                       verticalAlign: "baseline",
                       letterSpacing: "-0.02em",
+                      fontFamily: "inherit",
                     }
                   : {
                       fontSize: `${digitEm}em`,
@@ -53,9 +49,7 @@ const BrandText = React.forwardRef<HTMLElement, BrandTextProps>(
               {part}
             </span>
           ) : (
-            <span key={i} className={variant === "header" ? "leading-none" : undefined}>
-              {part}
-            </span>
+            <React.Fragment key={i}>{part}</React.Fragment>
           )
         )}
         {showTm && (

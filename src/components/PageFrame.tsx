@@ -51,12 +51,12 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: bo
       ref={ref}
       href="/"
       onClick={(e) => { e.preventDefault(); onClick(); }}
-      className="shrink-0 no-underline flex items-center h-full min-h-0 min-w-0 overflow-visible"
+      className="shrink-0 no-underline flex items-center min-h-0 min-w-0 overflow-visible"
     >
       {isHomepage ? (
         brand
       ) : (
-        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none inline-flex items-baseline">{brand}</h1>
+        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none">{brand}</h1>
       )}
     </a>
   );
