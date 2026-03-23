@@ -61,3 +61,4 @@
 - [GITHUB-SETTINGS-SOLO-AND-TEAM.md](./GITHUB-SETTINGS-SOLO-AND-TEAM.md) — PR, Stripe w Sponsor, solo → zespół
 - [DISCUSSIONS-WELCOME-COPY.md](./DISCUSSIONS-WELCOME-COPY.md) — tekst powitalny Discussions
 - [GITHUB-COPILOT-OSS-SETUP-PROMPT.md](./GITHUB-COPILOT-OSS-SETUP-PROMPT.md) — prompt Copilot (pliki `.github`, nie Settings)
+- [GITHUB-KTO-CO-ROBI.md](./GITHUB-KTO-CO-ROBI.md) — Cursor vs Copilot vs Ty + prompt + checklista ręczna
