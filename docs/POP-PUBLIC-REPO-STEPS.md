@@ -1,6 +1,10 @@
 # VBP — publikacja publicznego repo (DevRel + Cursor)
 
-Cel: osobne repo **`pr0ducent/vibecoding-broker-protocol`** (lub nazwa zgodna z marką), żeby buildery miały jedno miejsce: spec, schematy, OpenAPI, validator, przykłady.
+**Całe monorepo jest MIT** ([LICENSE](../LICENSE)) — możesz **upublicznić jedno repo** `pr0ducent` i wtedy linki do `blob/main/docs/...` oraz `tree/main/protocol/...` działają dla wszystkich bez osobnego mirroru.
+
+**Opcjonalnie** — osobne lekkie repo **`…/vibecoding-broker-protocol`** tylko ze speciem (subtree / kopia), jeśli chcesz wyraźnie oddzielić „samego protokołu” od pełnej aplikacji i skrócić czas klonowania dla integratorów.
+
+Cel osobnego repo: jedno miejsce dla buildera: spec, schematy, OpenAPI, validator, przykłady — bez pełnego frontu.
 
 ## Źródło w monorepo
 

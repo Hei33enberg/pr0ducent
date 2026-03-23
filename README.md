@@ -2,6 +2,8 @@
 
 > AI Builder Comparison Platform — test, compare, and choose the best AI app builder for your project.
 
+**Open source (MIT).** Fork, adapt, and plug in your own vibe‑AI apps — see [LICENSE](./LICENSE) and [CONTRIBUTING.md](./CONTRIBUTING.md). Production secrets and hosting stay on your side.
+
 ## What is pr0ducent?
 
 pr0ducent lets you enter a prompt and run it through multiple AI builders simultaneously (Lovable, v0, Bolt, Cursor, Replit, and more). You get a side-by-side comparison with scores, pros/cons, generation time, and community ratings.
@@ -9,7 +11,7 @@ pr0ducent lets you enter a prompt and run it through multiple AI builders simult
 ## Tech Stack
 
 - **Frontend:** React 18 · TypeScript · Vite 8 · Tailwind CSS
-- **Backend:** Lovable Cloud (Supabase)
+- **Backend:** Supabase (Postgres, Auth, Edge Functions)
 - **Auth:** Email/password via Supabase Auth
 - **i18n:** English & Polish
 - **Fonts:** Cormorant Garamond (headings) · Space Grotesk (body) · JetBrains Mono (code)
@@ -50,4 +52,6 @@ supabase/
 
 ## License
 
-Proprietary. All rights reserved.
+[MIT License](./LICENSE) — see the file for full text.
+
+**Trademark:** The name *pr0ducent* and related branding may be subject to rights separate from the code license; do not imply endorsement when redistributing forks.
