@@ -174,13 +174,15 @@ const Index = () => {
               <HomepageBlogSection />
             </div>
 
-            <div className="section-gradient-lavender">
-              <ExperimentHistory
-                experiments={pastExperiments}
-                onSelect={(exp) => setExperiment(exp)}
-                onDelete={handleDelete}
-              />
-            </div>
+            {pastExperiments.length > 0 ? (
+              <div className="section-gradient-lavender">
+                <ExperimentHistory
+                  experiments={pastExperiments}
+                  onSelect={(exp) => setExperiment(exp)}
+                  onDelete={handleDelete}
+                />
+              </div>
+            ) : null}
 
             <Footer />
           </div>
