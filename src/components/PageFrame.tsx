@@ -262,7 +262,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   const mobileOverlay = menuOpen && (
     <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden">
       {/* Header bar with logo + close */}
-      <div className="flex items-center justify-between px-5 sm:px-6 h-14 shrink-0 border-b border-foreground/[0.06]">
+      <div className="flex items-center justify-between px-6 sm:px-6 h-14 shrink-0 border-b border-foreground/[0.06]">
         <Logo onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
         <button
           onClick={() => setMenuOpen(false)}
