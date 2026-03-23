@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +57,9 @@ export default function BuilderDashboard() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
+          <PageBreadcrumb
+            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("dashboard.title") }]}
+          />
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1

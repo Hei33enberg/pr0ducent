@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 
@@ -18,7 +19,8 @@ const NotFound = () => {
     <div className="min-h-screen">
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
-        <div className="flex items-center justify-center px-4 py-24 sm:py-32">
+        <div className="flex flex-col items-center justify-center px-4 py-24 sm:py-32 max-w-lg mx-auto w-full">
+          <PageBreadcrumb className="mb-8 justify-center" crumbs={[{ label: t("notFound.title") }]} />
           <div className="text-center space-y-4">
             <h1 className="text-7xl md:text-9xl font-serif font-bold tracking-tight text-foreground">
               {t("notFound.title")}

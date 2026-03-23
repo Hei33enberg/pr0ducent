@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,6 +91,10 @@ export default function BuilderProfile() {
         <AmbientBackground />
         <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
           <div className="max-w-4xl mx-auto px-4 py-20 text-center">
+            <PageBreadcrumb
+              className="justify-center mb-8"
+              crumbs={[{ label: "Builders", href: "/builders" }, { label: "Not found" }]}
+            />
             <h1 className="text-2xl font-serif font-bold mb-4">Builder not found</h1>
             <Button onClick={() => navigate("/builders")}>
               <ArrowLeft className="w-4 h-4 mr-2" /> All Builders
@@ -132,6 +137,7 @@ export default function BuilderProfile() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Builders", href: "/builders" }, { label: tool.name }]} />
           {/* Header */}
           <div className="flex items-start gap-4 mb-8">
             <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center overflow-hidden shrink-0">

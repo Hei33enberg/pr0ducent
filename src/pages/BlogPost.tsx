@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft } from "lucide-react";
 
 interface FullBlogPost {
   id: string;
@@ -57,13 +57,21 @@ export default function BlogPost() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner-narrow py-12 sm:py-16">
-          <button
-            onClick={() => navigate("/blog")}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8 font-sans"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to blog
-          </button>
+          <PageBreadcrumb
+            className="mb-8"
+            crumbs={[
+              { label: "Blog", href: "/blog" },
+              {
+                label: post
+                  ? post.title.length > 48
+                    ? `${post.title.slice(0, 48)}…`
+                    : post.title
+                  : loading
+                    ? "…"
+                    : "Post",
+              },
+            ]}
+          />
 
           {loading ? (
             <div className="space-y-4">

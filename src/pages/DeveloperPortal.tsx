@@ -4,6 +4,7 @@ import { Terminal, Code2, Server, HelpCircle, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +46,7 @@ export default function DeveloperPortal() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner max-w-5xl space-y-8">
+          <PageBreadcrumb crumbs={[{ label: "Docs" }]} />
           <div>
             <h1
               className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"

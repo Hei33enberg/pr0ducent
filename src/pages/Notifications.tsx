@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTranslation } from "@/lib/i18n";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { NotificationSettings } from "@/components/NotificationSettings";
@@ -17,6 +18,10 @@ export default function Notifications() {
         <AmbientBackground />
         <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
           <div className="px-4 sm:px-8 lg:px-12 py-20 text-center max-w-2xl mx-auto">
+            <PageBreadcrumb
+              className="justify-center mb-8"
+              crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("nav.notifications") }]}
+            />
             <h1
               className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
               style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
@@ -44,6 +49,9 @@ export default function Notifications() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner-narrow py-12 sm:py-16">
+          <PageBreadcrumb
+            crumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: t("nav.notifications") }]}
+          />
           <h1
             className="font-serif font-bold tracking-[-0.02em] text-foreground mb-4"
             style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}

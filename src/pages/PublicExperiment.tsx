@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 
@@ -93,6 +94,10 @@ export default function PublicExperiment() {
         ) : experiment ? (
           <>
             <div className="px-4 pt-3 pb-2 border-b border-border/40">
+              <PageBreadcrumb
+                className="mb-4"
+                crumbs={[{ label: "Runs Now", href: "/runs-now" }, { label: "Experiment" }]}
+              />
               <h1 className="font-serif text-xl md:text-2xl font-bold text-foreground leading-tight">
                 {t("public.experimentDocumentTitle")}
               </h1>

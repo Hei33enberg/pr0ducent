@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ChevronRight, Home } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface BreadcrumbItem {
   label: string;
@@ -8,13 +9,14 @@ export interface BreadcrumbItem {
 
 interface PageBreadcrumbProps {
   crumbs: BreadcrumbItem[];
+  className?: string;
 }
 
 /**
  * Consistent breadcrumb bar — appears below the sticky header on inner pages.
  * Home crumb is always prepended automatically.
  */
-export function PageBreadcrumb({ crumbs }: PageBreadcrumbProps) {
+export function PageBreadcrumb({ crumbs, className }: PageBreadcrumbProps) {
   const navigate = useNavigate();
 
   const all: BreadcrumbItem[] = [{ label: "Home", href: "/" }, ...crumbs];
@@ -22,7 +24,7 @@ export function PageBreadcrumb({ crumbs }: PageBreadcrumbProps) {
   return (
     <nav
       aria-label="Breadcrumb"
-      className="flex items-center gap-1.5 text-[11px] font-sans text-muted-foreground mb-6 mt-1"
+      className={cn("flex items-center gap-1.5 text-[11px] font-sans text-muted-foreground mb-6 mt-1", className)}
     >
       {all.map((crumb, i) => {
         const isLast = i === all.length - 1;

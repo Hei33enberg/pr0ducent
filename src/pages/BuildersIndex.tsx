@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useBuilderCatalog } from "@/contexts/BuilderCatalogContext.tsx";
@@ -16,6 +17,7 @@ export default function BuildersIndex() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "All Builders" }]} />
           <div className="text-center mb-8">
             <h1
               className="font-serif font-bold tracking-[-0.02em] mb-2"

@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { PageFrame } from "@/components/PageFrame";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { Clock, ArrowRight, MessageSquare, Star, Users, TrendingUp } from "lucide-react";
@@ -97,6 +98,7 @@ export default function RunsNow() {
       <AmbientBackground />
       <PageFrame experiment={null} onBack={() => navigate("/")} onVisibilityChange={() => {}}>
         <div className="page-inner">
+          <PageBreadcrumb crumbs={[{ label: "Runs Now" }]} />
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-3">
               <span className="relative flex h-3 w-3">

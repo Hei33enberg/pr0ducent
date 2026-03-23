@@ -21,6 +21,10 @@ Szczegóły operacyjne: [`LP-CHECKLIST-PL.md`](./LP-CHECKLIST-PL.md). Master mul
 
 ---
 
+## Breadcrumbs (`PageBreadcrumb`)
+
+Inner routes use `src/components/PageBreadcrumb.tsx` (Home is prepended automatically). Coverage includes: Compare, Pricing, Calculator, Blog, BlogPost, Arena, Leaderboard, Marketplace, Runs Now, Builders index + profile, Public experiment, Docs (`/docs`), Notifications, Builder dashboard (`/dashboard/updates`), Integration Status, 404.
+
 ## Menu: murd0ch vs pr0ducent (metryki)
 
 | Element | murd0ch (`newsc0rp-main/src/pages/Index.tsx`) | pr0ducent (`src/components/PageFrame.tsx`) | Notes |
