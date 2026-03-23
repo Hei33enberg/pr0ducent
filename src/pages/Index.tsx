@@ -135,6 +135,8 @@ const Index = () => {
               heroRef={heroRef}
             />
 
+            <div className="parity-section-sep" aria-hidden="true" />
+
             {user ? (
               <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 pb-2">
                 <Alert className="border-border/60 bg-muted/30">

@@ -46,7 +46,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
       <div className="absolute pointer-events-none hero-wash hero-wash--rose" aria-hidden="true" />
       <div className="absolute pointer-events-none hero-wash hero-wash--gold" aria-hidden="true" />
 
-      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-12 py-6 sm:py-10 md:py-14 lg:py-16">
         {/* Hero grid — copy + caricature */}
         <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-14 items-end mb-10 md:mb-14">
           {/* Left — copy */}
@@ -74,6 +74,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
               className="illust-float w-[min(92vw,380px)] sm:w-[min(90vw,440px)] md:w-full md:max-w-[min(100%,520px)] lg:max-w-[min(100%,600px)] xl:max-w-[min(100%,680px)] h-auto max-h-[min(78vh,720px)] object-contain object-bottom select-none pointer-events-none"
               loading="eager"
               decoding="async"
+              fetchPriority="high"
             />
           </div>
         </div>

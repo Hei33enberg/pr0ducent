@@ -42,6 +42,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 ## UI / brand parity (Lovable + murd0ch alignment)
 
 - **Status i macierz:** [UI-PARITY-LOVABLE-SYNC.md](./UI-PARITY-LOVABLE-SYNC.md) — co weszło z Lovable, co domknięte w repo, prompt operatora dla migracji / Edge na cloud.
+- **UI parity remediation (menu / LP rhythm):** [PR0DUCENT-PARITY-GAPS.md](./PR0DUCENT-PARITY-GAPS.md), deploy handoff [LOVABLE-DEPLOY-PARITY-REMEDIATION.md](./LOVABLE-DEPLOY-PARITY-REMEDIATION.md).
 - Tokeny i guidelines: [DESIGN-TOKENS.md](./DESIGN-TOKENS.md), [BRAND-GUIDELINES.md](./BRAND-GUIDELINES.md).
 
 ## Builder pipeline — audyt hardeningowy (v0 + POP/VBP)
@@ -53,7 +54,7 @@ Secrets: `V0_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `PERPLEXITY_API_KEY` (sync),
 - React + TypeScript + Vite + Tailwind + shadcn/ui
 - Supabase client + `invoke` for Edge Functions
 - i18n: EN/PL dictionaries
-- **Nav (hamburger):** `PageFrame` uses the `.nav-dropdown-glass` utility in `src/index.css` (warm opaque background, optional backdrop blur) for the full-width dropdown under the sticky header so menu text never sits transparently over the hero.
+- **Nav (hamburger):** `PageFrame` uses `.sticky-header` + `.menu-dropdown` in `src/index.css` (glass via `@supports(backdrop-filter)`, `maxHeight`/`overflowY` for tall grids, mobile `.menu-overlay-mobile` with blur budget) — see [PR0DUCENT-PARITY-GAPS.md](./PR0DUCENT-PARITY-GAPS.md).
 
 ## Architecture reference
 

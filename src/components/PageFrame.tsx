@@ -68,24 +68,43 @@ function Hamburger({ open }: { open: boolean }) {
   );
 }
 
-/* ── Scroll-direction detection hook ── */
+/* ── Scroll-direction detection (murd0ch Index parity: threshold + direction) ── */
 function useScrollDirection() {
   const [hidden, setHidden] = useState(false);
-  const lastY = useRef(0);
+  const lastScrollY = useRef(0);
+  const scrollDir = useRef<"up" | "down">("up");
 
   useEffect(() => {
     let ticking = false;
+    const THRESHOLD = 8;
+
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        const y = window.scrollY;
-        if (y > 80 && y - lastY.current > 6) setHidden(true);
-        if (lastY.current - y > 6 || y < 40) setHidden(false);
-        lastY.current = y;
         ticking = false;
+        const y = window.scrollY;
+        const delta = y - lastScrollY.current;
+
+        if (y < 100) {
+          setHidden(false);
+          scrollDir.current = "up";
+          lastScrollY.current = y;
+          return;
+        }
+
+        if (delta > THRESHOLD && scrollDir.current !== "down") {
+          scrollDir.current = "down";
+          setHidden(true);
+        } else if (delta < -THRESHOLD && scrollDir.current !== "up") {
+          scrollDir.current = "up";
+          setHidden(false);
+        }
+
+        lastScrollY.current = y;
       });
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -215,6 +234,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           alt=""
           width={imgSize}
           height={imgSize}
+          loading="lazy"
+          decoding="async"
           className={`shrink-0 object-contain transition-all duration-200 ${
             active
               ? "brightness-0 invert drop-shadow-[0_1px_2px_rgba(255,255,255,0.3)]"
@@ -238,7 +259,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
   /* ── Mobile full-screen overlay ── */
   const mobileOverlay = menuOpen && (
-    <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden fixed inset-0 z-[200] flex flex-col">
+    <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden">
       {/* Header bar with logo + close */}
       <div className="flex items-center justify-between px-4 h-14 shrink-0 border-b border-foreground/[0.06]">
         <Logo onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
@@ -258,8 +279,8 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
         </div>
       </div>
 
-      {/* Language + CTA at bottom */}
-      <div className="shrink-0 border-t border-foreground/[0.06]">
+      {/* Language + CTA at bottom — solid strip (blur budget: no extra backdrop on mobile) */}
+      <div className="shrink-0 border-t border-foreground/[0.06] bg-[hsla(30,22%,97%,0.98)]">
         <div className="px-4 py-3 flex items-center gap-2">
           <LanguageToggle />
           <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
@@ -301,12 +322,12 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
   return (
     <div
       ref={frameRef}
-      className="page-frame mx-5 sm:mx-6 md:mx-7 lg:mx-auto md:max-w-[1400px] my-5 sm:my-6 md:my-7 lg:my-8 pt-14 sm:pt-16"
+      className="page-frame mx-2 sm:mx-3 md:mx-4 lg:mx-6 xl:mx-auto md:max-w-[1400px] my-2 sm:my-3 md:my-4 pt-14 sm:pt-16"
     >
       {frameRect && (
         <div
           className={`sticky-header ${shouldHide ? 'header-hidden' : ''}`}
-          style={{ left: frameRect.left, width: frameRect.width, zIndex: 100 }}
+          style={{ left: frameRect.left, width: frameRect.width }}
           ref={menuRef}
         >
           <header className={`header-glass relative flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 h-12 sm:h-14 md:h-16 ${!menuOpen ? 'section-divider' : ''}`}>
@@ -357,10 +378,16 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
 
           {/* Desktop dropdown — direct child of sticky-header */}
           <div
-            className="nav-dropdown-glass nav-dropdown-animate hidden sm:block absolute left-0 right-0 top-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)] overflow-hidden"
+            className="menu-dropdown hidden sm:block absolute left-0 right-0 top-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.12)]"
             style={{
               transform: menuOpen ? "scaleY(1)" : "scaleY(0)",
               opacity: menuOpen ? 1 : 0,
+              maxHeight: menuOpen ? "calc(100vh - 4rem)" : "0",
+              overflowX: "hidden",
+              overflowY: menuOpen ? "auto" : "hidden",
+              transition:
+                "transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease, max-height 0s linear " +
+                (menuOpen ? "0s" : "0.25s"),
               pointerEvents: menuOpen ? "auto" : "none",
             }}
           >

@@ -286,40 +286,64 @@
     border: 2px solid hsla(0, 0%, 0%, 0.92);
     border-radius: 20px;
     overflow: visible !important;
-    background: hsl(30, 20%, 97%);
+    /* Warm glass-over-gradient — aligned with murd0ch shell, keeps pr0ducent hue */
+    background: hsla(30, 25%, 97%, 0.92);
   }
 
   .sticky-header {
     position: fixed;
-    top: calc(1.25rem + 4px);
+    top: calc(0.5rem + 4px);
     z-index: 450;
     border-top-left-radius: 16px;
     border-top-right-radius: 16px;
-    background: hsl(30, 18%, 95%);
+    background: hsla(30, 18%, 95%, 0.82);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     will-change: transform;
   }
 
-  .header-hidden {
-    transform: translateY(-100%);
+  .sticky-header.header-hidden {
+    transform: translateY(calc(-100% - 1rem));
+    opacity: 0;
     pointer-events: none;
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .sticky-header {
+      background: hsla(30, 18%, 95%, 0.46);
+      backdrop-filter: blur(28px) saturate(1.9);
+      -webkit-backdrop-filter: blur(28px) saturate(1.9);
+    }
+  }
+
+  /* Lighter blur on narrow viewports (GPU / motion budget) */
+  @media (max-width: 639px) {
+    @supports (backdrop-filter: blur(1px)) {
+      .sticky-header {
+        background: hsla(30, 18%, 95%, 0.55);
+        backdrop-filter: blur(18px) saturate(1.45);
+        -webkit-backdrop-filter: blur(18px) saturate(1.45);
+      }
+    }
   }
 
   @media (min-width: 640px) {
     .sticky-header {
-      top: calc(1.5rem + 2px);
+      top: calc(0.75rem + 2px);
     }
   }
 
   @media (min-width: 768px) {
     .sticky-header {
-      top: calc(1.75rem + 2px);
+      top: calc(1rem + 2px);
     }
   }
 
-  @media (min-width: 1024px) {
+  @media (prefers-reduced-motion: reduce) {
     .sticky-header {
-      top: calc(2rem + 2px);
+      transition: opacity 0.2s ease;
+    }
+    .sticky-header.header-hidden {
+      transform: translateY(-100%);
     }
   }
 
@@ -349,6 +373,47 @@
 
   .section-divider {
     border-bottom: 1px solid hsla(0, 0%, 0%, 0.06);
+  }
+
+  /* CSS-only rhythm separator (IllustDivider-style parity, low-risk) */
+  .parity-section-sep {
+    height: 2px;
+    margin: 0 auto;
+    max-width: min(72rem, 92vw);
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsla(0, 0%, 0%, 0.06),
+      hsla(4, 60%, 55%, 0.12),
+      hsla(0, 0%, 0%, 0.06),
+      transparent
+    );
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .parity-section-sep {
+      animation: parity-sep-breathe 10s ease-in-out infinite;
+    }
+  }
+
+  @keyframes parity-sep-breathe {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scaleX(0.96);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .parity-section-sep {
+      animation: none;
+    }
   }
 
   .text-accent-gradient {
@@ -569,21 +634,33 @@
 }
 
 /* ═══════════════════════════════════════════════════
-   NAV DROPDOWN — DESKTOP (scaleY transition)
+   DESKTOP MENU DROPDOWN — GPU-composited (murd0ch menu-dropdown parity)
    ═══════════════════════════════════════════════════ */
 
-.nav-dropdown-glass {
-  background: hsl(30, 18%, 95%);
+.menu-dropdown {
+  background: hsla(30, 18%, 95%, 0.98);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
   border-top: 1px solid hsla(0, 0%, 0%, 0.06);
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
+  transform-origin: top center;
   will-change: transform, opacity;
   contain: layout style paint;
 }
 
-.nav-dropdown-animate {
-  transform-origin: top center;
-  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s ease;
+@supports not (backdrop-filter: blur(1px)) {
+  .menu-dropdown {
+    background: hsl(30, 18%, 95%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-dropdown {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: hsl(30, 18%, 95%);
+  }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -591,8 +668,34 @@
    ═══════════════════════════════════════════════════ */
 
 .menu-overlay-mobile {
-  background: hsl(30, 18%, 95%);
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: hsla(30, 18%, 95%, 0.97);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
   animation: menu-overlay-in 0.25s ease-out both;
+}
+
+/* Stronger solid + lighter blur on very small screens */
+@media (max-width: 480px) {
+  .menu-overlay-mobile {
+    background: hsla(30, 18%, 95%, 0.99);
+    backdrop-filter: blur(8px) saturate(1.1);
+    -webkit-backdrop-filter: blur(8px) saturate(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-overlay-mobile {
+    animation: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: hsl(30, 18%, 95%);
+  }
 }
 
 @keyframes menu-overlay-in {
