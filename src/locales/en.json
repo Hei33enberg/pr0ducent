@@ -9,7 +9,7 @@
   "hero.title1": "One prompt.",
   "hero.title2": "Many",
   "hero.title3": "builders.",
-  "hero.subtitle": "Run your prompt with live v0 generation and benchmark previews for other builders, then compare results side by side.",
+  "hero.subtitle": "Run one prompt across multiple builders—live output where your integrations support it, benchmark-style previews elsewhere—then compare results side by side.",
   "help.orchestrationSignedIn": "Signed in: your runs use full orchestration (database experiment ID). The Compare page is a feature matrix only — it does not start builders.",
   "help.comparePageNote": "The /compare page compares product features; live multi-builder runs start from the home prompt above.",
   "hero.runTest": "Run Multi-Builder Test",

@@ -9,7 +9,7 @@
   "hero.title1": "Jeden prompt.",
   "hero.title2": "Wiele",
   "hero.title3": "builderów.",
-  "hero.subtitle": "Uruchom prompt na żywo w v0 i porównaj go z benchmarkowymi preview innych builderów obok siebie.",
+  "hero.subtitle": "Jeden prompt u wielu builderów: na żywo tam, gdzie masz integrację, podglądy w stylu benchmarku tam, gdzie jeszcze nie—potem porównaj wyniki obok siebie.",
   "help.orchestrationSignedIn": "Po zalogowaniu pełna orkiestracja działa z eksperymentem w bazie (UUID). Strona Compare to tylko tabela funkcji — nie uruchamia builderów.",
   "help.comparePageNote": "Strona /compare porównuje funkcje produktów; żywe uruchomienia wielu builderów zaczynasz od promptu na stronie głównej.",
   "hero.runTest": "Uruchom Multi-Builder Test",
