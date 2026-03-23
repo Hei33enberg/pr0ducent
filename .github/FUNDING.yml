@@ -1,9 +1,8 @@
-# Sponsor button on the repo homepage.
-# Stripe: add a Payment Link URL under `custom:` (Stripe Dashboard → Product catalog → Payment links).
-# GitHub Sponsors: keep `github:` only if enrolled at https://github.com/sponsors
+# Funding configuration
 
-github: [Hei33enberg]
+# You can support the development of this project through GitHub Sponsors.\n# github: https://github.com/sponsors/your-github-username
 
-# Uncomment and paste your Stripe Payment Link when ready (https://buy.stripe.com/...):
-# custom:
-#   - https://buy.stripe.com/xxxxxxxxxxxxx
+# Custom Stripe Placeholder Section
+# Please add your Stripe configuration here:
+# - API Key: [your_api_key]
+# - Publication ID: [your_publication_id]
