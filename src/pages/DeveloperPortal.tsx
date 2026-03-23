@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Terminal, Code2, Server, HelpCircle, Copy, Check } from "lucide-react";
+import { Terminal, Code2, Shield, ExternalLink, HelpCircle, Copy, Check, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { PageFrame } from "@/components/PageFrame";
@@ -8,6 +8,20 @@ import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Footer } from "@/components/Footer";
 import AmbientBackground from "@/components/AmbientBackground";
 import { useNavigate } from "react-router-dom";
+
+/** Public OSS bundle (standalone repo when published). Fallback: monorepo path. */
+const PROTOCOL_REPO_URL =
+  (import.meta.env.VITE_VBP_PROTOCOL_URL as string | undefined)?.trim() ||
+  "https://github.com/Hei33enberg/pr0ducent/tree/main/protocol/vibecoding-broker-protocol";
+
+const POP_INDEX_DOC_URL =
+  "https://github.com/Hei33enberg/pr0ducent/blob/main/docs/POP-INDEX.md";
+
+const POP_MESSAGING_DOC_URL =
+  "https://github.com/Hei33enberg/pr0ducent/blob/main/docs/POP-PUBLIC-MESSAGING.md";
+
+const POP_OSS_SCOPE_DOC_URL =
+  "https://github.com/Hei33enberg/pr0ducent/blob/main/docs/POP-OSS-SCOPE.md";
 
 function CodeBlock({ code, title }: { code: string; title?: string }) {
   const [copied, setCopied] = useState(false);
@@ -52,137 +66,211 @@ export default function DeveloperPortal() {
               className="font-serif font-bold tracking-[-0.02em] leading-[1.1] text-foreground mb-3"
               style={{ fontSize: "clamp(2.2rem, 4vw + 0.8rem, 4.5rem)" }}
             >
-              Platform Developer Portal
+              Builder &amp; partner docs
             </h1>
             <p className="text-base sm:text-lg text-muted-foreground font-sans max-w-2xl">
-              Vibe-coding Broker Protocol (VBP) and POP Ecosystem Integrations.
+              <strong className="text-foreground">pr0ducent Open Protocol (POP)</strong> is the product name for our broker integration.
+              Technically it is the <strong className="text-foreground">Vibecoding Broker Protocol (VBP)</strong>: a small HTTP surface
+              (dispatch, status or webhooks, optional SSE) so your users can compare runs and hand off to your product.
+            </p>
+            <p className="text-sm text-muted-foreground font-sans max-w-2xl mt-3">
+              Full documentation index (Markdown):{" "}
+              <a
+                href={POP_INDEX_DOC_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary underline underline-offset-2 inline-flex items-center gap-1"
+              >
+                docs/POP-INDEX.md on GitHub <ExternalLink className="h-3 w-3" />
+              </a>
             </p>
           </div>
 
           <div className="section-wash-teal rounded-xl p-4">
-          <Tabs defaultValue="broker" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8">
-              <TabsTrigger value="broker" className="flex items-center gap-2 text-xs sm:text-sm">
-                <Server className="w-4 h-4" /> Broker Quickstart
-              </TabsTrigger>
-              <TabsTrigger value="builder" className="flex items-center gap-2 text-xs sm:text-sm">
-                <Terminal className="w-4 h-4" /> Builder Quickstart
-              </TabsTrigger>
-              <TabsTrigger value="api" className="flex items-center gap-2 text-xs sm:text-sm">
-                <Code2 className="w-4 h-4" /> Webhooks & API
-              </TabsTrigger>
-              <TabsTrigger value="faq" className="flex items-center gap-2 text-xs sm:text-sm">
-                <HelpCircle className="w-4 h-4" /> Compatibility FAQ
-              </TabsTrigger>
-            </TabsList>
+            <Tabs defaultValue="builder" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mb-8 h-auto sm:h-10">
+                <TabsTrigger value="builder" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+                  <Terminal className="w-4 h-4 shrink-0" /> Builder quickstart
+                </TabsTrigger>
+                <TabsTrigger value="pilot" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+                  <Shield className="w-4 h-4 shrink-0" /> Pilot &amp; security
+                </TabsTrigger>
+                <TabsTrigger value="handoff" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+                  <HelpCircle className="w-4 h-4 shrink-0" /> Claim &amp; compatibility
+                </TabsTrigger>
+                <TabsTrigger value="open" className="flex items-center gap-2 text-xs sm:text-sm py-2">
+                  <BookOpen className="w-4 h-4 shrink-0" /> Open protocol
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="broker" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Deploying the VBP Broker</CardTitle>
-                  <CardDescription>How to independently orchestrate AI builders.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
-                    The POP broker orchestrates cross-builder comparisons, handles dynamic API integrations, and secures polling mechanics seamlessly.
-                  </p>
-                  <CodeBlock
-                    title="1. Clone & Setup"
-                    code={`git clone https://github.com/Hei33enberg/pr0ducent.git\ncd pr0ducent\nnpm install`}
-                  />
-                  <CodeBlock
-                    title="2. Initialize Edge Functions"
-                    code={`supabase init\nsupabase start\nsupabase functions deploy process-task-queue`}
-                  />
-                  <p className="text-sm border-l-2 border-primary pl-3 text-muted-foreground italic mt-4">
-                    Note: Ensure you have your Supabase config properly linked to allow edge functions to access auth headers.
-                  </p>
-                </CardContent>
-              </Card>
-            </TabsContent>
+              <TabsContent value="builder" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Minimum integration (VBP)</CardTitle>
+                    <CardDescription>What to implement so pr0ducent can orchestrate a run and show results.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-muted-foreground text-sm">
+                      You expose a base URL (for example <code className="text-xs">/vbp/v1</code>). The broker calls{" "}
+                      <strong>POST /dispatch</strong> with the prompt and a <code className="text-xs">webhook_url</code> pointing at our
+                      receiver (unless you only use polling or SSE per spec). You return <code className="text-xs">202</code> and{" "}
+                      <code className="text-xs">provider_run_id</code>. Completion is signaled via{" "}
+                      <strong>GET /status/&#123;id&#125;</strong> and/or signed POSTs to the webhook.
+                    </p>
+                    <h3 className="font-semibold text-sm">Endpoints (normative detail: VBP-SPEC in the repo)</h3>
+                    <ul className="list-disc pl-5 space-y-2 text-muted-foreground text-sm">
+                      <li>
+                        <strong>POST …/dispatch</strong> — start run; broker sends <code className="text-xs">run_id</code> (our task id).
+                      </li>
+                      <li>
+                        <strong>GET …/status/&#123;provider_run_id&#125;</strong> — poll fallback when webhooks or SSE are not enough.
+                      </li>
+                      <li>
+                        <strong>Webhook to broker</strong> — POST JSON to our <code className="text-xs">pbp-webhook</code> Edge function; sign
+                        with HMAC when agreed (see Pilot &amp; security).
+                      </li>
+                    </ul>
+                    <CodeBlock
+                      title="Dispatch body (illustrative)"
+                      code={`{\n  "broker_id": "pr0ducent",\n  "run_id": "<uuid run_task_id>",\n  "prompt": "…",\n  "webhook_url": "https://<project>.supabase.co/functions/v1/pbp-webhook",\n  "user_context": { "experiment_id": "<uuid>" }\n}`}
+                    />
+                    <p className="text-xs text-muted-foreground border-l-2 border-primary/50 pl-3">
+                      Generic REST-only mappings (no full VBP) are configured per tool in our database; they are slower to evolve than
+                      implementing VBP. Prefer VBP for a stable partner surface.
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-            <TabsContent value="builder" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Onboarding as a Builder</CardTitle>
-                  <CardDescription>Integrate your AI application with the POP Orchestrator.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
-                    Whether you are a Native POP engine or prefer generic REST integration, you can connect your platform within minutes.
-                  </p>
-                  <h3 className="font-semibold mt-4">Required API Contracts</h3>
-                  <ul className="list-disc pl-5 space-y-2 text-muted-foreground text-sm">
-                    <li><strong>/dispatch</strong> (POST) - Receives the task prompt. Returns a Job ID.</li>
-                    <li><strong>/status/:id</strong> (GET) - Real-time job polling endpoints.</li>
-                    <li><strong>/webhook</strong> (Optional) - PBP webhook verification completion events.</li>
-                  </ul>
-                  <CodeBlock
-                    title="Generic REST Dispatch Mapping"
-                    code={`{\n  "task": "Build me a fully functional Todo app",\n  "config": {\n    "engine": "v0",\n    "theme": "dark"\n  },\n  "callback_url": "https://[broker-url]/functions/v1/pbp-webhook"\n}`}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
+              <TabsContent value="pilot" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pilot &amp; security</CardTitle>
+                    <CardDescription>Two-week pilot, signed webhooks, and limits.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <ul className="list-disc pl-5 space-y-2 text-muted-foreground text-sm">
+                      <li>
+                        <strong>Webhook signing:</strong> HMAC-SHA256 over the raw JSON body; header{" "}
+                        <code className="text-xs">X-VBP-Signature</code> (aliases accepted). We verify when{" "}
+                        <code className="text-xs">VBP_WEBHOOK_SECRET</code> is set; production should require it.
+                      </li>
+                      <li>
+                        <strong>Idempotency:</strong> duplicate identical webhook bodies are deduplicated after successful parse.
+                      </li>
+                      <li>
+                        <strong>Rate limits:</strong> agreed per partner; broker enforces windows and circuit breaker in config.
+                      </li>
+                      <li>
+                        <strong>Pilot:</strong> staging partner key, one smoke run dispatch → terminal status, conformance check.
+                      </li>
+                    </ul>
+                    <CodeBlock
+                      title="Example completion webhook payload"
+                      code={`{\n  "event_type": "completed",\n  "experiment_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",\n  "tool_id": "your_tool_id",\n  "preview_url": "https://your-builder.example/preview/123",\n  "trace_id": "optional-correlation-id"\n}`}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Lifecycle keywords are normalized from <code className="text-xs">event</code>, <code className="text-xs">type</code>,{" "}
+                      <code className="text-xs">event_type</code>, or <code className="text-xs">status</code>. See{" "}
+                      <code className="text-xs">docs/WEBHOOK-PAYLOAD-CONTRACT.md</code> in the repo.
+                    </p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-            <TabsContent value="api" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Webhook Signatures & Payloads</CardTitle>
-                  <CardDescription>
-                    Detailed verifiable signatures from documentation VBP-SPEC.md. Server contract:{" "}
-                    <code className="text-xs">docs/WEBHOOK-PAYLOAD-CONTRACT.md</code>.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <h3 className="font-semibold text-sm">Completion Payload Example</h3>
-                  <p className="text-muted-foreground text-xs mb-2">
-                    Broker applies lifecycle using <code className="text-xs">event</code>, <code className="text-xs">type</code>,{" "}
-                    <code className="text-xs">event_type</code>, or <code className="text-xs">status</code> (see{" "}
-                    <code className="text-xs">normalizeEvent</code> in Edge). Completion matches when that value is{" "}
-                    <code className="text-xs">completed</code>, <code className="text-xs">success</code>, or{" "}
-                    <code className="text-xs">done</code>. Require <code className="text-xs">experiment_id</code> +{" "}
-                    <code className="text-xs">tool_id</code>, or <code className="text-xs">provider_run_id</code> to resolve the row.
-                  </p>
-                  <CodeBlock
-                    title="POST /functions/v1/pbp-webhook"
-                    code={`{\n  "event_type": "completed",\n  "experiment_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",\n  "tool_id": "lovable",\n  "preview_url": "https://builder.dev/preview/123",\n  "trace_id": "optional-correlation-id"\n}`}
-                  />
-                  <h3 className="font-semibold text-sm mt-6">Generic Poller Response Example</h3>
-                  <p className="text-muted-foreground text-sm">For Tier 2 integrations utilizing the standard `poll-builder-status` edge adapter.</p>
-                  <CodeBlock
-                    title="GET /api/status/:id"
-                    code={`{\n  "status": "completed",\n  "preview_url": "https://builder.dev/preview/123",\n  "error": null\n}`}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
+              <TabsContent value="handoff" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>User accounts &amp; claim</CardTitle>
+                    <CardDescription>Multi-builder demos and handoff to your product.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-sm text-muted-foreground">
+                    <p>
+                      Each builder platform normally has its <strong>own</strong> user account. A user comparing several builders may need
+                      several handoffs. VBP supports a <code className="text-xs">claim_token</code> (and optional claim URL) so a demo run can
+                      upgrade to a real account on your side; attribute referrals with <code className="text-xs">ref</code> / UTM as you
+                      agree commercially.
+                    </p>
+                    <p>
+                      In the app we log handoff-related events for attribution (e.g. referral clicks and conversions). Exact commercial
+                      settlement is agreed in the partner program — see <code className="text-xs">docs/POP-COMMERCIAL-MODELS.md</code>.
+                    </p>
+                    <div className="h-px w-full bg-border" />
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">VBP vs generic REST</h4>
+                      <p>
+                        <strong>VBP</strong> gives one documented contract (dispatch, status, webhooks, optional SSE).{" "}
+                        <strong>Generic REST</strong> uses per-tool JSON path mapping and polling only — fine for experiments, but higher
+                        maintenance for both sides.
+                      </p>
+                    </div>
+                    <div className="h-px w-full bg-border" />
+                    <div>
+                      <h4 className="font-semibold text-foreground mb-1">Self-hosting the broker</h4>
+                      <p>
+                        The reference app is open on GitHub; enterprises can run their own stack. Most partners integrate against the hosted
+                        POP broker and the public protocol bundle — no need to deploy the full product to try a pilot.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-            <TabsContent value="faq" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Compatibility Matrix</CardTitle>
-                  <CardDescription>Common questions regarding Tier 1 & Tier 2 support.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6 text-sm">
-                  <div>
-                    <h4 className="font-semibold mb-1">Q: What is the difference between Native POP and Generic REST?</h4>
-                    <p className="text-muted-foreground">Native POP includes full 2-way Webhooks with E2EE telemetry syncing natively to our orchestrator. Generic REST relies purely on synchronous polling using the `poll-builder-status` fallback adapter.</p>
-                  </div>
-                  <div className="h-px w-full bg-border" />
-                  <div>
-                    <h4 className="font-semibold mb-1">Q: Do we need to deploy our own Broker?</h4>
-                    <p className="text-muted-foreground">No. We maintain the global POP Broker, but the SDK and contracts are completely open source if your enterprise requires an isolated self-hosted stack.</p>
-                  </div>
-                  <div className="h-px w-full bg-border" />
-                  <div>
-                    <h4 className="font-semibold mb-1">Q: How fast is adding a generic REST builder?</h4>
-                    <p className="text-muted-foreground">Zero deployments needed. A builder can be onboarded in 2 days by updating the `builder_integration_config` payload map.</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="open" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Open protocol (OSS)</CardTitle>
+                    <CardDescription>Spec, schemas, validator, and quickstart for builders and contributors.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4 text-sm text-muted-foreground">
+                    <p>
+                      We publish the <strong>VBP</strong> bundle (OpenAPI, JSON Schema, validator, minimal Node example) so integrations stay
+                      inspectable and community-driven. Application orchestration, billing, and high-risk bridge automation stay in the main
+                      product — see the scope doc on GitHub.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-2 text-xs">
+                      <a
+                        href={POP_OSS_SCOPE_DOC_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline underline-offset-2 inline-flex items-center gap-1"
+                      >
+                        POP-OSS-SCOPE.md <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <span className="text-muted-foreground hidden sm:inline">·</span>
+                      <a
+                        href={POP_MESSAGING_DOC_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary underline underline-offset-2 inline-flex items-center gap-1"
+                      >
+                        Bridge &amp; ToS messaging <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button variant="default" asChild>
+                        <a href={PROTOCOL_REPO_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                          Protocol repo <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </Button>
+                      <Button variant="outline" asChild>
+                        <a href={POP_INDEX_DOC_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                          POP documentation index <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    </div>
+                    <p className="text-xs">
+                      Set <code className="text-xs">VITE_VBP_PROTOCOL_URL</code> in hosting to point the primary button at your published
+                      standalone protocol repo when it exists.
+                    </p>
+                    <CodeBlock
+                      title="Validate a builder base URL (local)"
+                      code={`cd protocol/vibecoding-broker-protocol/validator\nnpm install\nnode cli.mjs https://your-builder.example.com/vbp/v1`}
+                    />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
 

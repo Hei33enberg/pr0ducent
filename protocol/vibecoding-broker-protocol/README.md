@@ -15,6 +15,9 @@ Mirror of what can be published as **`pr0ducent/vibecoding-broker-protocol`** on
 | [sdk/python/vbp_client/](./sdk/python/vbp_client/) | Minimal broker-side Python client |
 | [GOVERNANCE.md](./GOVERNANCE.md) | Versioning + RFC process |
 | [CONFORMANCE.md](./CONFORMANCE.md) | Verification levels + broker checklist |
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | How to contribute (schemas, validator, matrix) |
+| [COMPATIBILITY-MATRIX.md](./COMPATIBILITY-MATRIX.md) | Community builder compatibility table |
+| [.github/ISSUE_TEMPLATE/](./.github/ISSUE_TEMPLATE/) | Issue templates (builder, spec, compat) |
 
 ## Normative spec (app monorepo)
 

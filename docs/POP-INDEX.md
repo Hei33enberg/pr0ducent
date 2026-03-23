@@ -2,6 +2,12 @@
 
 **Marketing:** POP. **Technicznie:** VBP — [VBP-POP-BRANDING.md](./VBP-POP-BRANDING.md).
 
+## Start tutaj (1 strona)
+
+- [POP-START-HERE.md](./POP-START-HERE.md) — mapa dla partnera (30 min → pilot → conformance)
+- [POP-OSS-SCOPE.md](./POP-OSS-SCOPE.md) — co jest open source, czego nie
+- [POP-PUBLIC-MESSAGING.md](./POP-PUBLIC-MESSAGING.md) — komunikacja bridge mode i ToS (publiczne docs)
+
 ## Start tutaj
 
 | Dokument | Opis |
