@@ -4,6 +4,12 @@ import pl from "@/locales/pl.json";
 
 export type Locale = "en" | "pl";
 
+/**
+ * MVP: ship English-only UI. `t()` still reads from `en.json`; Polish strings stay in-repo for when you re-enable locales.
+ * Set to `false` and restore language toggles (PageFrame, Footer, `LanguageToggle`) when launching PL.
+ */
+export const I18N_SINGLE_LOCALE_ENGLISH = true;
+
 const dictionaries: Record<Locale, Record<string, string>> = { en, pl };
 
 interface I18nContextType {
@@ -25,13 +31,13 @@ function setCookie(name: string, value: string, days = 365) {
 }
 
 function detectLocale(): Locale {
+  if (I18N_SINGLE_LOCALE_ENGLISH) return "en";
   try {
-    // Check cookie first, then localStorage — NO browser detection
     const fromCookie = getCookie("pr0ducent_locale");
     if (fromCookie === "en" || fromCookie === "pl") return fromCookie;
     const fromStorage = localStorage.getItem("pr0ducent_locale");
     if (fromStorage === "en" || fromStorage === "pl") return fromStorage;
-    return "en"; // Always default to English
+    return "en";
   } catch {
     return "en";
   }
@@ -41,10 +47,20 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(detectLocale);
 
   const setLocale = useCallback((l: Locale) => {
+    if (I18N_SINGLE_LOCALE_ENGLISH && l !== "en") return;
     setLocaleState(l);
     try {
       localStorage.setItem("pr0ducent_locale", l);
       setCookie("pr0ducent_locale", l);
+    } catch {}
+  }, []);
+
+  /** Keep persisted locale pinned to English while MVP flag is on (avoids stale `pl` after a future toggle). */
+  useEffect(() => {
+    if (!I18N_SINGLE_LOCALE_ENGLISH) return;
+    try {
+      localStorage.setItem("pr0ducent_locale", "en");
+      setCookie("pr0ducent_locale", "en");
     } catch {}
   }, []);
 

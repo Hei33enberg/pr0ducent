@@ -4,7 +4,7 @@ import BrandText from "@/components/BrandText";
 import { FF } from "@/lib/featureFlags";
 
 export function Footer() {
-  const { t, locale, setLocale } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const year = new Date().getFullYear();
@@ -90,24 +90,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-sans" style={{ borderColor: "hsla(0, 0%, 100%, 0.1)", color: "hsla(0, 0%, 100%, 0.4)" }}>
+        <div className="border-t pt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 text-xs font-sans" style={{ borderColor: "hsla(0, 0%, 100%, 0.1)", color: "hsla(0, 0%, 100%, 0.4)" }}>
           <span>&copy; {year} pr0ducent. {t("footer.rights")}</span>
-          <div className="flex items-center gap-1.5 text-xs font-sans">
-            <button
-              onClick={() => setLocale("en")}
-              className={`px-2 py-1 rounded-md transition-colors ${locale === "en" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
-              style={locale !== "en" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
-            >
-              EN
-            </button>
-            <button
-              onClick={() => setLocale("pl")}
-              className={`px-2 py-1 rounded-md transition-colors ${locale === "pl" ? "bg-white text-black font-semibold" : "hover:text-white"}`}
-              style={locale !== "pl" ? { color: "hsla(0, 0%, 100%, 0.45)" } : undefined}
-            >
-              PL
-            </button>
-          </div>
         </div>
       </div>
     </footer>

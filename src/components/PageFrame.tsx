@@ -2,7 +2,6 @@ import { useRef, useState, useEffect, useCallback, forwardRef, type ReactNode } 
 import { LogOut, User } from "lucide-react";
 import { ShareButton } from "@/components/ShareButton";
 import { NotificationBell } from "@/components/NotificationBell";
-import { LanguageToggle } from "@/components/LanguageToggle";
 import BrandText from "@/components/BrandText";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -37,7 +36,16 @@ interface NavItem {
   iconSrc: string;
 }
 
-const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }, ref) => {
+const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void; isHomepage: boolean }>(({ onClick, isHomepage }, ref) => {
+  const brand = (
+    <BrandText
+      text="pr0ducent"
+      showTm
+      className="font-serif font-bold tracking-[0.03em] leading-none text-foreground"
+      as="span"
+      style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
+    />
+  );
   return (
     <a
       ref={ref}
@@ -45,13 +53,11 @@ const Logo = forwardRef<HTMLAnchorElement, { onClick: () => void }>(({ onClick }
       onClick={(e) => { e.preventDefault(); onClick(); }}
       className="shrink-0 no-underline flex items-center py-1 min-h-0 self-center"
     >
-      <BrandText
-        text="pr0ducent"
-        showTm
-        className="font-serif font-bold tracking-[0.03em] leading-none text-foreground"
-        as="span"
-        style={{ fontSize: "clamp(1.4rem, 2.5vw + 0.6rem, 2.2rem)" }}
-      />
+      {isHomepage ? (
+        brand
+      ) : (
+        <h1 className="m-0 p-0 text-[inherit] font-inherit leading-none inline-block">{brand}</h1>
+      )}
     </a>
   );
 });
@@ -114,7 +120,7 @@ function useScrollDirection() {
 
 export function PageFrame({ children, experiment, onBack, onVisibilityChange }: PageFrameProps) {
   const { user, signOut } = useAuth();
-  const { t, locale } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
@@ -263,7 +269,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
     <div ref={mobileMenuRef} className="menu-overlay-mobile sm:hidden">
       {/* Header bar with logo + close */}
       <div className="flex items-center justify-between px-6 sm:px-6 h-14 shrink-0 border-b border-foreground/[0.06]">
-        <Logo onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
+        <Logo isHomepage={isHomepage} onClick={() => { setMenuOpen(false); handleLogoClick(); }} />
         <button
           onClick={() => setMenuOpen(false)}
           aria-label="Close menu"
@@ -280,13 +286,9 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
         </div>
       </div>
 
-      {/* Language + CTA at bottom — solid strip (blur budget: no extra backdrop on mobile) */}
+      {/* CTA at bottom — solid strip (blur budget: no extra backdrop on mobile) */}
       <div className="shrink-0 border-t border-foreground/[0.06] bg-[hsla(30,22%,97%,0.98)]">
-        <div className="px-4 py-3 flex items-center gap-2">
-          <LanguageToggle />
-          <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
-        </div>
-        <div className="px-4 pb-4">
+        <div className="px-4 py-3 pb-4">
           {user ? (
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -332,7 +334,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
           ref={menuRef}
         >
           <header className={`header-glass relative flex items-center justify-between px-6 sm:px-6 md:px-8 lg:px-12 min-h-12 sm:min-h-14 md:min-h-16 pt-2.5 pb-2 sm:pt-2.5 sm:pb-2.5 md:pt-3 md:pb-2.5 ${!menuOpen ? 'section-divider' : ''}`}>
-            <Logo onClick={handleLogoClick} />
+            <Logo isHomepage={isHomepage} onClick={handleLogoClick} />
 
             {/* Right side: utility buttons + hamburger */}
             <div className="flex items-center gap-2.5">
@@ -398,11 +400,6 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
               </div>
             </div>
 
-            {/* Language toggle row */}
-            <div className="border-t border-foreground/[0.06] px-5 md:px-8 lg:px-12 py-3 flex items-center gap-2">
-              <LanguageToggle />
-              <span className="font-sans text-xs text-muted-foreground">{locale === "en" ? "Switch language" : "Zmień język"}</span>
-            </div>
             {/* Auth actions */}
             <div className="border-t border-foreground/[0.06] p-5 md:px-8 lg:px-12">
               <div className="grid grid-cols-2 gap-1">

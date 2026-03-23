@@ -177,7 +177,7 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           - md+: row1 = headline+subtitle | illustration; row2 = chips+dropdown (full); row3 = input+builders (full)
           - mobile: headline → illustration → chips → input+builders (order-1..4)
         */}
-        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 gap-x-5 sm:gap-x-8 lg:gap-x-10 gap-y-4 sm:gap-y-5 sm:items-start">
+        <div className="mx-auto max-w-6xl lg:max-w-7xl grid grid-cols-1 sm:grid-cols-2 gap-x-5 sm:gap-x-8 lg:gap-x-10 gap-y-3 sm:gap-y-4 sm:items-start">
           <div className="order-1 sm:col-start-1 sm:row-start-1 space-y-2 sm:space-y-3 text-left min-w-0">
             <h1
               className="font-serif leading-[0.95] tracking-[-0.02em] text-foreground fade-up visible-immediate"

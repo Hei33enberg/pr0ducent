@@ -1,8 +1,11 @@
 import { forwardRef } from "react";
-import { useTranslation, type Locale } from "@/lib/i18n";
+import { useTranslation, I18N_SINGLE_LOCALE_ENGLISH } from "@/lib/i18n";
 
+/** Hidden while {@link I18N_SINGLE_LOCALE_ENGLISH} is true; re-enable with the nav/footer language rows. */
 export const LanguageToggle = forwardRef<HTMLButtonElement>((_, ref) => {
   const { locale, setLocale } = useTranslation();
+
+  if (I18N_SINGLE_LOCALE_ENGLISH) return null;
 
   return (
     <button
