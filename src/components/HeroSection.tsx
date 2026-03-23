@@ -62,13 +62,13 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
         );
       })}
       {HERO_PROMPT_EXTRAS.length > 0 ? (
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
               type="button"
               variant="outline"
               size="sm"
-              className="h-auto rounded-full border-border/50 px-2.5 py-1 text-[11px] sm:text-xs font-medium font-sans gap-1 shadow-sm"
+              className="h-auto rounded-full border-border/50 px-2.5 py-1 text-[11px] sm:text-xs font-medium font-sans gap-1 shadow-sm shrink-0"
             >
               <List className="w-3 h-3 shrink-0" />
               {t("hero.morePrompts")}
@@ -77,14 +77,18 @@ export function HeroSection({ onSubmit, selectedTools, onSelectedToolsChange, he
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            className="max-h-[min(50vh,280px)] overflow-y-auto w-[min(calc(100vw-2rem),20rem)] z-50"
+            side="bottom"
+            sideOffset={8}
+            avoidCollisions={false}
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            className="hero-more-prompts-menu max-h-[min(42vh,232px)] w-[min(calc(100vw-2rem),18rem)] overflow-y-auto overscroll-contain p-1.5 shadow-lg z-[600] border-border/80 bg-popover"
           >
             {HERO_PROMPT_EXTRAS.map((tpl) => {
               const Icon = tpl.icon;
               return (
                 <DropdownMenuItem
                   key={tpl.id}
-                  className="cursor-pointer gap-2"
+                  className="cursor-pointer gap-2 py-2 text-[13px]"
                   onSelect={() => handleTemplateClick(tpl)}
                 >
                   <Icon className="w-4 h-4 shrink-0 text-muted-foreground" />

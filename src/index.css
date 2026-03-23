@@ -664,6 +664,19 @@
   }
 }
 
+/* Hero “More prompts” list — thin scrollbar, doesn’t compete with headline */
+.hero-more-prompts-menu {
+  scrollbar-width: thin;
+  scrollbar-color: hsla(0, 0%, 45%, 0.35) transparent;
+}
+.hero-more-prompts-menu::-webkit-scrollbar {
+  width: 6px;
+}
+.hero-more-prompts-menu::-webkit-scrollbar-thumb {
+  background: hsla(0, 0%, 45%, 0.28);
+  border-radius: 999px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .menu-dropdown {
     backdrop-filter: none;
