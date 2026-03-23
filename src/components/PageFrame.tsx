@@ -433,7 +433,7 @@ export function PageFrame({ children, experiment, onBack, onVisibilityChange }: 
                       <User className="w-5 h-5 shrink-0 opacity-70 group-hover:opacity-100 transition-opacity" />
                       <span className="font-sans font-extrabold uppercase tracking-[0.06em] text-xs sm:text-sm">{copy["nav.myAccount"]}</span>
                       <span className="ml-auto text-[10px] text-muted-foreground/60 truncate max-w-[80px]">
-                        {user.email?.splicopy["@"][0]}
+                        {user.email?.split("@")[0]}
                       </span>
                     </button>
                     <button

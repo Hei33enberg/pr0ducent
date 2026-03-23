@@ -440,7 +440,7 @@ export function useBuilderApi() {
       }
 
       if (!data?.ok) {
-        toast.error(data?.error || "Dispatch failed");
+        toast.error(String(data?.error || "Dispatch failed"));
         setLoading(false);
         return;
       }
